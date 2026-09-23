@@ -1,4 +1,4 @@
-# stupidspeed (programming language speed benchmark)
+# StUpIdSpEeD (programming language speed benchmark)
 
 Measures the speed of programming languages in the simplest ways possible.
 
