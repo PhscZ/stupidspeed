@@ -11,7 +11,7 @@ works; the minimum column is what the task actually needs, not what happens to b
 
 ## Host
 
-Builds assume **Linux x86-64**. That is not arbitrary — `nvfortran` and `hhvm` do not exist
+Builds assume **Linux x86-64**. That is not arbitrary - `nvfortran` and `hhvm` do not exist
 on Windows, so the matrix cannot be completed anywhere else. Windows is usable through
 WSL2. See `RUN.md` for the full platform breakdown.
 
