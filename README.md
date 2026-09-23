@@ -18,44 +18,13 @@ the program actually ran instead of getting optimized away.
 
 ## Tasks
 
-### 01 counter
+The order runs from the simplest thing a program does to the most involved: control flow,
+then memory, then numbers, then threads, then bulk math, then files.
 
-```
-count = 0
-repeat 100000000 times:
-    count = count + 1
-print count
-```
+### 01 branches
 
-Output: `100000000`
-
-Compilers see straight through this one and replace the loop with the constant, so in a
-compiled language this ends up measuring process startup. Interpreters really do run it.
-
-### 02 counter_concurrent
-
-Same loop, four times, on four threads at once.
-
-```
-function work():
-    count = 0
-    repeat 100000000 times:
-        count = count + 1
-    return count
-
-start 4 threads running work()
-wait for all of them
-print sum of the 4 results
-```
-
-Output: `400000000`
-
-Same folding problem as task 01, plus thread startup. Interpreters and VMs get the real
-measurement here.
-
-### 03 branches
-
-Four counters, one if/else chain, a hundred million times.
+The most basic thing a program does: look at a value and pick a branch. Four counters and
+one if/else chain, so the cost of a mispredicted branch shows up directly.
 
 ```
 a = 0; b = 0; c = 0; d = 0
@@ -73,9 +42,50 @@ print a, b, c, d
 
 Output: `33333334 13333333 7619048 45714285`
 
-The loop survives optimization here, so this one measures real work.
+### 02 switch_case
+
+The same four-way decision as task 01, written as a switch. Languages with jump tables
+compile this differently from an if/else chain, and running both shows whether it matters.
+
+```
+acc = 0
+for i from 0 to 99999999:
+    switch i mod 4:
+        case 0: acc = acc + 1
+        case 1: acc = acc + i
+        case 2: acc = acc + 2 * i
+        case 3: acc = acc + 3 * i
+print acc
+```
+
+Output: `7500000075000000`
+
+The total stays under 2^53, so languages that only have doubles still get the exact answer.
+
+### 03 func_sum
+
+Function call overhead. The function is deliberately non-inlinable, so the call actually
+happens a hundred million times.
+
+```
+function add_one(n):
+    return n + 1
+
+value = 0
+repeat 100000000 times:
+    value = add_one(value)
+print value
+```
+
+Put the function in its own file, or mark it no-inline if the language lets you. Otherwise
+the compiler deletes the whole thing.
+
+Output: `100000000`
 
 ### 04 array_sum
+
+Sequential memory access. Fills an array, then reads it back, so it measures how fast a
+language walks contiguous memory.
 
 ```
 make array of 1000000 integers
@@ -93,26 +103,33 @@ Output: `499999500000`
 Left at a million on purpose. Growing it past about 100 million elements means allocating
 800 MB, which turns a loop benchmark into a memory benchmark.
 
-### 05 func_sum
+### 05 alloc_churn
 
-A function that adds 1, called a hundred million times. Put it in its own file or mark it
-no-inline if the language lets you, otherwise the compiler deletes the whole thing.
+Allocation and garbage collection. Ten million small allocations is the only task here that
+puts any pressure on a garbage collector.
 
 ```
-function add_one(n):
-    return n + 1
-
-value = 0
-repeat 100000000 times:
-    value = add_one(value)
-print value
+total = 0
+slots = array of 256 empty buffer references
+for i from 0 to 9999999:
+    buf = allocate 64 bytes
+    buf[0] = i mod 256
+    total = total + buf[0]
+    slots[i mod 256] = buf
+print total
 ```
 
-Output: `100000000`
+Output: `1274991808`
+
+The line storing into `slots` is not decoration. It keeps the buffer reachable, which stops
+the compiler from deleting the allocation, and it drops the buffer it replaces. In C that
+means freeing the old one; in a language with a garbage collector it means the old one
+becomes garbage. Without it the whole task disappears at `-O2`, the same way a plain
+counter loop does.
 
 ### 06 char_count
 
-Build a long string, then count the `h` characters with an if/else chain.
+Scanning a string one character at a time, a hundred million characters in total.
 
 ```
 text = "abcdefghij" repeated 10000000 times
@@ -128,10 +145,13 @@ print count
 
 Output: `10000000`
 
-The string is 100 million characters. Build it by repeating the whole block, not by
-appending in a loop, or the build itself is the benchmark.
+Build the string by repeating the whole block, not by appending in a loop, or the build
+itself becomes the benchmark.
 
 ### 07 string_append
+
+Building a string by appending. Tests whether the string type grows in place or copies the
+whole thing every time.
 
 ```
 text = ""
@@ -145,34 +165,9 @@ Output: `1000000`
 Left at a million. Appending is quadratic when the language has no growable string, so
 ten times the count is a hundred times the work.
 
-### 08 fib_recursive
+### 08 average
 
-```
-function fib(n):
-    if n < 2: return n
-    return fib(n - 1) + fib(n - 2)
-
-print fib(40)
-```
-
-Output: `102334155`
-
-### 09 fib_iterative
-
-```
-a = 0; b = 1
-repeat 40 times:
-    next = a + b
-    a = b
-    b = next
-print a
-```
-
-Output: `102334155`
-
-### 10 average
-
-Average a hundred million measurements. The most common floating-point loop there is.
+Floating point. Averaging readings is the most common real floating-point loop there is.
 
 ```
 total = 0.0
@@ -191,7 +186,72 @@ Output: `0.498046875`
 The shells have no floating point, so they cannot do this one without calling out to
 `awk` or `bc`. Those cells are `SKIPPED`.
 
-### 11 matrix_add
+### 09 fib_recursive
+
+Recursion. Naive fib(40) is about 1.6 billion calls, so it stresses the call path itself
+rather than any particular arithmetic.
+
+```
+function fib(n):
+    if n < 2: return n
+    return fib(n - 1) + fib(n - 2)
+
+print fib(40)
+```
+
+Output: `102334155`
+
+### 10 pi
+
+Arbitrary-precision arithmetic. 10000 digits of pi need big integers, which most languages
+do not have built in.
+
+```
+compute 10000 digits of pi with the unbounded spigot algorithm
+print the sum of the digits
+```
+
+Output: `44889`
+
+Print the sum of the digits instead of the digits themselves, so the check is one number.
+
+### 11 parallel_sum
+
+Threads. Task 02's work split four ways, so this is the only task where a language can
+finish faster by having more than one core.
+
+```
+function work(t):
+    acc = 0
+    for i from t * 25000000 to (t + 1) * 25000000 - 1:
+        switch i mod 4:
+            case 0: acc = acc + 1
+            case 1: acc = acc + i
+            case 2: acc = acc + 2 * i
+            case 3: acc = acc + 3 * i
+    return acc
+
+start 4 threads with t = 0, 1, 2, 3
+wait for all of them
+print sum of the 4 results
+```
+
+Output: `7500000075000000`
+
+The four threads together do exactly the work of task 02, and print the same number, so the
+two are directly comparable: one core against four.
+
+Each thread owns a fixed range, so which thread finishes first does not change the answer
+and the checksum holds no matter how the threads are scheduled.
+
+Languages with no threads cannot do this, and those cells are `SKIPPED`. Languages whose
+threads cannot run at the same time, like Python and Ruby, will print the right answer but
+will not be any faster than task 02.
+
+### 12 matrix_add
+
+Memory bandwidth. Three arrays of eight megabytes each, too big to sit in cache, so this
+measures how fast the machine can move data rather than how fast it can compute.
 
 ```
 n = 1000
@@ -203,9 +263,10 @@ print sum of all values in C
 
 Output: `999000000`
 
-### 12 matrix_mul
+### 13 matrix_mul
 
-Plain triple loop, no tricks.
+Compute-bound nested loops. A hundred and twenty-five million multiply-adds, with nothing
+to hide behind.
 
 ```
 n = 500
@@ -223,14 +284,11 @@ print sum of all values in C
 
 Output: `599995000`
 
-### 13 pi
-
-10000 digits of pi with the unbounded spigot algorithm, big integers required.
-Print the sum of the digits instead of the digits themselves, so the check is one number.
-
-Output: `44889`
+Plain triple loop, no tricks. Reordering the loops would be faster, which is the point.
 
 ### 14 file_read
+
+Reading from disk. A hundred megabytes in one pass.
 
 ```
 open data.bin, 100 MiB
@@ -246,8 +304,7 @@ Output: `484442112`
 
 ### 15 file_write
 
-Write the same 100 MiB the read task consumes. Buffered, one megabyte at a time,
-because a syscall per byte measures the kernel and nothing else.
+Writing to disk. The same hundred megabytes back out.
 
 ```
 buffer = bytes 0,1,2,...,255 repeated 4096 times   (1 MiB)
@@ -260,6 +317,9 @@ print number of bytes written
 ```
 
 Output: `104857600`
+
+Buffered, one megabyte at a time, because a syscall per byte measures the kernel and
+nothing else.
 
 ## Languages
 
@@ -298,7 +358,9 @@ Output: `104857600`
 | Shells | bash, zsh, fish, powershell |
 | Assembly | x86-64 nasm |
 
-Missing a toolchain means the cell says `SKIPPED`. It never counts as zero.
+Missing a toolchain means the cell says `SKIPPED`. It never counts as zero. The same goes
+for a language that cannot do a task at all, such as a shell trying to do floating point
+in task 08 or a language with no threads trying task 11.
 
 ## How it is measured
 
@@ -309,7 +371,7 @@ Missing a toolchain means the cell says `SKIPPED`. It never counts as zero.
 - Peak memory recorded per run.
 - 300 second timeout, then `DNF`. The shells will hit this on the matrix and pi tasks. That is a result, not a bug.
 - Wrong output means `WRONG` and the timing is thrown away.
-- Everything pinned to one core, except task 02 which gets four.
+- Everything pinned to one core, except task 11 which gets four.
 - Times are reported as they are, in milliseconds. Nothing is normalized to a baseline
   language and there is no overall score.
 
