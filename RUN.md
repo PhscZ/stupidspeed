@@ -7,11 +7,11 @@ like for the numbers to mean anything. For compilers, see `BUILD.md`.
 
 | | Requirement | Why |
 |---|---|---|
-| OS | Linux x86-64 | `nvfortran` and `hhvm` do not run on Windows. WSL2 is acceptable but the file tasks then measure the WSL disk layer. |
+| OS | x86-64, Linux or Windows | Nothing in the matrix is unavailable on Windows. `msvc` is the only Windows-only toolchain. `tcc`, `clang`, `flang` and `luajit` all need a little care there but no WSL. |
 | CPU | 4 physical cores | Task 11 runs four threads. Every other task is pinned to one core, so more cores do not help them. |
 | RAM | 8 GB minimum, 16 GB comfortable | The tasks themselves are small (the largest allocates 24 MB). The 16 GB is for the JVM, GraalVM and Julia toolchains. `native-image` alone wants 2–4 GB to build. |
-| Disk | 5 GB free | 200 MiB of fixtures, plus room for 59 toolchains. |
-| Filesystem | `tmpfs` or RAM disk preferred for the file tasks | Reading 100 MiB from a spinning disk measures the disk. Where the fixture lives must be recorded in the results. |
+| Disk | 5 GB free | 200 MiB of fixtures, plus room for 51 toolchains. |
+| Filesystem | `tmpfs` or RAM disk preferred for the file tasks | Reading 100 MiB from a spinning disk measures the disk. Anything run under WSL2 measures the WSL disk layer instead. Where the fixture lives must be recorded in the results. |
 
 ## Runtimes
 
@@ -19,21 +19,18 @@ Languages compiled to a static native binary need nothing. The rest need the fol
 
 | Language | Toolchain | Runtime needed | Notes |
 |---|---|---|---|
-| C | gcc, clang, tcc | glibc + libpthread | MSVC build needs the UCRT |
+| C | gcc, clang, msvc, tcc | glibc + libpthread, MSVC runtime | MSVC build needs the UCRT |
 | C++ | g++, clang++ | libstdc++ or libc++ | |
 | C++ | msvc | MSVC runtime | |
 | Rust | rustc | none | links libstdc statically by default |
 | Zig | zig | none | static by default |
 | Go | gc | none | static without cgo |
-| Go | gccgo | libgo | |
-| D | dmd, ldc2, gdc | libphobos | or build with `-static` |
+| D | dmd, ldc2 | libphobos | or build with `-static` |
 | Swift | swiftc | Swift runtime libraries | unless statically linked |
 | Fortran | gfortran | libgfortran | |
 | Fortran | flang | Fortran runtime | |
-| Fortran | nvfortran | NVHPC runtime | |
 | Ada | gnat | libgnat | |
 | Pascal | fpc | none | static by default |
-| Delphi | dcc | none | Windows only |
 | Nim | nim | none | static by default |
 | Odin | odin | none | |
 | Assembly | nasm | none | |
@@ -46,25 +43,35 @@ Languages compiled to a static native binary need nothing. The rest need the fol
 | C# | mono | Mono runtime | |
 | F# | dotnet | .NET 8 runtime | |
 | Scala | jvm | JRE + scala library | |
-| Mojo | mojo | Mojo runtime libraries | bundled |
 | Dart | aot | none | |
 | Dart | jit | Dart VM | |
 | JavaScript | node, bun, deno | the runtime itself | |
-| PHP | zend | PHP + opcache | JIT needs `opcache.enable_cli=1` |
-| PHP | hhvm | HHVM | see `BUILD.md`, PHP mode is gone |
+| PHP | zend | PHP + opcache | |
+| PHP | zend + jit | PHP + opcache | JIT needs `opcache.enable_cli=1`. The stock Windows zip ships no `php.ini`, so JIT is off until you write one and set `opcache.jit_buffer_size`. |
 | Python | cpython, pypy, graalpy | the interpreter | |
 | Python | nuitka | none | standalone binary |
-| Ruby | cruby | Ruby | |
-| Ruby | jruby | JRE + JRuby | |
-| Ruby | truffleruby | GraalVM | |
-| Lua | puc-lua, luajit | the interpreter | task 11 also needs the Lanes extension, see below |
+| Ruby | cruby | Ruby | **the stock Windows build has no YJIT**: `ruby --yjit` warns "Ruby was built without YJIT support". The `cruby + yjit` row needs a Ruby built with rustc present. |
+| Ruby | jruby | JRE + JRuby | needs Java 25 |
+| Lua | puc-lua, luajit | the interpreter | task 11 also needs the Lanes extension, see below. No `luarocks` ships with the Windows binaries, so Lanes has to be built by hand. |
 | Perl | perl | Perl | |
 | R | gnu-r | R | task 11 uses the bundled `parallel` package, PSOCK mode |
-| R | fastr | GraalVM | not in current releases |
 | Julia | julia | Julia | about 1 GB with the standard library |
 | GDScript | godot | Godot binary | roughly a second of startup on its own |
 | Nushell | nu | the `nu` binary | version 0.115.1 or newer. No build step. |
 | PowerShell | powershell, pwsh | .NET runtime | **not a shell in the usual sense.** See below. |
+
+### JVM versions are not interchangeable
+
+Four rows need a JVM and they disagree about which one:
+
+- `jruby` needs **Java 25**; on Java 24 and older it dies with `UnsupportedClassVersionError`.
+- `kotlin/native` needs **Java 17**. Its launcher mis-parses JDK 24's version string and fails with a batch syntax error.
+- `scala` needs anything modern. Oracle's `java8path` shim, if it is ahead of the real JDK on `PATH`, makes `scalac` fail on class file version 61.0.
+- `graalvm native-image` is its own JDK 25.
+
+Set `JAVA_HOME` per row rather than relying on whatever `java` resolves to. On a machine with
+several JDKs installed, the default `PATH` order is usually the wrong one for at least two of
+these four.
 
 ## The two "shells" are real languages
 
@@ -113,7 +120,7 @@ verified by running the task or by reading the official documentation.
 
 ### Real OS threads, no problem
 
-C, C++, Rust, Zig, Go, D, Swift, Ada, Pascal, Delphi, Java, Kotlin, C#, F#, Scala, Nim,
+C, C++, Rust, Zig, Go, D, Swift, Ada, Pascal, Java, Kotlin, C#, F#, Scala, Nim,
 Odin, Fortran (OpenMP), Perl (ithreads), PowerShell (runspace pools), Nushell (`par-each`).
 
 ### Works, but not with shared-memory threads
@@ -210,7 +217,7 @@ iterations, the loop is smaller than the noise in starting the process.
 
 ## Expected cost
 
-Every task runs six times, in 59 toolchains.
+Every task runs six times, in 51 toolchains.
 
 - Fast compiled languages: under a second per run, so about **1.5 hours** for the matrix.
 - The 100-million-iteration tasks take 10 to 15 seconds in CPython.
@@ -240,13 +247,16 @@ discovering halfway through a run.
 |---|---|---|---|
 | nu (nushell) | yes | yes | yes |
 | powershell | yes | yes | yes |
-| nvfortran | yes | no | no |
-| hhvm | yes | yes | no |
+| tcc | yes | yes | yes (native win64 build) |
+| clang, clang++ | yes | yes | yes, but needs MinGW headers or the MSVC SDK |
+| swift | yes | yes | yes, via the burn-bundle extraction; needs MSVC to link |
+| flang | yes | yes | yes, from MSYS2 `ucrt64`; the official LLVM Windows tarball has no `flang.exe` |
+| luajit | source | source | source, builds in about 30 seconds with MinGW once `PREFIX` has no spaces |
+| graalvm, graalpy | yes | yes | yes |
+| jruby | yes | yes | yes, on Java 25 |
 | msvc | no | no | yes |
-| delphi | no | no | yes |
-| mojo | yes | yes | no |
-| gccgo, gdc | yes | no | no |
-| tcc | yes | yes | via WSL2 |
-| graalvm, graalpy, truffleruby | yes | yes | yes |
 
-A Linux host fills the most cells. That is the recommended platform for a full run.
+Every row is now reachable on every host. Windows is the only platform that fills all of
+them, because `msvc` exists nowhere else. Linux and macOS lose `msvc`, and that is the only
+outright loss anywhere in the matrix. Whichever host you pick, run the whole matrix on it,
+because numbers are only comparable within a run.

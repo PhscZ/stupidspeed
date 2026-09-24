@@ -339,26 +339,24 @@ nothing else.
 | C++ | g++, clang++, msvc |
 | Rust | rustc |
 | Zig | zig |
-| Go | gc, gccgo |
-| D | dmd, gdc, ldc2 |
+| Go | gc |
+| D | dmd, ldc2 |
 | Swift | swiftc |
-| Fortran | gfortran, nvfortran, flang |
+| Fortran | gfortran, flang |
 | Ada | gnat |
 | Pascal | fpc |
-| Delphi | dcc |
 | Java | openjdk, graalvm native-image |
 | Kotlin | jvm, native |
 | C# | coreclr, nativeaot, mono |
 | F# | dotnet |
 | Scala | jvm |
 | JavaScript | node, bun, deno |
-| PHP | zend, zend + jit, hhvm |
+| PHP | zend, zend + jit |
 | Python | cpython, pypy, nuitka, graalpy |
-| Mojo | mojo |
-| Ruby | cruby + yjit, jruby, truffleruby |
+| Ruby | cruby + yjit, jruby |
 | Lua | puc-lua, luajit |
 | Perl | perl |
-| R | gnu-r, fastr |
+| R | gnu-r |
 | Julia | julia |
 | Nim | nim |
 | Odin | odin |
