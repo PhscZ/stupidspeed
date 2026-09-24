@@ -1,4 +1,0 @@
-config_version=5
-[application]
-config/name="task"
-config/run/print_header=false

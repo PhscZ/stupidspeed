@@ -1,0 +1,12 @@
+<!-- task 10 pi — expected output: 44889 -->
+<!-- build: coreclr: dotnet build -c Release | nativeaot: dotnet publish -c Release -p:PublishAot=true | mono: mcs -optimize+ -r:System.Numerics.dll 10_pi.cs (mono does not reference System.Numerics implicitly)    run: coreclr: dotnet run -c Release (or bin/Release/net8.0/10_pi.exe) | nativeaot: bin/Release/net8.0/publish/10_pi.exe | mono: mono 10_pi.exe -->
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <Optimize>true</Optimize>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+</Project>

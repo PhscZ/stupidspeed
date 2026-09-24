@@ -1,0 +1,12 @@
+<!-- task 05 alloc_churn — expected output: 1274991808 -->
+<!-- build: coreclr: dotnet build -c Release | nativeaot: dotnet publish -c Release -p:PublishAot=true | mono: mcs -optimize+ 05_alloc_churn.cs    run: coreclr: dotnet run -c Release (or bin/Release/net8.0/05_alloc_churn.exe) | nativeaot: bin/Release/net8.0/publish/05_alloc_churn.exe | mono: mono 05_alloc_churn.exe -->
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <Optimize>true</Optimize>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+</Project>

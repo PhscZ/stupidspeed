@@ -1,0 +1,12 @@
+<!-- task 15 file_write — expected output: 104857600 -->
+<!-- build: coreclr: dotnet build -c Release | nativeaot: dotnet publish -c Release -p:PublishAot=true | mono: mcs -optimize+ 15_file_write.cs    run: coreclr: dotnet run -c Release (or bin/Release/net8.0/15_file_write.exe) | nativeaot: bin/Release/net8.0/publish/15_file_write.exe | mono: mono 15_file_write.exe -->
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <Optimize>true</Optimize>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+</Project>

@@ -7,10 +7,10 @@ like for the numbers to mean anything. For compilers, see `BUILD.md`.
 
 | | Requirement | Why |
 |---|---|---|
-| OS | x86-64, Linux or Windows | Nothing in the matrix is unavailable on Windows. `msvc` is the only Windows-only toolchain. `tcc`, `clang`, `flang` and `luajit` all need a little care there but no WSL. |
+| OS | x86-64, Linux, macOS or Windows | Every row is reachable on Windows and on Linux; macOS loses `msvc`. The one exception is `assembly`, which is Linux x86-64 only: it is a freestanding ELF64 binary built with `nasm -f elf64` and `ld`. `tcc`, `clang`, `flang` and `luajit` all need a little care on Windows but no WSL. |
 | CPU | 4 physical cores | Task 11 runs four threads. Every other task is pinned to one core, so more cores do not help them. |
-| RAM | 8 GB minimum, 16 GB comfortable | The tasks themselves are small (the largest allocates 24 MB). The 16 GB is for the JVM, GraalVM and Julia toolchains. `native-image` alone wants 2–4 GB to build. |
-| Disk | 5 GB free | 200 MiB of fixtures, plus room for 52 toolchains. |
+| RAM | 8 GB minimum, 16 GB comfortable | The tasks themselves are small: the largest allocation is task 06's 100 MB text, and task 12's three 1000x1000 arrays are 24 MB together. The 16 GB is for the JVM, GraalVM and Julia toolchains. `native-image` alone wants 2–4 GB to build. |
+| Disk | 20 GB free | 200 MiB of fixtures, plus the toolchains themselves: `BUILD.md` measured 19 GB for all 52 installed and run, with another 2–3 GB of scratch while reassembling MSVC and Swift. |
 | Filesystem | `tmpfs` or RAM disk preferred for the file tasks | Reading 100 MiB from a spinning disk measures the disk. Anything run under WSL2 measures the WSL disk layer instead. Where the fixture lives must be recorded in the results. |
 
 ## Runtimes
@@ -33,7 +33,7 @@ Languages compiled to a static native binary need nothing. The rest need the fol
 | Pascal | fpc | none | static by default |
 | Nim | nim | none | static by default |
 | Odin | odin | none | |
-| Assembly | nasm | none | |
+| Assembly | x86-64 nasm | none | |
 | Java | openjdk | JRE 17 or newer | |
 | Java | graalvm native-image | none | standalone binary |
 | Kotlin | jvm | JRE + kotlin-stdlib | |
@@ -47,23 +47,23 @@ Languages compiled to a static native binary need nothing. The rest need the fol
 | Dart | aot | none | |
 | Dart | jit | Dart VM | |
 | JavaScript | node, bun, deno | the runtime itself | |
-| PHP | zend | PHP + opcache | |
-| PHP | zend + jit | PHP + opcache | JIT needs `opcache.enable_cli=1`. The stock Windows zip ships no `php.ini`, so JIT is off until you write one and set `opcache.jit_buffer_size`. |
+| PHP | zend | PHP + opcache | task 11 needs the `parallel` PECL extension, which stock PHP does not ship and which requires a ZTS build. |
+| PHP | zend + jit | PHP + opcache | JIT needs `opcache.enable_cli=1`. The stock Windows zip ships no `php.ini`, so JIT is off until you write one and set `opcache.jit_buffer_size`. Same `parallel` requirement as the row above for task 11. |
 | Python | cpython, pypy, graalpy | the interpreter | |
 | Python | nuitka | none | standalone binary |
-| Ruby | cruby | Ruby | **the stock Windows build has no YJIT**: `ruby --yjit` warns "Ruby was built without YJIT support". The `cruby + yjit` row needs a Ruby built with rustc present. |
+| Ruby | cruby + yjit | Ruby | **the stock Windows build has no YJIT**: `ruby --yjit` warns "Ruby was built without YJIT support". The `cruby + yjit` row needs a Ruby built with rustc present. |
 | Ruby | jruby | JRE + JRuby | needs Java 25 |
 | Lua | puc-lua, luajit | the interpreter | task 11 also needs the Lanes extension, see below. No `luarocks` ships with the Windows binaries, so Lanes has to be built by hand. |
 | Perl | perl | Perl | |
 | R | gnu-r | R | task 11 uses the bundled `parallel` package, PSOCK mode |
-| Julia | julia | Julia | about 1 GB with the standard library |
-| GDScript | godot | Godot binary | roughly a second of startup on its own |
+| Julia | julia | Julia | about 1 GB with the standard library. Task 11 must run as `julia -t4 <task>.jl`, or `Threads.@threads` stays on one thread. |
+| GDScript | godot --headless | Godot binary | roughly a second of startup on its own |
 | Nushell | nu | the `nu` binary | version 0.115.1 or newer. No build step. |
 | PowerShell | powershell, pwsh | .NET runtime | **not a shell in the usual sense.** See below. |
 
 ### JVM versions are not interchangeable
 
-Four rows need a JVM and they disagree about which one:
+Six rows need a JVM, and four of them disagree about which one:
 
 - `jruby` needs **Java 25**; on Java 24 and older it dies with `UnsupportedClassVersionError`.
 - `kotlin/native` needs **Java 17**. Its launcher mis-parses JDK 24's version string and fails with a batch syntax error.
@@ -116,22 +116,24 @@ Both should be listed beside C# and F#, not beside a POSIX shell.
 
 ## Task 11: which languages can actually do it
 
-Task 11 is the only task that is not portable. This is what each language actually has,
-verified by running the task or by reading the official documentation.
+Task 11 is the only task whose mechanism differs per language, and one of the two tasks that
+is not portable at all: Nushell cannot do task 10 either. This is what each language
+actually has, verified by running the task or by reading the official documentation.
 
 ### Real OS threads, no problem
 
-C, C++, Rust, Zig, Go, D, Swift, Ada, Pascal, Java, Kotlin, C#, F#, VB.NET, Scala, Nim,
-Odin, Fortran (OpenMP), Perl (ithreads), PowerShell (runspace pools), Nushell (`par-each`).
+C, C++, Rust, Zig, Go, D, Swift, Ada, Pascal, Java, Kotlin (both rows), C#, F#, VB.NET,
+Scala, Nim, Odin, Julia (`-t4`), Fortran (OpenMP, needs `-fopenmp`), Perl (ithreads),
+PHP (`parallel`, needs a ZTS build), PowerShell (runspace pools), Nushell (`par-each`).
 
 ### Works, but not with shared-memory threads
 
 | Language | What it has | Measured |
 |---|---|---|
-| JavaScript | `worker_threads`, one thread each with its own heap | `750000750000` |
+| JavaScript | `worker_threads`, one thread each with its own heap | `7500000075000000` |
 | Dart | isolates, each with its own memory, message passing only | documented |
-| R | `PSOCK` cluster: separate R processes | `750000750000` in 0.07 s against 0.15 s serial |
-| Lua | needs the Lanes C extension (or llthreads2) | `750000750000`, **3.56x on 4 threads** |
+| R | `PSOCK` cluster: separate R processes | `7500000075000000` (timing not measured, see below) |
+| Lua | needs the Lanes C extension (or llthreads2) | `7500000075000000`, **3.56x on 4 threads** |
 | Python | threads exist but the GIL serializes them | correct, **0.97x** — use `multiprocessing` for 2.3x |
 | Ruby (CRuby) | threads exist but the GVL serializes them | correct, no speedup |
 
@@ -139,7 +141,7 @@ Odin, Fortran (OpenMP), Perl (ithreads), PowerShell (runspace pools), Nushell (`
 
 **Lua.** Stock Lua has no threads, only coroutines, which are cooperative and
 single-threaded. But `lanes` is a mature C extension that wraps real OS threads, and it
-works: Lua 5.4.6 with Lanes 3.17.2 produced `750000750000` and ran **3.56x faster on four
+works: Lua 5.4.6 with Lanes 3.17.2 produced `7500000075000000` and ran **3.56x faster on four
 threads**. So Lua is not `SKIPPED`, but it needs `luarocks install lanes` first. The
 alternatives are `lua-llthreads2` and `LuaThread`, both also C extensions.
 
@@ -147,7 +149,10 @@ alternatives are `lua-llthreads2` and `LuaThread`, both also C extensions.
 **Unix only** — on Windows it fails with `'mc.cores' > 1 is not supported on Windows`, and
 `makeCluster(type="FORK")` fails with `fork clusters are not supported on Windows`. What
 does work everywhere is `makeCluster(type="PSOCK")`, which starts separate R processes and
-communicates over sockets. That produced the right answer, 0.07 s against 0.15 s serial.
+communicates over sockets. That produces the right answer. The `0.07 s against 0.15 s` figure
+this file used to quote for it is not consistent with the current task: 100000000 interpreter
+iterations of a `switch` cannot finish in 0.15 s when CPython needs 10 to 15 s and PowerShell
+264 s for the same work, so treat the R timing as unmeasured until it is re-run.
 Note that PSOCK workers start with an empty environment, so constants must be pushed out
 with `clusterExport` or they fail with `object 'N' not found`.
 
@@ -170,19 +175,25 @@ Task 11 says "start 4 threads". Under that wording:
 - `SKIPPED`: assembly.
 - Pass, but with processes rather than threads: R, and JavaScript if you count worker threads
   as not being threads.
-- Pass, with the GIL/GVL caveat recorded: Python, Ruby.
+- Pass, with the GIL/GVL caveat recorded: CPython, CRuby. `jruby` is unaffected and uses real
+  JVM threads.
+- Pass, but only with an extra install or flag: Lua (Lanes), PHP (`parallel` on a ZTS build),
+  Julia (`-t4`), Fortran (`-fopenmp`). Without the flag Julia and Fortran still print the
+  right answer, because their loops fall back to serial.
 
 If the task instead says "4 concurrent workers", everything above passes and the comparison
 becomes "does this language use more than one core", which is the more useful question. That
-wording also lets R and Lua participate, and it keeps the informative result that Python and
-Ruby print the right answer with no speedup.
+wording also lets R and Lua participate, and it keeps the informative result that CPython and
+CRuby print the right answer with no speedup.
 
 ## Fixtures
 
-Task 14 and task 15 share one file.
+Task 14 and task 15 use two files with the same 100 MiB shape: 14 reads `data.bin`, 15
+writes `out.bin`.
 
 - `data.bin` — 104857600 bytes, the bytes 0 through 255 repeating. 409600 repetitions.
-  Generate once; every language reads the same bytes.
+  Generate once; every language reads the same bytes. There is no generator script in this
+  repository, so write one: 409600 copies of the 256-byte cycle.
 - `out.bin` — written by task 15, 104857600 bytes. Overwritten on every run, so it needs
   100 MiB of free space and a writable working directory.
 
@@ -193,7 +204,7 @@ rather than the language, which is a different and less interesting result.
 
 | Need | Linux | Windows |
 |---|---|---|
-| Wall clock | the harness, `CLOCK_MONOTONIC` | `QueryPerformanceCounter` |
+| Wall clock | your runner, `clock_gettime(CLOCK_MONOTONIC)` | `QueryPerformanceCounter` |
 | Timeout, 300 s | `timeout 300` | `Start-Process` with a wait |
 | Peak memory | `/usr/bin/time -v`, or `getrusage(RUSAGE_CHILDREN)` | `GetProcessMemoryInfo`, `PeakWorkingSetSize` |
 | Pin to one core | `taskset -c 3` | `start /affinity 8` |
@@ -222,9 +233,11 @@ Every task runs six times, in 52 toolchains.
 
 - Fast compiled languages: under a second per run, so about **1.5 hours** for the matrix.
 - The 100-million-iteration tasks take 10 to 15 seconds in CPython.
-- `nu` costs about 1.05 us per iteration, so the 100000000-iteration tasks take roughly 105
-  seconds each and finish inside the timeout. Its heaviest task, 13 `matrix_mul` at 125
-  million inner steps, will run close to the limit.
+- `nu` costs about 1.05 us per iteration, so its 100000000-iteration tasks take roughly 105
+  seconds each and finish inside the timeout. Its heaviest cells are 09 `fib_recursive`
+  (~331 million interpreted calls), 14 `file_read` (a per-byte pass over 100 MiB) and 06
+  `char_count` (a per-character pass over 100 MB); all three are expected to hit the
+  timeout, and 13 `matrix_mul` at 125 million inner steps runs close to it.
 - `nu` is `SKIPPED` on 10 `pi` only, because its integers are 64-bit.
 - `powershell` costs about 2.64 us per iteration, so its 100-million-iteration tasks take
   around 264 seconds and sit right on the 300 second timeout. Expect `DNF` there.
@@ -247,7 +260,8 @@ discovering halfway through a run.
 | Toolchain | Linux | macOS | Windows |
 |---|---|---|---|
 | nu (nushell) | yes | yes | yes |
-| powershell | yes | yes | yes |
+| powershell (`powershell`) | no | no | yes |
+| powershell (`pwsh`) | yes | yes | yes |
 | tcc | yes | yes | yes (native win64 build) |
 | clang, clang++ | yes | yes | yes, but needs MinGW headers or the MSVC SDK |
 | swift | yes | yes | yes, via the burn-bundle extraction; needs MSVC to link |
@@ -256,8 +270,8 @@ discovering halfway through a run.
 | graalvm, graalpy | yes | yes | yes |
 | jruby | yes | yes | yes, on Java 25 |
 | msvc | no | no | yes |
+| assembly | yes | no | no (freestanding ELF64, `nasm -f elf64` + `ld`) |
 
-Every row is now reachable on every host. Windows is the only platform that fills all of
-them, because `msvc` exists nowhere else. Linux and macOS lose `msvc`, and that is the only
-outright loss anywhere in the matrix. Whichever host you pick, run the whole matrix on it,
-because numbers are only comparable within a run.
+Every row is reachable on Linux. Windows loses `assembly`. macOS loses `assembly` and `msvc`,
+which exists nowhere else, plus the Windows PowerShell 5.1 row (use `pwsh` there). Whichever
+host you pick, run the whole matrix on it, because numbers are only comparable within a run.

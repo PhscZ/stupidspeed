@@ -1,0 +1,12 @@
+<!-- task 06 char_count — expected output: 10000000 -->
+<!-- build: coreclr: dotnet build -c Release | nativeaot: dotnet publish -c Release -p:PublishAot=true | mono: mcs -optimize+ 06_char_count.cs    run: coreclr: dotnet run -c Release (or bin/Release/net8.0/06_char_count.exe) | nativeaot: bin/Release/net8.0/publish/06_char_count.exe | mono: mono 06_char_count.exe -->
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <Optimize>true</Optimize>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+</Project>

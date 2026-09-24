@@ -120,8 +120,10 @@ Output: `33333334 13333333 7619048 45714285`
 
 ### 02 switch_case
 
-The same four-way decision as task 01, written as a switch. Languages with jump tables
-compile this differently from an if/else chain, and running both shows whether it matters.
+A four-way decision, written as a switch: the same shape as task 01 but a different
+predicate (i mod 4 instead of divisibility by 3, 5 and 7) and a different body. Languages
+with jump tables compile this differently from an if/else chain, and running both shows
+whether it matters.
 
 ```
 acc = 0
@@ -140,8 +142,9 @@ The total stays under 2^53, so languages that only have doubles still get the ex
 
 ### 03 func_sum
 
-Function call overhead. The function is deliberately non-inlinable, so the call actually
-happens a hundred million times.
+Function call overhead. The function is marked no-inline wherever the language has such a
+marker, so the call actually happens a hundred million times. Interpreted and JIT-compiled
+languages have no way to promise that, and their own files say so.
 
 ```
 function add_one(n):
@@ -181,8 +184,8 @@ Left at a million on purpose. Growing it past about 100 million elements means a
 
 ### 05 alloc_churn
 
-Allocation and garbage collection. Ten million small allocations is the only task here that
-puts any pressure on a garbage collector.
+Allocation and garbage collection. Ten million small allocations, plus the string churn in
+task 07 and the 100 MB text in task 06, are what put pressure on a garbage collector.
 
 ```
 total = 0
@@ -264,7 +267,7 @@ are no cells skipped for this task.
 
 ### 09 fib_recursive
 
-Recursion. Naive fib(40) is about 1.6 billion calls, so it stresses the call path itself
+Recursion. Naive fib(40) is about 331 million calls, so it stresses the call path itself
 rather than any particular arithmetic.
 
 ```
@@ -321,8 +324,9 @@ Each thread owns a fixed range, so which thread finishes first does not change t
 and the checksum holds no matter how the threads are scheduled.
 
 Languages with no threads cannot do this, and those cells are `SKIPPED`. Languages whose
-threads cannot run at the same time, like Python and Ruby, will print the right answer but
-will not be any faster than task 02.
+threads cannot run at the same time, like CPython and CRuby, will print the right answer but
+will not be any faster than task 02. That is a property of those runtimes, not of Python or
+Ruby: `jruby` runs on real JVM threads, and Python has `multiprocessing` for real parallelism.
 
 Three cases are worth knowing about before you write this one. Lua has no threads in the
 standard library but Lanes gives it real ones, so use Lanes. R has no threads at all, only
@@ -444,12 +448,14 @@ task 10, or one with no threads trying task 11.
 
 ## How it is measured
 
-- Only run time is measured. Compile time is not part of the results, since half
+- Only run time is measured. Compile time is not part of the results, since a third of
   the languages here have no compile step to begin with.
 - VM and interpreter startup does count, because you cannot run the program without it.
 - One warmup run, then 5 timed runs. The median is reported, with min, max and stddev kept alongside it.
 - Peak memory recorded per run.
-- 300 second timeout, then `DNF`. Nushell will hit this on the heaviest loop tasks. That is a result, not a bug.
+- 300 second timeout, then `DNF`. Nushell will hit this on its heaviest tasks: the
+  100-million-iteration loops, the per-byte pass in task 14 and the recursion in task 09.
+  That is a result, not a bug.
 - Wrong output means `WRONG` and the timing is thrown away.
 - Everything pinned to one core, except task 11 which gets four.
 - Times are reported as they are, in milliseconds. Nothing is normalized to a baseline

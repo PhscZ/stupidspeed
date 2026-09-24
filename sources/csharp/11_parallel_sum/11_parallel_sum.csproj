@@ -1,0 +1,12 @@
+<!-- task 11 parallel_sum — expected output: 7500000075000000 -->
+<!-- build: coreclr: dotnet build -c Release | nativeaot: dotnet publish -c Release -p:PublishAot=true | mono: mcs -optimize+ 11_parallel_sum.cs    run: coreclr: dotnet run -c Release (or bin/Release/net8.0/11_parallel_sum.exe) | nativeaot: bin/Release/net8.0/publish/11_parallel_sum.exe | mono: mono 11_parallel_sum.exe -->
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <Optimize>true</Optimize>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+</Project>

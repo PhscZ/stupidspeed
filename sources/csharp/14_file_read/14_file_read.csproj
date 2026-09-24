@@ -1,0 +1,12 @@
+<!-- task 14 file_read — expected output: 484442112 -->
+<!-- build: coreclr: dotnet build -c Release | nativeaot: dotnet publish -c Release -p:PublishAot=true | mono: mcs -optimize+ 14_file_read.cs    run: coreclr: dotnet run -c Release (or bin/Release/net8.0/14_file_read.exe) | nativeaot: bin/Release/net8.0/publish/14_file_read.exe | mono: mono 14_file_read.exe -->
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <Optimize>true</Optimize>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+</Project>

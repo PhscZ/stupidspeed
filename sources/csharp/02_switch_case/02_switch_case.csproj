@@ -1,0 +1,12 @@
+<!-- task 02 switch_case — expected output: 7500000075000000 -->
+<!-- build: coreclr: dotnet build -c Release | nativeaot: dotnet publish -c Release -p:PublishAot=true | mono: mcs -optimize+ 02_switch_case.cs    run: coreclr: dotnet run -c Release (or bin/Release/net8.0/02_switch_case.exe) | nativeaot: bin/Release/net8.0/publish/02_switch_case.exe | mono: mono 02_switch_case.exe -->
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <Optimize>true</Optimize>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+</Project>
