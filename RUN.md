@@ -10,7 +10,7 @@ like for the numbers to mean anything. For compilers, see `BUILD.md`.
 | OS | x86-64, Linux or Windows | Nothing in the matrix is unavailable on Windows. `msvc` is the only Windows-only toolchain. `tcc`, `clang`, `flang` and `luajit` all need a little care there but no WSL. |
 | CPU | 4 physical cores | Task 11 runs four threads. Every other task is pinned to one core, so more cores do not help them. |
 | RAM | 8 GB minimum, 16 GB comfortable | The tasks themselves are small (the largest allocates 24 MB). The 16 GB is for the JVM, GraalVM and Julia toolchains. `native-image` alone wants 2–4 GB to build. |
-| Disk | 5 GB free | 200 MiB of fixtures, plus room for 51 toolchains. |
+| Disk | 5 GB free | 200 MiB of fixtures, plus room for 52 toolchains. |
 | Filesystem | `tmpfs` or RAM disk preferred for the file tasks | Reading 100 MiB from a spinning disk measures the disk. Anything run under WSL2 measures the WSL disk layer instead. Where the fixture lives must be recorded in the results. |
 
 ## Runtimes
@@ -42,6 +42,7 @@ Languages compiled to a static native binary need nothing. The rest need the fol
 | C# | nativeaot | none | |
 | C# | mono | Mono runtime | |
 | F# | dotnet | .NET 8 runtime | |
+| VB.NET | dotnet | .NET 8 runtime | same SDK and runtime as C# and F# |
 | Scala | jvm | JRE + scala library | |
 | Dart | aot | none | |
 | Dart | jit | Dart VM | |
@@ -120,7 +121,7 @@ verified by running the task or by reading the official documentation.
 
 ### Real OS threads, no problem
 
-C, C++, Rust, Zig, Go, D, Swift, Ada, Pascal, Java, Kotlin, C#, F#, Scala, Nim,
+C, C++, Rust, Zig, Go, D, Swift, Ada, Pascal, Java, Kotlin, C#, F#, VB.NET, Scala, Nim,
 Odin, Fortran (OpenMP), Perl (ithreads), PowerShell (runspace pools), Nushell (`par-each`).
 
 ### Works, but not with shared-memory threads
@@ -217,7 +218,7 @@ iterations, the loop is smaller than the noise in starting the process.
 
 ## Expected cost
 
-Every task runs six times, in 51 toolchains.
+Every task runs six times, in 52 toolchains.
 
 - Fast compiled languages: under a second per run, so about **1.5 hours** for the matrix.
 - The 100-million-iteration tasks take 10 to 15 seconds in CPython.

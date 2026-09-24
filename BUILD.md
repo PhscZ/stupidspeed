@@ -15,7 +15,7 @@ Builds assume **x86-64**, on Linux, macOS or Windows. Nothing in the matrix is u
 Windows: `msvc` is the only Windows-only toolchain, and every other row now builds there,
 including `flang` and `luajit`. See `RUN.md` for the full platform breakdown.
 
-Disk: **19 GB measured** for all 51 toolchains, installed and run on one Windows x64 host.
+Disk: **19 GB measured** for all 52 toolchains, installed and run on one Windows x64 host.
 The heavy terms are LLVM (4.0 GB), Swift (3.2 GB), GNAT with its MSYS2 runtime (1.8 GB, which
 also supplies `flang`), MSVC (1.2 GB once reassembled from a 2.5 GB layout), Julia (1.1 GB),
 Perl (1.0 GB), the .NET SDK (0.7 GB) and GraalVM (0.7 GB); most other rows are 0.1-0.6 GB.
@@ -72,7 +72,13 @@ has to start on every measured run. That startup is part of the number.
 | C# | coreclr | .NET 8 | dotnet.microsoft.com | `dotnet build -c Release` |
 | C# | mono | 6.12 | mono-project.com | `mcs -optimize+ main.cs` |
 | F# | dotnet | .NET 8 | as above | `dotnet build -c Release` |
+| VB.NET | dotnet | .NET 8 | as above | `dotnet build -c Release`, with a `.vbproj` instead of a `.csproj`. Same SDK as C# and F#, so no extra install. |
 | Scala | jvm | 3.3 | scala-lang.org | `scalac -release 17 main.scala` |
+
+One SDK covers three rows here. C# (`coreclr`), F# and VB.NET are separate compilers and
+separate cells, but they all build with the .NET SDK and run on the .NET runtime, so
+installing it once fills all three. VB.NET is the only one of the three that needs a
+`.vbproj` rather than a `.csproj` or `.fsproj`.
 
 ### No build step — the interpreter is the runtime
 

@@ -349,6 +349,7 @@ nothing else.
 | Kotlin | jvm, native |
 | C# | coreclr, nativeaot, mono |
 | F# | dotnet |
+| VB.NET | dotnet |
 | Scala | jvm |
 | JavaScript | node, bun, deno |
 | PHP | zend, zend + jit |
