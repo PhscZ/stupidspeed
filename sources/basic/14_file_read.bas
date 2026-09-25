@@ -1,5 +1,5 @@
 ' task 14 file_read -- expected output: 484442112
-' build: fbc -O 2 -x 14_file_read.bas    run: ./14_file_read.exe
+' build: fbc -O 2 -x prog.exe 14_file_read.bas    run: ./prog
 ' task 14 - file_read
 const CHUNK as integer = 1048576
 dim as ubyte buf(0 to CHUNK-1)

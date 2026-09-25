@@ -1,5 +1,5 @@
 ' task 10 pi -- expected output: 44889
-' build: fbc -O 2 -x 10_pi.bas    run: ./10_pi.exe
+' build: fbc -O 2 -x prog.exe 10_pi.bas    run: ./prog
 ' task 10 pi - 10000 digits, Gibbons unbounded spigot on hand-rolled base-1e9 limbs.
 ' FreeBASIC has no big integers, so this is the GDScript/Pascal precedent: sign-magnitude
 ' big integers with the four operations the spigot needs. Only the digit sum is printed.
@@ -19,7 +19,7 @@ end type
 dim shared as Big q, r, t, nt, lhs, tl
 dim shared as Big tmp1, tmp2, tmp3, probe
 
-sub trim(byref a as Big)
+sub big_trim(byref a as Big)
     while a.n > 1 andalso a.d(a.n - 1) = 0
         a.n -= 1
     wend
@@ -65,7 +65,7 @@ sub mag_add(byref o as Big, byref a as Big, byref b as Big)
     o.d(nn) = carry
     o.n = nn + 1
     o.neg = 0
-    trim(o)
+    big_trim(o)
 end sub
 
 ' o = |a| - |b|, requires |a| >= |b|
@@ -85,7 +85,7 @@ sub mag_sub(byref o as Big, byref a as Big, byref b as Big)
     next
     o.n = a.n
     o.neg = 0
-    trim(o)
+    big_trim(o)
 end sub
 
 ' o = a + b, signed
@@ -93,7 +93,7 @@ sub add_big(byref o as Big, byref a as Big, byref b as Big)
     if a.neg = b.neg then
         mag_add(o, a, b)
         o.neg = a.neg
-        trim(o)
+        big_trim(o)
         exit sub
     end if
     dim as integer c = mag_cmp(a, b)
@@ -108,7 +108,7 @@ sub add_big(byref o as Big, byref a as Big, byref b as Big)
         mag_sub(o, b, a)
         o.neg = b.neg
     end if
-    trim(o)
+    big_trim(o)
 end sub
 
 ' o = a - b, signed
@@ -135,22 +135,22 @@ sub mul_small(byref o as Big, byref a as Big, byval m as longint)
     o.d(a.n) = carry
     o.n = a.n + 1
     o.neg = a.neg
-    trim(o)
+    big_trim(o)
 end sub
 
 ' floor(a / b) for a >= 0, b > 0, with the true quotient known to be <= hi.
 ' Binary search over [0, hi] on |b|*est against |a|: no big-by-big division needed.
 function div_quot(byref a as Big, byref b as Big, byval hi as longint) as longint
     if a.n < b.n then return 0
-    dim as longint lo = 0, mid
+    dim as longint lo = 0, md
     dim as longint high = hi
     do while lo < high
-        mid = lo + (high - lo + 1) \ 2
-        mul_small(probe, b, mid)
+        md = lo + (high - lo + 1) \ 2
+        mul_small(probe, b, md)
         if mag_cmp(probe, a) <= 0 then
-            lo = mid
+            lo = md
         else
-            high = mid - 1
+            high = md - 1
         end if
     loop
     return lo
@@ -173,7 +173,8 @@ do while emitted < NDIGITS
     add_big(tmp2, tmp1, r)              ' tmp2 = 4q + r
     sub_big(lhs, tmp2, t)               ' lhs = 4q + r - t   (may be negative)
     if cmp_big(lhs, nt) < 0 then
-        ' digit n is settled
+        ' digit n is settled. Every update reads the state as it was on entry to the
+        ' branch: n is the quotient of the *old* q and r over the old t.
         total += n
         emitted += 1
         mul_small(tmp1, q, 3)           ' 3q
@@ -192,12 +193,12 @@ do while emitted < NDIGITS
         add_big(tmp3, tmp1, tmp2)       ' numerator  (never negative)
         mul_small(tl, t, l)             ' denominator = t*l
         n = div_quot(tmp3, tl, QUOT_HI)
-        mul_small(tmp1, q, k)           ' q = q*k
-        copy_big(q, tmp1)
-        mul_small(tmp1, q, 2)           ' 2q
-        add_big(tmp2, tmp1, r)          ' 2q + r
+        mul_small(tmp1, q, 2)           ' 2q   -- the *old* q: r is (2q + r)*l, and q
+        add_big(tmp2, tmp1, r)          ' 2q + r   is only scaled by k afterwards
         mul_small(tmp1, tmp2, l)        ' r = (2q + r)*l
         copy_big(r, tmp1)
+        mul_small(tmp1, q, k)           ' q = q*k
+        copy_big(q, tmp1)
         copy_big(t, tl)                 ' t = t*l
         k += 1
         l += 2

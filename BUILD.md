@@ -7,10 +7,8 @@ Convention below: `<task>` is the task's own name, so the source for task 01 in 
 `sources/c/01_branches.c`, and the output is `prog`. Add the thread flag where a language
 needs one, because task 11 uses four threads.
 
-Four things do not follow the flat `<task>.<ext>` layout, and each says why:
+Three things do not follow the flat `<task>.<ext>` layout, and each says why:
 
-- **Swift** must be `main.swift`: `swiftc` only allows top-level code in a file with that
-  name, so each task keeps its own folder.
 - **C#, F# and VB.NET** keep a folder per task (`01_branches/01_branches.csproj`) because the
   .NET SDK does not support several projects in one directory: `dotnet build` with no project
   argument fails when the folder holds more than one `.csproj`, and the projects would share
@@ -21,14 +19,21 @@ Four things do not follow the flat `<task>.<ext>` layout, and each says why:
   is what `godot --headless --script <task>.gd` resolves against, and its
   `config/run/print_header=false` is what keeps the output to the single expected line.
 
+Swift is flat like everything else: `swiftc -O -o prog <task>.swift`. The rule that top-level
+code needs a file called `main.swift` only applies when several files are passed in one
+invocation, where `swiftc` has to pick which one holds `main`; with a single file there is
+nothing to pick, so the name is free.
+
 Java, D, Nim and Ada prefix the name (`_01_branches.java`, `_01_branches.d`,
 `_01_branches.nim`, `t01_branches.adb`), because those languages tie the file name to an
 identifier and a digit cannot start one.
 
-A toolchain that needs a different program from the shared one gets a `<task>_<toolchain>`
-file beside it rather than a folder. There is one such case today: Kotlin's `native` row on
-tasks 11, 14 and 15 (`11_parallel_sum_native.kt` and friends), because those three use
-`java.lang.Thread` and `java.io`, which only exist on the JVM row.
+A toolchain whose source genuinely differs from its language's main toolchain gets a folder of
+its own rather than a suffixed file beside the shared one. There is one such case today:
+`sources/kotlin-native/`, which holds the three Kotlin/Native files (tasks 11, 14 and 15) that
+cannot use `java.lang.Thread` or `java.io`. The other twelve tasks are one source shared by
+both Kotlin rows and stay in `sources/kotlin/`, so those twelve are built from `kotlin/` for
+either row and only the three are built from `kotlin-native/`.
 
 The version column is the **minimum** that works, not the newest release. Anything
 reasonably recent works; it is what the task actually needs, not what happens to be current.
@@ -72,29 +77,29 @@ is the practical way to get a working `flang` on Windows.
 | Go | gc | 1.20 | go.dev/dl | `go build -o prog <task>.go` |
 | D | dmd | 2.100 | dlang.org/install.sh | `dmd -O -release -of=prog _<task>.d` |
 | D | ldc2 | 1.30 | dlang.org/install.sh | `ldc2 -O3 -release -of=prog _<task>.d` |
-| Swift | swiftc | 5.8 | swift.org/install | `swiftc -O -o prog main.swift`. Windows needs `-sdk <swift>/Platforms/6.4.0/Windows.platform/Developer/SDKs/Windows.sdk`, and MSVC on PATH for the link step. |
+| Swift | swiftc | 5.8 | swift.org/install | `swiftc -O -o prog <task>.swift`. Windows needs `-sdk <swift>/Platforms/6.4.0/Windows.platform/Developer/SDKs/Windows.sdk`, and MSVC on PATH for the link step. |
 | Fortran | gfortran | 9 | distro package | `gfortran -O3 -o prog <task>.f90`. Task 03 also compiles `03_func_sum_add_one.f90`; task 11 needs `-fopenmp`. |
 | Fortran | flang | LLVM 17 | MSYS2 `ucrt64` on Windows, distro or LLVM release elsewhere | `flang -O3 -o prog <task>.f90` (older LLVM: `flang-new`). Same two extras as gfortran: the second file for task 03 and `-fopenmp` for task 11. The official LLVM Windows tarball has no `flang.exe`; MSYS2's `mingw-w64-ucrt-x86_64-flang` plus `-flang-rt` is the working Windows route, and it pulls in the runtime libraries as well. |
 | Ada | gnat | 12 | alire.ada.dev | `gnatmake -O3 t<task>.adb` |
 | Pascal | fpc | 3.2.2 | freepascal.org | `fpc -O3 -oprogram <task>.pas`. On Windows x64 there is no native compiler: install the i386-win32 native compiler plus the `cross.x86_64-win64` add-on, then build with `-Px86_64`. |
 | Nim | nim | 2.0 | nim-lang.org | `nim c -d:release -o:prog _<task>.nim` |
 | Odin | odin | dev-2024 | odin-lang.org | `odin build <task>.odin -o:speed -out:prog` |
-| Kotlin | kotlin/native | 1.9 | kotlinlang.org | `kotlinc-native -opt -o prog <task>.kt`, except tasks 11, 14 and 15, which build `<task>_native.kt` instead. Those three use `java.lang.Thread` and `java.io`, which do not exist on Native; the other twelve are one source shared by both Kotlin rows. |
+| Kotlin | kotlin/native | 1.9 | kotlinlang.org | `kotlinc-native -opt -o prog <task>.kt`, run from `sources/kotlin-native/` for tasks 11, 14 and 15 and from `sources/kotlin/` for the other twelve. The three in `kotlin-native/` use `java.lang.Thread` and `java.io`, which do not exist on Native; the other twelve are one source shared by both Kotlin rows. |
 | Java | graalvm native-image | 21 | graalvm.org | `native-image -O2 _<task>`. Emits a standalone native executable, so it belongs here and not with the bytecode rows. |
 | C# | nativeaot | .NET 8 | dotnet.microsoft.com | `dotnet publish -c Release -p:PublishAot=true`. Emits a native executable. |
 | Dart | aot | 3.3 | dart.dev | `dart compile exe -o prog <task>.dart`. Emits a native executable. |
 | Python | nuitka | 4.0 | nuitka.net | `nuitka --standalone <task>.py`. Compiles to C and then to a binary. |
-| Assembly | nasm | 2.15 | nasm.us | `nasm -f elf64 <task>.asm && ld -o prog <task>.o` |
+| Assembly | nasm | 2.15 | nasm.us | `nasm -f elf64 <task>.asm && ld -o prog <task>.o`. Nothing extra for task 11: there is no libc, so it issues `clone` and `futex` itself. |
 | Crystal | crystal | 1.21 | crystal-lang.org | `crystal build --release -o prog <task>.cr`. Needs the MSVC environment: the compiler shells out to `cl.exe`, which drives `link.exe`. Integer literals default to `Int32`, so task 02 must be written with the `Int64` form or it raises `OverflowError`. |
 | Objective-C | clang | 22 | MSYS2 `ucrt64` | `clang -fobjc-runtime=gnustep-2.2 -O2 -o prog <task>.m -lobjc -lgnustep-base`. The runtime flag is required; without it the link fails on `objc_autoreleasePoolPush` and `__objc_load`. `gcc-objc` 16.2.0 is an alternative front end, but the clang path is the one measured. |
 | Modula-2 | adw | 1.6.879 | modula2.org/adwm2 | Two steps, not one. `m2amd64.exe /sym:<ADW>\ASCII\winamd64sym <task>.mod` compiles, then `sblink.exe /machine:amd64 /out:prog.exe <module>.obj rtl-win-amd64.lib win64api.lib <module>.lib` links. `/machine:amd64` is mandatory: the default linker machine type rejects the 64-bit object with `Incorrect Machine Type`. The compiler writes the `.obj` **beside the source file**, not into the working directory, and names it after the `MODULE`, not the file. Copy the source into a scratch directory first or the repo fills up with objects. |
 | Modula-3 | cm3 | 5.10.0 | github.com/modula3/cm3 | `cm3 -build -O` in a directory holding `Main.m3` and an `m3makefile`. Needs the MSVC environment for its C backend, and writes the binary to `AMD64_NT\prog.exe`. Task 10 also needs `import("arithmetic")` in the m3makefile for `BigInteger`. |
-| COBOL | gnucobol | 3.2 | MSYS2 `ucrt64`, or gnucobol.sourceforge.io | `cobc -x -O2 -o prog <task>.cob`. `PIC 9(18) COMP-5` is the exact 64-bit picture. Outside an MSYS2 shell, `cobc` needs `COB_CONFIG_DIR` and `COB_COPY_DIR` set to the package's `share/gnucobol/{config,copy}` or it stops with `configuration error: /ucrt64/share/gnucobol/config/default.conf`. |
-| BASIC | freebasic | 1.10.1 | freebasic.net | `fbc -O 2 -x <task>.bas`. `LONGINT` is the 64-bit type; `THREADCREATE` gives real threads for task 11. |
-| V | v | 0.5.2 | vlang.io | `v -prod -cc x86_64-w64-mingw32-gcc -o prog <task>.v`. V compiles through a C backend, so it needs a C compiler; `-cc` picks it. Task 03 puts `add_one` in its own file. |
-| Oberon-2 | voc | 3.0.1 | github.com/vishapoberon/compiler | Built from source (`CC=x86_64-w64-mingw32-gcc make`, ~2 min). `CFLAGS=-O2 voc <task>.mod -m` compiles and links in one step, emitting an executable named after the `MODULE`. `CFLAGS` is how the backend's optimisation level is set — the `-O2` *compiler* flag means something else entirely (it selects the integer size model). Task 03 needs both `.mod` files on the command line. |
+| COBOL | gnucobol | 3.2 | MSYS2 `ucrt64`, or gnucobol.sourceforge.io | `cobc -x -O2 -o prog <task>.cob`. `PIC 9(18) COMP-5` is the exact 64-bit picture, and COMP-5 keeps the full binary range regardless of the PICTURE, so limb arithmetic fits in one COMPUTE. Outside an MSYS2 shell, `cobc` needs `COB_CONFIG_DIR` and `COB_COPY_DIR` set to the package's `share/gnucobol/{config,copy}` or it stops with `configuration error: /ucrt64/share/gnucobol/config/default.conf`. Task 11 needs `CBL_GC_FORK`, which GnuCOBOL documents as unavailable on Windows outside Cygwin: it returns -1 there and the program falls back to four in-process quarters, so the answer is right but the row is single-core on Windows and four-way on Linux. |
+| BASIC | freebasic | 1.10.1 | freebasic.net | `fbc -O 2 -x prog.exe <task>.bas`. `-x` names the output, so the source file name must come after it; `-x <task>.bas` alone would write the executable over the source. `LONGINT` is the 64-bit type; `THREADCREATE` gives real threads for task 11. Task 03 also compiles `03_func_sum_add_one.bas` on the same command line. |
+| V | v | 0.5.2 | vlang.io | `v -prod -cc x86_64-w64-mingw32-gcc -o prog <task>.v`. V compiles through a C backend, so it needs a C compiler; `-cc` picks it. Task 03 keeps `add_one` in the same file with `@[noinline]`, V's own no-inline facility, which the generated C carries over as `__attribute__((noinline))`. |
+| Oberon-2 | voc | 3.0.1 | github.com/vishapoberon/compiler | Built from source (`CC=x86_64-w64-mingw32-gcc make`, ~2 min). `CFLAGS=-O2 voc <task>.mod -m` compiles and links in one step, emitting an executable named after the `MODULE`. `CFLAGS` is how the backend's optimisation level is set — the `-O2` *compiler* flag means something else entirely (it selects the integer size model). Task 03 needs both `.mod` files on the command line. No task 11: nothing in the shipped library creates a thread or a process. `ulmProcess` is only the current process's identity and exit codes, `ulmSYSTEM.UNIXFORK` is private and its `UNIXCALL` wrapper is commented out in the source, and the only escape hatch is `oocRts.System`, a shell call. |
 | ATS | ats | 0.4.2 | ats-lang.org, or SourceForge `ats2-lang` | Built from source under Cygwin: `./configure && make -f Makefile_dist all`. GCC 14 rejects the 2014-era bootstrap C, so `src/CBOOT/Makefile` needs `CFLAGS += -fpermissive -Wno-implicit-function-declaration -Wno-int-conversion -Wno-implicit-int` first. That is enough to get `patsopt` and `patscc`; `make all` then fails on `utils/myatscc`, which is a build utility and not needed. `patscc -DATS_MEMALLOC_LIBC -O2 -o prog <task>.dats`. Task 03 needs `ATS_DYNLOADFLAG 0` on the helper unit, or the separate compilation gets optimised away. |
-| BCPL | cintsys | 1.0 (2023-12-13) | cl.cam.ac.uk/~mr10/BCPL.html | Interpretive cintcode system, **not native code** — the row measures a VM. Built from source under Cygwin: `make -f MakefileCygwin sysc/defines.h` then `make -f MakefileCygwin sys`. The header target must run first or the build fails. The binary needs Cygwin's DLLs, so it must be launched from Cygwin with `BCPLROOT`/`BCPLPATH`/`BCPLHDRS` set. Compile and run in one session: `printf 'bcpl prog.b to prog\nprog\nlogout\n' \| ./bin/cintsys`. Use `LET start() = VALOF { ... RESULTIS 0 }` — the old `LET START() BE` form aborts with `G1 unassigned`. |
+| BCPL | cintsys64 | 1.0 (2023-12-13) | cl.cam.ac.uk/~mr10/BCPL.html | Interpretive cintcode system, **not native code** — the row measures a VM, and it must be the **64-bit** one. Every `.b` file here is written for `cintsys64`: task 02's total does not fit in a 32-bit word, and under the 32-bit `cintsys` the accumulator wraps and the answer is wrong. Built from source under Cygwin; the current distribution builds both, `make bin/cintsys64` (or `make clean64` then `make run64`) puts the 64-bit Cintcode in `cintcode/cin64`, and `BCPLROOT` must point at the `cintcode` directory with `$BCPLROOT/bin` on `PATH`. The source headers name `BCPL64ROOT`/`BCPL64PATH`/`BCPL64HDRS`/`BCPL64SCRIPTS`, which is the older standalone `bcpl64.tgz` tree; upstream now marks that distribution obsolete in favour of the one above. The binary needs Cygwin's DLLs, so it must be launched from Cygwin. `cintsys64 -c bcpl <task>.b to <task>` compiles and `cintsys64 -c <task>` runs, both from `sources/bcpl/` because the compiled Cintcode file lands in the working directory; `-q` drops the banner and the CLI prompts. Use `LET start() = VALOF { ... RESULTIS 0 }` — the old `LET START() BE` form aborts with `G1 unassigned`. No task 11: Cintsys is single-threaded, as its own user guide describes it, and the distribution has no process-creation primitive either — the full `Sys_` call list in `g/libhdr.h` tops out at `Sys_shellcom` (a shell escape) and `Sys_getpid`, and the pthreads that once existed were removed in 2010 in favour of polling and coroutines. The coroutine multi-tasking variant is Cintpos, a different system. |
 
 ### Compiled to bytecode — the VM is needed on every run
 

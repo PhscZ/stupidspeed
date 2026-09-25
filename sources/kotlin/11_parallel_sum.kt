@@ -1,7 +1,7 @@
 // task 11 parallel_sum — expected output: 7500000075000000
-// build: kotlinc 11_parallel_sum.kt -include-runtime -d prog.jar    run: java -jar prog.jar    [native build: kotlinc-native -opt -o prog 11_parallel_sum_native.kt    native run: ./prog]
-// note: this is the jvm row, using four java.lang.Thread workers. The native row builds
-// 11_parallel_sum_native.kt, which uses the stdlib Worker because Native has no java.lang.
+// build: kotlinc 11_parallel_sum.kt -include-runtime -d prog.jar    run: java -jar prog.jar    [native row: sources/kotlin-native/11_parallel_sum.kt]
+// note: this is the jvm row, using four java.lang.Thread workers. The native row's file,
+// sources/kotlin-native/11_parallel_sum.kt, uses the stdlib Worker because Native has no java.lang.
 
 private fun work(t: Long): Long {
     var acc = 0L

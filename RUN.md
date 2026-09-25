@@ -68,7 +68,7 @@ Languages compiled to a static native binary need nothing. The rest need the fol
 | V | v | none | static by default; needs a C compiler to build |
 | Oberon-2 | voc | none | static by default |
 | ATS | ats | none | static by default; needs a C compiler to build |
-| BCPL | cintsys | Cygwin runtime (`cygwin1.dll`) | interpretive cintcode VM, not a native binary |
+| BCPL | cintsys64 | Cygwin runtime (`cygwin1.dll`) | interpretive cintcode VM, not a native binary; the 64-bit build, see `BUILD.md` |
 
 ### JVM versions are not interchangeable
 
@@ -116,15 +116,16 @@ It should be listed beside C# and F#, not beside a POSIX shell.
 ## Task 11: which languages can actually do it
 
 Task 11 is the only task whose mechanism differs per language, and the only one that is not
-portable at all: Assembly cannot do it. This is what each language actually has, verified by
-running the task or by reading the official documentation.
+portable at all: Assembly can only do it on Linux. This is what each language actually has,
+verified by running the task or by reading the official documentation.
 
 ### Real OS threads, no problem
 
 C, C++, Rust, Zig, Go, D, Swift, Ada, Pascal, Java, Kotlin (both rows), C#, F#, VB.NET,
 Scala, Nim, Odin, Julia (`-t4`), Fortran (OpenMP, needs `-fopenmp`), Perl (ithreads),
 PHP (`parallel`, needs a ZTS build), PowerShell (runspace pools), Crystal (`Fiber::ExecutionContext::Parallel`),
-Objective-C (`NSThread`), Modula-2 (Win32 `Threads` module), Modula-3 (`Thread.Fork`), BASIC (`THREADCREATE`).
+Objective-C (`NSThread`), Modula-2 (Win32 `Threads` module), Modula-3 (`Thread.Fork`), BASIC (`THREADCREATE`),
+Assembly (raw `clone` + `futex` syscalls, no libc).
 
 ### Works, but not with shared-memory threads
 
@@ -137,7 +138,7 @@ Objective-C (`NSThread`), Modula-2 (Win32 `Threads` module), Modula-3 (`Thread.F
 | Python | threads exist but the GIL serializes them | correct, **0.97x** — use `multiprocessing` for 2.3x |
 | Ruby (CRuby) | threads exist but the GVL serializes them | correct, no speedup |
 
-### The two that need explaining
+### The four that need explaining
 
 **Lua.** Stock Lua has no threads, only coroutines, which are cooperative and
 single-threaded. But `lanes` is a mature C extension that wraps real OS threads, and it
@@ -159,22 +160,46 @@ with `clusterExport` or they fail with `object 'N' not found`.
 Threading in R exists only inside C-level packages, such as OpenMP in `data.table` or TBB
 in `RcppParallel`. Plain R code never runs on two threads.
 
+**Assembly.** A freestanding ELF64 binary has no libc, so there is no `pthread_create` to
+call and no thread library to link. The task is still four threads: `11_parallel_sum.asm`
+issues `clone` with the flag set `pthread_create` uses (`CLONE_VM | CLONE_FS | CLONE_FILES |
+CLONE_SIGHAND | CLONE_THREAD | CLONE_SYSVSEM`) on four 64 KiB stacks in `.bss`, and joins the
+workers with `futex`, which is what `pthread_join` does underneath. Each worker is task 02's
+jump-table switch over a fixed range of 25000000 iterations, so the four together print the
+same number as task 02. It passes, and it is Linux x86-64 only, like the rest of that row.
+
+**COBOL.** GnuCOBOL has no threads, so the four workers are four forked processes:
+`11_parallel_sum.cob` calls `CBL_GC_FORK` — GnuCOBOL's own process facility, the COBOL
+equivalent of the R row's forked workers — and each child writes its quarter's partial sum to
+its own file, which the parent adds up after `CBL_GC_WAITPID` returns for all four. It passes
+on Linux. GnuCOBOL documents `CBL_GC_FORK` as unavailable on Windows outside Cygwin, where it
+returns -1 with a warning; the program then computes the four quarters in-process, so Windows
+still prints the right answer on one core. That is the same fallback the Fortran and Julia
+rows take without their thread flag.
+
 ### Cannot do it
 
 **GDScript.** Godot has a `Thread` class and it works, but it is awkward to use for this
 shape of problem and Godot's headless startup is about a second, which swamps the task.
 Treat it as a very slow pass rather than a skip.
 
-**Assembly.** Possible only through a raw `clone` or `CreateThread` syscall, which is not a
-traditional way to write the task. `SKIPPED`.
+**Oberon-2 and BCPL** have no file for this task, so their cell is `SKIPPED` and not an
+unbuilt row. These two are the only rows with no task 11 source. Nothing in the voc library
+creates a thread or a process: `ulmProcess` is only the current process's identity and exit
+codes, `ulmSYSTEM.UNIXFORK` is private and its `UNIXCALL` wrapper is commented out in the
+source, and `oocRts.System` is a shell call. Cintsys is single-threaded — its own user guide
+describes it that way, the distribution's pthreads were removed in 2010 in favour of polling
+and coroutines, and the full `Sys_` call list in `g/libhdr.h` has no process creation, only
+`Sys_shellcom` and `Sys_getpid`. The coroutine multi-tasking variant is Cintpos, a different
+system.
 
 ### What this means for the wording
 
 Task 11 says "start 4 threads". Under that wording:
 
-- `SKIPPED`: assembly.
-- Pass, but with processes rather than threads: R, and JavaScript if you count worker threads
-  as not being threads.
+- Pass: assembly (`clone` + `futex`), and everything in the threads list above.
+- Pass, but with processes rather than threads: R, COBOL on Linux (`CBL_GC_FORK`), and
+  JavaScript if you count worker threads as not being threads.
 - Pass, with the GIL/GVL caveat recorded: CPython, CRuby. `jruby` is unaffected and uses real
   JVM threads.
 - Pass, but only with an extra install or flag: Lua (Lanes), PHP (`parallel` on a ZTS build),

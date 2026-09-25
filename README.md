@@ -75,7 +75,7 @@ kept alongside the median in the raw results, not in this table.
 | V | v |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Oberon-2 | voc |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | ATS | ats (gcc) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| BCPL | cintsys |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| BCPL | cintsys64 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Objective-C | clang (objc) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Modula-2 | adw |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Modula-3 | cm3 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -83,8 +83,10 @@ kept alongside the median in the raw results, not in this table.
 | BASIC | freebasic |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Assembly | x86-64 nasm |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 
-One cell is `SKIPPED` by design and needs no toolchain: Assembly on task 11, because raw
-assembly would have to issue `clone` by hand. The rest of the task 11 picture is in `RUN.md`.
+No cell is `SKIPPED` by design, and none needs a toolchain beyond the one in its row.
+Assembly on task 11 is the only one worth a sentence: a freestanding binary has no libc, so
+there is no `pthread_create` to call, and the four threads are made by issuing `clone` and
+`futex` directly. The rest of the task 11 picture is in `RUN.md`.
 
 ## Rules
 
@@ -338,7 +340,8 @@ Ruby: `jruby` runs on real JVM threads, and Python has `multiprocessing` for rea
 Three cases are worth knowing about before you write this one. Lua has no threads in the
 standard library but Lanes gives it real ones, so use Lanes. R has no threads at all, only
 the forked or socket processes in its bundled `parallel` package, so use `PSOCK`. Assembly
-has to make the syscall by hand and is `SKIPPED`.
+has no libc and no thread library at all, so it makes the `clone` and `futex` syscalls by
+hand: four real kernel threads on four stacks, and the same answer.
 
 ### 12 matrix_add
 
@@ -450,7 +453,7 @@ nothing else.
 | V | v |
 | Oberon-2 | voc |
 | ATS | ats |
-| BCPL | cintsys |
+| BCPL | cintsys64 |
 | Objective-C | clang |
 | Modula-2 | adw |
 | Modula-3 | cm3 |
@@ -464,9 +467,13 @@ task 11. A language without big integers is not in that position: task 10 can st
 on hand-rolled limbs, which is what GDScript does.
 
 Some rows are deliberately partial, because the language genuinely cannot express the task.
-Where that happens the file is absent rather than stubbed, and the reason is recorded in
-`BUILD.md` next to the toolchain. Oberon-2 has no standard threads, so it has no task 11.
-BCPL is a 32-bit interpretive system, so task 02's total does not fit in a word.
+Where that happens the file is absent rather than stubbed, and the gap is recorded in
+`BUILD.md` next to the toolchain. Two rows are partial today, both missing only task 11:
+Oberon-2 has no thread facility at all, and Cintsys is single-threaded — its own user guide
+says so, and the distribution's pthreads were removed in 2010 in favour of polling and
+coroutines. COBOL's task 11 is present and correct but only parallel on Linux, see `RUN.md`.
+BCPL's task 02 needs the **64-bit** Cintcode system: its total does not fit in a 32-bit word,
+so the row is built and run as `cintsys64`.
 
 ### Languages that are not here, and why
 

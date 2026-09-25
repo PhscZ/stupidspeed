@@ -1,6 +1,6 @@
 // task 14 file_read — expected output: 484442112
-// build: kotlinc 14_file_read.kt -include-runtime -d prog.jar    run: java -jar prog.jar    (jvm row; the native row builds 14_file_read_native.kt)
-// note: java.io is not available on Kotlin/Native, so the native row has its own file, which
+// build: kotlinc 14_file_read.kt -include-runtime -d prog.jar    run: java -jar prog.jar    (jvm row; the native row's file is sources/kotlin-native/14_file_read.kt)
+// note: java.io is not available on Kotlin/Native, so the native row has its own file there, which
 // reads data.bin with platform.posix instead. This one reads it in 1 MiB chunks.
 
 import java.io.FileInputStream

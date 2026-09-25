@@ -1,5 +1,5 @@
 ' task 11 parallel_sum -- expected output: 7500000075000000
-' build: fbc -O 2 -x 11_parallel_sum.bas    run: ./11_parallel_sum.exe
+' build: fbc -O 2 -x prog.exe 11_parallel_sum.bas    run: ./prog
 ' task 11 - four real threads
 #define NT 4
 #define SPAN 25000000

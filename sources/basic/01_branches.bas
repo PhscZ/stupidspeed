@@ -1,5 +1,5 @@
 ' task 01 branches -- expected output: 33333334 13333333 7619048 45714285
-' build: fbc -O 2 -x 01_branches.bas    run: ./01_branches.exe
+' build: fbc -O 2 -x prog.exe 01_branches.bas    run: ./prog
 dim a as longint = 0
 dim b as longint = 0
 dim c as longint = 0

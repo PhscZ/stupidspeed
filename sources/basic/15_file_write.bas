@@ -1,5 +1,5 @@
 ' task 15 file_write -- expected output: 104857600
-' build: fbc -O 2 -x 15_file_write.bas    run: ./15_file_write.exe
+' build: fbc -O 2 -x prog.exe 15_file_write.bas    run: ./prog
 ' task 15 - file_write
 const CHUNK as integer = 1048576
 dim as ubyte buf(0 to CHUNK-1)

@@ -1,5 +1,5 @@
 ' task 02 switch_case -- expected output: 7500000075000000
-' build: fbc -O 2 -x 02_switch_case.bas    run: ./02_switch_case.exe
+' build: fbc -O 2 -x prog.exe 02_switch_case.bas    run: ./prog
 dim acc as longint = 0
 dim i as longint
 

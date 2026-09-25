@@ -1,6 +1,6 @@
 // task 15 file_write — expected output: 104857600
-// build: kotlinc 15_file_write.kt -include-runtime -d prog.jar    run: java -jar prog.jar    (jvm row; the native row builds 15_file_write_native.kt)
-// note: java.io is not available on Kotlin/Native, so the native row has its own file, which
+// build: kotlinc 15_file_write.kt -include-runtime -d prog.jar    run: java -jar prog.jar    (jvm row; the native row's file is sources/kotlin-native/15_file_write.kt)
+// note: java.io is not available on Kotlin/Native, so the native row has its own file there, which
 // writes out.bin with platform.posix instead. This one writes it in 1 MiB chunks.
 
 import java.io.FileOutputStream

@@ -18,7 +18,7 @@
        01 I         PIC 9(9)  COMP-5.
        01 B         PIC 9(9)  COMP-5.
        01 TOTAL     PIC 9(18) COMP-5.
-       01 OT        PIC 9(10).
+       01 OT        PIC 9(9).
        01 EOF-F     PIC X VALUE "N".
        PROCEDURE DIVISION.
            OPEN INPUT IN-FILE.
