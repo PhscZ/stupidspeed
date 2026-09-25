@@ -4,7 +4,7 @@
 # The 100 MB text is built once by strrep, before the scan, never by appending.
 # R has no character type: substr(text, i, i) is the per-character step, which
 # makes a hundred million one-character strings. This task is expected to be
-# very slow and may hit the 300 s timeout; that is a legitimate result, not a bug.
+# very slow; that is a legitimate result, not a bug.
 
 char_count <- function() {
   text <- strrep("abcdefghij", 10000000)

@@ -1,6 +1,6 @@
 # task 01 branches — expected output: 33333334 13333333 7619048 45714285
 # build: godot --headless --script 01_branches.gd    run: godot --headless --script 01_branches.gd
-# note: GDScript walks these 100 M-iteration loops very slowly and may hit the 300 s timeout.
+# note: GDScript walks these 100 M-iteration loops very slowly; expect a long run.
 
 extends SceneTree
 

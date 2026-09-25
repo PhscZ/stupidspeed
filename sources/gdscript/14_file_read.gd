@@ -1,7 +1,7 @@
 # task 14 file_read — expected output: 484442112
 # build: godot --headless --script 14_file_read.gd    run: godot --headless --script 14_file_read.gd
 # note: data.bin is read from the project directory in 1 MiB chunks; the byte loop is
-#       100 M iterations and may hit the 300 s timeout in GDScript.
+#       100 M iterations and is slow in GDScript.
 
 extends SceneTree
 

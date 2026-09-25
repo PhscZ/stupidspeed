@@ -10,7 +10,7 @@ like for the numbers to mean anything. For compilers, see `BUILD.md`.
 | OS | x86-64, Linux, macOS or Windows | Every row is reachable on Windows and on Linux; macOS loses `msvc`. The one exception is `assembly`, which is Linux x86-64 only: it is a freestanding ELF64 binary built with `nasm -f elf64` and `ld`. `tcc`, `clang`, `flang` and `luajit` all need a little care on Windows but no WSL. |
 | CPU | 4 physical cores | Task 11 runs four threads. Every other task is pinned to one core, so more cores do not help them. |
 | RAM | 8 GB minimum, 16 GB comfortable | The tasks themselves are small: the largest allocation is task 06's 100 MB text, and task 12's three 1000x1000 arrays are 24 MB together. The 16 GB is for the JVM, GraalVM and Julia toolchains. `native-image` alone wants 2–4 GB to build. |
-| Disk | 20 GB free | 200 MiB of fixtures, plus the toolchains themselves: `BUILD.md` measured 19 GB for all 52 installed and run, with another 2–3 GB of scratch while reassembling MSVC and Swift. |
+| Disk | 20 GB free | 200 MiB of fixtures, plus the toolchains themselves: `BUILD.md` measured 19 GB for all 61 installed and run, with another 2–3 GB of scratch while reassembling MSVC and Swift. |
 | Filesystem | `tmpfs` or RAM disk preferred for the file tasks | Reading 100 MiB from a spinning disk measures the disk. Anything run under WSL2 measures the WSL disk layer instead. Where the fixture lives must be recorded in the results. |
 
 ## Runtimes
@@ -58,8 +58,17 @@ Languages compiled to a static native binary need nothing. The rest need the fol
 | R | gnu-r | R | task 11 uses the bundled `parallel` package, PSOCK mode |
 | Julia | julia | Julia | about 1 GB with the standard library. Task 11 must run as `julia -t4 <task>.jl`, or `Threads.@threads` stays on one thread. |
 | GDScript | godot --headless | Godot binary | roughly a second of startup on its own |
-| Nushell | nu | the `nu` binary | version 0.115.1 or newer. No build step. |
 | PowerShell | powershell, pwsh | .NET runtime | **not a shell in the usual sense.** See below. |
+| Crystal | crystal | none | static by default; needs the MSVC toolchain to link |
+| Objective-C | clang | `libobjc-4.6.dll` + `gnustep-base-1_31.dll` + UCRT | the GNUstep runtime ships with the MSYS2 `ucrt64` packages |
+| Modula-2 | adw | none | static by default |
+| Modula-3 | cm3 | none | static by default |
+| COBOL | gnucobol | `libcob-4.dll` + UCRT | from MSYS2 `ucrt64` |
+| BASIC | freebasic | none | static by default |
+| V | v | none | static by default; needs a C compiler to build |
+| Oberon-2 | voc | none | static by default |
+| ATS | ats | none | static by default; needs a C compiler to build |
+| BCPL | cintsys | Cygwin runtime (`cygwin1.dll`) | interpretive cintcode VM, not a native binary |
 
 ### JVM versions are not interchangeable
 
@@ -74,57 +83,48 @@ Set `JAVA_HOME` per row rather than relying on whatever `java` resolves to. On a
 several JDKs installed, the default `PATH` order is usually the wrong one for at least two of
 these four.
 
-## The two "shells" are real languages
+## PowerShell is a real language
 
-Neither `powershell` nor `nu` is a shell in the POSIX sense. Both are full languages with
-typed data and real concurrency, and both can do far more of these tasks than a POSIX shell
-could. Every claim below was measured, not assumed.
+`powershell` is not a shell in the POSIX sense. It is a full language with typed data and
+real concurrency, and it can do far more of these tasks than a POSIX shell could. Every
+claim below was measured, not assumed.
 
-| Task | Needs | PowerShell 5.1 | Nushell 0.115.1 |
-|---|---|---|---|
-| 05 `alloc_churn` | allocation and GC | yes, the .NET GC | yes, garbage collected |
-| 08 `average` | floating point | yes, `[double]` | yes, `float` |
-| 10 `pi` | big integers | yes, `System.Numerics.BigInteger` | **no**, integers are i64 and `2 ** 200` overflows |
-| 11 `parallel_sum` | threads | yes, runspace pools | yes, `par-each` |
+| Task | Needs | PowerShell 5.1 |
+|---|---|---|
+| 05 `alloc_churn` | allocation and GC | yes, the .NET GC |
+| 08 `average` | floating point | yes, `[double]` |
+| 10 `pi` | big integers | yes, `System.Numerics.BigInteger` |
+| 11 `parallel_sum` | threads | yes, runspace pools |
 
-So nushell is `SKIPPED` on task 10. It is the only task it cannot do.
-
-### Task 11, measured in both
+### Task 11, measured
 
 Four workers of 25000000 iterations each, 100000000 total:
 
 | | Result | Time | Speedup vs serial |
 |---|---|---|---|
 | PowerShell, runspace pool | `7500000075000000` | **75.9 s** | 3.48x |
-| Nushell, `par-each` | `7500000075000000` | **53.3 s** | 1.98x |
-| (serial, for reference) | `7500000075000000` | ~264 s / ~105 s | 1x |
+| (serial, for reference) | `7500000075000000` | ~264 s | 1x |
 
-Both print the same number as the single-threaded task 02, which is the point of the task.
+It prints the same number as the single-threaded task 02, which is the point of the task.
 
-Nushell is faster in absolute terms because its loop costs about 1.05 us per iteration
-against PowerShell's 2.64 us. PowerShell scales better across threads, 3.48x against 1.98x.
+How it does it: `[runspacefactory]::CreateRunspacePool(1, 4)`, backed by real .NET thread
+pool threads. `Start-Job` is the wrong choice here because it spawns a process per job,
+and `ForEach-Object -Parallel` does not exist before PowerShell 7.
 
-How each does it:
-
-- **PowerShell**: `[runspacefactory]::CreateRunspacePool(1, 4)`, backed by real .NET thread
-  pool threads. `Start-Job` is the wrong choice here because it spawns a process per job,
-  and `ForEach-Object -Parallel` does not exist before PowerShell 7.
-- **Nushell**: `0..3 | par-each --threads 4 {|t| ... }`, which uses a dedicated thread pool.
-  Note `--keep-order` is not needed, because the four results are summed.
-
-Both should be listed beside C# and F#, not beside a POSIX shell.
+It should be listed beside C# and F#, not beside a POSIX shell.
 
 ## Task 11: which languages can actually do it
 
-Task 11 is the only task whose mechanism differs per language, and one of the two tasks that
-is not portable at all: Nushell cannot do task 10 either. This is what each language
-actually has, verified by running the task or by reading the official documentation.
+Task 11 is the only task whose mechanism differs per language, and the only one that is not
+portable at all: Assembly cannot do it. This is what each language actually has, verified by
+running the task or by reading the official documentation.
 
 ### Real OS threads, no problem
 
 C, C++, Rust, Zig, Go, D, Swift, Ada, Pascal, Java, Kotlin (both rows), C#, F#, VB.NET,
 Scala, Nim, Odin, Julia (`-t4`), Fortran (OpenMP, needs `-fopenmp`), Perl (ithreads),
-PHP (`parallel`, needs a ZTS build), PowerShell (runspace pools), Nushell (`par-each`).
+PHP (`parallel`, needs a ZTS build), PowerShell (runspace pools), Crystal (`Fiber::ExecutionContext::Parallel`),
+Objective-C (`NSThread`), Modula-2 (Win32 `Threads` module), Modula-3 (`Thread.Fork`), BASIC (`THREADCREATE`).
 
 ### Works, but not with shared-memory threads
 
@@ -205,7 +205,6 @@ rather than the language, which is a different and less interesting result.
 | Need | Linux | Windows |
 |---|---|---|
 | Wall clock | your runner, `clock_gettime(CLOCK_MONOTONIC)` | `QueryPerformanceCounter` |
-| Timeout, 300 s | `timeout 300` | `Start-Process` with a wait |
 | Peak memory | `/usr/bin/time -v`, or `getrusage(RUSAGE_CHILDREN)` | `GetProcessMemoryInfo`, `PeakWorkingSetSize` |
 | Pin to one core | `taskset -c 3` | `start /affinity 8` |
 
@@ -229,28 +228,23 @@ iterations, the loop is smaller than the noise in starting the process.
 
 ## Expected cost
 
-Every task runs six times, in 52 toolchains.
+Every task runs six times, in 61 toolchains.
 
 - Fast compiled languages: under a second per run, so about **1.5 hours** for the matrix.
 - The 100-million-iteration tasks take 10 to 15 seconds in CPython.
-- `nu` costs about 1.05 us per iteration, so its 100000000-iteration tasks take roughly 105
-  seconds each and finish inside the timeout. Its heaviest cells are 09 `fib_recursive`
-  (~331 million interpreted calls), 14 `file_read` (a per-byte pass over 100 MiB) and 06
-  `char_count` (a per-character pass over 100 MB); all three are expected to hit the
-  timeout, and 13 `matrix_mul` at 125 million inner steps runs close to it.
-- `nu` is `SKIPPED` on 10 `pi` only, because its integers are 64-bit.
-- `powershell` costs about 2.64 us per iteration, so its 100-million-iteration tasks take
-  around 264 seconds and sit right on the 300 second timeout. Expect `DNF` there.
-- **Task 11 works in both.** `powershell` uses runspace threads, `nu` uses `par-each`. Both
-  were measured at the full 100000000 iterations and both print the right answer. See the
-  section above.
-- **The timeouts dominate the total.** Roughly 40 cells hit the 300 second limit, and at six
-  runs each that is over 20 hours of waiting by itself. Run the timeout case once per cell
-  instead of six times, and record it as `DNF` on the first hit.
-- Budget **4 to 6 hours** for a full pass with that change, or **24 hours or more** without it.
+- `powershell` costs about 2.64 us per iteration, so its 100-million-iteration loops take
+  around 264 seconds each. Its call-heavy and per-character tasks are far slower: 03 and 09
+  are 100 and 331 million interpreted calls, and 06 and 14 walk 100 million items one at a
+  time. Task 11 was measured at the full 100000000 iterations and prints the right answer;
+  see the section above.
+- Measured slow cells elsewhere: Java task 07 at 514 s, Modula-3 task 10 at 206 s, Modula-2
+  task 10 at 115 s.
+- **Nothing is cut off, so a pass has no upper bound.** The compiled rows are all under a
+  second per run, but one of the slow cells above can outweigh the entire rest of the matrix,
+  and it runs six times. Budget from the slowest cells, not from the average.
 
-`DNF` and `WRONG` are results, not failures. So is `SKIPPED`, which is what a cell reports
-when the toolchain is missing or the language cannot do the task at all.
+`WRONG` is a result, not a failure. So is `SKIPPED`, which is what a cell reports when the
+toolchain is missing or the language cannot do the task at all.
 
 ## Platform limits
 
@@ -259,7 +253,6 @@ discovering halfway through a run.
 
 | Toolchain | Linux | macOS | Windows |
 |---|---|---|---|
-| nu (nushell) | yes | yes | yes |
 | powershell (`powershell`) | no | no | yes |
 | powershell (`pwsh`) | yes | yes | yes |
 | tcc | yes | yes | yes (native win64 build) |
@@ -270,8 +263,39 @@ discovering halfway through a run.
 | graalvm, graalpy | yes | yes | yes |
 | jruby | yes | yes | yes, on Java 25 |
 | msvc | no | no | yes |
+| crystal | yes | yes | yes, official MSVC build; needs the MSVC environment to link |
+| objective-c (`clang` + GNUstep) | yes | yes | yes, via MSYS2 `ucrt64` |
+| modula-2 (adw) | no | no | yes, freeware, Windows only |
+| modula-3 (cm3) | yes | yes | yes, official `AMD64_NT` build; needs MSVC for its C backend |
+| cobol (gnucobol) | yes | yes | yes, from MSYS2 `ucrt64` or the SourceForge release |
+| basic (freebasic) | yes | no | yes, official win64 build |
+| v (vlang) | yes | yes | yes, official `v_windows.zip`; needs a C compiler |
+| oberon-2 (voc) | yes | yes | yes, source build under Cygwin; best built with the mingw-w64 cross compiler for a standalone binary |
+| ats | yes | yes | yes, source build under Cygwin (its own requirements page says "Windows with Cygwin") |
+| bcpl | yes | no | yes, source build under Cygwin; the Cygwin path is the maintained one |
 | assembly | yes | no | no (freestanding ELF64, `nasm -f elf64` + `ld`) |
 
 Every row is reachable on Linux. Windows loses `assembly`. macOS loses `assembly` and `msvc`,
 which exists nowhere else, plus the Windows PowerShell 5.1 row (use `pwsh` there). Whichever
 host you pick, run the whole matrix on it, because numbers are only comparable within a run.
+
+### Cygwin-hosted toolchains: native or cross-compiled
+
+Some toolchains only exist under Cygwin (`voc` has no Windows binary at all; ATS's own
+requirements page says "Windows with Cygwin"). Those have a choice of C backend, and the
+choice is worth recording per row because it changes the number:
+
+| Backend | Produces | Startup cost |
+|---|---|---|
+| Cygwin `gcc` | a PE that loads `cygwin1.dll` | measured **7.54 ms** for hello-world |
+| `x86_64-w64-mingw32-gcc` | a standalone Windows binary, no Cygwin dependency | measured **5.84 ms** for hello-world |
+
+Both ship in the Cygwin `gcc-core` and `mingw64-x86_64-gcc-core` packages. The gap is about
+1.7 ms of pure `cygwin1.dll` initialisation, and it is systematic rather than noise, so it
+shifts every cell in a Cygwin-native row. It matters most for the short tasks: 1.7 ms against
+a compiled row's sub-millisecond loop time is a large relative effect. A row that wants to be
+comparable with `gcc` and `clang` should use the mingw cross compiler.
+
+One caveat when cross-compiling: the binary is standalone, so the *runtime* is not Cygwin's,
+but the *build* still is. Anything the program reads from the filesystem at run time sees
+native Windows paths, not `/cygdrive/...`.

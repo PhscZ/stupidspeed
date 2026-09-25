@@ -1,8 +1,7 @@
 # task 01 branches — expected output: 33333334 13333333 7619048 45714285
 # build: (none; interpreted)    run: powershell -File 01_branches.ps1  (PowerShell 7: pwsh -File 01_branches.ps1)
 # note: every counter is cast to [long]; PowerShell would otherwise promote the arithmetic to double.
-# note: a 100 M-iteration loop costs roughly 264 s under Windows PowerShell 5.1 on this machine and
-#       may hit the 300 s benchmark timeout. That is a documented result, not a bug.
+# note: a 100 M-iteration loop costs roughly 264 s under Windows PowerShell 5.1 on this machine.
 
 [long]$a = 0
 [long]$b = 0

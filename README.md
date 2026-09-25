@@ -11,14 +11,13 @@ them is in `RUN.md`.
 ## Results
 
 One row per toolchain, one column per task. The column headings are the task numbers, and
-the task names are the section headings under [Tasks](#tasks). All 52 toolchains, empty and
+the task names are the section headings under [Tasks](#tasks). All 61 toolchains, empty and
 ready to fill in.
 
-A cell holds the median of the 5 timed runs, in milliseconds. `DNF` is the 300 second
-timeout, `WRONG` is an output that did not match (the timing is thrown away), and `SKIPPED`
-is a toolchain that is not installed or a task the language cannot do. Blank means not run
-yet. Min, max, stddev and peak memory are kept alongside the median in the raw results, not
-in this table.
+A cell holds the median of the 5 timed runs, in milliseconds. `WRONG` is an output that did
+not match (the timing is thrown away), and `SKIPPED` is a toolchain that is not installed or
+a task the language cannot do. Blank means not run yet. Min, max, stddev and peak memory are
+kept alongside the median in the raw results, not in this table.
 
 | Language | Toolchain | 01 | 02 | 03 | 04 | 05 | 06 | 07 | 08 | 09 | 10 | 11 | 12 | 13 | 14 | 15 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -72,12 +71,20 @@ in this table.
 | GDScript | godot --headless |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | PowerShell | powershell |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | PowerShell | pwsh |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| Nushell | nu |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Crystal | crystal |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| V | v |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Oberon-2 | voc |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| ATS | ats (gcc) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| BCPL | cintsys |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Objective-C | clang (objc) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Modula-2 | adw |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Modula-3 | cm3 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| COBOL | gnucobol |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| BASIC | freebasic |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Assembly | x86-64 nasm |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 
-Two cells are `SKIPPED` by design and need no toolchain: Nushell on task 10, because its only
-integer type is 64-bit, and Assembly on task 11, because raw assembly would have to issue
-`clone` by hand. The rest of the task 11 picture is in `RUN.md`.
+One cell is `SKIPPED` by design and needs no toolchain: Assembly on task 11, because raw
+assembly would have to issue `clone` by hand. The rest of the task 11 picture is in `RUN.md`.
 
 ## Rules
 
@@ -439,12 +446,71 @@ nothing else.
 | Dart | jit, aot |
 | GDScript | godot --headless |
 | PowerShell | powershell, pwsh |
-| Nushell | nu |
+| Crystal | crystal |
+| V | v |
+| Oberon-2 | voc |
+| ATS | ats |
+| BCPL | cintsys |
+| Objective-C | clang |
+| Modula-2 | adw |
+| Modula-3 | cm3 |
+| COBOL | gnucobol |
+| BASIC | freebasic |
 | Assembly | x86-64 nasm |
 
 Missing a toolchain means the cell says `SKIPPED`. It never counts as zero. The same goes
-for a language that cannot do a task at all, such as a language without big integers trying
-task 10, or one with no threads trying task 11.
+for a language that cannot do a task at all, such as a language with no threads trying
+task 11. A language without big integers is not in that position: task 10 can still be done
+on hand-rolled limbs, which is what GDScript does.
+
+Some rows are deliberately partial, because the language genuinely cannot express the task.
+Where that happens the file is absent rather than stubbed, and the reason is recorded in
+`BUILD.md` next to the toolchain. Oberon-2 has no standard threads, so it has no task 11.
+BCPL is a 32-bit interpretive system, so task 02's total does not fit in a word.
+
+### Languages that are not here, and why
+
+Plenty of languages were considered and left out. The reasons fall into three groups, and
+they are recorded here so nobody has to re-derive them.
+
+**No working Windows x64 toolchain.**
+
+| Language | Blocker |
+|---|---|
+| Carbon | Only release asset is a Linux tarball. The nightly workflow has one runner, `ubuntu-22.04`. No released compiler, and the README says it is Linux-only. |
+| Turbo Pascal | Emits 16-bit DOS `.COM`/`.EXE`, or 16-bit Windows NE, or DPMI DOS. All three need `ntvdm.exe`, which 64-bit Windows does not ship. Only 32-bit Windows ever ran it, and Windows 11 has no 32-bit edition. DOSBox would work but measures the emulator. |
+| GNU Pascal | Last release 2007, on a 32-bit mingw32 base. Not maintained, no x86-64 Windows binaries. |
+| PL/I | Iron Spring PL/I, the only maintained free compiler, ships Linux and OS/2 builds only. The GCC front end `pl1gcc` never generated code at all — its own 2007 release note says "there is still no code generation taking place". |
+| BLISS | The x86-64 compilers exist but are hosted on OpenVMS, as part of DEC's ports. Nothing Windows-hosted. |
+| Occam | KRoC 1.4.0's `preconfigure` matches only `i[3456]86-*-cygwin*`. This host reports `x86_64-unknown-cygwin`, which it rejects outright. It needs 32-bit Cygwin, which is discontinued upstream. |
+| Austral | `austral.exe` only exists up to v0.1.1; the latest release, v0.2.0, ships a Linux binary only. The 0.1.1 compiler runs, but its own README example fails to compile with `No such module` — the `.aum` modules need matching `.aui` interfaces, and v0.1.1's stdlib is incomplete. It would need the interfaces written from scratch. |
+
+**Toolchain runs, but the language cannot be measured fairly.**
+
+| Language | Why not |
+|---|---|
+| ColdFusion / CFML | CommandBox, the only free headless path, takes **67–91 s of startup** for a trivial script. That is 20–30% of a row's budget before the program starts, on every task, and a 1 M-iteration probe already took 93.6 s. |
+| Vale | The project is archived. Its README says so on the first line, and the last release is a 2022 pre-release. A `Vale-Windows` binary does exist, so it would run — but a row nobody can rebuild is not worth the column. |
+| Nushell | Removed. Its only integer type is i64, so the spigot dies after **five digits** of pi (`2 ** 63` is an overflow error). Hand-rolled limbs in Nushell take 95 ms per 1112-limb multiply, which is one to two orders of magnitude past any budget. Task 10 is unreachable, so the row could never be complete. |
+
+**Duplicate of a row that already exists.**
+
+| Language | Already covered by |
+|---|---|
+| Object Pascal | The `pascal` row *is* Object Pascal — `fpc` in `{$mode objfpc}`. "Not Delphi" is exactly what Free Pascal is. |
+| Turbo Pascal mode | `fpc -Mtp` is the same compiler as the `pascal` row, so it would be a second column for one implementation. It does work: `-Mtp` keeps `Int64`, and a task-02 program compiled that way prints the exact total. |
+
+**Measured, but not added.**
+
+| Language | What was found |
+|---|---|
+| Groovy | Works — 5.1.3 on JDK 24, `fib(40)` in 12.1 s, BigInteger and real threads both fine. Left out for now only because the JVM is already represented three times (Java, Kotlin, Scala) and nothing here needed a fourth. Worth adding if the point is language surface rather than runtime. |
+
+One measurement from that work is worth keeping regardless of Groovy. **Task 07 takes 514 s
+in Java**, and 336 s in Groovy. Task 07 appends to an immutable string a million times, so it
+is quadratic by design, and on the JVM the constant is large enough that the cell is really
+measuring the string type rather than the language. That is the intended result, not a bug —
+but read the JVM rows' column 07 with it in mind.
 
 ## How it is measured
 
@@ -453,9 +519,9 @@ task 10, or one with no threads trying task 11.
 - VM and interpreter startup does count, because you cannot run the program without it.
 - One warmup run, then 5 timed runs. The median is reported, with min, max and stddev kept alongside it.
 - Peak memory recorded per run.
-- 300 second timeout, then `DNF`. Nushell will hit this on its heaviest tasks: the
-  100-million-iteration loops, the per-byte pass in task 14 and the recursion in task 09.
-  That is a result, not a bug.
+- No timeout. Every run goes to completion however long it takes, and the time reported is
+  the real time. The slow rows are the ones to watch: PowerShell's call-heavy and
+  per-character tasks are the worst of them, at 100 to 331 million interpreted operations.
 - Wrong output means `WRONG` and the timing is thrown away.
 - Everything pinned to one core, except task 11 which gets four.
 - Times are reported as they are, in milliseconds. Nothing is normalized to a baseline

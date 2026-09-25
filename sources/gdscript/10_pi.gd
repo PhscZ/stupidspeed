@@ -4,8 +4,7 @@
 #       base-10^9 limbs: multiply by a small integer, add, subtract, and one big division
 #       whose quotient is known to be small. Only the digit sum is printed.
 # note: the spigot state grows to about 145000 decimal digits by the 10000th digit, so this
-#       task does billions of limb operations in GDScript and may hit the 300 s timeout.
-#       That is a legitimate DNF result, the same way RUN.md describes Nushell.
+#       task does billions of limb operations in GDScript; expect a long run.
 
 extends SceneTree
 

@@ -3,7 +3,7 @@
 #
 # Naive recursion, no memoisation: about 331 million calls for fib(40). R's
 # interpreter makes each call expensive, so this task is expected to be very
-# slow and may hit the 300 s timeout; that is a legitimate result, not a bug.
+# slow; that is a legitimate result, not a bug.
 
 fib <- function(n) {
   if (n < 2) return(n)

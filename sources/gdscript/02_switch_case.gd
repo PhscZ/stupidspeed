@@ -1,6 +1,6 @@
 # task 02 switch_case — expected output: 7500000075000000
 # build: godot --headless --script 02_switch_case.gd    run: godot --headless --script 02_switch_case.gd
-# note: GDScript walks these 100 M-iteration loops very slowly and may hit the 300 s timeout.
+# note: GDScript walks these 100 M-iteration loops very slowly; expect a long run.
 
 extends SceneTree
 

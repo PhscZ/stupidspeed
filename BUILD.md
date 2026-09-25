@@ -41,7 +41,7 @@ row that is *not* portable is `assembly`: it is a freestanding ELF64 binary buil
 `nasm -f elf64` and `ld`, so it is Linux x86-64 only. See `RUN.md` for the full platform
 breakdown.
 
-Disk: **19 GB measured** for all 52 toolchains, installed and run on one Windows x64 host.
+Disk: **19 GB measured** for all 61 toolchains, installed and run on one Windows x64 host.
 The heavy terms are LLVM (4.0 GB), Swift (3.2 GB), GNAT with its MSYS2 runtime (1.8 GB, which
 also supplies `flang`), MSVC (1.2 GB once reassembled from a 2.5 GB layout), Julia (1.1 GB),
 Perl (1.0 GB), the .NET SDK (0.7 GB) and GraalVM (0.7 GB); most other rows are 0.1-0.6 GB.
@@ -85,6 +85,16 @@ is the practical way to get a working `flang` on Windows.
 | Dart | aot | 3.3 | dart.dev | `dart compile exe -o prog <task>.dart`. Emits a native executable. |
 | Python | nuitka | 4.0 | nuitka.net | `nuitka --standalone <task>.py`. Compiles to C and then to a binary. |
 | Assembly | nasm | 2.15 | nasm.us | `nasm -f elf64 <task>.asm && ld -o prog <task>.o` |
+| Crystal | crystal | 1.21 | crystal-lang.org | `crystal build --release -o prog <task>.cr`. Needs the MSVC environment: the compiler shells out to `cl.exe`, which drives `link.exe`. Integer literals default to `Int32`, so task 02 must be written with the `Int64` form or it raises `OverflowError`. |
+| Objective-C | clang | 22 | MSYS2 `ucrt64` | `clang -fobjc-runtime=gnustep-2.2 -O2 -o prog <task>.m -lobjc -lgnustep-base`. The runtime flag is required; without it the link fails on `objc_autoreleasePoolPush` and `__objc_load`. `gcc-objc` 16.2.0 is an alternative front end, but the clang path is the one measured. |
+| Modula-2 | adw | 1.6.879 | modula2.org/adwm2 | Two steps, not one. `m2amd64.exe /sym:<ADW>\ASCII\winamd64sym <task>.mod` compiles, then `sblink.exe /machine:amd64 /out:prog.exe <module>.obj rtl-win-amd64.lib win64api.lib <module>.lib` links. `/machine:amd64` is mandatory: the default linker machine type rejects the 64-bit object with `Incorrect Machine Type`. The compiler writes the `.obj` **beside the source file**, not into the working directory, and names it after the `MODULE`, not the file. Copy the source into a scratch directory first or the repo fills up with objects. |
+| Modula-3 | cm3 | 5.10.0 | github.com/modula3/cm3 | `cm3 -build -O` in a directory holding `Main.m3` and an `m3makefile`. Needs the MSVC environment for its C backend, and writes the binary to `AMD64_NT\prog.exe`. Task 10 also needs `import("arithmetic")` in the m3makefile for `BigInteger`. |
+| COBOL | gnucobol | 3.2 | MSYS2 `ucrt64`, or gnucobol.sourceforge.io | `cobc -x -O2 -o prog <task>.cob`. `PIC 9(18) COMP-5` is the exact 64-bit picture. Outside an MSYS2 shell, `cobc` needs `COB_CONFIG_DIR` and `COB_COPY_DIR` set to the package's `share/gnucobol/{config,copy}` or it stops with `configuration error: /ucrt64/share/gnucobol/config/default.conf`. |
+| BASIC | freebasic | 1.10.1 | freebasic.net | `fbc -O 2 -x <task>.bas`. `LONGINT` is the 64-bit type; `THREADCREATE` gives real threads for task 11. |
+| V | v | 0.5.2 | vlang.io | `v -prod -cc x86_64-w64-mingw32-gcc -o prog <task>.v`. V compiles through a C backend, so it needs a C compiler; `-cc` picks it. Task 03 puts `add_one` in its own file. |
+| Oberon-2 | voc | 3.0.1 | github.com/vishapoberon/compiler | Built from source (`CC=x86_64-w64-mingw32-gcc make`, ~2 min). `CFLAGS=-O2 voc <task>.mod -m` compiles and links in one step, emitting an executable named after the `MODULE`. `CFLAGS` is how the backend's optimisation level is set — the `-O2` *compiler* flag means something else entirely (it selects the integer size model). Task 03 needs both `.mod` files on the command line. |
+| ATS | ats | 0.4.2 | ats-lang.org, or SourceForge `ats2-lang` | Built from source under Cygwin: `./configure && make -f Makefile_dist all`. GCC 14 rejects the 2014-era bootstrap C, so `src/CBOOT/Makefile` needs `CFLAGS += -fpermissive -Wno-implicit-function-declaration -Wno-int-conversion -Wno-implicit-int` first. That is enough to get `patsopt` and `patscc`; `make all` then fails on `utils/myatscc`, which is a build utility and not needed. `patscc -DATS_MEMALLOC_LIBC -O2 -o prog <task>.dats`. Task 03 needs `ATS_DYNLOADFLAG 0` on the helper unit, or the separate compilation gets optimised away. |
+| BCPL | cintsys | 1.0 (2023-12-13) | cl.cam.ac.uk/~mr10/BCPL.html | Interpretive cintcode system, **not native code** — the row measures a VM. Built from source under Cygwin: `make -f MakefileCygwin sysc/defines.h` then `make -f MakefileCygwin sys`. The header target must run first or the build fails. The binary needs Cygwin's DLLs, so it must be launched from Cygwin with `BCPLROOT`/`BCPLPATH`/`BCPLHDRS` set. Compile and run in one session: `printf 'bcpl prog.b to prog\nprog\nlogout\n' \| ./bin/cintsys`. Use `LET start() = VALOF { ... RESULTIS 0 }` — the old `LET START() BE` form aborts with `G1 unassigned`. |
 
 ### Compiled to bytecode — the VM is needed on every run
 
@@ -123,7 +133,6 @@ time is zero. Everything is paid at run time.
 | Julia | julia |
 | Dart | jit |
 | GDScript | godot --headless |
-| Nushell | nu |
 | PowerShell | powershell, pwsh |
 
 Note that five of these are JITs rather than plain interpreters, and the distinction matters

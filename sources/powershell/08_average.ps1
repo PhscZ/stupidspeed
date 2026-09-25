@@ -2,8 +2,7 @@
 # build: (none; interpreted)    run: powershell -File 08_average.ps1  (PowerShell 7: pwsh -File 08_average.ps1)
 # note: [double] throughout; every reading is a multiple of 1/256, so the sum is exact.
 #       The 'R' format with the invariant culture prints the plain decimal, no exponent, no commas.
-# note: a 100 M-iteration loop costs roughly 264 s under Windows PowerShell 5.1 on this machine and
-#       may hit the 300 s benchmark timeout. That is a documented result, not a bug.
+# note: a 100 M-iteration loop costs roughly 264 s under Windows PowerShell 5.1 on this machine.
 
 [double]$total = 0.0
 

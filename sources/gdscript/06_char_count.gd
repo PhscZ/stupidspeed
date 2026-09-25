@@ -1,7 +1,7 @@
 # task 06 char_count — expected output: 10000000
 # build: godot --headless --script 06_char_count.gd    run: godot --headless --script 06_char_count.gd
 # note: the 100 MB text is built once by repeat(), then scanned by index; the scan is
-#       100 M iterations and may hit the 300 s timeout in GDScript.
+#       100 M iterations and is slow in GDScript.
 
 extends SceneTree
 
