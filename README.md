@@ -11,7 +11,7 @@ them is in `RUN.md`.
 ## Results
 
 One row per toolchain, one column per task. The column headings are the task numbers, and
-the task names are the section headings under [Tasks](#tasks). All 61 toolchains, empty and
+the task names are the section headings under [Tasks](#tasks). All 64 toolchains, empty and
 ready to fill in.
 
 A cell holds the median of the 5 timed runs, in milliseconds. `WRONG` is an output that did
@@ -82,11 +82,15 @@ kept alongside the median in the raw results, not in this table.
 | COBOL | gnucobol |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | BASIC | freebasic |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Assembly | x86-64 nasm |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Dolphin Smalltalk | Dolphin 8 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Groovy | groovy |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Tcl | tclsh |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 
-No cell is `SKIPPED` by design, and none needs a toolchain beyond the one in its row.
-Assembly on task 11 is the only one worth a sentence: a freestanding binary has no libc, so
-there is no `pthread_create` to call, and the four threads are made by issuing `clone` and
-`futex` directly. The rest of the task 11 picture is in `RUN.md`.
+No cell is `SKIPPED` by design. Three rows need more than the stock install for task 11, and
+each says so in `BUILD.md`: Assembly has no libc, so it issues `clone` and `futex` itself; Tcl
+needs the `Thread` package, which is not in the core distribution; and COBOL needs
+`CBL_GC_FORK`, which is Linux-only. Dolphin's task 11 passes but is a correct-answer-no-speedup
+cell, like CPython's. The rest of the task 11 picture is in `RUN.md`.
 
 ## Rules
 
@@ -460,6 +464,9 @@ nothing else.
 | COBOL | gnucobol |
 | BASIC | freebasic |
 | Assembly | x86-64 nasm |
+| Dolphin Smalltalk | Dolphin 8 |
+| Groovy | groovy |
+| Tcl | tclsh |
 
 Missing a toolchain means the cell says `SKIPPED`. It never counts as zero. The same goes
 for a language that cannot do a task at all, such as a language with no threads trying
@@ -511,13 +518,15 @@ they are recorded here so nobody has to re-derive them.
 
 | Language | What was found |
 |---|---|
-| Groovy | Works — 5.1.3 on JDK 24, `fib(40)` in 12.1 s, BigInteger and real threads both fine. Left out for now only because the JVM is already represented three times (Java, Kotlin, Scala) and nothing here needed a fourth. Worth adding if the point is language surface rather than runtime. |
+| Raku | Rakudo Star installs from an official Windows MSI, has native arbitrary-precision `Int` and real OS threads on MoarVM, so both hard tasks come for free. Not added yet only because the row has not been written. |
+| Unicon | Ships a 64-bit Windows installer and has large integers and built-in concurrency, so it is a plausible row. The thread model needs checking first. |
+| Factor | Has a Windows x86-64 build and native bignums, but its threads are co-operative rather than OS threads, so task 11 would be a correct-answer-no-speedup cell like CPython's. |
 
-One measurement from that work is worth keeping regardless of Groovy. **Task 07 takes 514 s
-in Java**, and 336 s in Groovy. Task 07 appends to an immutable string a million times, so it
-is quadratic by design, and on the JVM the constant is large enough that the cell is really
-measuring the string type rather than the language. That is the intended result, not a bug —
-but read the JVM rows' column 07 with it in mind.
+One measurement worth keeping. **Task 07 takes 514 s in Java** and 336 s in Groovy. Task 07
+appends to an immutable string a million times, so it is quadratic by design, and on the JVM
+the constant is large enough that the cell is really measuring the string type rather than the
+language. That is the intended result, not a bug — but read the JVM rows' column 07 with it in
+mind.
 
 ## How it is measured
 

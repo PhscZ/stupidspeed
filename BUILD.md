@@ -7,7 +7,7 @@ Convention below: `<task>` is the task's own name, so the source for task 01 in 
 `sources/c/01_branches.c`, and the output is `prog`. Add the thread flag where a language
 needs one, because task 11 uses four threads.
 
-Three things do not follow the flat `<task>.<ext>` layout, and each says why:
+Four things do not follow the flat `<task>.<ext>` layout, and each says why:
 
 - **C#, F# and VB.NET** keep a folder per task (`01_branches/01_branches.csproj`) because the
   .NET SDK does not support several projects in one directory: `dotnet build` with no project
@@ -18,6 +18,8 @@ Three things do not follow the flat `<task>.<ext>` layout, and each says why:
 - **GDScript** has one shared `sources/gdscript/project.godot` beside the 15 `.gd` files. It
   is what `godot --headless --script <task>.gd` resolves against, and its
   `config/run/print_header=false` is what keeps the output to the single expected line.
+- **Tcl task 03** is two files, `03_func_sum.tcl` and `03_func_sum_add_one.tcl`, because the
+  proc has to live in another file to be a real cross-file call; the main file `source`s it.
 
 Swift is flat like everything else: `swiftc -O -o prog <task>.swift`. The rule that top-level
 code needs a file called `main.swift` only applies when several files are passed in one
@@ -46,7 +48,7 @@ row that is *not* portable is `assembly`: it is a freestanding ELF64 binary buil
 `nasm -f elf64` and `ld`, so it is Linux x86-64 only. See `RUN.md` for the full platform
 breakdown.
 
-Disk: **19 GB measured** for all 61 toolchains, installed and run on one Windows x64 host.
+Disk: **19 GB measured** for all 64 toolchains, installed and run on one Windows x64 host.
 The heavy terms are LLVM (4.0 GB), Swift (3.2 GB), GNAT with its MSYS2 runtime (1.8 GB, which
 also supplies `flang`), MSVC (1.2 GB once reassembled from a 2.5 GB layout), Julia (1.1 GB),
 Perl (1.0 GB), the .NET SDK (0.7 GB) and GraalVM (0.7 GB); most other rows are 0.1-0.6 GB.
@@ -139,9 +141,25 @@ time is zero. Everything is paid at run time.
 | Dart | jit |
 | GDScript | godot --headless |
 | PowerShell | powershell, pwsh |
+| Groovy | groovy |
+| Dolphin Smalltalk | Dolphin 8 |
+| Tcl | tclsh |
 
-Note that five of these are JITs rather than plain interpreters, and the distinction matters
-for the numbers: `luajit`, `php zend + jit`, `cruby + yjit`, `dart jit` and `julia` all
+Two of these need more than a run command. **Dolphin** is
+`Dolphin8 DPRO.img8 -u -f <task>.st -q`, the same form Dolphin's own `TestDPRO.cmd` uses.
+`DPRO.img8` ships beside the installer in `userdocs/Dolphin Smalltalk 8/` and has to be
+copied next to `Dolphin8.exe`. The VM is 32-bit and needs the x86 VC++ runtime,
+which the installer ships as `vc_redist.x86.exe`. The installer is Inno Setup and needs
+elevation, so `innoextract -e -d <dir> Dolphin8Setup.exe` unpacks it without admin, which is
+how this row was verified. Scripts must write to stdout through `SessionManager current stdout`
+and end with `SessionManager current quit: 0`. **Tcl** needs the `Thread` package for task 11,
+which is not in the core distribution and is not in MSYS2's `mingw-w64-ucrt-x86_64-tcl`
+either, so it comes from a distribution that bundles it (Magicsplat's Windows installer) or
+from building `tcltk/thread` against the local Tcl. Task 03 also sources
+`03_func_sum_add_one.tcl`.
+
+Note that six of these are JITs rather than plain interpreters, and the distinction matters
+for the numbers: `luajit`, `php zend + jit`, `cruby + yjit`, `dart jit`, `julia` and Dolphin all
 start out interpreting and compile hot code as they run, so their first seconds are slower
 than their steady state. A short task therefore measures the warm-up, not the JIT.
 

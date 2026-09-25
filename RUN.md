@@ -7,10 +7,10 @@ like for the numbers to mean anything. For compilers, see `BUILD.md`.
 
 | | Requirement | Why |
 |---|---|---|
-| OS | x86-64, Linux, macOS or Windows | Every row is reachable on Windows and on Linux; macOS loses `msvc`. The one exception is `assembly`, which is Linux x86-64 only: it is a freestanding ELF64 binary built with `nasm -f elf64` and `ld`. `tcc`, `clang`, `flang` and `luajit` all need a little care on Windows but no WSL. |
+| OS | x86-64, Linux, macOS or Windows | Every row is reachable on Windows and on Linux; macOS loses `msvc` and `dolphin smalltalk`. The one exception is `assembly`, which is Linux x86-64 only: it is a freestanding ELF64 binary built with `nasm -f elf64` and `ld`. `tcc`, `clang`, `flang` and `luajit` all need a little care on Windows but no WSL. |
 | CPU | 4 physical cores | Task 11 runs four threads. Every other task is pinned to one core, so more cores do not help them. |
 | RAM | 8 GB minimum, 16 GB comfortable | The tasks themselves are small: the largest allocation is task 06's 100 MB text, and task 12's three 1000x1000 arrays are 24 MB together. The 16 GB is for the JVM, GraalVM and Julia toolchains. `native-image` alone wants 2–4 GB to build. |
-| Disk | 20 GB free | 200 MiB of fixtures, plus the toolchains themselves: `BUILD.md` measured 19 GB for all 61 installed and run, with another 2–3 GB of scratch while reassembling MSVC and Swift. |
+| Disk | 20 GB free | 200 MiB of fixtures, plus the toolchains themselves: `BUILD.md` measured 19 GB for all 64 installed and run, with another 2–3 GB of scratch while reassembling MSVC and Swift. |
 | Filesystem | `tmpfs` or RAM disk preferred for the file tasks | Reading 100 MiB from a spinning disk measures the disk. Anything run under WSL2 measures the WSL disk layer instead. Where the fixture lives must be recorded in the results. |
 
 ## Runtimes
@@ -34,6 +34,9 @@ Languages compiled to a static native binary need nothing. The rest need the fol
 | Nim | nim | none | static by default |
 | Odin | odin | none | |
 | Assembly | x86-64 nasm | none | |
+| Dolphin Smalltalk | Dolphin 8 | MSVC x86 runtime (`vcruntime140.dll` + `msvcp140.dll`) | the VM is 32-bit, so it needs the x86 runtime, not the x64 one |
+| Groovy | groovy | JRE 17 or newer | the distribution ships its own `groovy.bat` launcher |
+| Tcl | tclsh | none | task 11 also needs the `Thread` extension, see `BUILD.md` |
 | Java | openjdk | JRE 17 or newer | |
 | Java | graalvm native-image | none | standalone binary |
 | Kotlin | jvm | JRE + kotlin-stdlib | |
@@ -125,6 +128,7 @@ C, C++, Rust, Zig, Go, D, Swift, Ada, Pascal, Java, Kotlin (both rows), C#, F#, 
 Scala, Nim, Odin, Julia (`-t4`), Fortran (OpenMP, needs `-fopenmp`), Perl (ithreads),
 PHP (`parallel`, needs a ZTS build), PowerShell (runspace pools), Crystal (`Fiber::ExecutionContext::Parallel`),
 Objective-C (`NSThread`), Modula-2 (Win32 `Threads` module), Modula-3 (`Thread.Fork`), BASIC (`THREADCREATE`),
+Groovy (`java.lang.Thread`),
 Assembly (raw `clone` + `futex` syscalls, no libc).
 
 ### Works, but not with shared-memory threads
@@ -138,7 +142,7 @@ Assembly (raw `clone` + `futex` syscalls, no libc).
 | Python | threads exist but the GIL serializes them | correct, **0.97x** — use `multiprocessing` for 2.3x |
 | Ruby (CRuby) | threads exist but the GVL serializes them | correct, no speedup |
 
-### The four that need explaining
+### The five that need explaining
 
 **Lua.** Stock Lua has no threads, only coroutines, which are cooperative and
 single-threaded. But `lanes` is a mature C extension that wraps real OS threads, and it
@@ -177,6 +181,18 @@ returns -1 with a warning; the program then computes the four quarters in-proces
 still prints the right answer on one core. That is the same fallback the Fortran and Julia
 rows take without their thread flag.
 
+**Dolphin Smalltalk.** The VM has `Process`, `ProcessorScheduler` and `Semaphore`, and they
+are real, but they are green: the whole image is multiplexed onto one OS thread. Task 11
+therefore prints `7500000075000000` with no speedup over task 02, the same cell CPython and
+CRuby get. Every production Smalltalk is in this position — Squeak, Pharo, Cuis, VisualWorks
+and GNU Smalltalk all schedule green — so the caveat is a property of Smalltalk, not of
+Dolphin.
+
+**Tcl.** The core has no threads, so task 11 uses the `Thread` package, the language's own
+threading extension, which is the same exception Lua's Lanes gets. Each thread contains its
+own Tcl interpreter and the work is sent to it as a script, so the four workers share no
+mutable state and the answer is gathered with `thread::send`.
+
 ### Cannot do it
 
 **GDScript.** Godot has a `Thread` class and it works, but it is awkward to use for this
@@ -200,11 +216,12 @@ Task 11 says "start 4 threads". Under that wording:
 - Pass: assembly (`clone` + `futex`), and everything in the threads list above.
 - Pass, but with processes rather than threads: R, COBOL on Linux (`CBL_GC_FORK`), and
   JavaScript if you count worker threads as not being threads.
-- Pass, with the GIL/GVL caveat recorded: CPython, CRuby. `jruby` is unaffected and uses real
-  JVM threads.
-- Pass, but only with an extra install or flag: Lua (Lanes), PHP (`parallel` on a ZTS build),
-  Julia (`-t4`), Fortran (`-fopenmp`). Without the flag Julia and Fortran still print the
-  right answer, because their loops fall back to serial.
+- Pass, with the GIL/GVL caveat recorded: CPython, CRuby, and Dolphin Smalltalk, whose
+  `Process` objects are green and multiplexed onto one OS thread. `jruby` and Groovy are
+  unaffected and use real JVM threads.
+- Pass, but only with an extra install or flag: Lua (Lanes), Tcl (the `Thread` package),
+  PHP (`parallel` on a ZTS build), Julia (`-t4`), Fortran (`-fopenmp`). Without the flag
+  Julia and Fortran still print the right answer, because their loops fall back to serial.
 
 If the task instead says "4 concurrent workers", everything above passes and the comparison
 becomes "does this language use more than one core", which is the more useful question. That
@@ -253,7 +270,7 @@ iterations, the loop is smaller than the noise in starting the process.
 
 ## Expected cost
 
-Every task runs six times, in 61 toolchains.
+Every task runs six times, in 64 toolchains.
 
 - Fast compiled languages: under a second per run, so about **1.5 hours** for the matrix.
 - The 100-million-iteration tasks take 10 to 15 seconds in CPython.
@@ -299,10 +316,15 @@ discovering halfway through a run.
 | ats | yes | yes | yes, source build under Cygwin (its own requirements page says "Windows with Cygwin") |
 | bcpl | yes | no | yes, source build under Cygwin; the Cygwin path is the maintained one |
 | assembly | yes | no | no (freestanding ELF64, `nasm -f elf64` + `ld`) |
+| dolphin smalltalk | no | no | yes (Windows-only VM) |
+| groovy | yes | yes | yes |
+| tcl | yes | yes | yes (task 11 needs a distribution that bundles the `Thread` package) |
 
-Every row is reachable on Linux. Windows loses `assembly`. macOS loses `assembly` and `msvc`,
-which exists nowhere else, plus the Windows PowerShell 5.1 row (use `pwsh` there). Whichever
-host you pick, run the whole matrix on it, because numbers are only comparable within a run.
+Every row is reachable on Linux. Windows loses `assembly`, and loses Tcl's task 11 unless the
+distribution bundles the `Thread` package. macOS loses `assembly`, `msvc` and `dolphin
+smalltalk`, which exists nowhere else, plus the Windows PowerShell 5.1 row (use `pwsh`
+there). Whichever host you pick, run the whole matrix on it, because numbers are only
+comparable within a run.
 
 ### Cygwin-hosted toolchains: native or cross-compiled
 
