@@ -82,6 +82,7 @@ Languages compiled to a static native binary need nothing. The rest need the fol
 | OCaml | ocamlopt | none — native static binary | The MSYS2 UCRT64 build needs the UCRT64 DLLs on `PATH` at run time, and building needs `OCAMLLIB` set to the Windows form of the stdlib path plus the `flexdll` package; see `BUILD.md`. |
 | Raku | rakudo (MoarVM) | the extracted Rakudo tree | No build step. The MSI installs per-machine by default, so extract it with `msiexec /a` for a no-admin row. |
 | Erlang | OTP (escript) | the extracted OTP tree | No build step. `escript` compiles the script on each run. Run with `-smp enable` so all schedulers are live. |
+| SystemVerilog | iverilog | the vvp runtime, which ships with iverilog | Two commands, not one: `iverilog -g2012 -o prog.vvp <task>.sv` then `vvp prog.vvp`. The measured run is the `vvp` one. |
 | Elixir | elixir (BEAM) | Erlang's tree plus Elixir's | No build step. Elixir needs Erlang on `PATH` first; `elixir` then compiles the script each run. |
 | VBScript | cscript | none — `cscript.exe` ships with Windows | The runtime is a Windows component rather than something you install, which is also why the row is on borrowed time: see the platform table below. |
 | Common Lisp | sbcl | none — the dumped executable embeds the core | The build dumps a standalone `prog.exe` with `save-lisp-and-die`, so nothing has to be on `PATH` at run time. Task 11 uses `sb-thread`, which is a required part of the Windows build. |
@@ -178,6 +179,7 @@ Treat the cell like CPython's and CRuby's.
 | Simula | `SIMULATION`/`PROCESS`, the language's own process simulation: cooperative and green | `7500000075000000`, **1.9x slower** than task 02 |
 | ActionScript | AIR `Worker`: separate AVM2 instances, no shared memory, results via shared properties | `7500000075000000`, **2.91x on 4 workers** |
 | VBScript | four `WScript.Shell.Exec` child processes, one per quarter, partials read back from each child's stdout | `7500000075000000`, **3.41x on 4 processes** |
+| SystemVerilog | `fork`/`join` with four tasks, each owning a fixed quarter. The processes are scheduled by the simulator on one thread, so this is correct-answer-no-speedup. | `7500000075000000`, no speedup |
 | Racket | `(thread thunk #:pool 'own #:keep 'results)`: each thread gets its own OS thread with the heap shared, and `thread-wait` returns the result. Plain `thread` is green and `future` serialises at blocking operations, so neither is used. | `7500000075000000`, real multicore work |
 
 ### The six that need explaining
@@ -385,7 +387,7 @@ iterations, the loop is smaller than the noise in starting the process.
 
 ## Expected cost
 
-Every task runs six times, in 77 toolchains.
+Every task runs six times, in 78 toolchains.
 
 - Fast compiled languages: under a second per run, so about **1.5 hours** for the matrix.
 - The 100-million-iteration tasks take 10 to 15 seconds in CPython.
@@ -407,6 +409,11 @@ Every task runs six times, in 77 toolchains.
     Task 06's per-character `substr` scan is the other slow cell.
   - **Erlang and Elixir** are the reverse: both are fast, and their per-run start-up (about
     520 ms for Erlang, 800 ms for Elixir) is the main fixed cost, charged to every cell.
+  - **SystemVerilog** is an interpreter over an event queue, at about **5 us per loop
+    iteration**: its 100-million-iteration tasks (01, 02, 03, 06) take 13 to 22 minutes each,
+    task 15 is 94 million single-byte `$fwrite` calls, and task 10 is the slowest cell in the
+    row at **38.8 minutes** (2330 s measured; scaling 100 digits 3.8 s, 200 16.2 s, 1000 538 s,
+    an exponent of about 2.2 in the digit count).
   - **VBScript** is the slowest row overall. Task 07 takes about **9.6 minutes** (576 s
     measured) and task 14 about **1.4 minutes** (91 s measured at 100 MiB, so about 82 s at 90
     MiB, at roughly 1.1 us per byte through the text-mode stream), task 06 about 35 s. Task 10

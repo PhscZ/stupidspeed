@@ -16,7 +16,7 @@ disposable. See the end of `BUILD.md` for what is in each.
 ## Results
 
 One row per toolchain, one column per task. The column headings are the task numbers, and
-the task names are the section headings under [Tasks](#tasks). All 77 toolchains, empty and
+the task names are the section headings under [Tasks](#tasks). All 78 toolchains, empty and
 ready to fill in.
 
 A cell holds the median of the 5 timed runs, in milliseconds. `WRONG` is an output that did
@@ -103,6 +103,7 @@ kept alongside the median in the raw results, not in this table.
 | Raku | rakudo (MoarVM) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Erlang | OTP (escript) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Elixir | elixir (BEAM) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| SystemVerilog | iverilog |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 
 No cell is `SKIPPED` by design. Five rows need more than the stock install for task 11, and
 each says so in `BUILD.md`: Assembly has no libc, so it issues `clone` and `futex` itself; Tcl
@@ -149,6 +150,28 @@ most procedural form the languages have, and the rows say so rather than claimin
 imperative. Where a task needs mutable state they use the languages' own escape hatches: the
 process dictionary, and `:atomics`, a real mutable array of 64-bit integers. Raku has no such
 caveat — it is multi-paradigm with mutable variables, so its row is ordinary imperative code.
+
+**SystemVerilog** is unusual in a way no other row is, because it is not a general-purpose
+language: a program is a testbench module and the work happens inside the simulator, so every
+cell measures **Icarus Verilog's** event loop rather than "SystemVerilog" — the disclosure the
+GDScript, Dolphin and VHDL rows already carry. Four things follow. The cost is about **5 µs per
+loop iteration**, so the 100-million-iteration tasks take 13 to 22 minutes each and task 10 is
+the slowest cell in the row at **38.8 minutes**. Icarus will not hand a whole array to a
+file task, so task 15 is 94 million single-byte `$fwrite` calls. Task 07 is a documented
+deviation: the language has no immutable string type at all, so the append loop is a plain store
+and runs linear rather than quadratic — reproducing the quadratic behaviour would mean
+hand-copying the array every step, which is a different program from the one every other row
+writes. And the whole row needs `-g2012`, for the reason below.
+
+The row is SystemVerilog and not Verilog for a concrete reason worth recording, because it also
+explains why no Verilog row exists. Plain Verilog functions are *static*: a recursive function
+shares one frame between calls and silently returns wrong answers. Measured with Icarus,
+`fib(10)` gives **-80** in plain Verilog and **55** in SystemVerilog, which is what `automatic`
+was added for. A wrong answer means `WRONG` and a discarded timing, so Verilog cannot be a row.
+Two further Icarus limitations shaped the sources: `buf` is a reserved word (the buffer gate
+primitive) and cannot be an identifier, and package-qualified calls are rejected, so task 03's
+helper sits at compilation-unit scope in its own file and must be listed **first** on the
+`iverilog` command line — with the order reversed it fails at run time with no diagnostic.
 
 **VBScript** is the other. It has no byte type — it cannot index the `Byte()` array that
 `ADODB.Stream.Read` returns, and refuses `For Each` over it — so task 14 reads the file as text
@@ -450,6 +473,9 @@ sometimes the wrong thing.
 - **Erlang, Elixir and Raku** all pass with real OS threads and no caveat on this task: BEAM
   runs one scheduler per core with no global lock, and MoarVM runs each Raku thread through
   `uv_thread_create`. Erlang measured the best speedup in the matrix at **4.27x**.
+- **SystemVerilog** expresses the four workers with `fork`/`join`, which is the language's own
+  concurrency construct, but the processes are scheduled by the simulator on one thread, so the
+  cell is correct-answer-no-speedup — the same category Simula, VHDL and CPython occupy.
 - **Assembly** has no libc and no thread library at all, so it makes the `clone` and `futex`
   syscalls by hand: four real kernel threads on four stacks, and the same answer.
 - **VBScript** has no thread library either, and no way to declare one, so it starts four child
@@ -594,6 +620,7 @@ nothing else.
 | Raku | rakudo (MoarVM) |
 | Erlang | OTP (escript) |
 | Elixir | elixir (BEAM) |
+| SystemVerilog | iverilog |
 
 Missing a toolchain means the cell says `SKIPPED`. It never counts as zero. The same goes
 for a language that cannot do a task at all, such as a language with no threads trying
@@ -640,6 +667,7 @@ of magnitude too slow, not for being impossible.
 | PL/I | Iron Spring PL/I, the only maintained free compiler, ships Linux and OS/2 builds only. The GCC front end `pl1gcc` never generated code at all — its own 2007 release note says "there is still no code generation taking place". |
 | BLISS | The x86-64 compilers exist but are hosted on OpenVMS, as part of DEC's ports. Nothing Windows-hosted. |
 | Occam | KRoC 1.4.0's `preconfigure` matches only `i[3456]86-*-cygwin*`. This host reports `x86_64-unknown-cygwin`, which it rejects outright. It needs 32-bit Cygwin, which is discontinued upstream. |
+| Verilog | Not excluded for a missing toolchain — Icarus Verilog runs on Windows and is what the SystemVerilog row uses. Verilog itself cannot do task 09: its functions are *static*, so a recursive function shares one frame between calls and silently returns the wrong answer. Measured with Icarus, `fib(10)` gives **-80** in plain Verilog and **55** in SystemVerilog, which is what `automatic` was added for. A wrong answer is `WRONG` and its timing is discarded, so the row could never be complete. |
 | Austral | `austral.exe` only exists up to v0.1.1; the latest release, v0.2.0, ships a Linux binary only. The 0.1.1 compiler runs, but its own README example fails to compile with `No such module` — the `.aum` modules need matching `.aui` interfaces, and v0.1.1's stdlib is incomplete. It would need the interfaces written from scratch. |
 
 **Toolchain runs, but the language cannot be measured fairly.**
