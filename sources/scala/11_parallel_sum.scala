@@ -1,5 +1,10 @@
 // task 11 parallel_sum — expected output: 7500000075000000
-// build: scalac -release 17 11_parallel_sum.scala    run: scala Main
+// build: scalac -release 17 -d out 11_parallel_sum.scala
+// run: java -cp "out;<scala>/maven2/org/scala-lang/scala3-library_3/<v>/scala3-library_3-<v>.jar;<scala>/maven2/org/scala-lang/scala-library/<v>/scala-library-<v>.jar" Main
+// note: <scala> is the Scala distribution and <v> its version, 3.9.0 for the one this row was
+//       measured with. Scala CLI's `scala` is a subcommand runner, so `scala Main` is not a
+//       command it accepts; running the compiled class directly with `java -cp` is the
+//       equivalent, and it keeps the JVM's own start-up out of the compiler's way.
 
 object Main {
   private def work(t: Int, results: Array[Long]): Unit = {

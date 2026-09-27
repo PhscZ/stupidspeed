@@ -1,0 +1,9 @@
+# task 09 fib_recursive — expected output: 102334155 #
+# build: none (interpreter)    run: a68g 09_fib_recursive.a68 #
+# note: naive fib(40) is about 331 million calls, so it stresses the call path itself #
+# note: rather than any particular arithmetic. #
+
+PROC fib = (INT n) INT:
+  IF n < 2 THEN n ELSE fib (n - 1) + fib (n - 2) FI;
+
+print((whole(fib (40), 0), newline))

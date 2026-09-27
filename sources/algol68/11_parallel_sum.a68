@@ -1,0 +1,35 @@
+# task 11 parallel_sum — expected output: 7500000075000000 #
+# build: none (interpreter)    run: a68g 11_parallel_sum.a68 #
+# note: the parallel clause needs an interpreter built with --enable-parallel; the #
+# note: shipped win64 binary of 3.13.3 is built without it and answers interpreter was #
+# note: built without parallel-clause support. The one used here is a source build with #
+# note: that option, and the four units run on real pthreads, so the writes to the heap #
+# note: row are visible afterwards. #
+# note: the implementation copies the stack of each unit on every switch (its own #
+# note: source says the parallel clause is included for educational purposes), so this #
+# note: is a correct-answer-no-speedup cell, the same class as CPython and CRuby: it #
+# note: prints the right number and does not beat task 02. Measured on this machine: #
+# note: task 02 2m27.8s, task 11 2m16.6s, and an interleaved run of the same two gave #
+# note: 2m30s and 3m10s: the same time within run-to-run noise on a loaded box, so the #
+# note: clause buys nothing here. #
+# note: each unit owns a fixed range, so the order in which they finish cannot change #
+# note: the answer. #
+
+PROC work = (INT t) LONG INT: BEGIN
+  LONG INT acc := 0;
+  FOR i FROM t * 25000000 TO (t + 1) * 25000000 - 1 DO
+    CASE (i MOD 4) + 1 IN
+      acc +:= 1,
+      acc +:= i,
+      acc +:= 2 * i,
+      acc +:= 3 * i
+    ESAC
+  OD;
+  acc
+END;
+
+[4] LONG INT res;
+
+PAR (res[1] := work(0), res[2] := work(1), res[3] := work(2), res[4] := work(3));
+
+print((whole(res[1] + res[2] + res[3] + res[4], 0), newline))

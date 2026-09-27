@@ -11,7 +11,7 @@ them is in `RUN.md`.
 ## Results
 
 One row per toolchain, one column per task. The column headings are the task numbers, and
-the task names are the section headings under [Tasks](#tasks). All 64 toolchains, empty and
+the task names are the section headings under [Tasks](#tasks). All 74 toolchains, empty and
 ready to fill in.
 
 A cell holds the median of the 5 timed runs, in milliseconds. `WRONG` is an output that did
@@ -73,9 +73,7 @@ kept alongside the median in the raw results, not in this table.
 | PowerShell | pwsh |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Crystal | crystal |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | V | v |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| Oberon-2 | voc |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | ATS | ats (gcc) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| BCPL | cintsys64 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Objective-C | clang (objc) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Modula-2 | adw |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Modula-3 | cm3 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -85,12 +83,52 @@ kept alongside the median in the raw results, not in this table.
 | Dolphin Smalltalk | Dolphin 8 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Groovy | groovy |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Tcl | tclsh |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| C3 | c3c |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Vala | valac |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Simula | cim |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Algol 68 | a68g |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Component Pascal | gpcp |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Oberon-07 | akron |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| ActionScript | AIR |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Clojure | clojure.main |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Racket | racket (CS) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Common Lisp | sbcl |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| OCaml | ocamlopt |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| VBScript | cscript |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 
-No cell is `SKIPPED` by design. Three rows need more than the stock install for task 11, and
+No cell is `SKIPPED` by design. Five rows need more than the stock install for task 11, and
 each says so in `BUILD.md`: Assembly has no libc, so it issues `clone` and `futex` itself; Tcl
-needs the `Thread` package, which is not in the core distribution; and COBOL needs
-`CBL_GC_FORK`, which is Linux-only. Dolphin's task 11 passes but is a correct-answer-no-speedup
-cell, like CPython's. The rest of the task 11 picture is in `RUN.md`.
+needs the `Thread` package, which is not in the core distribution; COBOL needs
+`CBL_GC_FORK`, which is Linux-only; Algol 68 Genie needs a source build with
+`--enable-parallel`, because the prebuilt Windows binary is configured without the parallel
+clause; and Oberon-07 has no thread module in its library, so it declares `CreateThread` and
+`WaitForSingleObject` as foreign procedures. Two more rows have a version floor rather than an
+extra install: Racket's parallel threads need 8.18 or later, and OCaml's `Domain` needs 5.x,
+since the 4.14 build has no `Domain` module at all. Five rows pass task 11 but are
+correct-answer-no-speedup cells, because their concurrency is cooperative or serialised:
+CPython and CRuby, Dolphin Smalltalk, whose `Process` objects are green, Simula, whose four
+`PROCESS` objects are scheduled by its own cooperative process simulation, and Algol 68,
+whose four pthreads are real but whose implementation copies a stack on every switch. The rest
+of the task 11 picture is in `RUN.md`.
+
+Two rows are unusual for reasons the table cannot show. **ActionScript** prints a fixed
+2354-byte ASCII-art banner to stdout before the program's first line — the AIR runtime's own
+branding, with no switch to turn it off — so its cells are compared after that offset; AIR
+exposes no working-directory API, so task 14 reads its fixture from inside the application
+bundle; and the bundle is read-only, so task 15 writes `out.bin` to the runtime's own
+per-application data directory instead. All of it is covered in `RUN.md`, along with the
+runtime's rule that no filesystem work can happen in the application constructor and the fact
+that worker results have to come back through shared properties rather than a
+`MessageChannel`.
+
+**VBScript** is the other. It has no byte type — it cannot index the `Byte()` array that
+`ADODB.Stream.Read` returns, and refuses `For Each` over it — so task 14 reads the file as text
+through a single-byte charset and pulls each byte back out with `Asc(Mid(...))`, at about
+1.1 µs per byte. It has no big integers either, so task 10 is hand-rolled limbs like the C
+row's, and that cell is far and away the slowest in the row: the full run extrapolates to
+**about three hours**, so it was verified at reduced scales against independently computed
+digit sums instead of being run to completion. It is also the only row here that
+Microsoft is in the process of removing — see the platform table in `RUN.md`.
 
 ## Rules
 
@@ -295,17 +333,37 @@ Output: `102334155`
 
 ### 10 pi
 
-Arbitrary-precision arithmetic. 10000 digits of pi need big integers, which most languages
-do not have built in.
+Arbitrary-precision arithmetic. 2000 digits of pi need big integers. Many languages here have
+them in the standard library and use them directly; the rest hand-roll them, and that
+difference is what makes this the one task whose cost varies by orders of magnitude across the
+matrix.
 
 ```
-compute 10000 digits of pi with the unbounded spigot algorithm
+compute 2000 digits of pi with the unbounded spigot algorithm
 print the sum of the digits
 ```
 
-Output: `44889`
+Output: `9092`
 
 Print the sum of the digits instead of the digits themselves, so the check is one number.
+
+The algorithm is fixed: Gibbons' unbounded spigot, the same loop in every language. What
+differs is where the integers come from, and both routes are legitimate.
+
+- A language with arbitrary-precision integers in its standard library uses them, and a
+  division on those values is a real division — Python, Ruby, Java, C#, Go, JavaScript, Julia
+  and Common Lisp are among the rows that take this route.
+- A language without them hand-writes sign-magnitude, little-endian, base-1e9 limbs, with add,
+  subtract, multiply by a small integer, and a quotient that comes out of repeated subtraction,
+  because the spigot only ever asks for one decimal digit at a time. Same loop, same digits,
+  and far more work per step. At 2000 digits that is about 1.9 s in C, and it runs to minutes
+  in the interpreted rows that take this route — VBScript takes about 5.5 minutes and `a68g`
+  about 21. `RUN.md` has the measurements.
+
+A language with no bignum library is therefore **not** disqualified by this task, and no row
+here is missing because of it. `a68g`'s own arbitrary-precision `LONG LONG INT` mode was
+measured and rejected in favour of the hand-rolled limbs, because its cost scales with a
+`PR precision=` setting that would have to be set far higher than the default.
 
 ### 11 parallel_sum
 
@@ -336,16 +394,40 @@ two are directly comparable: one core against four.
 Each thread owns a fixed range, so which thread finishes first does not change the answer
 and the checksum holds no matter how the threads are scheduled.
 
-Languages with no threads cannot do this, and those cells are `SKIPPED`. Languages whose
-threads cannot run at the same time, like CPython and CRuby, will print the right answer but
-will not be any faster than task 02. That is a property of those runtimes, not of Python or
-Ruby: `jruby` runs on real JVM threads, and Python has `multiprocessing` for real parallelism.
+Languages with no concurrency facility at all cannot do this, and those cells are `SKIPPED`;
+no row here is in that position. A language whose workers cannot run at the same time, like
+CPython and CRuby, will print the right answer but will not be any faster than task 02. That is
+a property of those runtimes, not of Python or Ruby: `jruby` runs on real JVM threads, and
+Python has `multiprocessing` for real parallelism.
 
-Three cases are worth knowing about before you write this one. Lua has no threads in the
-standard library but Lanes gives it real ones, so use Lanes. R has no threads at all, only
-the forked or socket processes in its bundled `parallel` package, so use `PSOCK`. Assembly
-has no libc and no thread library at all, so it makes the `clone` and `futex` syscalls by
-hand: four real kernel threads on four stacks, and the same answer.
+Several cases are worth knowing about before you write this one, because the obvious thing is
+sometimes the wrong thing.
+
+- **Lua** has no threads in the standard library, but Lanes gives it real ones, so use Lanes.
+- **R** has no threads at all, only the forked or socket processes in its bundled `parallel`
+  package, so use `PSOCK`.
+- **Racket**'s plain `thread` is green — cooperative, on one OS thread, no speedup — and
+  `future` silently serialises as soon as its body blocks. The parallel route is
+  `(thread thunk #:pool 'own)`, which needs Racket 8.18 or later. `racket/place` also gives real
+  parallelism, but it was measured and rejected: each place is a separate Racket VM, so four of
+  them cost about **6.2 GB** of resident memory.
+- **OCaml** needs version 5, where `Domain.spawn` maps one domain to one OS thread. The 4.14
+  toolchain that the old "OCaml for Windows" installer ships has no `Domain` module at all and
+  serialises `Thread`, so it could only ever be a correct-answer-no-speedup cell.
+- **ActionScript** gets real OS threads from AIR `Worker`s, but they are separate AVM2 instances
+  with no shared memory, so they are isolates rather than threads — and the results have to come
+  back through shared properties, because a `MessageChannel`'s `send()` throws from inside a
+  worker.
+- **Assembly** has no libc and no thread library at all, so it makes the `clone` and `futex`
+  syscalls by hand: four real kernel threads on four stacks, and the same answer.
+- **VBScript** has no thread library either, and no way to declare one, so it starts four child
+  processes with `WScript.Shell.Exec`, each given its worker index as an argument, and reads
+  their stdout back. That is real parallelism across four cores, the same category as the R
+  row's `PSOCK` workers.
+- **Simula** has no thread library either, but its own process simulation is part of the
+  language's standard application package, so four `PROCESS` objects scheduled by a
+  `SIMULATION` block are the faithful translation: they interleave, they never run at once, and
+  the cell lands in the same correct-answer-no-speedup class as CPython's.
 
 ### 12 matrix_add
 
@@ -387,10 +469,10 @@ Plain triple loop, no tricks. Reordering the loops would be faster, which is the
 
 ### 14 file_read
 
-Reading from disk. A hundred megabytes in one pass.
+Reading from disk. Ninety megabytes in one pass.
 
 ```
-open data.bin, 100 MiB
+open data.bin, 90 MiB
 total = 0
 for each byte b in the file:
     total = total + b
@@ -399,23 +481,23 @@ print total mod 4294967296
 
 The file is just the bytes 0,1,2,...,255 over and over, so the answer is fixed.
 
-Output: `484442112`
+Output: `3442475008`
 
 ### 15 file_write
 
-Writing to disk. The same hundred megabytes back out.
+Writing to disk. The same ninety megabytes back out.
 
 ```
 buffer = bytes 0,1,2,...,255 repeated 4096 times   (1 MiB)
 
 open out.bin for writing
-repeat 100 times:
+repeat 90 times:
     write buffer
 flush and fsync
 print number of bytes written
 ```
 
-Output: `104857600`
+Output: `94371840`
 
 Buffered, one megabyte at a time, because a syscall per byte measures the kernel and
 nothing else.
@@ -455,9 +537,7 @@ nothing else.
 | PowerShell | powershell, pwsh |
 | Crystal | crystal |
 | V | v |
-| Oberon-2 | voc |
 | ATS | ats |
-| BCPL | cintsys64 |
 | Objective-C | clang |
 | Modula-2 | adw |
 | Modula-3 | cm3 |
@@ -467,25 +547,53 @@ nothing else.
 | Dolphin Smalltalk | Dolphin 8 |
 | Groovy | groovy |
 | Tcl | tclsh |
+| C3 | c3c |
+| Vala | valac |
+| Simula | cim |
+| Algol 68 | a68g |
+| Component Pascal | gpcp |
+| Oberon-07 | akron |
+| ActionScript | AIR |
+| Clojure | clojure.main |
+| Racket | racket (CS) |
+| Common Lisp | sbcl |
+| OCaml | ocamlopt |
+| VBScript | cscript |
 
 Missing a toolchain means the cell says `SKIPPED`. It never counts as zero. The same goes
 for a language that cannot do a task at all, such as a language with no threads trying
 task 11. A language without big integers is not in that position: task 10 can still be done
 on hand-rolled limbs, which is what GDScript does.
 
-Some rows are deliberately partial, because the language genuinely cannot express the task.
-Where that happens the file is absent rather than stubbed, and the gap is recorded in
-`BUILD.md` next to the toolchain. Two rows are partial today, both missing only task 11:
-Oberon-2 has no thread facility at all, and Cintsys is single-threaded — its own user guide
-says so, and the distribution's pthreads were removed in 2010 in favour of polling and
-coroutines. COBOL's task 11 is present and correct but only parallel on Linux, see `RUN.md`.
-BCPL's task 02 needs the **64-bit** Cintcode system: its total does not fit in a 32-bit word,
-so the row is built and run as `cintsys64`.
+No row is partial. Every language here has all fifteen tasks, including the ones that look
+hardest: task 10 is reachable without a bignum library, because the limbs can be hand-rolled,
+and task 11 is reachable without a thread library, because a language with any concurrency
+facility at all can express four workers. Where a language's concurrency is cooperative rather
+than parallel, or needs an extension or a special build, the cell says so and `BUILD.md`
+records it next to the toolchain.
+
+Three task 11 cells need explaining even though all three are present. Algol 68 Genie has a
+real parallel clause (`PAR`), and it creates four pthreads, but the implementation copies a
+whole stack on every unit switch and its own source calls the clause "included for educational
+purposes; this implementation is not the most efficient one", so the answer is right and the
+row is no faster than its task 02. Simula has no thread library, but it does not need one: its
+own process simulation is part of the language's standard application package, so task 11 is
+four `PROCESS` objects scheduled by a `SIMULATION` block, genuinely interleaved and genuinely
+cooperative, which makes it another correct-answer-no-speedup cell. Oberon-07 has no thread
+module in its library at all, so its task 11 is four `CreateThread` calls made through the
+compiler's own foreign-function declarations — the same hand-rolled route the Assembly row
+takes with `clone` and `futex`, and it is real parallelism that passes.
 
 ### Languages that are not here, and why
 
-Plenty of languages were considered and left out. The reasons fall into three groups, and
-they are recorded here so nobody has to re-derive them.
+Plenty of languages were considered and left out. The reasons fall into four groups, and
+they are recorded here so nobody has to re-derive them. Note that **no language has been
+excluded for task 10 alone except Nushell** — a language without big integers is not
+disqualified by task 10, because the limbs can be hand-rolled, which is what GDScript and
+several other rows do. Nushell is the exception because its hand-rolled limbs were measured
+at roughly 60x the cost of the slowest row that was accepted, which puts the cell at most of a
+day per run rather than minutes. The distinction matters: it is excluded for being two orders
+of magnitude too slow, not for being impossible.
 
 **No working Windows x64 toolchain.**
 
@@ -505,7 +613,7 @@ they are recorded here so nobody has to re-derive them.
 |---|---|
 | ColdFusion / CFML | CommandBox, the only free headless path, takes **67–91 s of startup** for a trivial script. That is 20–30% of a row's budget before the program starts, on every task, and a 1 M-iteration probe already took 93.6 s. |
 | Vale | The project is archived. Its README says so on the first line, and the last release is a 2022 pre-release. A `Vale-Windows` binary does exist, so it would run — but a row nobody can rebuild is not worth the column. |
-| Nushell | Removed. Its only integer type is i64, so the spigot dies after **five digits** of pi (`2 ** 63` is an overflow error). Hand-rolled limbs in Nushell take 95 ms per 1112-limb multiply, which is one to two orders of magnitude past any budget. Task 10 is unreachable, so the row could never be complete. |
+| Nushell | **Task 10 is unreachable, and it is the only blocker.** Rechecked against 0.116.0 (September 2026): there is still no arbitrary-precision type, so `2 ** 63` fails with `Operator overflow` and the spigot dies after **five digits** of pi. Floats are f64, so they cannot substitute — `10000000000000000000000.0 + 1.0` is unchanged. Hand-rolled base-1e9 limbs are the documented fallback for every other row, and they were measured here rather than assumed: **about 85 µs per limb operation**, against 1.4 µs in VBScript, which is the slowest row that was accepted. The 2000-digit spigot needs roughly 720 million limb operations, so the full run is still about **17 hours** — against about 5.5 minutes for VBScript, the slowest row that was accepted. Threading is **not** a problem, which is worth recording: `par-each` runs on a real thread pool and gave **3.91x** on four workers. The other tasks are merely slow, not impossible — about 11 minutes for the 100-million-iteration tasks at a measured ~6.8 µs per iteration, and about 2 hours for `fib(40)`. So the row fails on task 10 alone, and on a margin of two orders of magnitude rather than on a technicality. |
 
 **Duplicate of a row that already exists.**
 
@@ -514,6 +622,27 @@ they are recorded here so nobody has to re-derive them.
 | Object Pascal | The `pascal` row *is* Object Pascal — `fpc` in `{$mode objfpc}`. "Not Delphi" is exactly what Free Pascal is. |
 | Turbo Pascal mode | `fpc -Mtp` is the same compiler as the `pascal` row, so it would be a second column for one implementation. It does work: `-Mtp` keeps `Int64`, and a task-02 program compiled that way prints the exact total. |
 
+**Written, then removed.**
+
+These four rows were built, and then taken back out on request, because none of them has a
+route to four concurrent workers: task 11 is unreachable, so the row could never be complete,
+and the rule here is that no row is partial. Their sources and toolchains are gone. They are
+listed so the reason does not have to be re-derived.
+
+| Language | Why it went |
+|---|---|
+| AWK | No thread facility, and no process facility either: the POSIX standard defines neither, and `gawk`'s extensions do not add one. |
+| Squirrel | No thread library, and no standard extension that supplies one. |
+| Oberon-2 | No threading in the implementation used here. Note the contrast with Oberon-07, which stayed: it has no thread module either, but its compiler can declare the operating system's own `CreateThread`, which is enough to pass task 11. |
+| BCPL | No concurrency of any kind, and the only usable implementation is a bytecode interpreter. |
+
+The contrast with what stayed is the point. Oberon-07 and Component Pascal also have no thread
+module, but both can reach the operating system's own calls — Oberon-07 through the compiler's
+foreign-procedure declarations and Component Pascal through a foreign `Threading` module — so
+they pass task 11 with real threads. Simula has no thread library either, but its process
+simulation is part of the language's standard application package, so it has a faithful
+translation. AWK, Squirrel, Oberon-2 and BCPL have no such route.
+
 **Measured, but not added.**
 
 | Language | What was found |
@@ -521,6 +650,9 @@ they are recorded here so nobody has to re-derive them.
 | Raku | Rakudo Star installs from an official Windows MSI, has native arbitrary-precision `Int` and real OS threads on MoarVM, so both hard tasks come for free. Not added yet only because the row has not been written. |
 | Unicon | Ships a 64-bit Windows installer and has large integers and built-in concurrency, so it is a plausible row. The thread model needs checking first. |
 | Factor | Has a Windows x86-64 build and native bignums, but its threads are co-operative rather than OS threads, so task 11 would be a correct-answer-no-speedup cell like CPython's. |
+| Erlang | OTP 29.1.1 ships a no-admin Windows `.zip`, has native arbitrary-precision integers, and runs one scheduler per core, so task 11 is real: **4.27x** measured on four workers, the best in the matrix. Task 07 is the blocker. That task exists to measure quadratic copying of an immutable string, but BEAM's writable-binary optimisation turns the natural `<<Acc/binary, "x">>` append into an amortised O(1) in-place extend, so the idiomatic form runs **linear** — 1M appends in 19 ms. Forcing a copy to reproduce the intended semantics gives a clean quadratic (100k in 2.2 s, 200k in 17 s, so roughly 7 minutes at the task's million), but then the row is written artificially. |
+| Elixir | Same BEAM and the same task-07 issue, plus a higher per-run start-up (**about 800 ms**, against Erlang's 520 ms), which is charged to every cell. Otherwise it matches Erlang: 8 MB zip, native bignums, **3.42x** on four workers. |
+| Erlang and Elixir, on style | A separate reason not to add them. Both were asked for in an imperative style, and neither language has one: there are no mutable variables and no loop syntax, so the only imperative register available is tail recursion with explicit accumulators plus `case`. That is a real way to write them and it is what the 4.27x above was measured with, but it cannot be called imperative, and a row labelled that way would be misleading. |
 
 One measurement worth keeping. **Task 07 takes 514 s in Java** and 336 s in Groovy. Task 07
 appends to an immutable string a million times, so it is quadratic by design, and on the JVM
@@ -538,6 +670,12 @@ mind.
 - No timeout. Every run goes to completion however long it takes, and the time reported is
   the real time. The slow rows are the ones to watch: PowerShell's call-heavy and
   per-character tasks are the worst of them, at 100 to 331 million interpreted operations.
+  Every row that hand-writes the base-1e9 limbs for task 10 pays more for it than for
+  anything else — VBScript takes about 5.5 minutes at 2000 digits, and `a68g`, whose
+  interpreter is around 900x slower than C on limb arithmetic, about half an hour. The
+  slowest cell that is not task 10 is **Racket task 07 at 1121 s**, where appending to an
+  immutable string copies about 5x10^11 bytes in total. `RUN.md` records the measurements,
+  and for `a68g` the two options for it.
 - Wrong output means `WRONG` and the timing is thrown away.
 - Everything pinned to one core, except task 11 which gets four.
 - Times are reported as they are, in milliseconds. Nothing is normalized to a baseline

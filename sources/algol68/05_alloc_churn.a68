@@ -1,0 +1,23 @@
+# task 05 alloc_churn — expected output: 1274991808 #
+# build: none (interpreter)    run: a68g 05_alloc_churn.a68 #
+# note: ten million 64-byte buffers taken from the heap. Storing each one in slots #
+# note: keeps it reachable and drops the buffer it replaces, which is what gives the #
+# note: collector something to do; a compiled row needs that line or -O2 deletes the #
+# note: allocation. #
+
+[1:256] REF [] CHAR slots;
+
+FOR i TO 256 DO
+  slots[i] := NIL
+OD;
+
+INT total := 0;
+
+FOR i FROM 0 TO 9999999 DO
+  REF [] CHAR buf = HEAP [1:64] CHAR;
+  buf[1] := REPR (i MOD 256);
+  total +:= ABS buf[1];
+  slots[(i MOD 256) + 1] := buf
+OD;
+
+print((whole(total, 0), newline))

@@ -1,0 +1,40 @@
+(* task 07 string_append — expected output: 1000000 *)
+(* build: Compiler.exe _07_string_append.ob07 win64con -out prog.exe    run: prog.exe *)
+(* note: representation: Oberon's string type is ARRAY OF CHAR, a fixed length array with a *)
+(*       0X terminator, and the language has no string concatenation operator and no way to *)
+(*       return an array from a procedure. So text := text + "x" cannot be written at all; *)
+(*       the appends grow the string in place at the end of the buffer and a length counter *)
+(*       tracks the end, which is what the Modula-2 and Oberon-2 rows of this benchmark do. *)
+(*       The printed number is the length, found by scanning for the 0X terminator. *)
+(* note: Compiler.exe is C:\stupidspeed\tools\oberon07\oberon-07-compiler-master\Compiler.exe, *)
+(*       which has no optimisation switch; the build line above is the whole story. *)
+(* note: the line is ended with Out.Char(0AX) and not Out.Ln. Out.Ln prints CR LF, and msvcrt *)
+(*       text mode then translates that LF a second time, so the pipe receives CR CR LF; a *)
+(*       lone LF from Out.Char goes through the same translation as one CR LF, the normal *)
+(*       Windows line ending. Nothing else in the output is affected. *)
+
+MODULE _07_string_append;
+IMPORT Out;
+
+CONST
+  N = 1000000;
+
+VAR
+  text: ARRAY N + 1 OF CHAR;
+  len: INTEGER;
+  i: INTEGER;
+
+BEGIN
+  len := 0;
+  FOR i := 1 TO N DO
+    text[len] := "x";
+    INC(len)
+  END;
+  text[len] := 0X;
+
+  (* length of the string that was built, found by scanning for the 0X terminator *)
+  len := 0;
+  WHILE text[len] # 0X DO INC(len) END;
+
+  Out.Int(len, 1); Out.Char(0AX)
+END _07_string_append.

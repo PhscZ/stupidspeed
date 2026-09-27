@@ -1,5 +1,10 @@
 // task 10 pi — expected output: 44889
-// build: scalac -release 17 10_pi.scala    run: scala Main
+// build: scalac -release 17 -d out 10_pi.scala
+// run: java -cp "out;<scala>/maven2/org/scala-lang/scala3-library_3/<v>/scala3-library_3-<v>.jar;<scala>/maven2/org/scala-lang/scala-library/<v>/scala-library-<v>.jar" Main
+// note: <scala> is the Scala distribution and <v> its version, 3.9.0 for the one this row was
+//       measured with. Scala CLI's `scala` is a subcommand runner, so `scala Main` is not a
+//       command it accepts; running the compiled class directly with `java -cp` is the
+//       equivalent, and it keeps the JVM's own start-up out of the compiler's way.
 // Gibbons' unbounded spigot on java.math.BigInteger; the first 10000 digits it emits are
 // summed, and that includes the leading 3. The digits themselves are never printed.
 

@@ -1,0 +1,33 @@
+(* task 02 switch_case — expected output: 7500000075000000 *)
+(* build: Compiler.exe _02_switch_case.ob07 win64con -out prog.exe    run: prog.exe *)
+(* note: the four-way decision is a CASE statement over i MOD 4, so the compiler emits the *)
+(*       same shape the C row's switch does. The total needs 53 bits, which fits INTEGER *)
+(*       (64 bit here) with room to spare. *)
+(* note: Compiler.exe is C:\stupidspeed\tools\oberon07\oberon-07-compiler-master\Compiler.exe, *)
+(*       which has no optimisation switch; the build line above is the whole story. *)
+(* note: the line is ended with Out.Char(0AX) and not Out.Ln. Out.Ln prints CR LF, and msvcrt *)
+(*       text mode then translates that LF a second time, so the pipe receives CR CR LF; a *)
+(*       lone LF from Out.Char goes through the same translation as one CR LF, the normal *)
+(*       Windows line ending. Nothing else in the output is affected. *)
+
+MODULE _02_switch_case;
+IMPORT Out;
+
+VAR
+  acc: INTEGER;
+  i: INTEGER;
+
+BEGIN
+  acc := 0;
+  FOR i := 0 TO 99999999 DO
+    CASE i MOD 4 OF
+       0: INC(acc)
+    |  1: acc := acc + i
+    |  2: acc := acc + 2 * i
+    |  3: acc := acc + 3 * i
+    ELSE
+    END
+  END;
+
+  Out.Int(acc, 1); Out.Char(0AX)
+END _02_switch_case.

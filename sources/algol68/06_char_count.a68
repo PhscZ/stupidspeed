@@ -1,0 +1,43 @@
+# task 06 char_count — expected output: 10000000 #
+# build: none (interpreter)    run: a68g --heap 1900000000 06_char_count.a68 #
+# note: a CHAR is 16 bytes here (a status word plus the value), so the 100000000- #
+# note: character text needs about 1.6 GB of heap and the default 65 MB heap answers #
+# note: not enough memory; hence the --heap flag. #
+# note: the text is built by repeatedly doubling the filled prefix with slice #
+# note: assignments, which are block moves, so the build is linear. This interpreter #
+# note: has no string-repeat operator: `block * k` concatenates one copy at a time and #
+# note: would make the build itself quadratic, which the task forbids. #
+
+INT n = 100000000;
+
+[1:n] CHAR text;
+
+[1:10] CHAR block := "abcdefghij";
+
+FOR i TO 10 DO
+  text[i] := block[i]
+OD;
+
+INT filled := 10;
+
+WHILE filled < n DO
+  INT chunk := filled;
+  IF chunk > n - filled THEN
+    chunk := n - filled
+  FI;
+  text[filled + 1 : filled + chunk] := text[1 : chunk];
+  filled +:= chunk
+OD;
+
+INT count := 0;
+
+FOR i TO n DO
+  CHAR ch := text[i];
+  IF ch = "a" THEN SKIP
+  ELIF ch = "e" THEN SKIP
+  ELIF ch = "h" THEN count +:= 1
+  ELSE SKIP
+  FI
+OD;
+
+print((whole(count, 0), newline))

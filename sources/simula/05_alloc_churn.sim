@@ -1,0 +1,40 @@
+! task 05 alloc_churn — expected output: 1274991808 ;
+! build: cim -q -o prog 05_alloc_churn.sim    run: ./prog ;
+! note: "allocate 64 bytes" is one object of a class whose only field is an INTEGER ;
+!       ARRAY of eight 64-bit integers. The 256-element ref array keeps the live buffer ;
+!       reachable and drops the one it replaces, so the replaced objects become garbage ;
+!       and cim's mark-and-sweep collector collects them, exactly as the task describes. ;
+! note: the program ends with exit(0), declared below as an external C procedure. ;
+!       Without it cim's runtime prints its own line ;
+!       "NNN garbage collection(s) in N.N seconds." on stdout when the program ;
+!       terminates, and every task here prints one line and nothing else. OutImage has ;
+!       already flushed the answer before exit runs. ;
+! note: cim.exe is a Cygwin build that drives the system gcc and links libcim.a, so ;
+!       C:\cygwin64\bin must be on PATH when it is run. ;
+! note: cim terminates a comment with a semicolon, which is why every header line above ;
+!       ends with one. ;
+begin
+  external C procedure exit is procedure quit(i); integer i;;
+
+  class Cell;
+  begin
+    integer array data(0:7);
+  end;
+
+  ref(Cell) buf;
+  ref(Cell) array slots(0:255);
+  integer i, total, slot;
+
+  total := 0;
+  for i := 0 step 1 until 9999999 do
+  begin
+    buf :- new Cell;
+    buf.data(0) := Mod(i, 256);
+    total := total + buf.data(0);
+    slot := Mod(i, 256);
+    slots(slot) :- buf
+  end;
+
+  OutInt(total, 0); OutImage;
+  quit(0)
+end

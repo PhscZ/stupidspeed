@@ -1,0 +1,280 @@
+# task 10 pi — expected output: 44889 #
+# build: none (interpreter)    run: a68g 10_pi.a68 #
+# note: Gibbons' unbounded spigot on hand written big integers, ported operation for #
+# note: operation from sources/c/10_pi.c: sign-magnitude, little-endian limbs, base 1e9. #
+# note: The limbs are LONG INT because INT is 32 bit here and limb * small overflows it. #
+# note: Only the operations the spigot needs are implemented, and the quotient is always #
+# note: one decimal digit, so repeated subtraction finds it. The limb arrays are fixed #
+# note: at 40000 entries: the state reaches about 16192 limbs (145728 decimal digits) at #
+# note: the 10000th digit. Only the sum of the digits is printed. #
+# note: The interpreter's own LONG LONG INT mode was measured and rejected: its cost #
+# note: scales with the PR precision setting, which would have to be 150000 for this #
+# note: task, making a run take about 20 hours. #
+# note: Every value in the spigot is non-negative, so OVER is floor division and the #
+# note: quotient needs no correction. #
+# note: Every routine hoists its row reference out of the loop (`REF [] LONG INT lr := #
+# note: limb OF r`). Re-deriving `limb OF x` for each element instead costs 13 to 18 #
+# note: percent more, measured on this file at all three calibration points. #
+# note: This is the slowest cell in the benchmark, and it is slow because a68g walks the #
+# note: tree rather than compiling: the C reference does the same 10000 digits in 57 s on #
+# note: this machine, and a68g is about 900 times slower per limb operation. Six measured #
+# note: points of this exact file, each printing the right digit sum: 200 digits 9.5 s #
+# note: (897), 300 digits 20.4 s (1337), 400 digits 40.3 s (1753), 500 digits 61.2 s #
+# note: (2212), 700 digits 126.9 s (3122), 1000 digits 293 s (4470). Every one of those #
+# note: sums was checked against an independent mpmath computation of pi. The cost grows #
+# note: faster than the square of the digit count (the exponent is about 2.3 over the last #
+# note: two points), so they extrapolate to roughly 16 hours for the real 10000-digit run, #
+# note: and the benchmark takes a warm-up plus five timed runs. #
+# note: The interpreter's -O2 (compile units and drop the runtime checks) is documented as #
+# note: Linux and FreeBSD only, and it measurably does nothing on Cygwin: a probe ran 23.7 s #
+# note: with -O2 against 23.3 s without. #
+# note: The 10000-digit output itself has not been observed from this file. RUN.md records #
+# note: the extrapolation and the options. #
+
+MODE BIG = STRUCT([0:39999] LONG INT limb, INT n, BOOL neg);
+
+PROC btrim = (REF BIG x) VOID:
+  BEGIN
+    REF [] LONG INT lx := limb OF x;
+    BOOL done := FALSE;
+    WHILE NOT done AND n OF x > 0 DO
+      IF lx[(n OF x) - 1] = 0 THEN
+        n OF x := n OF x - 1
+      ELSE
+        done := TRUE
+      FI
+    OD;
+    IF n OF x = 0 THEN neg OF x := FALSE FI
+  END;
+
+PROC bset = (REF BIG x, LONG INT v) VOID:
+  BEGIN
+    REF [] LONG INT lx := limb OF x;
+    LONG INT w := v;
+    n OF x := 0;
+    neg OF x := FALSE;
+    WHILE w > 0 DO
+      lx[n OF x] := w MOD 1000000000;
+      n OF x +:= 1;
+      w := w OVER 1000000000
+    OD
+  END;
+
+PROC bcopy = (REF BIG dst, REF BIG src) VOID:
+  BEGIN
+    REF [] LONG INT ld := limb OF dst, ls := limb OF src;
+    INT i := 0;
+    WHILE i < n OF src DO
+      ld[i] := ls[i];
+      i +:= 1
+    OD;
+    n OF dst := n OF src;
+    neg OF dst := neg OF src
+  END;
+
+PROC bcmpmag = (REF BIG a, REF BIG b) INT:
+  BEGIN
+    REF [] LONG INT la := limb OF a, lb := limb OF b;
+    INT c := 0;
+    IF n OF a /= n OF b THEN
+      IF n OF a < n OF b THEN c := -1 ELSE c := 1 FI
+    ELSE
+      INT i := n OF a;
+      WHILE i > 0 AND c = 0 DO
+        i := i - 1;
+        IF la[i] /= lb[i] THEN
+          IF la[i] < lb[i] THEN c := -1 ELSE c := 1 FI
+        FI
+      OD
+    FI;
+    c
+  END;
+
+PROC bcmp = (REF BIG a, REF BIG b) INT:
+  BEGIN
+    INT c := 0;
+    IF neg OF a /= neg OF b THEN
+      IF neg OF a THEN c := -1 ELSE c := 1 FI
+    ELSE
+      c := bcmpmag(a, b);
+      IF neg OF a THEN c := -c FI
+    FI;
+    c
+  END;
+
+PROC baddmag = (REF BIG r, REF BIG a, REF BIG b) VOID:
+  BEGIN
+    REF [] LONG INT lr := limb OF r, la := limb OF a, lb := limb OF b;
+    INT len := n OF a;
+    IF n OF b > len THEN len := n OF b FI;
+    LONG INT carry := 0;
+    INT i := 0;
+    WHILE i < len DO
+      LONG INT s := carry;
+      IF i < n OF a THEN s +:= la[i] FI;
+      IF i < n OF b THEN s +:= lb[i] FI;
+      IF s >= 1000000000 THEN
+        s := s - 1000000000;
+        carry := 1
+      ELSE
+        carry := 0
+      FI;
+      lr[i] := s;
+      i +:= 1
+    OD;
+    lr[len] := carry;
+    IF carry /= 0 THEN n OF r := len + 1 ELSE n OF r := len FI;
+    neg OF r := FALSE
+  END;
+
+PROC bsubmag = (REF BIG r, REF BIG a, REF BIG b) VOID:   # requires a >= b >= 0 #
+  BEGIN
+    REF [] LONG INT lr := limb OF r, la := limb OF a, lb := limb OF b;
+    LONG INT borrow := 0;
+    INT i := 0;
+    WHILE i < n OF a DO
+      LONG INT bi := borrow;
+      IF i < n OF b THEN bi +:= lb[i] FI;
+      IF la[i] >= bi THEN
+        lr[i] := la[i] - bi;
+        borrow := 0
+      ELSE
+        lr[i] := la[i] + 1000000000 - bi;
+        borrow := 1
+      FI;
+      i +:= 1
+    OD;
+    n OF r := n OF a;
+    neg OF r := FALSE;
+    btrim(r)
+  END;
+
+PROC badd = (REF BIG r, REF BIG a, REF BIG b) VOID:
+  BEGIN
+    BOOL an := neg OF a;
+    BOOL bn := neg OF b;
+    IF an = bn THEN
+      baddmag(r, a, b);
+      neg OF r := an
+    ELIF bcmpmag(a, b) >= 0 THEN
+      bsubmag(r, a, b);
+      neg OF r := an
+    ELSE
+      bsubmag(r, b, a);
+      neg OF r := bn
+    FI;
+    btrim(r)
+  END;
+
+PROC bsub = (REF BIG r, REF BIG a, REF BIG b) VOID:      # r = a - b #
+  BEGIN
+    BOOL an := neg OF a;
+    BOOL bn := neg OF b;
+    IF an /= bn THEN
+      baddmag(r, a, b);
+      neg OF r := an
+    ELIF bcmpmag(a, b) >= 0 THEN
+      bsubmag(r, a, b);
+      neg OF r := an
+    ELSE
+      bsubmag(r, b, a);
+      neg OF r := NOT an
+    FI;
+    btrim(r)
+  END;
+
+PROC bmul = (REF BIG r, REF BIG a, LONG INT m) VOID:
+  BEGIN
+    IF m = 0 OR n OF a = 0 THEN
+      n OF r := 0;
+      neg OF r := FALSE
+    ELSE
+      REF [] LONG INT lr := limb OF r, la := limb OF a;
+      LONG INT carry := 0;
+      INT i := 0;
+      WHILE i < n OF a DO
+        LONG INT p := la[i] * m + carry;
+        lr[i] := p MOD 1000000000;
+        carry := p OVER 1000000000;
+        i +:= 1
+      OD;
+      INT len := n OF a;
+      WHILE carry > 0 DO
+        lr[len] := carry MOD 1000000000;
+        len +:= 1;
+        carry := carry OVER 1000000000
+      OD;
+      n OF r := len;
+      neg OF r := neg OF a;
+      btrim(r)
+    FI
+  END;
+
+# floor(a / b) for a >= 0 and b > 0. The spigot only ever asks for a quotient of one #
+# decimal digit, so counting how many times b fits into a is enough. #
+PROC bquot = (REF BIG a, REF BIG b, REF BIG work) LONG INT:
+  BEGIN
+    LONG INT q := 0;
+    IF (NOT neg OF a) AND (NOT neg OF b) AND (n OF b > 0) THEN
+      bcopy(work, b);
+      WHILE bcmp(a, work) >= 0 DO
+        q +:= 1;
+        baddmag(work, work, b)
+      OD
+    FI;
+    q
+  END;
+
+BIG q, r, t, u, v, w;
+
+bset(q, 1);
+bset(r, 0);
+bset(t, 1);
+
+LONG INT k := 1, l := 3, n := 3;
+LONG INT total := 0;
+INT produced := 0;
+
+WHILE produced < 10000 DO
+  bmul(u, q, 4);
+  badd(u, u, r);                    # u = 4q + r #
+  bmul(v, t, n + 1);                # v = (n + 1)t #
+
+  IF bcmp(u, v) < 0 THEN
+    # the digit n is settled #
+    total +:= n;
+    produced +:= 1;
+
+    bmul(u, q, 3);
+    badd(u, u, r);
+    bmul(u, u, 10);                 # u = 10(3q + r) #
+    LONG INT nxt := bquot(u, t, w) - 10 * n;
+
+    bmul(v, t, n);                  # v = n t #
+    bsub(v, r, v);                  # v = r - n t #
+    bmul(r, v, 10);                 # r = 10(r - n t) #
+    bmul(q, q, 10);                 # q = 10q, t is unchanged #
+
+    n := nxt
+  ELSE
+    # not settled yet: widen the state by one more term #
+    bmul(u, q, 7 * k + 2);
+    bmul(v, r, l);
+    badd(u, u, v);                  # u = q(7k + 2) + r l #
+    bmul(v, t, l);                  # v = t l #
+    LONG INT nxt := bquot(u, v, w);
+
+    bmul(u, q, 2);
+    badd(u, u, r);
+    bmul(u, u, l);                  # u = (2q + r) l #
+    bcopy(r, u);
+    bmul(q, q, k);
+    bmul(t, t, l);
+
+    k +:= 1;
+    l +:= 2;
+    n := nxt
+  FI
+OD;
+
+print((whole(total, 0), newline))

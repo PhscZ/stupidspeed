@@ -1,0 +1,76 @@
+(* task 11 parallel_sum — expected output: 7500000075000000 *)
+(* build: Compiler.exe _11_parallel_sum.ob07 win64con -out prog.exe    run: prog.exe *)
+(* note: this compiler's Windows library has no thread module at all — lib\Windows\ holds *)
+(*       API, Args, Console, DateTime, File, HOST, In, Math, Math_x86, Out, RTL and WINAPI, *)
+(*       and none of them starts a thread. The language can still do it: Oberon-07's *)
+(*       [convention, "dll", "proc"] procedure declaration imports any kernel32 entry point, *)
+(*       which is how Out, File and WINAPI themselves are built, so CreateThread and *)
+(*       WaitForSingleObject are declared here in the same form WINAPI.ob07 uses. This is the *)
+(*       same kind of hand-rolled threading the Assembly row of this benchmark does with *)
+(*       clone and futex. Importing SYSTEM is what allows a foreign declaration like that. *)
+(* note: the thread start routine has to use the Windows calling convention, so Work is *)
+(*       declared PROCEDURE [windows] and the matching procedure type TProc is *)
+(*       PROCEDURE [windows] (p: INTEGER): INTEGER. A plain Oberon procedure would be called *)
+(*       with the wrong ABI and the thread would not return. *)
+(* note: the four results come back through a global array rather than the thread exit code: *)
+(*       a thread start routine returns a 32 bit DWORD, and each quarter of this sum is *)
+(*       larger than that, so the values cannot travel that way. Every thread writes its own *)
+(*       slot, so no locking is needed and the answer does not depend on the schedule. *)
+(* note: the work is exactly task 02's work, four ways, so the two are directly comparable: *)
+(*       one core against four. Compiler.exe is *)
+(*       C:\stupidspeed\tools\oberon07\oberon-07-compiler-master\Compiler.exe, which has no *)
+(*       optimisation switch; the build line above is the whole story. *)
+(* note: the line is ended with Out.Char(0AX) and not Out.Ln. Out.Ln prints CR LF, and msvcrt *)
+(*       text mode then translates that LF a second time, so the pipe receives CR CR LF; a *)
+(*       lone LF from Out.Char goes through the same translation as one CR LF, the normal *)
+(*       Windows line ending. Nothing else in the output is affected. *)
+
+MODULE _11_parallel_sum;
+IMPORT Out, SYSTEM;
+
+CONST
+  Span = 25000000;   (* one quarter of the 100000000 iterations *)
+
+TYPE
+  TProc = PROCEDURE [windows] (p: INTEGER): INTEGER;
+
+VAR
+  res: ARRAY 4 OF INTEGER;
+  h: ARRAY 4 OF INTEGER;
+  tid: INTEGER;
+  t, total: INTEGER;
+
+PROCEDURE [windows, "kernel32.dll", ""] CreateThread (sa, stackSize: INTEGER; start: TProc; param, flags: INTEGER; VAR id: INTEGER): INTEGER;
+PROCEDURE [windows, "kernel32.dll", ""] WaitForSingleObject (hh, ms: INTEGER): INTEGER;
+
+(* one quarter of task 02's switch, the same shape as the C row's worker *)
+PROCEDURE [windows] Work(p: INTEGER): INTEGER;
+VAR acc, i: INTEGER;
+BEGIN
+  acc := 0;
+  FOR i := p * Span TO (p + 1) * Span - 1 DO
+    CASE i MOD 4 OF
+       0: INC(acc)
+    |  1: acc := acc + i
+    |  2: acc := acc + 2 * i
+    |  3: acc := acc + 3 * i
+    ELSE
+    END
+  END;
+  res[p] := acc
+RETURN 0
+END Work;
+
+BEGIN
+  FOR t := 0 TO 3 DO
+    h[t] := CreateThread(0, 0, Work, t, 0, tid)
+  END;
+
+  (* wait for all four, then add up the four results *)
+  FOR t := 0 TO 3 DO
+    tid := WaitForSingleObject(h[t], -1)
+  END;
+
+  total := res[0] + res[1] + res[2] + res[3];
+  Out.Int(total, 1); Out.Char(0AX)
+END _11_parallel_sum.

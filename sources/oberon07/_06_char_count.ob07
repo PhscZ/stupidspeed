@@ -1,0 +1,50 @@
+(* task 06 char_count — expected output: 10000000 *)
+(* build: Compiler.exe _06_char_count.ob07 win64con -out prog.exe    run: prog.exe *)
+(* note: the whole 100 MB text is built up front by moving the ten character block into *)
+(*       every tenth slot with SYSTEM.MOVE; nothing is appended in a loop. The scan then *)
+(*       walks the array one character at a time. The text is a module level array, so it is *)
+(*       a 100 MB static block in the module's data segment. *)
+(* note: Compiler.exe is C:\stupidspeed\tools\oberon07\oberon-07-compiler-master\Compiler.exe, *)
+(*       which has no optimisation switch; the build line above is the whole story. *)
+(* note: the line is ended with Out.Char(0AX) and not Out.Ln. Out.Ln prints CR LF, and msvcrt *)
+(*       text mode then translates that LF a second time, so the pipe receives CR CR LF; a *)
+(*       lone LF from Out.Char goes through the same translation as one CR LF, the normal *)
+(*       Windows line ending. Nothing else in the output is affected. *)
+
+MODULE _06_char_count;
+IMPORT Out, SYSTEM;
+
+CONST
+  BlockLen = 10;
+  Repeats  = 10000000;
+  TextLen  = Repeats * BlockLen;
+
+VAR
+  text: ARRAY TextLen OF CHAR;
+  pat: ARRAY BlockLen OF CHAR;
+  count: INTEGER;
+  i: INTEGER;
+
+BEGIN
+  pat[0] := "a"; pat[1] := "b"; pat[2] := "c"; pat[3] := "d"; pat[4] := "e";
+  pat[5] := "f"; pat[6] := "g"; pat[7] := "h"; pat[8] := "i"; pat[9] := "j";
+
+  FOR i := 0 TO Repeats - 1 DO
+    SYSTEM.MOVE(SYSTEM.ADR(pat), SYSTEM.ADR(text[i * BlockLen]), BlockLen)
+  END;
+
+  count := 0;
+  FOR i := 0 TO TextLen - 1 DO
+    IF text[i] = "a" THEN
+      (* skip *)
+    ELSIF text[i] = "e" THEN
+      (* skip *)
+    ELSIF text[i] = "h" THEN
+      INC(count)
+    ELSE
+      (* skip *)
+    END
+  END;
+
+  Out.Int(count, 1); Out.Char(0AX)
+END _06_char_count.

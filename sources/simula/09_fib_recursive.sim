@@ -1,0 +1,18 @@
+! task 09 fib_recursive — expected output: 102334155 ;
+! build: cim -q -o prog 09_fib_recursive.sim    run: ./prog ;
+! note: fib is an INTEGER PROCEDURE. cim gives every call a fresh procedure data object, ;
+!       so plain recursion is allowed and no trampoline or second translation unit is ;
+!       needed. About 331 million calls are made and the run takes a few minutes. ;
+! note: cim.exe is a Cygwin build that drives the system gcc and links libcim.a, so ;
+!       C:\cygwin64\bin must be on PATH when it is run. ;
+! note: cim terminates a comment with a semicolon, which is why every header line above ;
+!       ends with one. ;
+begin
+  integer procedure fib(n); integer n;
+  begin
+    if n < 2 then fib := n
+    else fib := fib(n - 1) + fib(n - 2)
+  end;
+
+  OutInt(fib(40), 0); OutImage
+end

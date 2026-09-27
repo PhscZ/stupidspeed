@@ -1,0 +1,40 @@
+(* task 05 alloc_churn — expected output: 1274991808 *)
+(* build: Compiler.exe _05_alloc_churn.ob07 win64con -out prog.exe    run: prog.exe *)
+(* note: NEW and DISPOSE are the language's allocator; the runtime behind them is *)
+(*       HeapAlloc/HeapFree, with no collector, so this is malloc/free exactly as the C row *)
+(*       does it. The line storing into slots keeps the buffer reachable, and DISPOSE *)
+(*       releases the one the slot replaces. A pointer's base type must be a record here, *)
+(*       hence the one field record instead of a bare 64 byte block. *)
+(* note: Compiler.exe is C:\stupidspeed\tools\oberon07\oberon-07-compiler-master\Compiler.exe, *)
+(*       which has no optimisation switch; the build line above is the whole story. *)
+(* note: the line is ended with Out.Char(0AX) and not Out.Ln. Out.Ln prints CR LF, and msvcrt *)
+(*       text mode then translates that LF a second time, so the pipe receives CR CR LF; a *)
+(*       lone LF from Out.Char goes through the same translation as one CR LF, the normal *)
+(*       Windows line ending. Nothing else in the output is affected. *)
+
+MODULE _05_alloc_churn;
+IMPORT Out;
+
+TYPE
+  Buf = POINTER TO RECORD
+    b: ARRAY 64 OF BYTE
+  END;
+
+VAR
+  slots: ARRAY 256 OF Buf;
+  buf: Buf;
+  total: INTEGER;
+  i: INTEGER;
+
+BEGIN
+  total := 0;
+  FOR i := 0 TO 9999999 DO
+    NEW(buf);
+    buf.b[0] := i MOD 256;
+    total := total + buf.b[0];
+    DISPOSE(slots[i MOD 256]);   (* the buffer this slot replaces is released here *)
+    slots[i MOD 256] := buf      (* keeping buf reachable stops the allocation going away *)
+  END;
+
+  Out.Int(total, 1); Out.Char(0AX)
+END _05_alloc_churn.

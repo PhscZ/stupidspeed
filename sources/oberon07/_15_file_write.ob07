@@ -1,0 +1,50 @@
+(* task 15 file_write — expected output: 104857600 *)
+(* build: Compiler.exe _15_file_write.ob07 win64con -out prog.exe    run: prog.exe *)
+(* note: a 1 MiB buffer of the byte cycle 0..255 repeated 4096 times, written 100 times, so *)
+(*       it is one write call per megabyte and never one per byte. File.Write issues *)
+(*       WriteFile on the handle directly and there is no stdio buffer in the way, so the *)
+(*       flush the task asks for is FlushFileBuffers, declared here and called before the *)
+(*       close; WINAPI ships no FlushFileBuffers, so it is declared with the same *)
+(*       [windows, "kernel32.dll", ""] form that lib\Windows\WINAPI.ob07 uses for its own *)
+(*       kernel32 imports. *)
+(* note: importing SYSTEM is what allows a foreign procedure declaration like that one. *)
+(* note: Compiler.exe is C:\stupidspeed\tools\oberon07\oberon-07-compiler-master\Compiler.exe, *)
+(*       which has no optimisation switch; the build line above is the whole story. *)
+(* note: the line is ended with Out.Char(0AX) and not Out.Ln. Out.Ln prints CR LF, and msvcrt *)
+(*       text mode then translates that LF a second time, so the pipe receives CR CR LF; a *)
+(*       lone LF from Out.Char goes through the same translation as one CR LF, the normal *)
+(*       Windows line ending. Nothing else in the output is affected. *)
+
+MODULE _15_file_write;
+IMPORT Out, File, SYSTEM;
+
+CONST
+  Chunk = 1048576;   (* 1 MiB *)
+  Reps  = 100;
+
+VAR
+  f, n, total, i: INTEGER;
+  buf: ARRAY Chunk OF BYTE;
+
+PROCEDURE [windows, "kernel32.dll", ""] FlushFileBuffers (hFile: INTEGER): INTEGER;
+
+BEGIN
+  FOR i := 0 TO Chunk - 1 DO
+    buf[i] := i MOD 256
+  END;
+
+  f := File.Create("out.bin");
+  IF f # -1 THEN
+    total := 0;
+    FOR i := 1 TO Reps DO
+      n := File.Write(f, SYSTEM.ADR(buf), Chunk);
+      total := total + n
+    END;
+    n := FlushFileBuffers(f);
+    File.Close(f);
+
+    Out.Int(total, 1); Out.Char(0AX)
+  ELSE
+    Out.String("cannot create out.bin"); Out.Char(0AX)
+  END
+END _15_file_write.

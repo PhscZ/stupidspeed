@@ -1,0 +1,17 @@
+# task 07 string_append — expected output: 1000000 #
+# build: none (interpreter)    run: a68g 07_string_append.a68 #
+# note: a STRING is a FLEX ROW CHAR, and +:= allocates a new row and copies the old #
+# note: one, so the loop is quadratic by design, the same shape as the C row realloc #
+# note: plus strcat. Left at a million because ten times the count is a hundred times #
+# note: the work. #
+# note: measured cost of that quadratic loop in this interpreter: 300000 appends take #
+# note: about 6 minutes, so the full million is roughly an hour. Nothing is cut off for #
+# note: being slow; this is the row's second slowest task after task 10. #
+
+STRING text := "";
+
+FOR i FROM 1 TO 1000000 DO
+  text +:= "x"
+OD;
+
+print((whole(UPB text, 0), newline))

@@ -1,0 +1,42 @@
+# task 15 file_write — expected output: 104857600 #
+# build: none (interpreter)    run: a68g 15_file_write.a68 #
+# note: the 1 MiB buffer is a row of 262144 INT, four raw bytes each, holding the #
+# note: bytes 0..255 repeating; a hundred writes of it make the 100 MiB. A BITS element #
+# note: is four bytes in this build, not eight, so INT and BITS would carry the same #
+# note: number of bytes and INT needs no shifting. #
+# note: a byte with the top bit set makes the word negative, so the top byte is written #
+# note: as (b3 - 256) and the four bytes come back out of the file in order. #
+# note: the file is opened on the back channel, which is the one that allows binary #
+# note: putting; the out channel is text only and answers channel does not allow binary #
+# note: putting. close() flushes the file, and this interpreter exposes no fsync. #
+
+INT words = 262144;
+
+[1:words] INT buf;
+
+FOR j TO words DO
+  INT base := ((j - 1) * 4) MOD 256;
+  INT b3 := (base + 3) MOD 256;
+  IF b3 > 127 THEN
+    b3 -:= 256
+  FI;
+  buf[j] := (base MOD 256)
+          + (((base + 1) MOD 256) * 256)
+          + (((base + 2) MOD 256) * 65536)
+          + (b3 * 16777216)
+OD;
+
+FILE f;
+
+VOID (open (f, "out.bin", stand back channel));
+
+INT written := 0;
+
+FOR rep TO 100 DO
+  putbin (f, buf);
+  written +:= words * 4
+OD;
+
+close (f);
+
+print((whole(written, 0), newline))

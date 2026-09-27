@@ -1,0 +1,31 @@
+(* task 09 fib_recursive — expected output: 102334155 *)
+(* build: Compiler.exe _09_fib_recursive.ob07 win64con -out prog.exe    run: prog.exe *)
+(* note: plain double recursion, no memoisation, about 331 million calls. The compiler has *)
+(*       no inliner, so nothing is folded away. *)
+(* note: in this dialect RETURN is not a statement: a function body is a statement sequence *)
+(*       followed by one RETURN expression, so the two cases go into a local result variable *)
+(*       and the single RETURN hands it back. *)
+(* note: Compiler.exe is C:\stupidspeed\tools\oberon07\oberon-07-compiler-master\Compiler.exe, *)
+(*       which has no optimisation switch; the build line above is the whole story. *)
+(* note: the line is ended with Out.Char(0AX) and not Out.Ln. Out.Ln prints CR LF, and msvcrt *)
+(*       text mode then translates that LF a second time, so the pipe receives CR CR LF; a *)
+(*       lone LF from Out.Char goes through the same translation as one CR LF, the normal *)
+(*       Windows line ending. Nothing else in the output is affected. *)
+
+MODULE _09_fib_recursive;
+IMPORT Out;
+
+PROCEDURE Fib(n: INTEGER): INTEGER;
+VAR res: INTEGER;
+BEGIN
+  IF n < 2 THEN
+    res := n
+  ELSE
+    res := Fib(n - 1) + Fib(n - 2)
+  END
+RETURN res
+END Fib;
+
+BEGIN
+  Out.Int(Fib(40), 1); Out.Char(0AX)
+END _09_fib_recursive.

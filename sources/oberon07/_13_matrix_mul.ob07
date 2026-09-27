@@ -1,0 +1,49 @@
+(* task 13 matrix_mul — expected output: 599995000 *)
+(* build: Compiler.exe _13_matrix_mul.ob07 win64con -out prog.exe    run: prog.exe *)
+(* note: plain i, j, k triple loop in the order the task gives, no blocking and no loop *)
+(*       reordering, so the k loop walks a column of b and the cache is not helping. *)
+(* note: Compiler.exe is C:\stupidspeed\tools\oberon07\oberon-07-compiler-master\Compiler.exe, *)
+(*       which has no optimisation switch; the build line above is the whole story. *)
+(* note: the line is ended with Out.Char(0AX) and not Out.Ln. Out.Ln prints CR LF, and msvcrt *)
+(*       text mode then translates that LF a second time, so the pipe receives CR CR LF; a *)
+(*       lone LF from Out.Char goes through the same translation as one CR LF, the normal *)
+(*       Windows line ending. Nothing else in the output is affected. *)
+
+MODULE _13_matrix_mul;
+IMPORT Out;
+
+CONST
+  N = 500;
+
+VAR
+  a, b, c: ARRAY N, N OF INTEGER;
+  total, sum: INTEGER;
+  i, j, k: INTEGER;
+
+BEGIN
+  FOR i := 0 TO N - 1 DO
+    FOR j := 0 TO N - 1 DO
+      a[i, j] := (i + j) MOD 7;
+      b[i, j] := (i * j) MOD 5
+    END
+  END;
+
+  FOR i := 0 TO N - 1 DO
+    FOR j := 0 TO N - 1 DO
+      sum := 0;
+      FOR k := 0 TO N - 1 DO
+        sum := sum + a[i, k] * b[k, j]
+      END;
+      c[i, j] := sum
+    END
+  END;
+
+  total := 0;
+  FOR i := 0 TO N - 1 DO
+    FOR j := 0 TO N - 1 DO
+      total := total + c[i, j]
+    END
+  END;
+
+  Out.Int(total, 1); Out.Char(0AX)
+END _13_matrix_mul.

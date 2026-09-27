@@ -1,0 +1,31 @@
+(* task 08 average — expected output: 0.498046875 *)
+(* build: Compiler.exe _08_average.ob07 win64con -out prog.exe    run: prog.exe *)
+(* note: Oberon-07 does not mix INTEGER and REAL in one expression, so the reading is *)
+(*       FLT(i MOD 256) / 256.0. REAL is an IEEE 64 bit double here, and every reading is a *)
+(*       multiple of 1/256, so the sum is exact and the answer does not depend on the order *)
+(*       of the additions. *)
+(* note: Out.FixReal(x, width, precision) is printf("%*.*f"), so width 1 and precision 9 *)
+(*       give the nine digits after the point that the task wants. Out.Real would print *)
+(*       exponential form. *)
+(* note: Compiler.exe is C:\stupidspeed\tools\oberon07\oberon-07-compiler-master\Compiler.exe, *)
+(*       which has no optimisation switch; the build line above is the whole story. *)
+(* note: the line is ended with Out.Char(0AX) and not Out.Ln. Out.Ln prints CR LF, and msvcrt *)
+(*       text mode then translates that LF a second time, so the pipe receives CR CR LF; a *)
+(*       lone LF from Out.Char goes through the same translation as one CR LF, the normal *)
+(*       Windows line ending. Nothing else in the output is affected. *)
+
+MODULE _08_average;
+IMPORT Out;
+
+VAR
+  total: REAL;
+  i: INTEGER;
+
+BEGIN
+  total := 0.0;
+  FOR i := 0 TO 99999999 DO
+    total := total + FLT(i MOD 256) / 256.0
+  END;
+
+  Out.FixReal(total / 100000000.0, 1, 9); Out.Char(0AX)
+END _08_average.

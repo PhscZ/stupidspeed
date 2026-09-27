@@ -1,0 +1,31 @@
+! task 06 char_count — expected output: 10000000 ;
+! build: cim -q -m128 -o prog 06_char_count.sim    run: ./prog ;
+! note: -m128 asks for a 128 MB initial memory pool so that the single 100 MB character ;
+!       array fits, the runtime default is far smaller and the allocation would abort. ;
+! note: Simula's TEXT is a fixed-length frame capped at 65535 characters (its length ;
+!       field is an unsigned short in cim's runtime), so a 100 million character text ;
+!       cannot exist. The characters live in a CHARACTER ARRAY instead, which has no ;
+!       such cap. The ten-character block is copied in whole, block by block, as the ;
+!       task asks, the string is not built by appending. ;
+! note: cim.exe is a Cygwin build that drives the system gcc and links libcim.a, so ;
+!       C:\cygwin64\bin must be on PATH when it is run. ;
+! note: cim terminates a comment with a semicolon, which is why every header line above ;
+!       ends with one. ;
+begin
+  character array t(0:99999999);
+  character array pat(0:9);
+  integer i, j, count;
+
+  pat(0) := 'a'; pat(1) := 'b'; pat(2) := 'c'; pat(3) := 'd'; pat(4) := 'e';
+  pat(5) := 'f'; pat(6) := 'g'; pat(7) := 'h'; pat(8) := 'i'; pat(9) := 'j';
+
+  for i := 0 step 1 until 9999999 do
+    for j := 0 step 1 until 9 do
+      t(i * 10 + j) := pat(j);
+
+  count := 0;
+  for i := 0 step 1 until 99999999 do
+    if t(i) = 'h' then count := count + 1;
+
+  OutInt(count, 0); OutImage
+end

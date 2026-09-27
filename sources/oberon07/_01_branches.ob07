@@ -1,0 +1,40 @@
+(* task 01 branches — expected output: 33333334 13333333 7619048 45714285 *)
+(* build: Compiler.exe _01_branches.ob07 win64con -out prog.exe    run: prog.exe *)
+(* note: Compiler.exe is C:\stupidspeed\tools\oberon07\oberon-07-compiler-master\Compiler.exe, *)
+(*       Akron Oberon-07 compiler 1.69 (64-bit). It has no optimisation switch — its x86-64 *)
+(*       code generator has no unoptimised mode — so the build line is the whole story. *)
+(*       -nochk a turns off the range and type checks and changes what the program means, so *)
+(*       it is not used. INTEGER is 64 bit here. *)
+(* note: the module name does not have to match the file name for the module named on the *)
+(*       command line; only imported modules must be named after their file. *)
+(* note: the line is ended with Out.Char(0AX) and not Out.Ln. Out.Ln prints CR LF, and msvcrt *)
+(*       text mode then translates that LF a second time, so the pipe receives CR CR LF; a *)
+(*       lone LF from Out.Char goes through the same translation as one CR LF, the normal *)
+(*       Windows line ending. Nothing else in the output is affected. *)
+
+MODULE _01_branches;
+IMPORT Out;
+
+VAR
+  a, b, c, d: INTEGER;
+  i: INTEGER;
+
+BEGIN
+  a := 0; b := 0; c := 0; d := 0;
+  FOR i := 0 TO 99999999 DO
+    IF i MOD 3 = 0 THEN
+      INC(a)
+    ELSIF i MOD 5 = 0 THEN
+      INC(b)
+    ELSIF i MOD 7 = 0 THEN
+      INC(c)
+    ELSE
+      INC(d)
+    END
+  END;
+
+  Out.Int(a, 1); Out.Char(" ");
+  Out.Int(b, 1); Out.Char(" ");
+  Out.Int(c, 1); Out.Char(" ");
+  Out.Int(d, 1); Out.Char(0AX)
+END _01_branches.

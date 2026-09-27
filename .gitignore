@@ -1,1 +1,10 @@
+# Installed toolchains. Local only; BUILD.md lists what to install.
 tools/
+
+# Scratch: build outputs, test fixtures, probes, investigation notes.
+# Nothing here is part of the benchmark.
+temp/
+
+# Python bytecode from the helper scripts.
+__pycache__/
+*.pyc

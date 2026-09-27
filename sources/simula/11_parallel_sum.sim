@@ -1,0 +1,57 @@
+! task 11 parallel_sum — expected output: 7500000075000000 ;
+! build: cim -q -o prog 11_parallel_sum.sim    run: ./prog ;
+! note: Simula's concurrency is its process simulation, the SIMULATION and PROCESS part ;
+!       of the language's own standard application package. Four PROCESS objects are ;
+!       scheduled by the SIMULATION scheduler: ACTIVATE starts a process, HOLD(0) gives ;
+!       up the processor to the next process in the sequencing set, and a plain HOLD ;
+!       puts the main program behind them until all four have terminated. ;
+! note: the scheduler is cooperative and single-threaded - one OS thread, no preemption -
+!       so this is quasi-parallel execution, the same shape as Dolphin Smalltalk's green ;
+!       processes and the same class of cell as CPython and CRuby: it prints the number ;
+!       task 02 prints and is not faster than task 02. ;
+! note: each worker's quarter is walked in four chunks with a yield between chunks, which ;
+!       is what makes the four interleave rather than run to completion one after another. ;
+!       The arithmetic and the order the terms are accumulated in are unchanged from the ;
+!       single-loop form, only the loop is split. ;
+! note: cim.exe is a Cygwin build that drives the system gcc and links libcim.a, so ;
+!       C:\cygwin64\bin must be on PATH when it is run. ;
+! note: cim terminates a comment with a semicolon, which is why every header line above ;
+!       ends with one. ;
+
+SIMULATION
+BEGIN
+  INTEGER ARRAY res(0:3);
+
+  PROCESS CLASS WORKER(t); INTEGER t;
+  BEGIN
+    INTEGER c, i, lo, hi, acc;
+
+    acc := 0;
+    FOR c := 0 STEP 1 UNTIL 3 DO
+    BEGIN
+      lo := t * 25000000 + c * 6250000;
+      hi := lo + 6250000 - 1;
+      FOR i := lo STEP 1 UNTIL hi DO
+      BEGIN
+        IF Mod(i, 4) = 0 THEN acc := acc + 1
+        ELSE IF Mod(i, 4) = 1 THEN acc := acc + i
+        ELSE IF Mod(i, 4) = 2 THEN acc := acc + 2 * i
+        ELSE acc := acc + 3 * i
+      END;
+      IF c < 3 THEN HOLD(0)
+    END;
+
+    res(t) := acc
+  END;
+
+  INTEGER t, total;
+
+  FOR t := 0 STEP 1 UNTIL 3 DO ACTIVATE(NEW WORKER(t));
+
+  HOLD(1);
+
+  total := 0;
+  FOR t := 0 STEP 1 UNTIL 3 DO total := total + res(t);
+
+  OutInt(total, 0); OutImage
+END

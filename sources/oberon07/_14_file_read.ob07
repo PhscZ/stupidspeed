@@ -1,0 +1,45 @@
+(* task 14 file_read — expected output: 484442112 *)
+(* build: Compiler.exe _14_file_read.ob07 win64con -out prog.exe    run: prog.exe *)
+(* note: data.bin (100 MiB, the bytes 0..255 repeating) must be in the working directory. *)
+(*       File.Open/File.Read go straight to the Win32 OpenFile/ReadFile, one megabyte per *)
+(*       call, and File.Read takes the address of the buffer, hence SYSTEM.ADR. A zero or *)
+(*       negative read ends the loop, so a short final block would still be counted. *)
+(* note: the total is reduced mod 2^32 the way the C row does it, although INTEGER is 64 bit *)
+(*       and would hold the raw sum too. *)
+(* note: Compiler.exe is C:\stupidspeed\tools\oberon07\oberon-07-compiler-master\Compiler.exe, *)
+(*       which has no optimisation switch; the build line above is the whole story. *)
+(* note: the line is ended with Out.Char(0AX) and not Out.Ln. Out.Ln prints CR LF, and msvcrt *)
+(*       text mode then translates that LF a second time, so the pipe receives CR CR LF; a *)
+(*       lone LF from Out.Char goes through the same translation as one CR LF, the normal *)
+(*       Windows line ending. Nothing else in the output is affected. *)
+
+MODULE _14_file_read;
+IMPORT Out, File, SYSTEM;
+
+CONST
+  Chunk = 1048576;
+
+VAR
+  f, got, total, i: INTEGER;
+  buf: ARRAY Chunk OF BYTE;
+
+BEGIN
+  f := File.Open("data.bin", File.OPEN_R);
+  IF f # -1 THEN
+    total := 0;
+    got := Chunk;
+    WHILE got > 0 DO
+      got := File.Read(f, SYSTEM.ADR(buf), Chunk);
+      IF got > 0 THEN
+        FOR i := 0 TO got - 1 DO
+          total := total + buf[i]
+        END
+      END
+    END;
+    File.Close(f);
+
+    Out.Int(total MOD 4294967296, 1); Out.Char(0AX)
+  ELSE
+    Out.String("cannot open data.bin"); Out.Char(0AX)
+  END
+END _14_file_read.
