@@ -80,6 +80,9 @@ Languages compiled to a static native binary need nothing. The rest need the fol
 | Clojure | clojure.main | a JRE (17 or newer; Clojure supports 8 through 25) plus the three runtime jars | No build step and no installer. The three jars are the whole toolchain; `clojure.main` compiles the source as it runs. Set `JAVA_HOME` per row rather than relying on whatever `java` is first on `PATH`. |
 | Racket | racket (CS) | none — the installation tree is the runtime | Relocatable, but it has to move as a unit: the DLL and `collects` paths are embedded in the executables relative to the executable's own location. `Racket.exe` is the console program; task 11 uses `racket/place`, which is in `base` and therefore present even in Minimal Racket. |
 | OCaml | ocamlopt | none — native static binary | The MSYS2 UCRT64 build needs the UCRT64 DLLs on `PATH` at run time, and building needs `OCAMLLIB` set to the Windows form of the stdlib path plus the `flexdll` package; see `BUILD.md`. |
+| Raku | rakudo (MoarVM) | the extracted Rakudo tree | No build step. The MSI installs per-machine by default, so extract it with `msiexec /a` for a no-admin row. |
+| Erlang | OTP (escript) | the extracted OTP tree | No build step. `escript` compiles the script on each run. Run with `-smp enable` so all schedulers are live. |
+| Elixir | elixir (BEAM) | Erlang's tree plus Elixir's | No build step. Elixir needs Erlang on `PATH` first; `elixir` then compiles the script each run. |
 | VBScript | cscript | none — `cscript.exe` ships with Windows | The runtime is a Windows component rather than something you install, which is also why the row is on borrowed time: see the platform table below. |
 | Common Lisp | sbcl | none — the dumped executable embeds the core | The build dumps a standalone `prog.exe` with `save-lisp-and-die`, so nothing has to be on `PATH` at run time. Task 11 uses `sb-thread`, which is a required part of the Windows build. |
 
@@ -138,7 +141,7 @@ C, C++, Rust, Zig, Go, D, Swift, Ada, Pascal, Java, Kotlin (both rows), C#, F#, 
 Scala, Nim, Odin, Julia (`-t4`), Fortran (OpenMP, needs `-fopenmp`), Perl (ithreads),
 PHP (`parallel`, needs a ZTS build), PowerShell (runspace pools), Crystal (`Fiber::ExecutionContext::Parallel`),
 Objective-C (`NSThread`), Modula-2 (Win32 `Threads` module), Modula-3 (`Thread.Fork`), BASIC (`THREADCREATE`),
-Groovy (`java.lang.Thread`), Clojure (`java.lang.Thread` interop, not `future`), Common Lisp (`sb-thread:make-thread` on real Win32 threads), OCaml (`Domain.spawn`/`Domain.join`, OCaml 5 only), Vala (`GLib.Thread`), Component Pascal (the .NET `Threading` module,
+Groovy (`java.lang.Thread`), Clojure (`java.lang.Thread` interop, not `future`), Common Lisp (`sb-thread:make-thread` on real Win32 threads), OCaml (`Domain.spawn`/`Domain.join`, OCaml 5 only), Erlang and Elixir (`spawn` onto a BEAM scheduler, one per core, no global lock), Raku (`start`, which MoarVM runs through `uv_thread_create`), Vala (`GLib.Thread`), Component Pascal (the .NET `Threading` module,
 via `REGISTER` on a bound method with the foreign `Th.ThreadStart` delegate), C3 (`std::thread`),
 Oberon-07 (raw `CreateThread` + `WaitForSingleObject` declared as foreign procedures, no thread
 module in its library),
@@ -382,7 +385,7 @@ iterations, the loop is smaller than the noise in starting the process.
 
 ## Expected cost
 
-Every task runs six times, in 74 toolchains.
+Every task runs six times, in 77 toolchains.
 
 - Fast compiled languages: under a second per run, so about **1.5 hours** for the matrix.
 - The 100-million-iteration tasks take 10 to 15 seconds in CPython.
@@ -398,6 +401,12 @@ Every task runs six times, in 74 toolchains.
     immutable and `string-append` allocates and copies the whole string every time, so a million
     appends copy about 5x10^11 bytes. That is the quadratic cost the task is about, and it makes
     this one of the slowest cells in the matrix.
+  - **Raku** is slow per operation: `given`/`when` costs about 5.7 us per iteration against
+    0.47 us for the equivalent `if`/`elsif` chain, because `when` smartmatches. The row keeps
+    `given`/`when` in task 02, since that is Raku's own switch, and takes the ~10 minute run.
+    Task 06's per-character `substr` scan is the other slow cell.
+  - **Erlang and Elixir** are the reverse: both are fast, and their per-run start-up (about
+    520 ms for Erlang, 800 ms for Elixir) is the main fixed cost, charged to every cell.
   - **VBScript** is the slowest row overall. Task 07 takes about **9.6 minutes** (576 s
     measured) and task 14 about **1.4 minutes** (91 s measured at 100 MiB, so about 82 s at 90
     MiB, at roughly 1.1 us per byte through the text-mode stream), task 06 about 35 s. Task 10

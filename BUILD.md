@@ -61,7 +61,7 @@ row that is *not* portable is `assembly`: it is a freestanding ELF64 binary buil
 `nasm -f elf64` and `ld`, so it is Linux x86-64 only. See `RUN.md` for the full platform
 breakdown.
 
-Disk: **23 GB measured** for all 74 toolchains, installed and run on one Windows x64 host.
+Disk: **23 GB measured** for all 77 toolchains, installed and run on one Windows x64 host.
 The heavy terms are LLVM (4.0 GB), Swift (3.2 GB), the AIR SDK (1.6 GB), GNAT with its MSYS2
 runtime (1.8 GB, which also supplies `flang`), MSVC (1.2 GB once reassembled from a 2.5 GB
 layout), Julia (1.1 GB), Perl (1.0 GB), the .NET SDK (0.7 GB) and GraalVM (0.7 GB); most other
@@ -178,8 +178,11 @@ time is zero. Everything is paid at run time.
 | Racket | racket (CS) |
 | Common Lisp | sbcl |
 | VBScript | cscript |
+| Raku | rakudo (MoarVM) |
+| Erlang | OTP (escript) |
+| Elixir | elixir (BEAM) |
 
-Seven of these need more than a run command.
+Eight of these need more than a run command.
 
 **Dolphin** is
 `Dolphin8 DPRO.img8 -u -f <task>.st -q`, the same form Dolphin's own `TestDPRO.cmd` uses.
@@ -294,6 +297,35 @@ VBScript has no thread library and no way to declare one, so the parent re-runs 
 four times through `WScript.Shell.Exec` with a worker index as the argument and reads each
 child's stdout back, which blocks until that child exits and is therefore the join. That is
 real parallelism across four cores, the same category as the R row's `PSOCK` workers.
+
+**Raku, Erlang and Elixir** are three separate rows that share a runtime shape and one caveat.
+All three install without admin: Raku is a 64 MB MSI that `msiexec /a <msi> TARGETDIR=<dir> /qn`
+administratively extracts (the same no-admin route the SBCL row uses — the MSI itself installs
+per-machine and wants elevation), Erlang OTP 29.1.1 is a plain 179 MB Windows `.zip`, and Elixir
+is an 8 MB zip that sits on top of that Erlang. None has a build step: `raku <task>.raku`,
+`escript <task>.erl` and `elixir <task>.exs` each compile the file as they run, so that compile
+time is inside the measured number. All three have arbitrary-precision integers built in, so
+task 10 is a fast cell rather than a hand-rolled one, and all three have real OS threads, so
+task 11 is a genuine pass — Erlang measured **4.27x**, the best in the matrix.
+
+The caveat is task 07, and it is the same one for all three: each runtime has an explicit
+optimisation for repeatedly appending the same value, which turns the natural expression into an
+amortised O(1) in-place extend. MoarVM's `MVM_string_concatenate` detects the pattern and bumps a
+repetition counter on the string's strand tree; BEAM's writable-binary optimisation does the same
+for `<<Acc/binary, "x">>`. Both therefore run **linear**, not quadratic, and the cell measures the
+optimised append instead of the quadratic copy the task is about. Measured: Raku 0.39 s for 1M
+appends (0.05/0.07/0.14 s at 100k/200k/400k), Erlang 19 ms for 1M and 87 ms for 4M. The rows
+record this rather than forcing a copy, because forcing one would mean writing them artificially.
+
+Erlang and Elixir also need a style note that the other 74 rows do not. Neither language has
+mutable variables or loop syntax — there is no assignment statement — so every loop in those two
+rows is tail recursion with explicit accumulators, which the compiler turns into a jump, plus
+`case`/`cond` for the branches. The rows deliberately avoid the functional style (no
+`map`/`foldl`/comprehensions/higher-order functions in any timed path) and use the languages' own
+escape hatches for state: the process dictionary, and `:atomics`, a real mutable array of 64-bit
+integers. That is the most procedural register either language has; it cannot honestly be called
+imperative and the rows do not claim to be. Raku needs no such note — it has mutable variables
+and `for`/`while`/`loop`, so its row is ordinary imperative code.
 
 VBScript is also the only row here that is being withdrawn. Microsoft's phased deprecation
 makes it a Feature on Demand in Windows 11 24H2 — present and enabled at first — then disables

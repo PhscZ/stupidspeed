@@ -16,7 +16,7 @@ disposable. See the end of `BUILD.md` for what is in each.
 ## Results
 
 One row per toolchain, one column per task. The column headings are the task numbers, and
-the task names are the section headings under [Tasks](#tasks). All 74 toolchains, empty and
+the task names are the section headings under [Tasks](#tasks). All 77 toolchains, empty and
 ready to fill in.
 
 A cell holds the median of the 5 timed runs, in milliseconds. `WRONG` is an output that did
@@ -100,6 +100,9 @@ kept alongside the median in the raw results, not in this table.
 | Common Lisp | sbcl |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | OCaml | ocamlopt |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | VBScript | cscript |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Raku | rakudo (MoarVM) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Erlang | OTP (escript) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Elixir | elixir (BEAM) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 
 No cell is `SKIPPED` by design. Five rows need more than the stock install for task 11, and
 each says so in `BUILD.md`: Assembly has no libc, so it issues `clone` and `futex` itself; Tcl
@@ -125,6 +128,27 @@ per-application data directory instead. All of it is covered in `RUN.md`, along 
 runtime's rule that no filesystem work can happen in the application constructor and the fact
 that worker results have to come back through shared properties rather than a
 `MessageChannel`.
+
+**Raku, Erlang and Elixir** share one caveat, and it is the only thing unusual about them. Task
+07 exists to measure the quadratic cost of appending to an immutable string, and all three
+runtimes have an explicit optimisation for exactly that pattern. MoarVM's
+`MVM_string_concatenate` detects "repeatedly concatenating the same string" and bumps a
+repetition counter on its strand tree instead of copying; BEAM's writable-binary optimisation
+does the same for `<<Acc/binary, "x">>`. Measured: Raku takes 0.05 s / 0.07 s / 0.14 s / 0.39 s
+at 100k / 200k / 400k / 1M appends, and Erlang 19 ms at 1M and 87 ms at 4M — both **linear**,
+not quadratic. That cell therefore measures the runtime's optimised append rather than the
+quadratic copy the task is designed to measure, and it is recorded rather than worked around:
+forcing a copy would mean writing the row artificially, which is further from the rules than the
+deviation is.
+
+Erlang and Elixir carry a second note. Neither has mutable variables or loop syntax, so there is
+no imperative register to write in. Every loop in those two rows is tail recursion with explicit
+accumulators, which the compiler turns into a jump, and both rows avoid the functional style
+entirely — no `map`/`foldl`/comprehensions/higher-order functions in any timed path. That is the
+most procedural form the languages have, and the rows say so rather than claiming to be
+imperative. Where a task needs mutable state they use the languages' own escape hatches: the
+process dictionary, and `:atomics`, a real mutable array of 64-bit integers. Raku has no such
+caveat — it is multi-paradigm with mutable variables, so its row is ordinary imperative code.
 
 **VBScript** is the other. It has no byte type — it cannot index the `Byte()` array that
 `ADODB.Stream.Read` returns, and refuses `For Each` over it — so task 14 reads the file as text
@@ -423,6 +447,9 @@ sometimes the wrong thing.
   with no shared memory, so they are isolates rather than threads — and the results have to come
   back through shared properties, because a `MessageChannel`'s `send()` throws from inside a
   worker.
+- **Erlang, Elixir and Raku** all pass with real OS threads and no caveat on this task: BEAM
+  runs one scheduler per core with no global lock, and MoarVM runs each Raku thread through
+  `uv_thread_create`. Erlang measured the best speedup in the matrix at **4.27x**.
 - **Assembly** has no libc and no thread library at all, so it makes the `clone` and `futex`
   syscalls by hand: four real kernel threads on four stacks, and the same answer.
 - **VBScript** has no thread library either, and no way to declare one, so it starts four child
@@ -564,6 +591,9 @@ nothing else.
 | Common Lisp | sbcl |
 | OCaml | ocamlopt |
 | VBScript | cscript |
+| Raku | rakudo (MoarVM) |
+| Erlang | OTP (escript) |
+| Elixir | elixir (BEAM) |
 
 Missing a toolchain means the cell says `SKIPPED`. It never counts as zero. The same goes
 for a language that cannot do a task at all, such as a language with no threads trying
@@ -652,12 +682,8 @@ translation. AWK, Squirrel, Oberon-2 and BCPL have no such route.
 
 | Language | What was found |
 |---|---|
-| Raku | Rakudo Star installs from an official Windows MSI, has native arbitrary-precision `Int` and real OS threads on MoarVM, so both hard tasks come for free. Not added yet only because the row has not been written. |
 | Unicon | Ships a 64-bit Windows installer and has large integers and built-in concurrency, so it is a plausible row. The thread model needs checking first. |
 | Factor | Has a Windows x86-64 build and native bignums, but its threads are co-operative rather than OS threads, so task 11 would be a correct-answer-no-speedup cell like CPython's. |
-| Erlang | OTP 29.1.1 ships a no-admin Windows `.zip`, has native arbitrary-precision integers, and runs one scheduler per core, so task 11 is real: **4.27x** measured on four workers, the best in the matrix. Task 07 is the blocker. That task exists to measure quadratic copying of an immutable string, but BEAM's writable-binary optimisation turns the natural `<<Acc/binary, "x">>` append into an amortised O(1) in-place extend, so the idiomatic form runs **linear** — 1M appends in 19 ms. Forcing a copy to reproduce the intended semantics gives a clean quadratic (100k in 2.2 s, 200k in 17 s, so roughly 7 minutes at the task's million), but then the row is written artificially. |
-| Elixir | Same BEAM and the same task-07 issue, plus a higher per-run start-up (**about 800 ms**, against Erlang's 520 ms), which is charged to every cell. Otherwise it matches Erlang: 8 MB zip, native bignums, **3.42x** on four workers. |
-| Erlang and Elixir, on style | A separate reason not to add them. Both were asked for in an imperative style, and neither language has one: there are no mutable variables and no loop syntax, so the only imperative register available is tail recursion with explicit accumulators plus `case`. That is a real way to write them and it is what the 4.27x above was measured with, but it cannot be called imperative, and a row labelled that way would be misleading. |
 
 One measurement worth keeping. **Task 07 takes 514 s in Java** and 336 s in Groovy. Task 07
 appends to an immutable string a million times, so it is quadratic by design, and on the JVM
