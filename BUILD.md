@@ -413,5 +413,19 @@ computed independently. Keeping those reproducible needs:
 - Python 3.10 or newer, for the fixture generator
 
 Both are already covered above. Note that neither the generator nor the reference
-implementations are committed: the repository holds the three documents and `sources/` only.
-`data.bin` is 368640 copies of the byte cycle 0..255, which is the whole specification.
+implementations are committed: the repository holds the three documents, `sources/`, and the
+`.gitignore` only. `data.bin` is 368640 copies of the byte cycle 0..255, which is the whole
+specification.
+
+Two directories exist locally and are deliberately **not** in the repository, so a fresh clone
+will not have them:
+
+- `tools/` — the installed toolchains. Several are hundreds of megabytes and two exceed
+  GitHub's per-file limit outright, so they cannot be committed even if that were wanted.
+  `BUILD.md` above is the list of what to install and where to get it.
+- `temp/` — scratch: build outputs, the generated fixtures, probe programs, and the
+  investigation notes written while adding a row. None of it is part of the benchmark.
+
+Neither is needed to read the benchmark, and neither is needed to run it: `tools/` is
+reproducible from the install instructions, and `temp/` is disposable. Only `sources/` is
+load-bearing, which is why it is the only directory the repository tracks.
