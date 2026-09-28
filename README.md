@@ -157,7 +157,7 @@ cell measures **Icarus Verilog's** event loop rather than "SystemVerilog" — th
 GDScript, Dolphin and VHDL rows already carry. Four things follow. The cost is about **5 µs per
 loop iteration**, so the 100-million-iteration tasks take 13 to 22 minutes each and task 10 is
 the slowest cell in the row at **38.8 minutes**. Icarus will not hand a whole array to a
-file task, so task 15 is 94 million single-byte `$fwrite` calls. Task 07 is a documented
+file task, so task 15 is 52 million single-byte `$fwrite` calls. Task 07 is a documented
 deviation: the language has no immutable string type at all, so the append loop is a plain store
 and runs linear rather than quadratic — reproducing the quadratic behaviour would mean
 hand-copying the array every step, which is a different program from the one every other row

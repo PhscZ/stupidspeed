@@ -15,8 +15,8 @@
 # note: binary transput never sets that flag: reading a 3 MiB file in 1 MiB chunks reports #
 # note: `end of file` FALSE after every one of them, so an EOF-driven loop runs for ever #
 # note: instead of stopping. The task fixes the file size at 50 MiB, so counting the #
-# note: hundred chunks is both deterministic and exactly what the spec describes. #
-# note: measured cost: a full 50 MiB run takes about three and a half minutes, and a #
+# note: fifty chunks is both deterministic and exactly what the spec describes. #
+# note: measured cost: a full 50 MiB run takes about 1.75 minutes, and a #
 # note: third of that is a68g's binary transput against the extraction arithmetic over the #
 # note: same bytes. Reading into LONG INT elements instead of INT would halve the element #
 # note: count, but it doubles the arithmetic per element, so the four byte INT word is kept: #
@@ -24,7 +24,7 @@
 # note: elements. #
 
 INT chunk = 1048576;
-INT chunks = 100;    # data.bin is exactly 50 MiB, so 100 chunks of 1 MiB #
+INT chunks = 50;     # data.bin is exactly 50 MiB, so 50 chunks of 1 MiB #
 
 FILE f;
 

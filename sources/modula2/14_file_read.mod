@@ -6,7 +6,7 @@ FROM SYSTEM IMPORT ADR;
 
 CONST
    chunk = 1048576;
-   reps  = 100;
+   reps  = 50;
 
 VAR
    buf   : ARRAY [0 .. chunk - 1] OF CHAR;

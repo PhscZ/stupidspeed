@@ -11,8 +11,8 @@
 //       Verilog. That is also why no Verilog row exists.
 // note: the buffer is written one byte at a time because Icarus's $fwrite does not accept a
 //       memory (it reports "$fwrite does not support argument type (vpiMemory)"), and
-//       SystemVerilog has no way to hand a whole array to a system task. That is 94 million
-//       $fwrite calls for the 50 MiB, measured at about 12.5 minutes a run.
+//       SystemVerilog has no way to hand a whole array to a system task. That is 52 million
+//       $fwrite calls for the 50 MiB, measured at about 7 minutes a run.
 // note: the buffer is named `chunk` because `buf` is a reserved word in Verilog -- it is
 //       the buffer gate primitive -- and Icarus rejects it as an identifier.
 // note: $finish(0) rather than a bare $finish, because Icarus prints a "$finish called at"

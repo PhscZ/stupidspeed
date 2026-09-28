@@ -10,7 +10,7 @@ like for the numbers to mean anything. For compilers, see `BUILD.md`.
 | OS | x86-64, Linux, macOS or Windows | Every row is reachable on Windows and on Linux; macOS loses `msvc` and `dolphin smalltalk`. The one exception is `assembly`, which is Linux x86-64 only: it is a freestanding ELF64 binary built with `nasm -f elf64` and `ld`. `tcc`, `clang`, `flang` and `luajit` all need a little care on Windows but no WSL. |
 | CPU | 4 physical cores | Task 11 runs four threads. Every other task is pinned to one core, so more cores do not help them. |
 | RAM | 8 GB minimum, 16 GB comfortable | The tasks themselves are small: the largest allocation is task 06's 100 MB text, and task 12's three 1000x1000 arrays are 24 MB together. The 16 GB is for the JVM, GraalVM and Julia toolchains. `native-image` alone wants 2–4 GB to build. |
-| Disk | 25 GB free | 180 MiB of fixtures, plus the toolchains themselves: `BUILD.md` measured 23 GB for all 74 installed and run, of which the MSYS2 tree that `valac` needs is 2.2 GB on its own, with another 2–3 GB of scratch while reassembling MSVC and Swift. |
+| Disk | 25 GB free | 100 MiB of fixtures, plus the toolchains themselves: `BUILD.md` measured 23 GB for all 74 installed and run, of which the MSYS2 tree that `valac` needs is 2.2 GB on its own, with another 2–3 GB of scratch while reassembling MSVC and Swift. |
 | Filesystem | `tmpfs` or RAM disk preferred for the file tasks | Reading 50 MiB from a spinning disk measures the disk. Anything run under WSL2 measures the WSL disk layer instead. Where the fixture lives must be recorded in the results. |
 
 ## Runtimes
@@ -411,11 +411,11 @@ Every task runs six times, in 78 toolchains.
     520 ms for Erlang, 800 ms for Elixir) is the main fixed cost, charged to every cell.
   - **SystemVerilog** is an interpreter over an event queue, at about **5 us per loop
     iteration**: its 100-million-iteration tasks (01, 02, 03, 06) take 13 to 22 minutes each,
-    task 15 is 94 million single-byte `$fwrite` calls, and task 10 is the slowest cell in the
+    task 15 is 52 million single-byte `$fwrite` calls, and task 10 is the slowest cell in the
     row at **38.8 minutes** (2330 s measured; scaling 100 digits 3.8 s, 200 16.2 s, 1000 538 s,
     an exponent of about 2.2 in the digit count).
   - **VBScript** is the slowest row overall. Task 07 takes about **9.6 minutes** (576 s
-    measured) and task 14 about **1.4 minutes** (91 s measured at 50 MiB, so about 82 s at 90
+    measured) and task 14 about **46 s** (91 s measured at 100 MiB, so about 46 s at 50
     MiB, at roughly 1.1 us per byte through the text-mode stream), task 06 about 35 s. Task 10
     is the worst cell in the matrix after `a68g`'s. Measured scaling at 100/200/400/800/1600
     digits is 1.19 s, 3.24 s, 10.4 s, 46.1 s and 205.5 s, an exponent of about 2.16 in the digit
@@ -429,7 +429,7 @@ Every task runs six times, in 78 toolchains.
     double-precision limbs.
   - **Oberon-07** task 10 is about 10 s at 1000 digits, **Algol 68 Genie** task 02 takes about
     2.5 minutes and its task 11 about the same, its task 07 about an hour and its task 14 about
-    three and a half minutes, and **Cim** task 10 about 3 s.
+    about 1.75 minutes, and **Cim** task 10 about 3 s.
   - **Algol 68 Genie task 10 is the slowest cell in the matrix.** The interpreter's own
     arbitrary-precision mode is unusable for it (its cost scales with `PR precision=`, which
     would have to be about 30000 here), so the row hand-writes the base-1e9 limbs

@@ -19,7 +19,7 @@
 // note: data.bin is read from the working directory in 1 MiB chunks and every byte is added
 //       up; the running total is reduced mod 2^32 after each chunk so it stays inside the 2^53
 //       range where a real is exact. The chunk is a 1 MiB byte array and $fread fills it in one
-//       call, so this is 90 chunk reads rather than 90 million single-byte reads.
+//       call, so this is 50 chunk reads rather than 50 million single-byte reads.
 module tb;
   bit [7:0] chunk [0:1048575];
   integer fd, got, i;
