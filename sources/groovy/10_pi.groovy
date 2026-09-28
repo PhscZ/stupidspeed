@@ -8,7 +8,7 @@ def (q, r, t, k, n, l) = [1G, 0G, 1G, 1G, 3G, 3G]
 long total = 0
 long emitted = 0
 
-while (emitted < 10000L) {
+while (emitted < 1000L) {
     if (4G * q + r - t < n * t) {
         total += n.longValue()
         emitted += 1

@@ -14,15 +14,15 @@
 %% note: mutable state, where a task genuinely needs it, uses the language's own escape
 %%       hatches -- the process dictionary (put/get) and the atomics module, which is a
 %%       real fixed-size mutable array of 64-bit integers.
-%% note: the 1 MiB buffer is written 50 times, then closed. Erlang's file module has no fsync
-%%       wrapper in this form, so the deviation is flush plus close -- the same one the Tcl, D,
-%%       Julia, Nim, Dart, Pascal, COBOL, Dolphin and Common Lisp rows note.
+%% note: the 1 MiB buffer is written 50 times, then committed with file:datasync/1, which is the
+%%       BEAM's fsync on the descriptor, and closed.
 
 main(_) ->
     Cycle = list_to_binary(lists:seq(0, 255)),
     Buf = binary:copy(Cycle, 4096),
     {ok, F} = file:open("out.bin", [write, raw, binary]),
     write(F, Buf, 50),
+    ok = file:datasync(F),
     file:close(F),
     io:format("~w~n", [50 * 1048576]).
 

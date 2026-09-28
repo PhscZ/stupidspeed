@@ -338,7 +338,7 @@ program main
   dg = 0_8
   total = 0_8
 
-  do while (dg < 10000_8)
+  do while (dg < 1000_8)
     ! the next digit n is ready once 4q + r - t < n*t
     call bmul(t1, q, 4_8)
     call badd(t2, t1, r)

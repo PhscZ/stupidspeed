@@ -4,7 +4,7 @@ MODULE Task05;
 IMPORT STextIO, SLWholeIO, Storage;
 FROM SYSTEM IMPORT ADDRESS, ADRCARD, CAST;
 
-TYPE Buf = ARRAY [0 .. 63] OF CARDINAL;
+TYPE Buf = ARRAY [0 .. 15] OF CARDINAL;
      BufPtr = POINTER TO Buf;
 
 VAR
@@ -13,19 +13,22 @@ VAR
    i, k  : CARDINAL;
    total : LONGCARD;
    p     : BufPtr;
+   old   : ADDRESS;
 
 BEGIN
    FOR k := 0 TO 255 DO slots [k] := NIL; blks [k] := NIL END;
-   total := 0;
+   (* Allocate a fresh 64-byte buffer, then free the prior slot buffer. *)
    FOR i := 0 TO 9999999 DO
-      Storage.ALLOCATE (blks [i MOD 256], VAL (ADRCARD, 256));
+      old := blks [i MOD 256];
+      Storage.ALLOCATE (blks [i MOD 256], VAL (ADRCARD, 64));
       p := CAST (BufPtr, blks [i MOD 256]);
       p^ [0] := i MOD 256;
       total := total + VAL (LONGCARD, p^ [0]);
       IF slots [i MOD 256] # NIL THEN
-         Storage.DEALLOCATE (blks [i MOD 256], VAL (ADRCARD, 256))
+         Storage.DEALLOCATE (old, VAL (ADRCARD, 64))
       END;
       slots [i MOD 256] := p
    END;
+
    SLWholeIO.WriteLongCard (total, 0); STextIO.WriteLn
 END Task05.

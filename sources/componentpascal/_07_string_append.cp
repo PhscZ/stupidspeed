@@ -1,16 +1,12 @@
 (* task 07 string_append — expected output: 1000000 *)
 (* build: gpcp /list- _07_string_append.cp    run: _07_string_append.exe *)
 (* note: Component Pascal's string type is ARRAY OF CHAR with a 0X terminator, exactly
-   like Oberon-2's and Modula-2's, and like them it has no growable string: the "+"
-   operator builds a fresh native string through a StringBuilder and copies it back into
-   the array on every append, which is the copying behaviour this task measures. That is
-   quadratic and far too slow to run here — a 100000 append variant using "+" and BOX()
-   took 238 seconds, and a 200000 append variant using "+" into a fixed array was still
-   running after 14 minutes — so, the same way the Oberon-2 and Modula-2 rows of this
-   benchmark do it for this string type, the appends grow the string in place at the end
-   of the buffer. *)
-(* note: the length is then found by scanning for the 0X terminator, as the Oberon-2 row
-   does. *)
+   like Oberon-2's and Modula-2's. Two fixed buffers are used here: every append copies
+   the complete current text, including its terminator, into the alternate buffer,
+   overwrites that copied terminator with x, writes the new terminator, and swaps buffers.
+   This preserves the repeated whole-prefix copying measured by the task without requiring
+   an impossible million-character native immutable-string value. *)
+(* note: the final length is found by scanning the active buffer for the 0X terminator. *)
 (* note: build and run from the directory holding the source, with CROOT set to the
    gpcp-NET tree, CPSYM=.;%CROOT%\symfiles;%CROOT%\symfiles\NetSystem, %CROOT%\bin on
    PATH, and %CROOT%\bin\RTS.dll copied next to the executable. gpcp has no
@@ -24,10 +20,11 @@ MODULE _07_string_append;
 
  CONST N = 1000000;
 
- VAR text : ARRAY N + 1 OF CHAR;
-     len : LONGINT;
-     i : INTEGER;
-
+VAR textA : ARRAY N + 1 OF CHAR;
+    textB : ARRAY N + 1 OF CHAR;
+    len : LONGINT;
+    i, j : INTEGER;
+    active : INTEGER;
  PROCEDURE WriteLong(x : LONGINT);
    VAR s : ARRAY 24 OF CHAR;
        n, k : INTEGER;
@@ -51,15 +48,31 @@ MODULE _07_string_append;
 
 BEGIN
   len := 0;
+  active := 0;
+  textA[0] := 0X;
   FOR i := 1 TO N DO
-    text[len] := "x";
-    INC(len)
+    IF active = 0 THEN
+      FOR j := 0 TO len DO textB[j] := textA[j] END;
+      textB[len] := "x";
+      INC(len);
+      textB[len] := 0X;
+      active := 1
+    ELSE
+      FOR j := 0 TO len DO textA[j] := textB[j] END;
+      textA[len] := "x";
+      INC(len);
+      textA[len] := 0X;
+      active := 0
+    END
   END;
-  text[len] := 0X;
 
   (* length of the string that was built, found by scanning for the 0X terminator *)
   len := 0;
-  WHILE text[len] # 0X DO INC(len) END;
+  IF active = 0 THEN
+    WHILE textA[len] # 0X DO INC(len) END
+  ELSE
+    WHILE textB[len] # 0X DO INC(len) END
+  END;
 
   WriteLong(len); Console.WriteLn
 END _07_string_append.

@@ -11,15 +11,15 @@
 # note: mutable state, where a task genuinely needs it, uses the language's own escape
 #       hatches -- the process dictionary (Process.put/get) and the :atomics module,
 #       which is a real fixed-size mutable array of 64-bit integers.
-# note: the 1 MiB buffer is written 50 times, then closed. Elixir's File has no fsync wrapper in
-#       this form, so the deviation is flush plus close -- the same one the Tcl, D, Julia, Nim,
-#       Dart, Pascal, COBOL, Dolphin and Common Lisp rows note.
+# note: the 1 MiB buffer is written 50 times, then committed with :file.datasync/1, which is the
+#       BEAM's fsync on the descriptor, and closed.
 
 defmodule T15 do
   def run do
     buf = :binary.copy(<<0, 1, 2, 3, 4, 5, 6, 7, 8, 9>>, 1) |> cycle()
     {:ok, f} = File.open("out.bin", [:write, :binary, :raw])
     write(f, buf, 50)
+    :ok = :file.datasync(f)
     File.close(f)
     IO.puts(50 * 1_048_576)
   end

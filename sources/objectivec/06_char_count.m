@@ -2,10 +2,20 @@
 // build: clang -fobjc-runtime=gnustep-2.2 -O2 -o prog 06_char_count.m -lobjc -lgnustep-base    run: ./prog
 // Objective-C has no big integers in its standard library; task 10 hand-rolls base-1e9 limbs.
 #import <Foundation/Foundation.h>
+#include <string.h>
 int main(void) { @autoreleasepool {
-    NSMutableString *text = [NSMutableString stringWithCapacity:100000000];
-    NSString *unit = @"abcdefghij";
-    for (int i = 0; i < 10000000; i++) [text appendString:unit];
+    const NSUInteger totalLength = 100000000;
+    const char unit[] = "abcdefghij";
+    NSMutableData *data = [NSMutableData dataWithLength:totalLength];
+    unsigned char *bytes = [data mutableBytes];
+    memcpy(bytes, unit, sizeof(unit) - 1);
+    NSUInteger filled = sizeof(unit) - 1;
+    while (filled < totalLength) {
+        NSUInteger chunk = filled < totalLength - filled ? filled : totalLength - filled;
+        memcpy(bytes + filled, bytes, chunk);
+        filled += chunk;
+    }
+    NSString *text = [[NSString alloc] initWithBytes:bytes length:totalLength encoding:NSASCIIStringEncoding];
     long long count = 0;
     NSUInteger n = [text length];
     unichar *buf = malloc(n * sizeof(unichar));

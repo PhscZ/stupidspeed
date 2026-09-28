@@ -158,27 +158,22 @@ fn mag_sub(a: &[u64], b: &[u64]) -> Vec<u64> {
 /// compare q * d with the magnitude a, q being a small multiplier.
 fn cmp_mul_mag(d: &[u64], q: u64, a: &[u64]) -> Ordering {
     let mut carry = 0u64;
+    let mut ordering = Ordering::Equal;
     let mut i = 0usize;
-    while i < d.len() || carry > 0 {
+    while i < d.len() || i < a.len() || carry > 0 {
         let di = if i < d.len() { d[i] } else { 0 };
         let p = di * q + carry;
         let limb = p % BASE;
         carry = p / BASE;
         let ai = if i < a.len() { a[i] } else { 0 };
         if limb != ai {
-            return limb.cmp(&ai);
+            // Higher limbs dominate lower limbs, so retain the latest difference.
+            ordering = limb.cmp(&ai);
         }
         i += 1;
     }
-    while i < a.len() {
-        if a[i] != 0 {
-            return Ordering::Less;
-        }
-        i += 1;
-    }
-    Ordering::Equal
+    ordering
 }
-
 /// largest q < bound with q * d <= a.
 fn largest_le(a: &[u64], d: &[u64], bound: u64) -> u64 {
     let mut lo = 0u64;

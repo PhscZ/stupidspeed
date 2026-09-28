@@ -2,10 +2,10 @@
 (* build: Compiler.exe _07_string_append.ob07 win64con -out prog.exe    run: prog.exe *)
 (* note: representation: Oberon's string type is ARRAY OF CHAR, a fixed length array with a *)
 (*       0X terminator, and the language has no string concatenation operator and no way to *)
-(*       return an array from a procedure. So text := text + "x" cannot be written at all; *)
-(*       the appends grow the string in place at the end of the buffer and a length counter *)
-(*       tracks the end, which is what the Modula-2 and Oberon-2 rows of this benchmark do. *)
-(*       The printed number is the length, found by scanning for the 0X terminator. *)
+(*       return an array from a procedure. Each append copies the complete text including *)
+(*       its terminator into the alternate fixed array, replaces that terminator with x, *)
+(*       writes a new terminator, and swaps buffers. The printed length is found by *)
+(*       scanning the active buffer for the 0X terminator. *)
 (* note: Compiler.exe is C:\stupidspeed\tools\oberon07\oberon-07-compiler-master\Compiler.exe, *)
 (*       which has no optimisation switch; the build line above is the whole story. *)
 (* note: the line is ended with Out.Char(0AX) and not Out.Ln. Out.Ln prints CR LF, and msvcrt *)
@@ -20,21 +20,36 @@ CONST
   N = 1000000;
 
 VAR
-  text: ARRAY N + 1 OF CHAR;
-  len: INTEGER;
-  i: INTEGER;
+  textA, textB: ARRAY N + 1 OF CHAR;
+  len, i, j, active: INTEGER;
 
 BEGIN
   len := 0;
+  active := 0;
+  textA[0] := 0X;
   FOR i := 1 TO N DO
-    text[len] := "x";
-    INC(len)
+    IF active = 0 THEN
+      FOR j := 0 TO len DO textB[j] := textA[j] END;
+      textB[len] := "x";
+      INC(len);
+      textB[len] := 0X;
+      active := 1
+    ELSE
+      FOR j := 0 TO len DO textA[j] := textB[j] END;
+      textA[len] := "x";
+      INC(len);
+      textA[len] := 0X;
+      active := 0
+    END
   END;
-  text[len] := 0X;
 
   (* length of the string that was built, found by scanning for the 0X terminator *)
   len := 0;
-  WHILE text[len] # 0X DO INC(len) END;
+  IF active = 0 THEN
+    WHILE textA[len] # 0X DO INC(len) END
+  ELSE
+    WHILE textB[len] # 0X DO INC(len) END
+  END;
 
   Out.Int(len, 1); Out.Char(0AX)
 END _07_string_append.
