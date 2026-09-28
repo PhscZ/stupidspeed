@@ -1,4 +1,4 @@
-;; task 10 pi — expected output: 44889
+;; task 10 pi — expected output: 4470
 ;; build: sbcl --non-interactive --no-userinit --no-sysinit --load 10_pi.lisp \
 ;;            --eval "(sb-ext:save-lisp-and-die \"prog.exe\" :executable t :toplevel (function main) :application-type :console)"
 ;; run: prog.exe
@@ -18,7 +18,7 @@
 (defun main ()
   (let ((q 1) (r 0) (tt 1) (k 1) (l 3) (n 3) (produced 0) (sum 0))
     (declare (fixnum k l n produced sum))
-    (loop while (< produced 10000) do
+    (loop while (< produced 1000) do
       (let ((u (+ (* 4 q) r))
             (v (* (+ n 1) tt)))
         (if (< u v)

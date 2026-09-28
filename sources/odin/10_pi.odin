@@ -1,4 +1,4 @@
-// task 10 pi — expected output: 44889
+// task 10 pi — expected output: 4470
 // build: odin build 10_pi.odin -o:speed -out:prog    run: ./prog
 // core has no big integers, so this is Gibbons' unbounded spigot on hand-written
 // sign-magnitude base-1e9 limbs: multiply by a small integer, divide by a big one
@@ -9,7 +9,7 @@ import "core:fmt"
 
 BASE :: 1_000_000_000
 BASE_U :: u64(BASE)
-DIGITS :: 10_000
+DIGITS :: 1_000
 
 Big :: struct {
 	neg: bool,          // sign; never set while the value is zero

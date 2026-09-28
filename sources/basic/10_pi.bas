@@ -1,12 +1,12 @@
-' task 10 pi -- expected output: 44889
+' task 10 pi -- expected output: 4470
 ' build: fbc -O 2 -x prog.exe 10_pi.bas    run: ./prog
-' task 10 pi - 10000 digits, Gibbons unbounded spigot on hand-rolled base-1e9 limbs.
+' task 10 pi - 1000 digits, Gibbons unbounded spigot on hand-rolled base-1e9 limbs.
 ' FreeBASIC has no big integers, so this is the GDScript/Pascal precedent: sign-magnitude
 ' big integers with the four operations the spigot needs. Only the digit sum is printed.
-' Expected 44889.
+' Expected 4470.
 
 const LIMB_BASE as longint = 1000000000
-const NDIGITS as integer = 10000
+const NDIGITS as integer = 1000
 const NLIMBS as integer = 17000      ' t reaches 145726 decimal digits -> 16192 limbs
 const QUOT_HI as longint = 1023      ' true quotients observed <= 99
 

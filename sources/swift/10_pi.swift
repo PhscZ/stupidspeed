@@ -1,4 +1,4 @@
-// task 10 pi — expected output: 44889
+// task 10 pi — expected output: 4470
 // build: swiftc -O -o prog 10_pi.swift    run: ./prog
 
 // Gibbons' unbounded spigot, from "Unbounded Spigot Algorithms for the Digits of Pi":
@@ -227,7 +227,7 @@ var l: UInt64 = 3
 var digitSum = 0
 var produced = 0
 
-while produced < 10000 {
+while produced < 1000 {
     // 4q + r - t < n t is the same test as 4q + r < (n + 1) t, with both sides
     // non-negative.
     let lhs = Signed(q.mulSmall(4)).add(r)

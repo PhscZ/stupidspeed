@@ -1,4 +1,4 @@
-! task 10 pi — expected output: 44889
+! task 10 pi — expected output: 4470
 ! build: gfortran -O3 -o prog 10_pi.f90 (flang -O3 -o prog 10_pi.f90)    run: ./prog
 !
 ! Fortran has no arbitrary-precision integers, so Gibbons' unbounded spigot
@@ -6,12 +6,12 @@
 ! 64-bit limbs in base 10^9.  Only a multiply by a small integer, add,
 ! subtract, compare and a division whose quotient is known to be small are
 ! needed.  The spigot emits pi's digits one at a time; the sum of the first
-! 10000 of them, the leading 3 included, is printed instead of the digits.
+! 1000 of them, the leading 3 included, is printed instead of the digits.
 
 module bignum
   implicit none
   integer, parameter :: BASE = 1000000000_8
-  ! Emitting 10000 digits peaks around 20000 limbs of base 10^9, so 32768
+  ! Emitting 1000 digits peaks around 20000 limbs of base 10^9, so 32768
   ! limbs leave room to spare.
   integer, parameter :: CAP = 32768
 

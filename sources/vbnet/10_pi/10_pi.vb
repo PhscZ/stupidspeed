@@ -1,7 +1,7 @@
-' task 10 pi — expected output: 44889
+' task 10 pi — expected output: 4470
 ' build: dotnet build -c Release 10_pi.vbproj    run: dotnet bin/Release/net8.0/10_pi.dll
 ' Gibbons' unbounded spigot on System.Numerics.BigInteger. It emits the leading 3 first;
-' the first 10000 emitted digits are summed, and the digits themselves are never printed.
+' the first 1000 emitted digits are summed, and the digits themselves are never printed.
 
 Imports System
 Imports System.Numerics
@@ -18,7 +18,7 @@ Module Program
         Dim total As Long = 0
         Dim emitted As Integer = 0
 
-        While emitted < 10000
+        While emitted < 1000
             If 4 * q + r - t < n * t Then
                 total += CLng(n)
                 emitted += 1

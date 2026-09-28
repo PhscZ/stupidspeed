@@ -1,10 +1,10 @@
-// task 10 pi — expected output: 44889
+// task 10 pi — expected output: 4470
 // build: g++ -O2 -pthread -o prog 10_pi.cpp    run: ./prog
 // also builds with: clang++ -O2 -pthread -o prog 10_pi.cpp | cl /O2 /EHsc /Fe:prog 10_pi.cpp
 // note: Gibbons' unbounded spigot. C++ has no standard big integer, so the spigot state is
 //       kept as a hand-written big integer of 64-bit limbs in base 1000000000, held in a
 //       std::vector, with hand-written multiply-by-small and divide-by-small. Only the sum
-//       of the first 10000 emitted digits is printed, never the digits.
+//       of the first 1000 emitted digits is printed, never the digits.
 
 #include <cstdio>
 #include <vector>
@@ -220,7 +220,7 @@ int main() {
     unsigned long long n = 3;
     unsigned long long l = 3;
 
-    const long long wanted = 10000;
+    const long long wanted = 1000;
     long long emitted = 0;
     long long total = 0;
 

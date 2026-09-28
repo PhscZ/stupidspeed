@@ -1,4 +1,4 @@
-(* task 10 pi — expected output: 44889 *)
+(* task 10 pi — expected output: 4470 *)
 (* build: ocamlopt -unsafe -o prog.exe _10_pi.ml *)
 (* run: prog.exe *)
 (* note: the row is built from the MSYS2 UCRT64 package mingw-w64-ucrt-x86_64-ocaml
@@ -150,7 +150,7 @@ let () =
   let k = ref 1L and l = ref 3L and n = ref 3L in
   let sum = ref 0L and produced = ref 0 in
 
-  while !produced < 10000 do
+  while !produced < 1000 do
     mul_small u q 4L;
     add u u r;                            (* u = 4q + r *)
     mul_small v t (Int64.add !n 1L);      (* v = (n + 1)t *)

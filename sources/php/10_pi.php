@@ -1,11 +1,11 @@
 <?php
-// task 10 pi — expected output: 44889
+// task 10 pi — expected output: 4470
 // build: none (interpreted)    run: php 10_pi.php (zend) | php -d opcache.enable_cli=1 -d opcache.jit_buffer_size=64M 10_pi.php (zend + jit)
 // Gibbons' unbounded spigot. PHP has no built-in arbitrary-precision integers — bcmath and gmp
 // are optional extensions and are not enabled in the stock Windows configuration — so q, r and
 // t are hand-written big integers: base-10^9 limb arrays with a sign, carrying exactly the
 // operations the spigot needs. The leading 3 is the first digit emitted and counts toward the
-// 10000; only their sum is printed, never the digits.
+// 1000; only their sum is printed, never the digits.
 
 const BASE = 1000000000;
 
@@ -246,7 +246,7 @@ $l = 3;
 $sum = 0;
 $emitted = 0;
 
-while ($emitted < 10000) {
+while ($emitted < 1000) {
     // 4*q + r - t < n*t means n is the next digit of pi.
     $lhs = bsub(badd(bmul($q, 4), $r), $t);
     $rhs = bmul($t, $n);

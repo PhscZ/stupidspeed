@@ -1,4 +1,4 @@
-# task 10 pi — expected output: 9092
+# task 10 pi — expected output: 4470
 # build: none (interpreted)
 # run: raku 10_pi.raku
 # note: Raku is genuinely imperative -- mutable variables, `for`/`while`/`loop`, and
@@ -12,12 +12,12 @@
 #       fast route the Python, Ruby, Java and Common Lisp rows take.
 
 # Gibbons' unbounded spigot over Raku's built-in exact integers. n stays a native int because it
-# is always a single digit; q, r and t grow to a few hundred digits at 2000 and are plain Int.
+# is always a single digit; q, r and t grow to a few hundred digits at 1000 and are plain Int.
 my Int $q = 1; my Int $r = 0; my Int $t = 1;
 my int $k = 1; my int $l = 3; my int $n = 3;
 my int $sum = 0; my int $produced = 0;
 
-while $produced < 2000 {
+while $produced < 1000 {
     my Int $u = 4 * $q + $r;
     my Int $v = ($n + 1) * $t;
     if $u < $v {

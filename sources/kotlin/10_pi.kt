@@ -1,4 +1,4 @@
-// task 10 pi — expected output: 44889
+// task 10 pi — expected output: 4470
 // build: kotlinc 10_pi.kt -include-runtime -d prog.jar    run: java -jar prog.jar    [native build: kotlinc-native -opt -o prog 10_pi.kt    native run: ./prog]
 // note: the common Kotlin stdlib has no big integers (java.math is JVM-only), so this is a hand-written base-10^9 limb bignum: multiply by a small int, add/subtract, and divide by a big divisor whose quotient is a small int. Gibbons' unbounded spigot.
 
@@ -283,7 +283,7 @@ fun main() {
 
     var digits = 0
     var sum = 0L
-    while (digits < 10000) {
+    while (digits < 1000) {
         // 4*q + r - t < n*t  means the digit n is safe to emit
         lhs.setMulSmall(q, 4L)
         lhs.addAssign(r)

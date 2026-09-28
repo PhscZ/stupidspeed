@@ -1,9 +1,9 @@
-# task 10 pi — expected output: 44889
+# task 10 pi — expected output: 4470
 # build: (none; interpreted)    run: powershell -File 10_pi.ps1  (PowerShell 7: pwsh -File 10_pi.ps1)
 # note: Gibbons' unbounded spigot on System.Numerics.BigInteger, which both PowerShell 5.1 and 7
 #       ship with. BigInteger's "/" truncates toward zero; that was checked against the reference
 #       spigot and produces the same digits, so no floor-division helper is needed.
-# note: the leading 3 is emitted first and counts as the first of the 10000 digits that are summed.
+# note: the leading 3 is emitted first and counts as the first of the 1000 digits that are summed.
 
 [System.Numerics.BigInteger]$q = 1
 [System.Numerics.BigInteger]$r = 0
@@ -15,7 +15,7 @@
 [long]$sum = 0
 [long]$digits = 0
 
-while ($digits -lt 10000) {
+while ($digits -lt 1000) {
     if ((4 * $q + $r - $t) -lt ($n * $t)) {
         # n is a safe digit: emit it, then q, r, n = 10q, 10(r - nt), 10(3q + r)/t - 10n
         $sum += [long]$n

@@ -1,7 +1,7 @@
-// task 10 pi — expected output: 44889
+// task 10 pi — expected output: 4470
 // build: rustc -O -o prog 10_pi.rs    run: ./prog
 //
-// Gibbons' unbounded spigot, summing the first 10000 digits it emits (leading 3 included)
+// Gibbons' unbounded spigot, summing the first 1000 digits it emits (leading 3 included)
 // and never printing them. Rust's standard library has no big integers, so the state
 // (q, r, t, k, n, l) is carried in base-1e9 limbs: multiply-by-small-int and add/sub are
 // hand-written below, and the two divisions (by the big t and by t*l) take their small
@@ -11,7 +11,7 @@
 use std::cmp::Ordering;
 
 const BASE: u64 = 1_000_000_000;
-const DIGITS: usize = 10_000;
+const DIGITS: usize = 1_000;
 // The spigot only ever divides by the big t (or t*l), and always for a quotient that is a
 // digit or a digit times ten: floor(10*(3q+r)/t) = next_digit + 10*previous_digit <= 99,
 // and the next digit itself is 0..9. Both bounds are exclusive and have room to spare.

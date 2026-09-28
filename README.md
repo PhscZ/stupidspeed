@@ -385,17 +385,17 @@ Output: `102334155`
 
 ### 10 pi
 
-Arbitrary-precision arithmetic. 2000 digits of pi need big integers. Many languages here have
+Arbitrary-precision arithmetic. 1000 digits of pi need big integers. Many languages here have
 them in the standard library and use them directly; the rest hand-roll them, and that
 difference is what makes this the one task whose cost varies by orders of magnitude across the
 matrix.
 
 ```
-compute 2000 digits of pi with the unbounded spigot algorithm
+compute 1000 digits of pi with the unbounded spigot algorithm
 print the sum of the digits
 ```
 
-Output: `9092`
+Output: `4470`
 
 Print the sum of the digits instead of the digits themselves, so the check is one number.
 
@@ -408,9 +408,9 @@ differs is where the integers come from, and both routes are legitimate.
 - A language without them hand-writes sign-magnitude, little-endian, base-1e9 limbs, with add,
   subtract, multiply by a small integer, and a quotient that comes out of repeated subtraction,
   because the spigot only ever asks for one decimal digit at a time. Same loop, same digits,
-  and far more work per step. At 2000 digits that is about 1.9 s in C, and it runs to minutes
-  in the interpreted rows that take this route — VBScript takes about 5.5 minutes and `a68g`
-  about 21. `RUN.md` has the measurements.
+  and far more work per step. At 1000 digits that is about 0.6 s in C, and it runs to minutes
+  in the interpreted rows that take this route — VBScript takes about 1.4 minutes and `a68g`
+  about 7.5. `RUN.md` has the measurements.
 
 A language with no bignum library is therefore **not** disqualified by this task, and no row
 here is missing because of it. `a68g`'s own arbitrary-precision `LONG LONG INT` mode was
@@ -676,7 +676,7 @@ of magnitude too slow, not for being impossible.
 |---|---|
 | ColdFusion / CFML | CommandBox, the only free headless path, takes **67–91 s of startup** for a trivial script. That is 20–30% of a row's budget before the program starts, on every task, and a 1 M-iteration probe already took 93.6 s. |
 | Vale | The project is archived. Its README says so on the first line, and the last release is a 2022 pre-release. A `Vale-Windows` binary does exist, so it would run — but a row nobody can rebuild is not worth the column. |
-| Nushell | **Task 10 is unreachable, and it is the only blocker.** Rechecked against 0.116.0 (September 2026): there is still no arbitrary-precision type, so `2 ** 63` fails with `Operator overflow` and the spigot dies after **five digits** of pi. Floats are f64, so they cannot substitute — `10000000000000000000000.0 + 1.0` is unchanged. Hand-rolled base-1e9 limbs are the documented fallback for every other row, and they were measured here rather than assumed: **about 85 µs per limb operation**, against 1.4 µs in VBScript, which is the slowest row that was accepted. The 2000-digit spigot needs roughly 720 million limb operations, so the full run is still about **17 hours** — against about 5.5 minutes for VBScript, the slowest row that was accepted. Threading is **not** a problem, which is worth recording: `par-each` runs on a real thread pool and gave **3.91x** on four workers. The other tasks are merely slow, not impossible — about 11 minutes for the 100-million-iteration tasks at a measured ~6.8 µs per iteration, and about 2 hours for `fib(40)`. So the row fails on task 10 alone, and on a margin of two orders of magnitude rather than on a technicality. |
+| Nushell | **Task 10 is unreachable, and it is the only blocker.** Rechecked against 0.116.0 (September 2026): there is still no arbitrary-precision type, so `2 ** 63` fails with `Operator overflow` and the spigot dies after **five digits** of pi. Floats are f64, so they cannot substitute — `10000000000000000000000.0 + 1.0` is unchanged. Hand-rolled base-1e9 limbs are the documented fallback for every other row, and they were measured here rather than assumed: **about 85 µs per limb operation**, against 1.4 µs in VBScript, which is the slowest row that was accepted. The 1000-digit spigot needs roughly 180 million limb operations, so the full run is still about **4.25 hours** — against about 1.4 minutes for VBScript, the slowest row that was accepted. Threading is **not** a problem, which is worth recording: `par-each` runs on a real thread pool and gave **3.91x** on four workers. The other tasks are merely slow, not impossible — about 11 minutes for the 100-million-iteration tasks at a measured ~6.8 µs per iteration, and about 2 hours for `fib(40)`. So the row fails on task 10 alone, and on a margin of two orders of magnitude rather than on a technicality. |
 
 **Duplicate of a row that already exists.**
 
@@ -730,8 +730,8 @@ mind.
   the real time. The slow rows are the ones to watch: PowerShell's call-heavy and
   per-character tasks are the worst of them, at 100 to 331 million interpreted operations.
   Every row that hand-writes the base-1e9 limbs for task 10 pays more for it than for
-  anything else — VBScript takes about 5.5 minutes at 2000 digits, and `a68g`, whose
-  interpreter is around 900x slower than C on limb arithmetic, about half an hour. The
+  anything else — VBScript takes about 1.4 minutes at 1000 digits, and `a68g`, whose
+  interpreter is around 900x slower than C on limb arithmetic, about 7.5 minutes. The
   slowest cell that is not task 10 is **Racket task 07 at 1121 s**, where appending to an
   immutable string copies about 5x10^11 bytes in total. `RUN.md` records the measurements,
   and for `a68g` the two options for it.

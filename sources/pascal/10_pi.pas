@@ -1,4 +1,4 @@
-{ task 10 pi — expected output: 44889 }
+{ task 10 pi — expected output: 4470 }
 { build: fpc -O3 -oprogram 10_pi.pas    run: ./program }
 { Windows x64: i386-win32 fpc + cross.x86_64-win64 add-on, build with -Px86_64; run as program.exe }
 { note: the RTL has no big integers, so Gibbons' unbounded spigot runs on hand-written
@@ -308,7 +308,7 @@ begin
   sum := 0;
   produced := 0;
 
-  while produced < 10000 do
+  while produced < 1000 do
   begin
     { 4q + r < (n + 1)t means the digit n is settled }
     u := BigAdd(MulSmall(q, 4), r);

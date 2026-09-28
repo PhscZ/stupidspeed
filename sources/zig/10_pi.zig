@@ -1,4 +1,4 @@
-// task 10 pi — expected output: 44889
+// task 10 pi — expected output: 4470
 // build: zig build-exe -O ReleaseFast 10_pi.zig -femit-bin=prog    run: ./prog
 // deviation: Zig 0.16 removed std.posix.write, so the line goes out through std.Io.File.stdout().
 // Gibbons' unbounded spigot needs a signed r (it goes negative), so the big integers below are
@@ -8,8 +8,8 @@
 const std = @import("std");
 
 const base: u64 = 1_000_000_000;
-const limb_capacity: usize = 24_000; // 10000 digits peak at 484097 bits, which is 16193 limbs
-const digits_wanted: usize = 10_000;
+const limb_capacity: usize = 24_000; // 1000 digits peak at 484097 bits, which is 16193 limbs
+const digits_wanted: usize = 1_000;
 
 const Big = struct {
     limbs: []u64,

@@ -1,4 +1,4 @@
-;; task 10 pi — expected output: 44889
+;; task 10 pi — expected output: 4470
 ;; build: none (Racket.exe compiles the module on every run; the VM start is part of
 ;;        the measured time)
 ;; run: Racket.exe 10_pi.rkt
@@ -22,7 +22,7 @@
 ;; roughly 16000 limbs. Only the sum of the digits is printed.
 (define sum
   (let loop ([q 1] [r 0] [t 1] [k 1] [l 3] [n 3] [produced 0] [sum 0])
-    (if (< produced 10000)
+    (if (< produced 1000)
         (let ([u (+ (* 4 q) r)]
               [v (* (+ n 1) t)])
           (if (< u v)

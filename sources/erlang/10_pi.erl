@@ -1,7 +1,7 @@
 #!/usr/bin/env escript
 %%! -smp enable
 
-% task 10 pi — expected output: 9092
+% task 10 pi — expected output: 4470
 %% build: none (escript compiles the script on every run)
 % run: escript 10_pi.erl
 %% note: Erlang has no mutable variables and no loop syntax, so there is no imperative
@@ -22,7 +22,7 @@
 main(_) ->
     loop(1, 0, 1, 1, 3, 3, 0, 0).
 
-loop(_Q, _R, _T, _K, _L, _N, Produced, Sum) when Produced >= 2000 ->
+loop(_Q, _R, _T, _K, _L, _N, Produced, Sum) when Produced >= 1000 ->
     io:format("~w~n", [Sum]);
 loop(Q, R, T, K, L, N, Produced, Sum) ->
     U = 4 * Q + R,

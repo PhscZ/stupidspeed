@@ -1,4 +1,4 @@
-# task 10 pi — expected output: 44889
+# task 10 pi — expected output: 4470
 # build: none (interpreted)    run: tclsh 10_pi.tcl
 # Tcl's integers are arbitrary precision since 8.5, backed by LibTomMath (TIP 237),
 # so this is the real Gibbons unbounded spigot with no hand-rolled limbs. Only the
@@ -15,7 +15,7 @@ set l 3
 set total 0
 set emitted 0
 
-while {$emitted < 10000} {
+while {$emitted < 1000} {
     if {4 * $q + $r - $t < $n * $t} {
         incr total $n
         incr emitted

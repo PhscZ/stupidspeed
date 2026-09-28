@@ -1,6 +1,6 @@
 MODULE Task10;
 
-(* task 10 pi — expected output: 44889
+(* task 10 pi — expected output: 4470
    Modula-2 has no arbitrary precision integers, so the unbounded spigot (Gibbons)
    runs on hand-written base-10^9 limbs: multiply by a small integer, add, subtract,
    and one big division whose quotient is known to be small. Only the digit sum is
@@ -11,7 +11,7 @@ IMPORT STextIO, SLWholeIO;
 CONST
    LIMB_BASE = 1000000000;
    MAXL      = 24000;
-   DIGITS    = 10000;
+   DIGITS    = 1000;
    QUOT_MAX  = 1000000;
 
 TYPE

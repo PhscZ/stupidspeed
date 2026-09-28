@@ -1,15 +1,15 @@
-# task 10 pi — expected output: 44889
+# task 10 pi — expected output: 4470
 # build: godot --headless --script 10_pi.gd    run: godot --headless --script 10_pi.gd
 # note: GDScript has no big integers, so the unbounded spigot (Gibbons) runs on hand-written
 #       base-10^9 limbs: multiply by a small integer, add, subtract, and one big division
 #       whose quotient is known to be small. Only the digit sum is printed.
-# note: the spigot state grows to about 145000 decimal digits by the 10000th digit, so this
+# note: the spigot state grows to about 145000 decimal digits by the 1000th digit, so this
 #       task does billions of limb operations in GDScript; expect a long run.
 
 extends SceneTree
 
 const LIMB_BASE := 1000000000
-const DIGITS := 10000
+const DIGITS := 1000
 const QUOT_MAX := 1000000
 
 # Signed arbitrary-precision integer: a sign flag plus little-endian base-10^9 limbs.

@@ -1,8 +1,8 @@
-# task 10 pi — expected output: 44889
+# task 10 pi — expected output: 4470
 # build: julia 10_pi.jl    run: julia 10_pi.jl
 
 # Gibbons' unbounded spigot: each state transition emits one digit, starting with the
-# leading 3 of pi. Sum the first 10000 emitted digits and print only the sum.
+# leading 3 of pi. Sum the first 1000 emitted digits and print only the sum.
 function pi_digit_sum(count::Int)
     q = big(1)
     r = big(0)
@@ -40,7 +40,7 @@ function pi_digit_sum(count::Int)
 end
 
 function main()
-    println(pi_digit_sum(10000))
+    println(pi_digit_sum(1000))
 end
 
 main()

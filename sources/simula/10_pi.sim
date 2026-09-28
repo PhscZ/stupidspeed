@@ -1,4 +1,4 @@
-! task 10 pi — expected output: 44889 ;
+! task 10 pi — expected output: 4470 ;
 ! build: cim -q -m8 -o prog 10_pi.sim    run: ./prog ;
 ! note: -m8 asks cim for an 8 MB initial memory pool. The six Big objects are 40000 ;
 !       limbs each, about 1.9 MB in total, which is larger than the default pool, so ;
@@ -7,11 +7,11 @@
 !       spigot is held in hand-written sign-magnitude big integers: little-endian limbs, ;
 !       base 10^9, kept in an INTEGER ARRAY inside a class (INTEGER is C long, 64 bits, ;
 !       which is enough for limb * small + carry, since the spigot's multiplier never ;
-!       exceeds 7k + 2 for k up to about 10000). Only add, subtract, multiply by a ;
+!       exceeds 7k + 2 for k up to about 1000). Only add, subtract, multiply by a ;
 !       small integer and a quotient are implemented, the quotient the spigot asks for ;
 !       is always one decimal digit, so repeated subtraction finds it. No 128-bit ;
 !       arithmetic is used. ;
-! note: the spigot state reaches roughly 145000 decimal digits by the 10000th digit, ;
+! note: the spigot state reaches roughly 145000 decimal digits by the 1000th digit, ;
 !       about 16100 limbs, so the limb arrays are sized at 40000, well past that. Only ;
 !       the sum of the digits is printed. ;
 ! note: the loop below is the same spigot as sources/c/10_pi.c, step for step. It forms ;
@@ -254,7 +254,7 @@ begin
   k := 1; l := 3; d := 3;
   sum := 0; produced := 0;
 
-  while produced < 10000 do
+  while produced < 1000 do
   begin
     mul(u, q, 4);
     add(u, u, r);

@@ -1,8 +1,8 @@
-# task 10 pi — expected output: 44889
+# task 10 pi — expected output: 4470
 # build: python 10_pi.py | pypy 10_pi.py | graalpy 10_pi.py | nuitka --standalone 10_pi.py    run: python 10_pi.py
-# note: Gibbons' unbounded spigot on Python's native arbitrary-precision ints; only the sum of the first 10000 emitted digits is printed, never the digits.
+# note: Gibbons' unbounded spigot on Python's native arbitrary-precision ints; only the sum of the first 1000 emitted digits is printed, never the digits.
 
-DIGITS = 10000
+DIGITS = 1000
 
 q, r, t, k, n, l = 1, 0, 1, 1, 3, 3
 total = 0

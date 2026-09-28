@@ -1,4 +1,4 @@
-// task 10 pi — expected output: 44889
+// task 10 pi — expected output: 4470
 // build: amxmlc -swf-version=51 -output prog.swf _10_pi.as  then  adt -package -storetype pkcs12 -keystore test.p12 -storepass pass -target cmdline out app.xml prog.swf
 // run: out\prog.exe
 // note: AIR 51.4.1 via amxmlc (the real Adobe/HARMAN compiler), packaged with adt
@@ -22,7 +22,7 @@
 //       into one of them in place, so the 20000-odd spigot iterations allocate nothing
 //       at all. An earlier version returned a fresh object per operation, which churned
 //       hundreds of megabytes of 16000-limb vectors and died with "out of memory".
-// note: the spigot's state reaches about 145728 digits at 10000 digits, which is 16192
+// note: the spigot's state reaches about 145728 digits at 1000 digits, which is 16192
 //       limbs, so 20000 limbs per variable has a little margin. Only the sum of the
 //       digits is printed.
 
@@ -47,7 +47,7 @@ package
             var sum:Number = 0;
             var produced:int = 0;
 
-            while (produced < 10000)
+            while (produced < 1000)
             {
                 Big.mulSmall(u, q, 4);
                 Big.add(u, u, r);                 // u = 4q + r

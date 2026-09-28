@@ -1,4 +1,4 @@
--- task 10 pi — expected output: 44889
+-- task 10 pi — expected output: 4470
 -- build: none (interpreted)    run: lua 10_pi.lua (PUC Lua 5.4)    also runs on LuaJIT: luajit 10_pi.lua
 -- Lua has no arbitrary-precision integers, so the Gibbons unbounded spigot runs on
 -- hand-written bignums: base 1e9 limbs in a table, multiply by a small integer, and
@@ -206,7 +206,7 @@ local k, n, l = 1, 3, 3
 local emitted = 0
 local digitsum = 0
 
-while emitted < 10000 do
+while emitted < 1000 do
     -- 4*q + r - t < n*t  ->  emit n
     blin(A, BQ, 4, BR, 1, BT, -1)
     bmul(B, BT, n)

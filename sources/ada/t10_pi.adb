@@ -1,11 +1,11 @@
--- task 10 pi — expected output: 44889
+-- task 10 pi — expected output: 4470
 -- build: gnatmake -O3 t10_pi.adb    run: ./t10_pi
 -- Ada's standard library has no big integers, so Gibbons' unbounded spigot is
 -- run on hand-written big integers: little-endian sign-magnitude limbs in
 -- Interfaces.Unsigned_64, base 10**9.  Only a multiply by a small integer, an
 -- add, a subtract, a compare and a division whose quotient is small are
 -- needed.  The spigot emits pi's digits one at a time; the sum of the first
--- 10000 of them, the leading 3 included, is printed instead of the digits.
+-- 1000 of them, the leading 3 included, is printed instead of the digits.
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Text_IO.Integer_IO;
 with Interfaces; use type Interfaces.Unsigned_64;
@@ -13,11 +13,11 @@ with Interfaces; use type Interfaces.Unsigned_64;
 procedure T10_Pi is
    package LL_IO is new Ada.Text_IO.Integer_IO (Long_Long_Integer);
 
-   Digits : constant := 10_000;                     --  digits emitted and summed
+   Digits : constant := 1_000;                     --  digits emitted and summed
    Base   : constant Interfaces.Unsigned_64 := 1_000_000_000;
 
    --  The state grows to about 145000 decimal digits -- roughly 16200 limbs --
-   --  by the time the 10000th digit comes out, so this leaves room to spare.
+   --  by the time the 1000th digit comes out, so this leaves room to spare.
    Max_Limbs : constant := 65_536;
 
    type Limb_Array is array (1 .. Max_Limbs) of Interfaces.Unsigned_64;

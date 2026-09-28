@@ -1,11 +1,11 @@
-# task 10 pi — expected output: 44889
+# task 10 pi — expected output: 4470
 # build: crystal build --release -o prog 10_pi.cr    run: ./prog
 # note: Gibbons' unbounded spigot on the stdlib BigInt; only the sum of the first
-# 10000 emitted digits is printed, never the digits. Same algorithm as ruby/python rows.
+# 1000 emitted digits is printed, never the digits. Same algorithm as ruby/python rows.
 
 require "big"
 
-DIGITS = 10000
+DIGITS = 1000
 
 q = 1.to_big_i
 r = 0.to_big_i

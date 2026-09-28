@@ -1,4 +1,4 @@
-// task 10 pi — expected output: 44889
+// task 10 pi — expected output: 4470
 // build: dmd -O -release -of=prog _10_pi.d    run: ./prog
 // build (ldc2): ldc2 -O3 -release -of=prog _10_pi.d
 
@@ -15,7 +15,7 @@ void main()
     long sum = 0;
     int emitted = 0;
 
-    while (emitted < 10_000)
+    while (emitted < 1_000)
     {
         if (q * 4 + r - t < n * t)
         {

@@ -1,6 +1,6 @@
-# task 10 pi — expected output: 44889
+# task 10 pi — expected output: 4470
 # build: perl 10_pi.pl    run: perl 10_pi.pl
-# note: Perl's native integers are 64-bit and Math::BigInt is far too slow for 10000 digits, so the
+# note: Perl's native integers are 64-bit and Math::BigInt is far too slow for 1000 digits, so the
 #       Gibbons unbounded spigot runs on hand-written big integers: sign-magnitude arrays of limbs
 #       in base 1000000000, with hand-written add, subtract, multiply by a small integer and
 #       divide by a big integer (by repeated subtraction of ten times the divisor, then of the
@@ -168,7 +168,7 @@ my ($k, $l, $n) = (1, 3, 3);
 
 my $sum = 0;
 
-for (my $produced = 0; $produced < 10000; ) {
+for (my $produced = 0; $produced < 1000; ) {
     my $u = bi_add(bi_mul_small($q, 4), $r);        # u = 4q + r
     my $v = bi_mul_small($t, $n + 1);               # v = (n + 1) t
 

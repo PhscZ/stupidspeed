@@ -1,4 +1,4 @@
-(* task 10 pi — expected output: 44889 *)
+(* task 10 pi — expected output: 4470 *)
 (* build: cm3 -build -O    run: AMD64_NT\prog.exe *)
 (* note: the unbounded spigot algorithm on BigInteger; the digit sum is printed *)
 (* note: measured at about 206 s on the development machine, by far the slowest cell *)
@@ -22,7 +22,7 @@ PROCEDURE Quot(a, b: BigInteger.T): INTEGER =
   END Quot;
 
 BEGIN
-  digits := 10000;
+  digits := 1000;
   q := I(1); r := I(0); t := I(1);
   k := 1; n := 3; l := 3; emitted := 0; total := 0;
   WHILE emitted < digits DO

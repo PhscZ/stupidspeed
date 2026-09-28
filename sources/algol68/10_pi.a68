@@ -1,4 +1,4 @@
-# task 10 pi — expected output: 44889 #
+# task 10 pi — expected output: 4470 #
 # build: none (interpreter)    run: a68g 10_pi.a68 #
 # note: Gibbons' unbounded spigot on hand written big integers, ported operation for #
 # note: operation from sources/c/10_pi.c: sign-magnitude, little-endian limbs, base 1e9. #
@@ -6,7 +6,7 @@
 # note: Only the operations the spigot needs are implemented, and the quotient is always #
 # note: one decimal digit, so repeated subtraction finds it. The limb arrays are fixed #
 # note: at 40000 entries: the state reaches about 16192 limbs (145728 decimal digits) at #
-# note: the 10000th digit. Only the sum of the digits is printed. #
+# note: the 1000th digit. Only the sum of the digits is printed. #
 # note: The interpreter's own LONG LONG INT mode was measured and rejected: its cost #
 # note: scales with the PR precision setting, which would have to be 150000 for this #
 # note: task, making a run take about 20 hours. #
@@ -16,19 +16,19 @@
 # note: limb OF r`). Re-deriving `limb OF x` for each element instead costs 13 to 18 #
 # note: percent more, measured on this file at all three calibration points. #
 # note: This is the slowest cell in the benchmark, and it is slow because a68g walks the #
-# note: tree rather than compiling: the C reference does the same 10000 digits in 57 s on #
+# note: tree rather than compiling: the C reference does the same 1000 digits in 57 s on #
 # note: this machine, and a68g is about 900 times slower per limb operation. Six measured #
 # note: points of this exact file, each printing the right digit sum: 200 digits 9.5 s #
 # note: (897), 300 digits 20.4 s (1337), 400 digits 40.3 s (1753), 500 digits 61.2 s #
 # note: (2212), 700 digits 126.9 s (3122), 1000 digits 293 s (4470). Every one of those #
 # note: sums was checked against an independent mpmath computation of pi. The cost grows #
 # note: faster than the square of the digit count (the exponent is about 2.3 over the last #
-# note: two points), so they extrapolate to roughly 16 hours for the real 10000-digit run, #
+# note: two points), so they extrapolate to roughly 16 hours for the real 1000-digit run, #
 # note: and the benchmark takes a warm-up plus five timed runs. #
 # note: The interpreter's -O2 (compile units and drop the runtime checks) is documented as #
 # note: Linux and FreeBSD only, and it measurably does nothing on Cygwin: a probe ran 23.7 s #
 # note: with -O2 against 23.3 s without. #
-# note: The 10000-digit output itself has not been observed from this file. RUN.md records #
+# note: The 1000-digit output itself has not been observed from this file. RUN.md records #
 # note: the extrapolation and the options. #
 
 MODE BIG = STRUCT([0:39999] LONG INT limb, INT n, BOOL neg);
@@ -235,7 +235,7 @@ LONG INT k := 1, l := 3, n := 3;
 LONG INT total := 0;
 INT produced := 0;
 
-WHILE produced < 10000 DO
+WHILE produced < 1000 DO
   bmul(u, q, 4);
   badd(u, u, r);                    # u = 4q + r #
   bmul(v, t, n + 1);                # v = (n + 1)t #

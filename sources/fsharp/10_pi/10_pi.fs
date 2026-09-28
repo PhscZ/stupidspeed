@@ -1,4 +1,4 @@
-// task 10 pi — expected output: 44889
+// task 10 pi — expected output: 4470
 // build: dotnet build -c Release 10_pi.fsproj    run: dotnet run -c Release (or bin/Release/net8.0/10_pi.dll)
 
 open System.Numerics
@@ -23,11 +23,11 @@ let mutable l = three
 let mutable emitted = 0
 let mutable sum = 0
 
-while emitted < 10000 do
+while emitted < 1000 do
     if four * q + r - t < n * t then
         sum <- sum + int n
         emitted <- emitted + 1
-        if emitted < 10000 then
+        if emitted < 1000 then
             let nNext = (ten * (three * q + r)) / t - ten * n
             q <- ten * q
             r <- ten * (r - n * t)

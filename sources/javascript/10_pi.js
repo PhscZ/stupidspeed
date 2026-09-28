@@ -1,8 +1,8 @@
-// task 10 pi — expected output: 44889
+// task 10 pi — expected output: 4470
 // build: none    run: node 10_pi.js | bun 10_pi.js | deno run 10_pi.js
 // note: Gibbons' unbounded spigot on native BigInt; only the digit sum is printed.
 
-const DIGITS = 10000;
+const DIGITS = 1000;
 
 // BigInt division truncates toward zero; the spigot's quotients are floor divisions.
 function floorDiv(a, b) {

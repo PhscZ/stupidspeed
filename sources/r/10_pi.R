@@ -1,8 +1,8 @@
-# task 10 pi — expected output: 44889
+# task 10 pi — expected output: 4470
 # build: Rscript 10_pi.R    run: Rscript 10_pi.R
 #
 # Unbounded spigot (Gibbons), emitting the leading 3 first, summing the first
-# 10000 digits it emits. R has no arbitrary-precision integers, so the state
+# 1000 digits it emits. R has no arbitrary-precision integers, so the state
 # (q, r, t) is carried as sign/magnitude vectors of base-10^9 limbs, with the
 # multiply-by-a-small-integer, the add, the subtract and the compare written
 # by hand. Every intermediate stays below 2^53, so doubles hold limbs exactly.
@@ -10,7 +10,7 @@
 # division is a normalised two-limb estimate plus a correction step or two.
 
 BASE <- 1e9
-NDIGITS <- 10000
+NDIGITS <- 1000
 
 # --- base-10^9 limbs, little-endian, no leading zero limbs -------------------
 

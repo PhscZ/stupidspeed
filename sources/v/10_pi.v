@@ -1,8 +1,8 @@
-// task 10 pi — expected output: 44889
+// task 10 pi — expected output: 4470
 // build: v -prod -cc gcc -o prog 10_pi.v    run: ./prog
 // note: Gibbons' unbounded spigot. V has arbitrary-precision integers in the standard
 //       library (`math.big`, the `Integer` type), so the spigot runs on those rather
-//       than on hand-rolled limbs. Only the sum of the 10000 digits is printed.
+//       than on hand-rolled limbs. Only the sum of the 1000 digits is printed.
 // note: `Integer.int()` is only ever asked for a value below 10 here — the spigot's
 //       quotient for the next digit is always a single decimal digit.
 
@@ -10,7 +10,7 @@ module main
 
 import math.big
 
-const digits = 10000
+const digits = 1000
 
 fn main() {
 	mut q := big.integer_from_int(1)

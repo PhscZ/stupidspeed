@@ -1,4 +1,4 @@
-// task 10 pi — expected output: 44889
+// task 10 pi — expected output: 4470
 // build: coreclr: dotnet build -c Release | nativeaot: dotnet publish -c Release -p:PublishAot=true | mono: mcs -optimize+ -r:System.Numerics.dll 10_pi.cs (mono does not reference System.Numerics implicitly)    run: coreclr: dotnet run -c Release (or bin/Release/net8.0/10_pi.exe) | nativeaot: bin/Release/net8.0/publish/10_pi.exe | mono: mono 10_pi.exe
 using System;
 using System.Numerics;
@@ -23,7 +23,7 @@ class Program
         BigInteger q = 1, r = 0, t = 1, k = 1, n = 3, l = 3;
         long sum = 0;
         int emitted = 0;
-        while (emitted < 10000)
+        while (emitted < 1000)
         {
             if (4 * q + r - t < n * t)
             {

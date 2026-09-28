@@ -1,4 +1,4 @@
-// task 10 pi — expected output: 44889
+// task 10 pi — expected output: 4470
 // build: gcc -O2 -pthread -o prog 10_pi.c    run: ./prog
 // alternates: clang -O2 -pthread -o prog 10_pi.c | cl /O2 /Fe:prog 10_pi.c | tcc -o prog 10_pi.c
 
@@ -221,7 +221,7 @@ int main(void) {
     uint64_t k = 1, l = 3, n = 3;
     uint64_t sum = 0;
 
-    for (int64_t produced = 0; produced < 10000; ) {
+    for (int64_t produced = 0; produced < 1000; ) {
         big_mul_small(&u, &q, 4);
         big_add(&u, &u, &r);             /* u = 4q + r */
         big_mul_small(&v, &t, n + 1);    /* v = (n + 1)t */

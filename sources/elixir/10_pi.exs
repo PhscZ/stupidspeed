@@ -1,4 +1,4 @@
-# task 10 pi — expected output: 9092
+# task 10 pi — expected output: 4470
 # build: none (elixir compiles the script on every run)
 # run: elixir 10_pi.exs
 # note: like Erlang, Elixir has no mutable variables and no loop syntax, so there is no
@@ -19,7 +19,7 @@
 defmodule T10 do
   def run, do: loop(1, 0, 1, 1, 3, 3, 0, 0)
 
-  defp loop(_q, _r, _t, _k, _l, _n, produced, sum) when produced >= 2000 do
+  defp loop(_q, _r, _t, _k, _l, _n, produced, sum) when produced >= 1000 do
     IO.puts(sum)
   end
 

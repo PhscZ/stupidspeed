@@ -1,4 +1,4 @@
-// task 10 pi — expected output: 44889
+// task 10 pi — expected output: 4470
 // build: dart compile exe -o prog 10_pi.dart (aot; jit has no build step)    run: ./prog (aot) | dart 10_pi.dart (jit)
 // Gibbons' unbounded spigot on hand-written base-10^9 limbs: dart:core has no big integers.
 // Every intermediate stays below 2^53, so the arithmetic is exact if compiled to JavaScript too.
@@ -167,7 +167,7 @@ void main() {
   int n = 3;
   int l = 3;
 
-  const int digits = 10000;
+  const int digits = 1000;
   int emitted = 0;
   int digitSum = 0;
   while (emitted < digits) {

@@ -398,7 +398,7 @@ Every task runs six times, in 78 toolchains.
   see the section above.
 - The six new rows are mostly slow, and they hold the slowest cells in the matrix:
   - **Component Pascal** task 10 is a .NET assembly running the same bounds-checked spigot; at
-    10000 digits it took about 5 minutes a run, so about **12 s** at 2000.
+    10000 digits it took about 5 minutes a run, so about **3 s** at 1000.
   - **Racket** task 07 takes about **19 minutes** a run (1121 s measured): Racket strings are
     immutable and `string-append` allocates and copies the whole string every time, so a million
     appends copy about 5x10^11 bytes. That is the quadratic cost the task is about, and it makes
@@ -419,17 +419,17 @@ Every task runs six times, in 78 toolchains.
     MiB, at roughly 1.1 us per byte through the text-mode stream), task 06 about 35 s. Task 10
     is the worst cell in the matrix after `a68g`'s. Measured scaling at 100/200/400/800/1600
     digits is 1.19 s, 3.24 s, 10.4 s, 46.1 s and 205.5 s, an exponent of about 2.16 in the digit
-    count, which puts the 2000-digit run at roughly **5.5 minutes**. The digit sums at those
+    count, which puts the 1000-digit run at roughly **1.4 minutes**. The digit sums at those
     scales are 471, 897, 1753, 3588 and 7269, each matching an independently computed value.
-  - **OCaml** task 10 is about **16 s** at 2000 digits (405 s measured at 10000, scaled
+  - **OCaml** task 10 is about **4 s** at 1000 digits (405 s measured at 10000, scaled
     quadratically): the hand-rolled int64 base-1e9 limbs, since the standard library has no
     bignum and `zarith` is not in MSYS2's UCRT64 repository.
-  - **ActionScript** task 10 is about **11 s** at 2000 digits (268 s measured at 10000, scaled
+  - **ActionScript** task 10 is about **2.8 s** at 1000 digits (268 s measured at 10000, scaled
     quadratically): the same bounds-checked spigot, running on the AVM2 JIT with
     double-precision limbs.
-  - **Oberon-07** task 10 is about 10 s at 2000 digits, **Algol 68 Genie** task 02 takes about
+  - **Oberon-07** task 10 is about 10 s at 1000 digits, **Algol 68 Genie** task 02 takes about
     2.5 minutes and its task 11 about the same, its task 07 about an hour and its task 14 about
-    three and a half minutes, and **Cim** task 10 about 12 s.
+    three and a half minutes, and **Cim** task 10 about 3 s.
   - **Algol 68 Genie task 10 is the slowest cell in the matrix.** The interpreter's own
     arbitrary-precision mode is unusable for it (its cost scales with `PR precision=`, which
     would have to be about 30000 here), so the row hand-writes the base-1e9 limbs
@@ -443,9 +443,9 @@ Every task runs six times, in 78 toolchains.
     | digit sum | 897 | 1337 | 1753 | 2212 | 3122 | 4470 |
 
     The cost grows faster than the square of the digit count (exponent about 2.3 over the last
-    two points), so those extrapolate to roughly **half an hour** for the 2000-digit run, and the
+    two points), so those extrapolate to roughly **7.5 minutes** for the 1000-digit run, and the
     cell's warm-up plus five timed runs is about two and a half hours. The cause is not the
-    program: the C reference does the identical work in **1.9 s** on this machine, so a68g is
+    program: the C reference does the identical work in **0.6 s** on this machine, so a68g is
     about 900x slower
     per limb operation because it walks the tree instead of compiling. Its `-O2` (compile units,
     drop runtime checks) is documented as Linux/FreeBSD only and measurably does nothing on

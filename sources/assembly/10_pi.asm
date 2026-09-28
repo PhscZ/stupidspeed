@@ -1,4 +1,4 @@
-; task 10 pi — expected output: 44889
+; task 10 pi — expected output: 4470
 ; build: nasm -f elf64 10_pi.asm && ld -o prog 10_pi.o    run: ./prog
 ; Linux x86-64 only: freestanding ELF64, nasm + ld, no libc.
 ;
@@ -7,7 +7,7 @@
 ; Multiplying by a small integer is mul plus carry propagation, and the carry
 ; out of a limb is taken with div. The two digit estimates the spigot needs are
 ; quotients by a full sized divisor whose quotient is a single digit, so they
-; are taken by repeated subtraction. Only the sum of the first 10000 digits
+; are taken by repeated subtraction. Only the sum of the first 1000 digits
 ; (the leading 3 included) is printed.
 ;
 ;   if 4q + r - t < n*t: emit n, and
@@ -74,7 +74,7 @@ _start:
     ; ---------------- emit the digit n ----------------
     add r14, r13
     inc rbp
-    cmp rbp, 10000
+    cmp rbp, 1000
     je .done
     ; C = n*t
     lea rdi, [C]

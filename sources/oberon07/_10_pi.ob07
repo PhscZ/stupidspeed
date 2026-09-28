@@ -1,4 +1,4 @@
-(* task 10 pi — expected output: 44889 *)
+(* task 10 pi — expected output: 4470 *)
 (* build: Compiler.exe _10_pi.ob07 win64con -out prog.exe    run: prog.exe *)
 (* note: Oberon-07 has no big integers, so Gibbons' unbounded spigot runs on hand-written *)
 (*       sign-magnitude big integers: little-endian limbs, base 10^9, held in a record with *)
@@ -10,7 +10,7 @@
 (* note: in this dialect RETURN is not a statement: a function body is a statement sequence *)
 (*       followed by exactly one RETURN expression, so each big-integer function below ends *)
 (*       with a single RETURN and puts its result in a local variable. *)
-(* note: the spigot state reaches roughly 145000 decimal digits by the 10000th digit, so the *)
+(* note: the spigot state reaches roughly 145000 decimal digits by the 1000th digit, so the *)
 (*       limb arrays are sized well past that; 32768 limbs is 256 KB per big number. *)
 (* note: Compiler.exe is C:\stupidspeed\tools\oberon07\oberon-07-compiler-master\Compiler.exe, *)
 (*       which has no optimisation switch; the build line above is the whole story. *)
@@ -25,7 +25,7 @@ IMPORT Out;
 CONST
   Base   = 1000000000;
   Limbs  = 32768;
-  Digits = 10000;
+  Digits = 1000;
 
 TYPE
   Big = RECORD

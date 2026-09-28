@@ -1,4 +1,4 @@
-// task 10 pi — expected output: 44889
+// task 10 pi — expected output: 4470
 // build: valac -X -O2 -o prog 10_pi.vala    run: ./prog
 // note: build from the MSYS2 UCRT64 shell (tools/msys2.cmd, MSYSTEM=UCRT64). valac translates
 //       the Vala to C and drives gcc, and -X -O2 is what hands -O2 to that gcc; without it
@@ -11,7 +11,7 @@
 //       big integer: sign-magnitude, little-endian base-1e9 limbs in `uint64`, with add,
 //       subtract, multiply by a small int and a quotient that comes out of repeated
 //       subtraction because the spigot only ever asks for one decimal digit. Gibbons'
-//       unbounded spigot is unchanged; only the sum of the 10000 digits is printed.
+//       unbounded spigot is unchanged; only the sum of the 1000 digits is printed.
 // note: the C reference reallocs its limb buffer; Vala owns its arrays, so `reserve` doubles
 //       the limb array and copies the limbs across. Same doubling growth, same algorithm.
 
@@ -222,7 +222,7 @@ int main () {
     uint64 n = 3;
     uint64 sum = 0;
 
-    for (int64 produced = 0; produced < 10000; ) {
+    for (int64 produced = 0; produced < 1000; ) {
         Big.mul_small (u, q, 4);
         Big.add (u, u, r);             /* u = 4q + r */
         Big.mul_small (v, t, n + 1);   /* v = (n + 1)t */

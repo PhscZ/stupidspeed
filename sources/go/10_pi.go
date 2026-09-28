@@ -1,4 +1,4 @@
-// task 10 pi — expected output: 44889
+// task 10 pi — expected output: 4470
 // build: go build -o prog 10_pi.go    run: ./prog
 // note: plain "go build" only; do not set GOGC=off or any other tuning flags
 package main
@@ -23,7 +23,7 @@ func main() {
 	seven := big.NewInt(7)
 	ten := big.NewInt(10)
 
-	const digits = 10000
+	const digits = 1000
 	sum := 0
 	emitted := 0
 	for emitted < digits {

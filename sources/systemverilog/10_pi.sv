@@ -1,4 +1,4 @@
-// task 10 pi — expected output: 9092
+// task 10 pi — expected output: 4470
 // build: iverilog -g2012 -o prog.vvp 10_pi.sv
 // run: vvp prog.vvp
 // note: SystemVerilog is a hardware description language, so a 'program' is a testbench
@@ -19,7 +19,7 @@
 //       999999999 * 232472 ~= 2.3e14, far inside 2^63, so every product and carry is exact.
 // note: the six big integers live in one two-dimensional array indexed by a constant, rather
 //       than being passed around as arrays, because that is what keeps the operations cheap in
-//       a simulator. The state reaches about 3200 limbs at 2000 digits, so each is sized 8000.
+//       a simulator. The state reaches about 3200 limbs at 1000 digits, so each is sized 8000.
 // note: this is the slowest cell in the row: about 720 million limb operations at roughly 5 us
 //       each puts the full run at around an hour, which the benchmark's no-timeout rule allows.
 //       It was verified at 100, 200, 400 and 1000 digits against independently computed digit
@@ -193,7 +193,7 @@ module tb;
     k = 1; l = 3; n = 3;
     sum = 0; produced = 0;
 
-    while (produced < 2000) begin
+    while (produced < 1000) begin
       mul_small(U, Q, 4);
       big_add(U, U, R);                 // u = 4q + r
       mul_small(V, T, n + 1);           // v = (n + 1)t

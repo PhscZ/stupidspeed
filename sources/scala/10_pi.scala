@@ -1,11 +1,11 @@
-// task 10 pi — expected output: 44889
+// task 10 pi — expected output: 4470
 // build: scalac -release 17 -d out 10_pi.scala
 // run: java -cp "out;<scala>/maven2/org/scala-lang/scala3-library_3/<v>/scala3-library_3-<v>.jar;<scala>/maven2/org/scala-lang/scala-library/<v>/scala-library-<v>.jar" Main
 // note: <scala> is the Scala distribution and <v> its version, 3.9.0 for the one this row was
 //       measured with. Scala CLI's `scala` is a subcommand runner, so `scala Main` is not a
 //       command it accepts; running the compiled class directly with `java -cp` is the
 //       equivalent, and it keeps the JVM's own start-up out of the compiler's way.
-// Gibbons' unbounded spigot on java.math.BigInteger; the first 10000 digits it emits are
+// Gibbons' unbounded spigot on java.math.BigInteger; the first 1000 digits it emits are
 // summed, and that includes the leading 3. The digits themselves are never printed.
 
 import java.math.BigInteger
@@ -31,7 +31,7 @@ object Main {
     var digits = 0
     var sum = 0L
 
-    while (digits < 10000) {
+    while (digits < 1000) {
       val nTimesT = t.multiply(BigInteger.valueOf(n))
       if (q.shiftLeft(2).add(r).subtract(t).compareTo(nTimesT) < 0) {
         // emit n, then (q,r,t,k,n,l) = (10q, 10(r-nt), t, k, (10(3q+r))/t - 10n, l)

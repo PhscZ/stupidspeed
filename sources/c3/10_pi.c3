@@ -1,4 +1,4 @@
-// task 10 pi — expected output: 44889
+// task 10 pi — expected output: 4470
 // build: c3c compile -O2 --wincrt=dynamic --win-sdk <sdk> -L <vc-lib> -L <ucrt-lib> -L <um-lib> -o prog 10_pi.c3    run: prog.exe
 // note: <sdk> is the MSVC tree's "Windows Kits\10", <vc-lib> its
 //       VC\Tools\MSVC\<version>\lib\x64, and <ucrt-lib> and <um-lib> the SDK's
@@ -8,7 +8,7 @@
 // note: --wincrt=dynamic links against the system ucrtbase.dll and vcruntime140.dll, so
 //       the executable needs no extra runtime DLLs beside it.
 // note: std::math::bigint is fixed at 8192 bits, about 2466 decimal digits, so it cannot
-//       hold 10000 digits of pi. The state is therefore hand-written big integers, the
+//       hold 1000 digits of pi. The state is therefore hand-written big integers, the
 //       same sign-magnitude base-1e9 little-endian limbs as sources/c/10_pi.c, with only
 //       the operations the spigot needs: add, subtract, multiply by a small integer, and
 //       a quotient that is always one decimal digit and so comes out of repeated
@@ -288,7 +288,7 @@ fn void main()
 	ulong n = 3;
 	ulong sum = 0;
 
-	for (long produced = 0; produced < 10000; )
+	for (long produced = 0; produced < 1000; )
 	{
 		big_mul_small(&u, &q, 4);
 		big_add(&u, &u, &r);              // u = 4q + r

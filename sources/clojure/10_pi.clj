@@ -1,4 +1,4 @@
-;; task 10 pi — expected output: 44889
+;; task 10 pi — expected output: 4470
 ;; build: none (clojure.main compiles the file to bytecode on every run)
 ;; run: java -cp "<clojure>\clojure-1.12.0.jar;<clojure>\spec.alpha-0.5.238.jar;<clojure>\core.specs.alpha-0.4.74.jar" 10_pi.clj
 ;; note: <clojure> is the directory holding the three Clojure runtime jars. Clojure needs
@@ -23,7 +23,7 @@
   (loop [q 1N r 0N t 1N
          k (long 1) l (long 3) n (long 3)
          produced (long 0) sum (long 0)]
-    (if (< produced (long 10000))
+    (if (< produced (long 1000))
       (let [u (+' (*' (long 4) q) r)
             v (*' (inc n) t)]
         (if (< u v)

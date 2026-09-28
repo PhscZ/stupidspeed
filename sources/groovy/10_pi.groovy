@@ -1,4 +1,4 @@
-// task 10 pi — expected output: 44889
+// task 10 pi — expected output: 4470
 // build: none (interpreted)    run: groovy 10_pi.groovy
 // java.math.BigInteger is arbitrary precision, so this is the real Gibbons unbounded
 // spigot with no hand-rolled limbs: the GDScript/BASIC/Pascal/COBOL rows only need

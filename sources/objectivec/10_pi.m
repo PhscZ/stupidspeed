@@ -1,10 +1,10 @@
-// task 10 pi -- expected output: 44889
+// task 10 pi -- expected output: 4470
 // build: clang -fobjc-runtime=gnustep-2.2 -O2 -o prog 10_pi.m -lobjc -lgnustep-base    run: ./prog
 // Objective-C has no big integers in its standard library; task 10 hand-rolls base-1e9 limbs.
-/* Benchmark task 10 equivalent, idiomatic Objective-C: 10000 digits of pi via
+/* Benchmark task 10 equivalent, idiomatic Objective-C: 1000 digits of pi via
    Gibbons' unbounded spigot, with the arbitrary-precision state in a hand-rolled
    BigInt class (ObjC has no bignum in its standard library, exactly like C).
-   Expected output: 44889 */
+   Expected output: 4470 */
 #import <Foundation/Foundation.h>
 
 #define BASE 1000000000ULL
@@ -194,7 +194,7 @@ int main(void) {
         uint64_t k = 1, l = 3, n = 3;
         uint64_t sum = 0;
 
-        for (long long produced = 0; produced < 10000; ) {
+        for (long long produced = 0; produced < 1000; ) {
             [u mulSmall:q by:4];
             [u add:u with:r];                 /* u = 4q + r */
             [v mulSmall:t by:n + 1];          /* v = (n + 1)t */

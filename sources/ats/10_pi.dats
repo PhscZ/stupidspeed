@@ -1,4 +1,4 @@
-// task 10 pi — expected output: 44889
+// task 10 pi — expected output: 4470
 // build: patscc -DATS_MEMALLOC_LIBC -O2 -o prog 10_pi.dats    run: ./prog
 // note: patscc is a driver: it turns the .dats into C with patsopt and then runs a C compiler,
 //       so $PATSHOME/bin has to be on PATH.
@@ -259,7 +259,7 @@ in
   big_set (q, 1LL);
   big_set (r, 0LL);
   big_set (t, 1LL);
-  while (produced < 10000) (
+  while (produced < 1000) (
     big_mul_small (u, q, 4LL);
     big_add (u, u, r);                   (* u = 4q + r *)
     big_mul_small (v, t, n + 1LL);       (* v = (n + 1)t *)

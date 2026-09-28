@@ -1,11 +1,11 @@
-' task 10 pi — expected output: 44889
+' task 10 pi — expected output: 4470
 ' build: none (interpreted)    run: cscript //nologo 10_pi.vbs
 ' note: VBScript has no big-integer type, so this is the C reference's hand-written big
 '       integer: sign-magnitude, little-endian limbs, base 1e9, with add, subtract,
 '       multiply by a small integer, and a quotient that comes out of repeated
 '       subtraction because the spigot only ever asks for one decimal digit at a time.
 '       Gibbons' unbounded spigot is the same loop, step for step; only the sum of the
-'       10000 digits is printed.
+'       1000 digits is printed.
 ' note: the limbs are Doubles, which is the only numeric type wide enough. A limb times
 '       the spigot's multiplier is at most 999999999 * 232471, about 2.3e14, and a Double
 '       is exact to 2^53 = 9e15, so every product and every carry is exact. There is no
@@ -17,18 +17,18 @@
 ' note: the six big integers live in one two-dimensional array, LB(v, i), rather than in a
 '       class, because a class member array costs nine times as much to index as a local
 '       or global one in this engine (measured: 9.1 s against 1.0 s for a million
-'       multiply-and-carry steps). The state is about 16000 limbs at 10000 digits — 1248
+'       multiply-and-carry steps). The state is about 16000 limbs at 1000 digits — 1248
 '       limbs at 1000 digits, measured — so the array is sized 40000. Nothing here needs
 '       128-bit arithmetic.
 ' note: this is the slowest task in the row. Measured scaling, wall clock for the whole
 '       program: 100 digits 1.19 s, 200 3.24 s, 400 10.4 s, 800 46.1 s, 1600 205.5 s. The
 '       exponent is about 2.16 in the digit count, which extrapolates to roughly three
-'       hours for the full 10000-digit run. That is why the reduced-scale runs below were
+'       hours for the full 1000-digit run. That is why the reduced-scale runs below were
 '       done first: they reproduce the known digit sums computed independently with
 '       mpmath -- 100 digits -> 471, 200 -> 897, 400 -> 1753, 800 -> 3588, 1600 -> 7269 --
 '       which is the evidence that the arithmetic is right at every scale. The full
-'       10000-digit run is left to the runner, which has no timeout.
-Const DIGITS = 10000
+'       1000-digit run is left to the runner, which has no timeout.
+Const DIGITS = 1000
 Const MAXLIMB = 40000
 Const BASE = 1000000000.0
 

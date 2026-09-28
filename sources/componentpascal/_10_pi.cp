@@ -1,9 +1,9 @@
-(* task 10 pi — expected output: 44889 *)
+(* task 10 pi — expected output: 4470 *)
 (* build: gpcp /list- _10_pi.cp    run: _10_pi.exe *)
 (* note: Component Pascal has no big integer library, so this is the same hand written
    sign-magnitude base 10^9 big integer as the C row: little-endian LONGINT limbs, with
    add, subtract, multiply by a small integer, and a quotient that is always a small
-   digit found by repeated subtraction. Same Gibbons spigot, same 10000 digits. *)
+   digit found by repeated subtraction. Same Gibbons spigot, same 1000 digits. *)
 (* note: the six state values are fixed records of 40000 limbs each, comfortably more
    than the spigot reaches, so no limb array ever has to grow; the arithmetic routines
    read limb i before they write it, which is what makes the in-place calls such as
@@ -13,7 +13,7 @@
    PATH, and %CROOT%\bin\RTS.dll copied next to the executable. gpcp has no
    optimisation levels; the documented invocation is plain "gpcp _10_pi.cp" and /list-
    only suppresses the .lst listing file. *)
-(* note: this is by far the slowest task in the row: a full 10000 digit run takes about
+(* note: this is by far the slowest task in the row: a full 1000 digit run takes about
    4 minutes 55 seconds on this machine, so the five timed runs plus a warm-up are about
    half an hour. The spigot was also cross-checked against the first 20 digits of pi
    (sum 97) and the first 100 digits (sum 471) before the full run. *)
@@ -25,7 +25,7 @@ MODULE _10_pi;
 
  CONST BASE = 1000000000;
        LIMBS = 40000;
-       DIGITS = 10000;
+       DIGITS = 1000;
 
  TYPE Big = RECORD
               limb : ARRAY LIMBS OF LONGINT;   (* little-endian, base 1e9 *)

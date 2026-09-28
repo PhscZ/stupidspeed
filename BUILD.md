@@ -208,14 +208,14 @@ prebuilt Windows binary on the project's download page is built **without** it a
 the source tarball turns it on, and the source's own `configure.ac` disables it again for any
 host it does not recognise (`HAVE_UNTESTED`), so the Cygwin build is the one that works.
 `a68g` also carries an arbitrary-precision `LONG LONG INT` mode, but it was measured and
-**rejected for task 10**: its cost is linear in the `PR precision=` setting, and 2000 digits
-need a spigot state of about 29000 digits, so the precision would have to be set to roughly
+**rejected for task 10**: its cost is linear in the `PR precision=` setting, and 1000 digits
+need a spigot state of about 11232 digits, so the precision would have to be set to roughly
 30000 (200-digit spigot: 1 s at precision 4000, 4 s at 20000, 37 s at 150000, which is the
 linearity the mode is rejected for). Task 10 therefore hand-writes the base-1e9 limbs in
 `LONG INT` arrays, like every other row, and hoists each row reference out of its loop (worth
 another 13-18%). It is still quadratic in the digits and still the slowest cell in the matrix:
-a68g is about 900x slower per limb operation than the C reference, which does the same 2000
-digits in **1.9 s** on this machine, so a68g extrapolates to roughly **half an hour** for the
+a68g is about 900x slower per limb operation than the C reference, which does the same 1000
+digits in **0.6 s** on this machine, so a68g extrapolates to roughly **7.5 minutes** for the
 run. See `RUN.md` for what that means for the cell.
 
 **Clojure** is three jars and no installer: `clojure-1.12.0.jar`, `spec.alpha-0.5.238.jar` and

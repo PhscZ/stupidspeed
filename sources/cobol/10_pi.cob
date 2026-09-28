@@ -1,4 +1,4 @@
-      *> task 10 pi -- expected output: 44889
+      *> task 10 pi -- expected output: 4470
       *> build: cobc -x -O2 -o prog 10_pi.cob    run: ./prog
       *> COBOL has no big integers, so this is the GDScript/BASIC/Pascal
       *> precedent: sign-magnitude big integers on base-1e9 limbs with the four
@@ -6,14 +6,14 @@
       *> printed, so the check is one number.
       *> COMP-5 gives the full 64-bit binary range regardless of the PICTURE, so a
       *> limb product plus carry fits in one COMPUTE with no overflow handling.
-      *> 17000 limbs is what the BASIC row uses for 10000 digits; t peaks near
+      *> 17000 limbs is what the BASIC row uses for 1000 digits; t peaks near
       *> 16192 limbs, so the arrays are never indexed past their end.
        IDENTIFICATION DIVISION.
        PROGRAM-ID. T10.
        DATA DIVISION.
        WORKING-STORAGE SECTION.
        01 QUOT-HI  PIC 9(9) COMP-5 VALUE 1023.
-       01 NDIGITS  PIC 9(9) COMP-5 VALUE 10000.
+       01 NDIGITS  PIC 9(9) COMP-5 VALUE 1000.
        01 Q.
            05 Q-NEG  PIC 9 COMP-5.
            05 Q-N    PIC 9(9) COMP-5.

@@ -1,4 +1,4 @@
-"task 10 pi — expected output: 44889
+"task 10 pi — expected output: 4470
  build: none (image is prebuilt)    run: Dolphin8 DPRO.img8 -u -f 10_pi.st -q
  Dolphin's integers are arbitrary precision natively (LargePositiveInteger is a core
  class, and the VM has LargeIntPrim), so this is the real Gibbons unbounded spigot
@@ -12,7 +12,7 @@ out := SessionManager current stdout.
 q := 1. r := 0. t := 1. k := 1. n := 3. l := 3.
 total := 0. emitted := 0.
 
-[emitted < 10000] whileTrue: [
+[emitted < 1000] whileTrue: [
 	(4 * q + r - t) < (n * t)
 		ifTrue: [
 			| nextn |

@@ -1,4 +1,4 @@
-# task 10 pi — expected output: 44889
+# task 10 pi — expected output: 4470
 # build: nim c -d:release -o:prog _10_pi.nim    run: ./prog
 #
 # Deviation: Nim's standard library has no arbitrary-precision integer type
@@ -141,7 +141,7 @@ proc main() =
   var l: int64 = 3
   var total: int64 = 0
   var emitted = 0
-  while emitted < 10_000:
+  while emitted < 1_000:
     # 4*q + r - t < n*t
     let test = sub(add(mulSmall(q, 4), r), mulSmall(t, n + 1))
     if test.neg:
