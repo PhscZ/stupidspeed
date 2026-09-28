@@ -11,7 +11,7 @@ like for the numbers to mean anything. For compilers, see `BUILD.md`.
 | CPU | 4 physical cores | Task 11 runs four threads. Every other task is pinned to one core, so more cores do not help them. |
 | RAM | 8 GB minimum, 16 GB comfortable | The tasks themselves are small: the largest allocation is task 06's 100 MB text, and task 12's three 1000x1000 arrays are 24 MB together. The 16 GB is for the JVM, GraalVM and Julia toolchains. `native-image` alone wants 2–4 GB to build. |
 | Disk | 25 GB free | 180 MiB of fixtures, plus the toolchains themselves: `BUILD.md` measured 23 GB for all 74 installed and run, of which the MSYS2 tree that `valac` needs is 2.2 GB on its own, with another 2–3 GB of scratch while reassembling MSVC and Swift. |
-| Filesystem | `tmpfs` or RAM disk preferred for the file tasks | Reading 90 MiB from a spinning disk measures the disk. Anything run under WSL2 measures the WSL disk layer instead. Where the fixture lives must be recorded in the results. |
+| Filesystem | `tmpfs` or RAM disk preferred for the file tasks | Reading 50 MiB from a spinning disk measures the disk. Anything run under WSL2 measures the WSL disk layer instead. Where the fixture lives must be recorded in the results. |
 
 ## Runtimes
 
@@ -343,14 +343,14 @@ way, so the two are comparable.
 
 ## Fixtures
 
-Task 14 and task 15 use two files with the same 90 MiB shape: 14 reads `data.bin`, 15
+Task 14 and task 15 use two files with the same 50 MiB shape: 14 reads `data.bin`, 15
 writes `out.bin`.
 
-- `data.bin` — 94371840 bytes, the bytes 0 through 255 repeating. 368640 repetitions.
+- `data.bin` — 52428800 bytes, the bytes 0 through 255 repeating. 204800 repetitions.
   Generate once; every language reads the same bytes. There is no generator script in this
-  repository, so write one: 368640 copies of the 256-byte cycle.
-- `out.bin` — written by task 15, 94371840 bytes. Overwritten on every run, so it needs
-  90 MiB of free space and a writable working directory. One row cannot use the working
+  repository, so write one: 204800 copies of the 256-byte cycle.
+- `out.bin` — written by task 15, 52428800 bytes. Overwritten on every run, so it needs
+  50 MiB of free space and a writable working directory. One row cannot use the working
   directory: ActionScript's AIR runtime refuses to write inside its own application bundle
   and has no working-directory API at all, so its task 15 writes to the runtime's
   per-application data directory, `%APPDATA%\stupidspeed.actionscript\Local Store\out.bin`.
@@ -415,7 +415,7 @@ Every task runs six times, in 78 toolchains.
     row at **38.8 minutes** (2330 s measured; scaling 100 digits 3.8 s, 200 16.2 s, 1000 538 s,
     an exponent of about 2.2 in the digit count).
   - **VBScript** is the slowest row overall. Task 07 takes about **9.6 minutes** (576 s
-    measured) and task 14 about **1.4 minutes** (91 s measured at 100 MiB, so about 82 s at 90
+    measured) and task 14 about **1.4 minutes** (91 s measured at 50 MiB, so about 82 s at 90
     MiB, at roughly 1.1 us per byte through the text-mode stream), task 06 about 35 s. Task 10
     is the worst cell in the matrix after `a68g`'s. Measured scaling at 100/200/400/800/1600
     digits is 1.19 s, 3.24 s, 10.4 s, 46.1 s and 205.5 s, an exponent of about 2.16 in the digit

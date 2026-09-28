@@ -1,7 +1,7 @@
 <?php
-// task 14 file_read — expected output: 484442112
+// task 14 file_read — expected output: 2389704704
 // build: none (interpreted)    run: php 14_file_read.php (zend) | php -d opcache.enable_cli=1 -d opcache.jit_buffer_size=64M 14_file_read.php (zend + jit)
-// Reads data.bin (104857600 bytes: the bytes 0..255 repeating) from the working directory in
+// Reads data.bin (52428800 bytes: the bytes 0..255 repeating) from the working directory in
 // 1 MiB chunks, never one byte per syscall, and sums every byte.
 
 $handle = fopen('data.bin', 'rb');

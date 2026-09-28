@@ -1,4 +1,4 @@
-// task 15 file_write — expected output: 104857600
+// task 15 file_write — expected output: 52428800
 // build: zig build-exe -O ReleaseFast 15_file_write.zig -femit-bin=prog    run: ./prog
 // deviation: Zig 0.16 removed std.posix.write and moved std.fs onto std.Io, so the line goes out
 // through std.Io.File.stdout() and the file is created with std.Io.Dir.cwd().createFile(io, ..).
@@ -6,7 +6,7 @@
 const std = @import("std");
 
 const buffer_size: usize = 1 << 20;
-const passes: usize = 100;
+const passes: usize = 50;
 
 pub fn main(init: std.process.Init) !void {
     const io = init.io;

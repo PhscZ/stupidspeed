@@ -1,6 +1,6 @@
-(* task 14 file_read — expected output: 484442112 *)
+(* task 14 file_read — expected output: 2389704704 *)
 (* build: cm3 -build -O    run: AMD64_NT\prog.exe *)
-(* note: data.bin must be in the working directory: 409600 copies of the byte cycle 0..255 *)
+(* note: data.bin must be in the working directory: 204800 copies of the byte cycle 0..255 *)
 
 MODULE Main;
 IMPORT IO, Fmt, FS, File;

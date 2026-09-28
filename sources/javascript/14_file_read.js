@@ -1,4 +1,4 @@
-// task 14 file_read — expected output: 484442112
+// task 14 file_read — expected output: 2389704704
 // build: none    run: node 14_file_read.js | bun 14_file_read.js | deno run --allow-read 14_file_read.js
 
 const fs = require('node:fs');

@@ -1,7 +1,7 @@
 <?php
-// task 15 file_write — expected output: 104857600
+// task 15 file_write — expected output: 52428800
 // build: none (interpreted)    run: php 15_file_write.php (zend) | php -d opcache.enable_cli=1 -d opcache.jit_buffer_size=64M 15_file_write.php (zend + jit)
-// Writes out.bin: the 1 MiB pattern 0,1,2,...,255 repeated 4096 times, written 100 times,
+// Writes out.bin: the 1 MiB pattern 0,1,2,...,255 repeated 4096 times, written 50 times,
 // then flushed and fsynced. Prints the number of bytes the writes reported.
 
 $pattern = '';
@@ -13,7 +13,7 @@ $buffer = str_repeat($pattern, 4096);
 $handle = fopen('out.bin', 'wb');
 
 $written = 0;
-for ($i = 0; $i < 100; $i++) {
+for ($i = 0; $i < 50; $i++) {
     $written += fwrite($handle, $buffer);
 }
 

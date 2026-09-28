@@ -1,4 +1,4 @@
-' task 15 file_write -- expected output: 104857600
+' task 15 file_write -- expected output: 52428800
 ' build: fbc -O 2 -x prog.exe 15_file_write.bas    run: ./prog
 ' task 15 - file_write
 const CHUNK as integer = 1048576
@@ -12,7 +12,7 @@ next
 dim as integer f = freefile
 open "out.bin" for binary access write as #f
 dim as ulongint written = 0
-for i = 1 to 100
+for i = 1 to 50
     put #f, , buf()
     written += CHUNK
 next

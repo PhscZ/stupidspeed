@@ -1,4 +1,4 @@
-;; task 14 file_read — expected output: 484442112
+;; task 14 file_read — expected output: 2389704704
 ;; build: none (Racket.exe compiles the module on every run; the VM start is part of
 ;;        the measured time)
 ;; run: Racket.exe 14_file_read.rkt

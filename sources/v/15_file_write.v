@@ -1,6 +1,6 @@
-// task 15 file_write — expected output: 104857600
+// task 15 file_write — expected output: 52428800
 // build: v -prod -cc gcc -o prog 15_file_write.v    run: ./prog
-// note: the 1 MiB buffer is written 100 times through the os.File buffer, then
+// note: the 1 MiB buffer is written 50 times through the os.File buffer, then
 //       flushed and committed. `os` has no fsync wrapper, so the commit goes to the
 //       C library directly: _commit on Windows, fsync everywhere else.
 
@@ -33,7 +33,7 @@ fn main() {
 	mut f := os.create('out.bin') or { panic(err) }
 
 	mut written := i64(0)
-	for _ in 0 .. 100 {
+	for _ in 0 .. 50 {
 		n := f.write(buf) or { panic(err) }
 		written += i64(n)
 	}

@@ -1,4 +1,4 @@
-// task 14 file_read — expected output: 484442112
+// task 14 file_read — expected output: 2389704704
 // build: valac -X -O2 -o prog 14_file_read.vala    run: ./prog
 // note: build from the MSYS2 UCRT64 shell (tools/msys2.cmd, MSYSTEM=UCRT64). valac translates
 //       the Vala to C and drives gcc, and -X -O2 is what hands -O2 to that gcc; without it

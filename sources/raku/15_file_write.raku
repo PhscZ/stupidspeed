@@ -1,4 +1,4 @@
-# task 15 file_write — expected output: 94371840
+# task 15 file_write — expected output: 52428800
 # build: none (interpreted)
 # run: raku 15_file_write.raku
 # note: Raku is genuinely imperative -- mutable variables, `for`/`while`/`loop`, and
@@ -7,7 +7,7 @@
 #       used in any timed path.
 # note: integer arithmetic is arbitrary-precision by default; `int`/`num` native types are
 #       used only where the value is known to fit, since native ops are much faster.
-# note: the 1 MiB buffer is written 90 times, then flushed and closed. Raku exposes no fsync on
+# note: the 1 MiB buffer is written 50 times, then flushed and closed. Raku exposes no fsync on
 #       an IO::Handle, so the deviation is flush plus close -- the same one the Tcl, D, Julia, Nim,
 #       Dart, Pascal, COBOL, Dolphin and Common Lisp rows note.
 
@@ -16,10 +16,10 @@
 my $buf = Buf.new( flat (0..255) xx 4096 );
 
 my $fh = open 'out.bin', :bin, :w;
-loop (my int $i = 0; $i < 90; $i++) {
+loop (my int $i = 0; $i < 50; $i++) {
     $fh.write($buf);
 }
 $fh.flush;
 $fh.close;
 
-say 90 * 1048576;
+say 50 * 1048576;

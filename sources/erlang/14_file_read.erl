@@ -1,7 +1,7 @@
 #!/usr/bin/env escript
 %%! -smp enable
 
-% task 14 file_read — expected output: 3442475008
+% task 14 file_read — expected output: 2389704704
 %% build: none (escript compiles the script on every run)
 % run: escript 14_file_read.erl
 %% note: Erlang has no mutable variables and no loop syntax, so there is no imperative

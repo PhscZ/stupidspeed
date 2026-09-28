@@ -1,4 +1,4 @@
-// task 15 file_write — expected output: 104857600
+// task 15 file_write — expected output: 52428800
 // build: amxmlc -swf-version=51 -output prog.swf _15_file_write.as  then
 //        adt -package -storetype pkcs12 -keystore test.p12 -storepass pass -target cmdline out app.xml prog.swf
 // run: out\prog.exe
@@ -63,7 +63,7 @@ package
                 stream.open(out, FileMode.WRITE);
 
                 var written:Number = 0;
-                for (var t:int = 0; t < 100; t++)
+                for (var t:int = 0; t < 50; t++)
                 {
                     stream.writeBytes(buf, 0, CHUNK);
                     written = written + CHUNK;

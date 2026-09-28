@@ -1,11 +1,11 @@
-(* task 15 file_write — expected output: 104857600 *)
+(* task 15 file_write — expected output: 52428800 *)
 (* build: cm3 -build -O    run: AMD64_NT\prog.exe *)
 
 MODULE Main;
 IMPORT IO, Fmt, FileWr, Wr;
 
 CONST chunk = 1048576;   (* 1 MiB *)
-      reps  = 100;
+      reps  = 50;
 
 VAR buf: ARRAY [0..chunk - 1] OF CHAR;
     wr: Wr.T;

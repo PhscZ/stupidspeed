@@ -1,4 +1,4 @@
-// task 14 file_read — expected output: 484442112
+// task 14 file_read — expected output: 2389704704
 // build: swiftc -O -o prog 14_file_read.swift    run: ./prog
 
 import Foundation

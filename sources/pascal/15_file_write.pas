@@ -1,4 +1,4 @@
-{ task 15 file_write — expected output: 104857600 }
+{ task 15 file_write — expected output: 52428800 }
 { build: fpc -O3 -oprogram 15_file_write.pas    run: ./program }
 { Windows x64: i386-win32 fpc + cross.x86_64-win64 add-on, build with -Px86_64; run as program.exe }
 { note: fpc's TFileStream exposes no fsync, so the flush point is freeing the stream,
@@ -25,7 +25,7 @@ begin
   written := 0;
   fs := TFileStream.Create('out.bin', fmCreate);
   try
-    for rep := 1 to 100 do
+    for rep := 1 to 50 do
     begin
       fs.WriteBuffer(buf, ChunkSize);
       written := written + ChunkSize;

@@ -427,7 +427,7 @@ Worth knowing before starting, because these will eat a day each:
   `WHILE NOT end of file (f) DO getbin (f, buf) OD` loop **never terminates** — it spins,
   burning kernel time, and looks exactly like a very slow program rather than a hung one. This
   cost a day of measurement before it was isolated; the fix is to count the chunks, which is
-  what the spec's fixed 90 MiB file size allows. `getbin` on a `CHAR` row and the scalar `get`
+  what the spec's fixed 50 MiB file size allows. `getbin` on a `CHAR` row and the scalar `get`
   route are not alternatives: `CHAR` is 16 bytes in this interpreter, so a 1 MiB `CHAR` row
   needs 16 MB and aborts with `not enough memory`, and scalar `get` on a binary file fails with
   `error transputting INT value`.
@@ -439,7 +439,7 @@ Worth knowing before starting, because these will eat a day each:
 
 ## Reference implementations
 
-Task 14 and task 15 use a 90 MiB fixture, and every expected output in this benchmark was
+Task 14 and task 15 use a 50 MiB fixture, and every expected output in this benchmark was
 computed independently. Keeping those reproducible needs:
 
 - a C compiler, for the reference implementations
@@ -447,7 +447,7 @@ computed independently. Keeping those reproducible needs:
 
 Both are already covered above. Note that neither the generator nor the reference
 implementations are committed: the repository holds the three documents, `sources/`, and the
-`.gitignore` only. `data.bin` is 368640 copies of the byte cycle 0..255, which is the whole
+`.gitignore` only. `data.bin` is 204800 copies of the byte cycle 0..255, which is the whole
 specification.
 
 Two directories exist locally and are deliberately **not** in the repository, so a fresh clone

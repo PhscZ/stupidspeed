@@ -1,4 +1,4 @@
-// task 14 file_read — expected output: 484442112
+// task 14 file_read — expected output: 2389704704
 // build: dmd -O -release -of=prog _14_file_read.d    run: ./prog
 // build (ldc2): ldc2 -O3 -release -of=prog _14_file_read.d
 

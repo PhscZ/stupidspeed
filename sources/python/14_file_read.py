@@ -1,6 +1,6 @@
-# task 14 file_read — expected output: 484442112
+# task 14 file_read — expected output: 2389704704
 # build: python 14_file_read.py | pypy 14_file_read.py | graalpy 14_file_read.py | nuitka --standalone 14_file_read.py    run: python 14_file_read.py
-# note: data.bin is a fixture of 104857600 bytes, the bytes 0..255 repeating; it is read from the working directory in 1 MiB chunks.
+# note: data.bin is a fixture of 52428800 bytes, the bytes 0..255 repeating; it is read from the working directory in 1 MiB chunks.
 
 total = 0
 

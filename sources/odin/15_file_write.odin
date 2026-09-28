@@ -1,4 +1,4 @@
-// task 15 file_write — expected output: 104857600
+// task 15 file_write — expected output: 52428800
 // build: odin build 15_file_write.odin -o:speed -out:prog    run: ./prog
 // fsync is os.flush in core:os (FlushFileBuffers on Windows, fsync on Unix), and
 // core:os has no os.create, so the file is opened with O_WRONLY|O_CREATE|O_TRUNC.
@@ -20,7 +20,7 @@ main :: proc() {
 	}
 
 	written: i64
-	for _ in 0 ..< 100 {
+	for _ in 0 ..< 50 {
 		n, werr := os.write(f, buf)
 		written += i64(n)
 		if werr != nil {

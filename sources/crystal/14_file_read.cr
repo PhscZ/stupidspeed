@@ -1,4 +1,4 @@
-# task 14 file_read -- expected output: 484442112
+# task 14 file_read -- expected output: 2389704704
 # build: crystal build --release -o prog 14_file_read.cr    run: ./prog
 CHUNK = 1048576
 total = 0u64

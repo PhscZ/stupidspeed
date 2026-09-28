@@ -1,9 +1,9 @@
-// task 14 file_read — expected output: 484442112
+// task 14 file_read — expected output: 2389704704
 // build: dotnet build -c Release 14_file_read.fsproj    run: dotnet run -c Release (or bin/Release/net8.0/14_file_read.dll)
 
 open System.IO
 
-// data.bin is the bytes 0..255 repeating, 104857600 bytes, in the working directory.
+// data.bin is the bytes 0..255 repeating, 52428800 bytes, in the working directory.
 let chunk = 1024 * 1024
 let buffer : byte[] = Array.zeroCreate chunk
 

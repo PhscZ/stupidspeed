@@ -1,4 +1,4 @@
-// task 15 file_write — expected output: 104857600
+// task 15 file_write — expected output: 52428800
 // build: dotnet build -c Release 15_file_write.fsproj    run: dotnet run -c Release (or bin/Release/net8.0/15_file_write.dll)
 
 open System.IO
@@ -12,7 +12,7 @@ for i in 0 .. chunk - 1 do
 let stream = new FileStream("out.bin", FileMode.Create, FileAccess.Write, FileShare.None)
 
 let mutable written = 0L
-for _ in 1 .. 100 do
+for _ in 1 .. 50 do
     stream.Write(buffer, 0, chunk)
     written <- written + int64 chunk
 

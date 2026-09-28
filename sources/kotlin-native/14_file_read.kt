@@ -1,4 +1,4 @@
-// task 14 file_read — expected output: 484442112
+// task 14 file_read — expected output: 2389704704
 // build: kotlinc-native -opt -o prog 14_file_read.kt    run: ./prog
 // note: this is the kotlin/native row. Native has no stdlib file I/O and no java.io, so
 // data.bin is read with the platform C library (fopen/fread/fclose) from the working

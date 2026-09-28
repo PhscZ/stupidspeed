@@ -1,4 +1,4 @@
-(* task 15 file_write — expected output: 104857600 *)
+(* task 15 file_write — expected output: 52428800 *)
 (* build: ocamlopt -unsafe -o prog.exe _15_file_write.ml *)
 (* run: prog.exe *)
 (* note: the row is built from the MSYS2 UCRT64 package mingw-w64-ucrt-x86_64-ocaml
@@ -15,7 +15,7 @@
 (* note: filenames carry the row's _ prefix. OCaml derives a module name from the file
          name and a module name has to be a valid identifier, so 01_branches.ml draws
          'Warning 24: bad source file name'; _01_branches.ml compiles clean. *)
-(* note: the 1 MiB buffer is written 100 times, then flushed and closed. OCaml has no standard
+(* note: the 1 MiB buffer is written 50 times, then flushed and closed. OCaml has no standard
          fsync, so the deviation is flush plus close -- the same one the Tcl, D, Julia, Nim, Dart,
          Pascal, COBOL and Dolphin rows note. *)
 
@@ -26,9 +26,9 @@ let () =
     Bytes.unsafe_set buf i (Char.chr (i mod 256))
   done;
   let oc = open_out_bin "out.bin" in
-  for _ = 1 to 100 do
+  for _ = 1 to 50 do
     output oc buf 0 chunk
   done;
   flush oc;
   close_out oc;
-  Printf.printf "%d\n" (100 * chunk)
+  Printf.printf "%d\n" (50 * chunk)

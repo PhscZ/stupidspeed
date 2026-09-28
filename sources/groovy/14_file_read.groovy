@@ -1,6 +1,6 @@
-// task 14 file_read — expected output: 484442112
+// task 14 file_read — expected output: 2389704704
 // build: none (interpreted)    run: groovy 14_file_read.groovy
-// One pass over 100 MiB, reading 1 MiB at a time.
+// One pass over 50 MiB, reading 1 MiB at a time.
 
 byte[] buf = new byte[1024 * 1024]
 long total = 0

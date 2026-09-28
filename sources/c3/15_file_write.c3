@@ -1,4 +1,4 @@
-// task 15 file_write — expected output: 104857600
+// task 15 file_write — expected output: 52428800
 // build: c3c compile -O2 --wincrt=dynamic --win-sdk <sdk> -L <vc-lib> -L <ucrt-lib> -L <um-lib> -o prog 15_file_write.c3    run: prog.exe
 // note: <sdk> is the MSVC tree's "Windows Kits\10", <vc-lib> its
 //       VC\Tools\MSVC\<version>\lib\x64, and <ucrt-lib> and <um-lib> the SDK's
@@ -7,7 +7,7 @@
 //       -O2 is the optimisation flag, and c3c defaults to -O0.
 // note: --wincrt=dynamic links against the system ucrtbase.dll and vcruntime140.dll, so
 //       the executable needs no extra runtime DLLs beside it.
-// note: writes out.bin (104857600 bytes) in the working directory, 1 MiB at a time through
+// note: writes out.bin (52428800 bytes) in the working directory, 1 MiB at a time through
 //       std::io::file. C3's std::io has no fsync wrapper, so `_commit` is declared extern
 //       here and taken straight from the UCRT that the -L flags already link against.
 //       File.write is buffered by the C runtime; flush then _commit pushes it to disk.
@@ -20,7 +20,7 @@ import std::core::mem;
 extern fn int _commit(int fd);
 
 const long CHUNK = 1048576;   // 1 MiB
-const int REPEATS = 100;
+const int REPEATS = 50;
 
 fn void main()
 {

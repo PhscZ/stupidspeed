@@ -1,4 +1,4 @@
-; task 14 file_read — expected output: 484442112
+; task 14 file_read — expected output: 2389704704
 ; build: nasm -f elf64 14_file_read.asm && ld -o prog 14_file_read.o    run: ./prog
 ; Linux x86-64 only: freestanding ELF64, nasm + ld, no libc.
 ; Reads data.bin from the working directory in 1 MiB chunks and prints the

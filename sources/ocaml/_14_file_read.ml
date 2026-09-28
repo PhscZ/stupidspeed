@@ -1,4 +1,4 @@
-(* task 14 file_read — expected output: 484442112 *)
+(* task 14 file_read — expected output: 2389704704 *)
 (* build: ocamlopt -unsafe -o prog.exe _14_file_read.ml *)
 (* run: prog.exe *)
 (* note: the row is built from the MSYS2 UCRT64 package mingw-w64-ucrt-x86_64-ocaml

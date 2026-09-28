@@ -1,4 +1,4 @@
-// task 15 file_write — expected output: 104857600
+// task 15 file_write — expected output: 52428800
 // build: kotlinc 15_file_write.kt -include-runtime -d prog.jar    run: java -jar prog.jar    (jvm row; the native row's file is sources/kotlin-native/15_file_write.kt)
 // note: java.io is not available on Kotlin/Native, so the native row has its own file there, which
 // writes out.bin with platform.posix instead. This one writes it in 1 MiB chunks.
@@ -13,7 +13,7 @@ fun main() {
     }
     var written = 0L
     FileOutputStream("out.bin").use { out ->
-        for (t in 0 until 100) {
+        for (t in 0 until 50) {
             out.write(buf)
             written += chunk.toLong()
         }

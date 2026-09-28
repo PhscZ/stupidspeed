@@ -1,4 +1,4 @@
-! task 15 file_write — expected output: 104857600
+! task 15 file_write — expected output: 52428800
 ! build: gfortran -O3 -o prog 15_file_write.f90 (flang -O3 -o prog 15_file_write.f90)    run: ./prog
 !
 ! One mebibyte per write, unformatted stream.  Fortran's standard library has
@@ -26,7 +26,7 @@ program main
        status='replace', action='write')
 
   written = 0_8
-  do i = 1, 100
+  do i = 1, 50
     write(u) buf
     written = written + int(chunk, kind=8)
   end do

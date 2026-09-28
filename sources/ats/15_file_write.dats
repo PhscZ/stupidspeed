@@ -1,4 +1,4 @@
-// task 15 file_write — expected output: 104857600
+// task 15 file_write — expected output: 52428800
 // build: patscc -DATS_MEMALLOC_LIBC -O2 -o prog 15_file_write.dats    run: ./prog
 // note: patscc is a driver: it turns the .dats into C with patsopt and then runs a C compiler,
 //       so $PATSHOME/bin has to be on PATH.
@@ -41,7 +41,7 @@ in
     i := i + 1
   );
   if $UN.cast{ulint} (f) = 0UL then () else (
-    while (rep < 100) (
+    while (rep < 50) (
       written := written
         + g0int2int_int_llint ($extfcall (int, "fwrite", buf, i2sz (1), i2sz (chunk), f));
       rep := rep + 1

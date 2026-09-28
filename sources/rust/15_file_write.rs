@@ -1,4 +1,4 @@
-// task 15 file_write — expected output: 104857600
+// task 15 file_write — expected output: 52428800
 // build: rustc -O -o prog 15_file_write.rs    run: ./prog
 
 use std::fs::File;
@@ -13,7 +13,7 @@ fn main() {
     let mut file = File::create("out.bin").expect("cannot create out.bin");
     let mut written: u64 = 0;
 
-    for _ in 0..100 {
+    for _ in 0..50 {
         file.write_all(&buf).expect("write failed");
         written += buf.len() as u64;
     }

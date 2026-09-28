@@ -1,4 +1,4 @@
-// task 14 file_read — expected output: 484442112
+// task 14 file_read — expected output: 2389704704
 // build: gcc -O2 -pthread -o prog 14_file_read.c    run: ./prog
 // alternates: clang -O2 -pthread -o prog 14_file_read.c | cl /O2 /Fe:prog 14_file_read.c | tcc -o prog 14_file_read.c
 

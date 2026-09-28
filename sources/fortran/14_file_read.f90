@@ -1,4 +1,4 @@
-! task 14 file_read — expected output: 484442112
+! task 14 file_read — expected output: 2389704704
 ! build: gfortran -O3 -o prog 14_file_read.f90 (flang -O3 -o prog 14_file_read.f90)    run: ./prog
 !
 ! One mebibyte per read, unformatted stream, so no syscall per byte.  The

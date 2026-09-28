@@ -1,6 +1,6 @@
-' task 14 file_read — expected output: 484442112
+' task 14 file_read — expected output: 2389704704
 ' build: dotnet build -c Release 14_file_read.vbproj    run: dotnet bin/Release/net8.0/14_file_read.dll
-' data.bin is 104857600 bytes, the byte values 0..255 repeating, read 1 MiB at a time.
+' data.bin is 52428800 bytes, the byte values 0..255 repeating, read 1 MiB at a time.
 
 Imports System
 Imports System.IO

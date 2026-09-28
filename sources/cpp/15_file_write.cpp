@@ -1,4 +1,4 @@
-// task 15 file_write — expected output: 104857600
+// task 15 file_write — expected output: 52428800
 // build: g++ -O2 -pthread -o prog 15_file_write.cpp    run: ./prog
 // also builds with: clang++ -O2 -pthread -o prog 15_file_write.cpp | cl /O2 /EHsc /Fe:prog 15_file_write.cpp
 // note: writes out.bin in 1 MiB chunks, flushes and fsyncs, then prints the byte count.
@@ -23,7 +23,7 @@ int main() {
     }
 
     unsigned long long written = 0;
-    for (int pass = 0; pass < 100; ++pass) {
+    for (int pass = 0; pass < 50; ++pass) {
         written += static_cast<unsigned long long>(std::fwrite(buffer, 1, sizeof(buffer), file));
     }
 

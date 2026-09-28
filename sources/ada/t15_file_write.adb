@@ -1,4 +1,4 @@
--- task 15 file_write — expected output: 104857600
+-- task 15 file_write — expected output: 52428800
 -- build: gnatmake -O3 t15_file_write.adb    run: ./t15_file_write
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Text_IO.Integer_IO;
@@ -22,7 +22,7 @@ begin
 
    SIO.Create (F, SIO.Out_File, "out.bin");
 
-   for Rep in 1 .. 100 loop
+   for Rep in 1 .. 50 loop
       SIO.Write (F, Buf);
       Written := Written + Long_Long_Integer (Buf'Length);
    end loop;

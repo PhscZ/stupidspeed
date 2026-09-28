@@ -1,10 +1,10 @@
-! task 15 file_write — expected output: 104857600 ;
+! task 15 file_write — expected output: 52428800 ;
 ! build: cim -q -m8 -o prog 15_file_write.sim    run: ./prog ;
 ! note: -m8 asks cim for an 8 MB initial memory pool. The 1 MiB buffer is larger than ;
 !       the default pool, so without it the allocation aborts with ;
 !       "Alloc: Virtual memory exhausted". ;
 ! note: the buffer is the 1 MiB pattern 0..255 repeated 4096 times, held in a CHARACTER ;
-!       ARRAY, and it is written 100 times, as the task asks. ;
+!       ARRAY, and it is written 50 times, as the task asks. ;
 ! note: Simula's byte file interface is byte-at-a-time: OUTBYTEFILE.outbyte writes one ;
 !       byte per call and the Oakwood file classes have no bulk write, so the bytes are ;
 !       handed over one at a time. cim's runtime buffers them internally and OUTBYTEFILE ;
@@ -24,7 +24,7 @@ begin
   g :- new outbytefile("out.bin");
   g.open;
   written := 0;
-  for i := 1 step 1 until 100 do
+  for i := 1 step 1 until 50 do
     for j := 0 step 1 until 1048575 do
     begin
       g.outbyte(Rank(buf(j)));

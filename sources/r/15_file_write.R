@@ -1,8 +1,8 @@
-# task 15 file_write — expected output: 104857600
+# task 15 file_write — expected output: 52428800
 # build: Rscript 15_file_write.R    run: Rscript 15_file_write.R
 #
 # The buffer is the 1 MiB pattern 0,1,2,...,255 repeated 4096 times, written
-# 100 times to out.bin. flush() pushes R's buffer down to the OS and close()
+# 50 times to out.bin. flush() pushes R's buffer down to the OS and close()
 # closes the connection; the byte count is printed after both.
 
 write_file <- function() {
@@ -10,7 +10,7 @@ write_file <- function() {
   con <- file("out.bin", "wb")
   written <- 0
   i <- 0
-  while (i < 100) {
+  while (i < 50) {
     writeBin(buf, con)
     written <- written + length(buf)
     i <- i + 1

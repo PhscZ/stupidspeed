@@ -1,4 +1,4 @@
-// task 14 file_read — expected output: 484442112
+// task 14 file_read — expected output: 2389704704
 // build: c3c compile -O2 --wincrt=dynamic --win-sdk <sdk> -L <vc-lib> -L <ucrt-lib> -L <um-lib> -o prog 14_file_read.c3    run: prog.exe
 // note: <sdk> is the MSVC tree's "Windows Kits\10", <vc-lib> its
 //       VC\Tools\MSVC\<version>\lib\x64, and <ucrt-lib> and <um-lib> the SDK's
@@ -7,9 +7,9 @@
 //       -O2 is the optimisation flag, and c3c defaults to -O0.
 // note: --wincrt=dynamic links against the system ucrtbase.dll and vcruntime140.dll, so
 //       the executable needs no extra runtime DLLs beside it.
-// note: data.bin (104857600 bytes, the bytes 0..255 repeating) must be in the working
+// note: data.bin (52428800 bytes, the bytes 0..255 repeating) must be in the working
 //       directory. std::io::file reads it in 1 MiB chunks through a File; the byte sum is
-//       kept in a `ulong` because 100 MB of bytes overflows 32 bits.
+//       kept in a `ulong` because 50 MB of bytes overflows 32 bits.
 
 module c3_14_file_read;
 import std::io;

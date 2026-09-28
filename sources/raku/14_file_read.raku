@@ -1,4 +1,4 @@
-# task 14 file_read — expected output: 3442475008
+# task 14 file_read — expected output: 2389704704
 # build: none (interpreted)
 # run: raku 14_file_read.raku
 # note: Raku is genuinely imperative -- mutable variables, `for`/`while`/`loop`, and

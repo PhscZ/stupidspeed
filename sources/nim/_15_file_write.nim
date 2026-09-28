@@ -1,4 +1,4 @@
-# task 15 file_write — expected output: 104857600
+# task 15 file_write — expected output: 52428800
 # build: nim c -d:release -o:prog _15_file_write.nim    run: ./prog
 #
 # Deviation: Nim's standard library exposes no fsync (File has no such proc),
@@ -12,8 +12,8 @@ for i in 0 ..< chunk:
 var f: File
 if not open(f, "out.bin", fmWrite):
   quit(1)
-for _ in 0 ..< 100:
+for _ in 0 ..< 50:
   discard writeBuffer(f, addr buf[0], buf.len)
 flushFile(f)
 close(f)
-echo(100 * chunk)
+echo(50 * chunk)

@@ -1,4 +1,4 @@
-# task 15 file_write — expected output: 104857600
+# task 15 file_write — expected output: 52428800
 # build: julia 15_file_write.jl    run: julia 15_file_write.jl
 # deviation: Julia's standard library exposes no fsync, so the file is flushed and closed.
 
@@ -10,7 +10,7 @@ function main()
 
     written = Int64(0)
     open("out.bin", "w") do f
-        for _ in 1:100
+        for _ in 1:50
             written += write(f, buf)
         end
         flush(f)

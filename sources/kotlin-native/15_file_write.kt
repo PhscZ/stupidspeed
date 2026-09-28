@@ -1,4 +1,4 @@
-// task 15 file_write — expected output: 104857600
+// task 15 file_write — expected output: 52428800
 // build: kotlinc-native -opt -o prog 15_file_write.kt    run: ./prog
 // note: this is the kotlin/native row. Native has no stdlib file I/O and no java.io, so
 // out.bin is written with the platform C library (fopen/fwrite/fflush/fclose) in 1 MiB
@@ -25,7 +25,7 @@ fun main() {
     val file = fopen("out.bin", "wb")
     if (file == null) return
     var written = 0L
-    for (t in 0 until 100) {
+    for (t in 0 until 50) {
         written += buf.usePinned { p -> fwrite(p.addressOf(0), 1.convert(), buf.size.convert(), file) }.toLong()
     }
     fflush(file)

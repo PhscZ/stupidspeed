@@ -1,7 +1,7 @@
-; task 15 file_write — expected output: 104857600
+; task 15 file_write — expected output: 52428800
 ; build: nasm -f elf64 15_file_write.asm && ld -o prog 15_file_write.o    run: ./prog
 ; Linux x86-64 only: freestanding ELF64, nasm + ld, no libc.
-; Writes the 1 MiB pattern buffer 100 times to out.bin, fsyncs, then prints the
+; Writes the 1 MiB pattern buffer 50 times to out.bin, fsyncs, then prints the
 ; number of bytes written.
 
 default rel
@@ -37,7 +37,7 @@ _start:
 
 .write:
     xor r13, r13                ; bytes written
-    mov rbx, 100
+    mov rbx, 50
 .loop:
     mov eax, 1                  ; write
     mov rdi, r12

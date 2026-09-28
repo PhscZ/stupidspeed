@@ -1,4 +1,4 @@
-// task 14 file_read — expected output: 484442112
+// task 14 file_read — expected output: 2389704704
 // build: v -prod -cc gcc -o prog 14_file_read.v    run: ./prog
 // note: data.bin is read from the current directory in 1 MiB chunks and every byte is
 //       added up; the running total is reduced mod 2^32 only when it is printed.

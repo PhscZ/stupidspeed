@@ -1,6 +1,6 @@
-(* task 15 file_write — expected output: 104857600 *)
+(* task 15 file_write — expected output: 52428800 *)
 (* build: Compiler.exe _15_file_write.ob07 win64con -out prog.exe    run: prog.exe *)
-(* note: a 1 MiB buffer of the byte cycle 0..255 repeated 4096 times, written 100 times, so *)
+(* note: a 1 MiB buffer of the byte cycle 0..255 repeated 4096 times, written 50 times, so *)
 (*       it is one write call per megabyte and never one per byte. File.Write issues *)
 (*       WriteFile on the handle directly and there is no stdio buffer in the way, so the *)
 (*       flush the task asks for is FlushFileBuffers, declared here and called before the *)
@@ -20,7 +20,7 @@ IMPORT Out, File, SYSTEM;
 
 CONST
   Chunk = 1048576;   (* 1 MiB *)
-  Reps  = 100;
+  Reps  = 50;
 
 VAR
   f, n, total, i: INTEGER;

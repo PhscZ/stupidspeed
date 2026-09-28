@@ -1,4 +1,4 @@
-// task 14 file_read — expected output: 484442112
+// task 14 file_read — expected output: 2389704704
 // build: g++ -O2 -pthread -o prog 14_file_read.cpp    run: ./prog
 // also builds with: clang++ -O2 -pthread -o prog 14_file_read.cpp | cl /O2 /EHsc /Fe:prog 14_file_read.cpp
 // note: reads data.bin from the working directory in 1 MiB chunks and prints the byte sum

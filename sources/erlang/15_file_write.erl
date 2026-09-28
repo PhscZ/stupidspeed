@@ -1,7 +1,7 @@
 #!/usr/bin/env escript
 %%! -smp enable
 
-% task 15 file_write — expected output: 94371840
+% task 15 file_write — expected output: 52428800
 %% build: none (escript compiles the script on every run)
 % run: escript 15_file_write.erl
 %% note: Erlang has no mutable variables and no loop syntax, so there is no imperative
@@ -14,7 +14,7 @@
 %% note: mutable state, where a task genuinely needs it, uses the language's own escape
 %%       hatches -- the process dictionary (put/get) and the atomics module, which is a
 %%       real fixed-size mutable array of 64-bit integers.
-%% note: the 1 MiB buffer is written 90 times, then closed. Erlang's file module has no fsync
+%% note: the 1 MiB buffer is written 50 times, then closed. Erlang's file module has no fsync
 %%       wrapper in this form, so the deviation is flush plus close -- the same one the Tcl, D,
 %%       Julia, Nim, Dart, Pascal, COBOL, Dolphin and Common Lisp rows note.
 
@@ -22,9 +22,9 @@ main(_) ->
     Cycle = list_to_binary(lists:seq(0, 255)),
     Buf = binary:copy(Cycle, 4096),
     {ok, F} = file:open("out.bin", [write, raw, binary]),
-    write(F, Buf, 90),
+    write(F, Buf, 50),
     file:close(F),
-    io:format("~w~n", [90 * 1048576]).
+    io:format("~w~n", [50 * 1048576]).
 
 write(_F, _Buf, 0) -> ok;
 write(F, Buf, N) ->

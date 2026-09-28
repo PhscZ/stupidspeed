@@ -527,10 +527,10 @@ Plain triple loop, no tricks. Reordering the loops would be faster, which is the
 
 ### 14 file_read
 
-Reading from disk. Ninety megabytes in one pass.
+Reading from disk. Fifty megabytes in one pass.
 
 ```
-open data.bin, 90 MiB
+open data.bin, 50 MiB
 total = 0
 for each byte b in the file:
     total = total + b
@@ -539,23 +539,23 @@ print total mod 4294967296
 
 The file is just the bytes 0,1,2,...,255 over and over, so the answer is fixed.
 
-Output: `3442475008`
+Output: `2389704704`
 
 ### 15 file_write
 
-Writing to disk. The same ninety megabytes back out.
+Writing to disk. The same fifty megabytes back out.
 
 ```
 buffer = bytes 0,1,2,...,255 repeated 4096 times   (1 MiB)
 
 open out.bin for writing
-repeat 90 times:
+repeat 50 times:
     write buffer
 flush and fsync
 print number of bytes written
 ```
 
-Output: `94371840`
+Output: `52428800`
 
 Buffered, one megabyte at a time, because a syscall per byte measures the kernel and
 nothing else.

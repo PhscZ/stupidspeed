@@ -1,6 +1,6 @@
-' task 15 file_write — expected output: 104857600
+' task 15 file_write — expected output: 52428800
 ' build: dotnet build -c Release 15_file_write.vbproj    run: dotnet bin/Release/net8.0/15_file_write.dll
-' The 1 MiB buffer is the byte values 0..255 repeated 4096 times, written 100 times.
+' The 1 MiB buffer is the byte values 0..255 repeated 4096 times, written 50 times.
 
 Imports System
 Imports System.IO
@@ -15,7 +15,7 @@ Module Program
         Dim written As Long = 0
 
         Using stream As New FileStream("out.bin", FileMode.Create, FileAccess.Write)
-            For pass As Integer = 1 To 100
+            For pass As Integer = 1 To 50
                 stream.Write(buffer, 0, buffer.Length)
                 written += buffer.Length
             Next

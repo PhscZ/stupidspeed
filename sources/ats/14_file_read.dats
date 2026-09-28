@@ -1,4 +1,4 @@
-// task 14 file_read — expected output: 484442112
+// task 14 file_read — expected output: 2389704704
 // build: patscc -DATS_MEMALLOC_LIBC -O2 -o prog 14_file_read.dats    run: ./prog
 // note: patscc is a driver: it turns the .dats into C with patsopt and then runs a C compiler,
 //       so $PATSHOME/bin has to be on PATH.

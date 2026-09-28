@@ -1,4 +1,4 @@
-# task 14 file_read — expected output: 484442112
+# task 14 file_read — expected output: 2389704704
 # build: godot --headless --script 14_file_read.gd    run: godot --headless --script 14_file_read.gd
 # note: data.bin is read from the project directory in 1 MiB chunks; the byte loop is
 #       100 M iterations and is slow in GDScript.

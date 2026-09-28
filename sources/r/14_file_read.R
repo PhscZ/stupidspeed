@@ -1,10 +1,10 @@
-# task 14 file_read — expected output: 484442112
+# task 14 file_read — expected output: 2389704704
 # build: Rscript 14_file_read.R    run: Rscript 14_file_read.R
 #
-# data.bin is 104857600 bytes, the bytes 0..255 repeating, opened from the
+# data.bin is 52428800 bytes, the bytes 0..255 repeating, opened from the
 # working directory and read in 1 MiB chunks, never a byte per syscall. R has
 # no per-byte loop worth running, so each chunk is summed vectorised; the
-# accumulation is exact because the total before the modulus (13369344000)
+# accumulation is exact because the total before the modulus (6684672000)
 # is far below 2^53. The modulus is taken once, at the end.
 
 read_file <- function() {

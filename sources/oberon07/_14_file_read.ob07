@@ -1,6 +1,6 @@
-(* task 14 file_read — expected output: 484442112 *)
+(* task 14 file_read — expected output: 2389704704 *)
 (* build: Compiler.exe _14_file_read.ob07 win64con -out prog.exe    run: prog.exe *)
-(* note: data.bin (100 MiB, the bytes 0..255 repeating) must be in the working directory. *)
+(* note: data.bin (50 MiB, the bytes 0..255 repeating) must be in the working directory. *)
 (*       File.Open/File.Read go straight to the Win32 OpenFile/ReadFile, one megabyte per *)
 (*       call, and File.Read takes the address of the buffer, hence SYSTEM.ADR. A zero or *)
 (*       negative read ends the loop, so a short final block would still be counted. *)

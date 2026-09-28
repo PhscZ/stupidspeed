@@ -1,4 +1,4 @@
-;; task 15 file_write — expected output: 104857600
+;; task 15 file_write — expected output: 52428800
 ;; build: sbcl --non-interactive --no-userinit --no-sysinit --load 15_file_write.lisp \
 ;;            --eval "(sb-ext:save-lisp-and-die \"prog.exe\" :executable t :toplevel (function main) :application-type :console)"
 ;; run: prog.exe
@@ -14,7 +14,7 @@
 ;;       _beginthreadex. There is no global interpreter lock.
 ;; note: loops are `loop`/`dotimes` with setf/incf. mapcar and reduce are avoided in the
 ;;       timed paths because they cons and hide the loop body from type inference.
-;; note: the 1 MiB buffer is written 100 times, then force-output and close. Common Lisp has
+;; note: the 1 MiB buffer is written 50 times, then force-output and close. Common Lisp has
 ;;       no standard fsync, so the deviation is force-output plus close -- the same one the Tcl,
 ;;       D, Julia, Nim, Dart, Pascal, COBOL and Dolphin rows note.
 
@@ -28,8 +28,8 @@
       (setf (aref buf i) (mod i 256)))
     (with-open-file (out "out.bin" :direction :output :if-exists :supersede
                                       :element-type '(unsigned-byte 8))
-      (dotimes (i 100)
+      (dotimes (i 50)
         (declare (fixnum i))
         (write-sequence buf out))
       (force-output out))
-    (format t "~a~%" (* 100 len))))
+    (format t "~a~%" (* 50 len))))

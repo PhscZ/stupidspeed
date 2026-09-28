@@ -1,4 +1,4 @@
-# task 14 file_read — expected output: 484442112
+# task 14 file_read — expected output: 2389704704
 # build: nim c -d:release -o:prog _14_file_read.nim    run: ./prog
 
 const chunk = 1024 * 1024

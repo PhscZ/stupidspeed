@@ -1,4 +1,4 @@
-;; task 15 file_write — expected output: 104857600
+;; task 15 file_write — expected output: 52428800
 ;; build: none (Racket.exe compiles the module on every run; the VM start is part of
 ;;        the measured time)
 ;; run: Racket.exe 15_file_write.rkt
@@ -10,7 +10,7 @@
 ;;       loop local. Racket's own performance chapter measures `set!` in a hot loop as
 ;;       allocating a fresh location per iteration, so mutation of a loop variable is the
 ;;       slow way to write it here and the accumulator is the fast way.
-;; note: the 1 MiB buffer is written 100 times and then flushed and closed. Racket exposes no
+;; note: the 1 MiB buffer is written 50 times and then flushed and closed. Racket exposes no
 ;;       fsync on a file port, so the deviation is flush plus close -- the same one the Tcl, D,
 ;;       Julia, Nim, Dart, Pascal, COBOL and Dolphin rows note.
 
@@ -24,10 +24,10 @@
 
 (define out (open-output-file "out.bin" #:exists 'truncate/replace))
 
-(for ([i (in-range 100)])
+(for ([i (in-range 50)])
   (write-bytes buf out))
 
 (flush-output out)
 (close-output-port out)
 
-(displayln (* 100 len))
+(displayln (* 50 len))

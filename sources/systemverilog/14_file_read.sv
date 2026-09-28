@@ -1,4 +1,4 @@
-// task 14 file_read — expected output: 3442475008
+// task 14 file_read — expected output: 2389704704
 // build: iverilog -g2012 -o prog.vvp 14_file_read.sv
 // run: vvp prog.vvp
 // note: SystemVerilog is a hardware description language, so a 'program' is a testbench

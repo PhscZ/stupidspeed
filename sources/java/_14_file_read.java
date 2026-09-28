@@ -1,4 +1,4 @@
-// task 14 file_read — expected output: 484442112
+// task 14 file_read — expected output: 2389704704
 // build: javac _14_file_read.java    run: java _14_file_read
 // build (graalvm native-image): native-image -O2 _14_file_read    run: ./_14_file_read
 // Reads data.bin from the working directory in 1 MiB chunks; bytes are unsigned via & 0xFF.

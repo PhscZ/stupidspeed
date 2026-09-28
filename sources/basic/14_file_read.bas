@@ -1,4 +1,4 @@
-' task 14 file_read -- expected output: 484442112
+' task 14 file_read -- expected output: 2389704704
 ' build: fbc -O 2 -x prog.exe 14_file_read.bas    run: ./prog
 ' task 14 - file_read
 const CHUNK as integer = 1048576

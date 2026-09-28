@@ -1,4 +1,4 @@
-// task 14 file_read — expected output: 484442112
+// task 14 file_read — expected output: 2389704704
 // build: rustc -O -o prog 14_file_read.rs    run: ./prog
 
 use std::fs::File;

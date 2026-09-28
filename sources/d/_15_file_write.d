@@ -1,4 +1,4 @@
-// task 15 file_write — expected output: 104857600
+// task 15 file_write — expected output: 52428800
 // build: dmd -O -release -of=prog _15_file_write.d    run: ./prog
 // build (ldc2): ldc2 -O3 -release -of=prog _15_file_write.d
 // std.stdio.File exposes flush() but no portable fsync, so flush() is the closest equivalent.
@@ -16,7 +16,7 @@ void main()
     auto file = File("out.bin", "wb");
 
     ulong written = 0;
-    foreach (int rep; 0 .. 100)
+    foreach (int rep; 0 .. 50)
     {
         file.rawWrite(buf);
         written += buf.length;

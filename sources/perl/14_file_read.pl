@@ -1,6 +1,6 @@
-# task 14 file_read — expected output: 484442112
+# task 14 file_read — expected output: 2389704704
 # build: perl 14_file_read.pl    run: perl 14_file_read.pl
-# note: data.bin is a fixture of 104857600 bytes, the bytes 0..255 repeating, opened in the working
+# note: data.bin is a fixture of 52428800 bytes, the bytes 0..255 repeating, opened in the working
 #       directory and read in 1 MiB chunks, never one byte per syscall.
 use strict;
 use warnings;

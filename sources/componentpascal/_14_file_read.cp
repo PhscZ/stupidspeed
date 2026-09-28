@@ -1,6 +1,6 @@
-(* task 14 file_read — expected output: 484442112 *)
+(* task 14 file_read — expected output: 2389704704 *)
 (* build: gpcp /list- _14_file_read.cp    run: _14_file_read.exe *)
-(* note: data.bin (104857600 bytes) must be in the working directory. The file is read
+(* note: data.bin (52428800 bytes) must be in the working directory. The file is read
    one megabyte at a time into a heap allocated UBYTE buffer with GPBinFiles.readNBytes,
    which may return short, so the loop keeps reading until it returns nothing. *)
 (* note: build and run from the directory holding the source, with CROOT set to the

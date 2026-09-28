@@ -1,4 +1,4 @@
-// task 14 file_read — expected output: 484442112
+// task 14 file_read — expected output: 2389704704
 // build: dart compile exe -o prog 14_file_read.dart (aot; jit has no build step)    run: ./prog (aot) | dart 14_file_read.dart (jit)
 
 import 'dart:io';

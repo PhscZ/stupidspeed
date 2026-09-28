@@ -1,4 +1,4 @@
-// task 15 file_write — expected output: 104857600
+// task 15 file_write — expected output: 52428800
 // build: gcc -O2 -pthread -o prog 15_file_write.c    run: ./prog
 // alternates: clang -O2 -pthread -o prog 15_file_write.c | cl /O2 /Fe:prog 15_file_write.c | tcc -o prog 15_file_write.c
 
@@ -13,7 +13,7 @@
 #endif
 
 #define CHUNK 1048576   /* 1 MiB */
-#define REPEATS 100
+#define REPEATS 50
 
 int main(void) {
     unsigned char *buf = (unsigned char *)malloc(CHUNK);

@@ -1,4 +1,4 @@
-(* task 15 file_write -- expected output: 104857600 *)
+(* task 15 file_write -- expected output: 52428800 *)
 (* build: m2amd64.exe /sym:<symdir> 15_file_write.mod  then  sblink.exe /machine:amd64 /out:prog.exe <obj> rtl-win-amd64.lib win64api.lib <mod>.lib *)
 MODULE Task15;
 IMPORT STextIO, SLWholeIO, SeqFile, IOChan, ChanConsts;
@@ -6,7 +6,7 @@ FROM SYSTEM IMPORT ADR;
 
 CONST
    chunk = 1048576;
-   reps  = 100;
+   reps  = 50;
 
 VAR
    buf   : ARRAY [0 .. chunk - 1] OF CHAR;

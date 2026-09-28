@@ -1,4 +1,4 @@
-      *> task 14 file_read -- expected output: 484442112
+      *> task 14 file_read -- expected output: 2389704704
       *> build: cobc -x -O2 -o prog 14_file_read.cob    run: ./prog
        IDENTIFICATION DIVISION.
        PROGRAM-ID. T14.

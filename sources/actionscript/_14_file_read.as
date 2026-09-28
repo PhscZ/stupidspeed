@@ -1,4 +1,4 @@
-// task 14 file_read — expected output: 484442112
+// task 14 file_read — expected output: 2389704704
 // build: amxmlc -swf-version=51 -output prog.swf _14_file_read.as  then
 //        adt -package -storetype pkcs12 -keystore test.p12 -storepass pass -target cmdline out app.xml prog.swf data.bin
 // run: out\prog.exe

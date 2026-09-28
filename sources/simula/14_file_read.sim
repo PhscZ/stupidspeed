@@ -1,8 +1,8 @@
-! task 14 file_read — expected output: 484442112 ;
+! task 14 file_read — expected output: 2389704704 ;
 ! build: cim -q -o prog 14_file_read.sim    run: ./prog ;
-! note: data.bin (100 MiB, the bytes 0..255 repeating) must be in the working directory. ;
+! note: data.bin (50 MiB, the bytes 0..255 repeating) must be in the working directory. ;
 ! note: Simula's byte file interface is byte-at-a-time: INBYTEFILE.inbyte reads one byte ;
-!       per call and there is no bulk read in the Oakwood file classes, so the 100 MB ;
+!       per call and there is no bulk read in the Oakwood file classes, so the 50 MB ;
 !       arrive one byte per call. That is why the run takes about 15 seconds. ;
 ! note: the total is reduced with // and the arithmetic, not with a bitwise and, since ;
 !       Simula has no bit operators for INTEGER. ;
@@ -17,7 +17,7 @@ begin
   total := 0;
   f :- new inbytefile("data.bin");
   f.open;
-  for i := 1 step 1 until 104857600 do
+  for i := 1 step 1 until 52428800 do
   begin
     b := f.inbyte;
     total := total + b

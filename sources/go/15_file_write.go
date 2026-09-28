@@ -1,4 +1,4 @@
-// task 15 file_write — expected output: 104857600
+// task 15 file_write — expected output: 52428800
 // build: go build -o prog 15_file_write.go    run: ./prog
 // note: plain "go build" only; do not set GOGC=off or any other tuning flags
 package main
@@ -20,7 +20,7 @@ func main() {
 	}
 
 	written := 0
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 50; i++ {
 		n, err := f.Write(buf)
 		if err != nil {
 			panic(err)

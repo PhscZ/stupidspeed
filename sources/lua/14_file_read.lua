@@ -1,6 +1,6 @@
--- task 14 file_read — expected output: 484442112
+-- task 14 file_read — expected output: 2389704704
 -- build: none (interpreted)    run: lua 14_file_read.lua (PUC Lua 5.4)    also runs on LuaJIT: luajit 14_file_read.lua
--- data.bin (100 MiB: the bytes 0..255 repeating) must sit in the working directory.
+-- data.bin (50 MiB: the bytes 0..255 repeating) must sit in the working directory.
 -- Read in 1 MiB chunks, then scan every byte.
 
 local f = io.open("data.bin", "rb")

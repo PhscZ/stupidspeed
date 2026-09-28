@@ -1,4 +1,4 @@
-(* task 14 file_read -- expected output: 484442112 *)
+(* task 14 file_read -- expected output: 2389704704 *)
 (* build: m2amd64.exe /sym:<symdir> 14_file_read.mod  then  sblink.exe /machine:amd64 /out:prog.exe <obj> rtl-win-amd64.lib win64api.lib <mod>.lib *)
 MODULE Task14;
 IMPORT STextIO, SLWholeIO, SeqFile, IOChan, ChanConsts;

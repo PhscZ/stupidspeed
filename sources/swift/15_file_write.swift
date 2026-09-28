@@ -1,4 +1,4 @@
-// task 15 file_write — expected output: 104857600
+// task 15 file_write — expected output: 52428800
 // build: swiftc -O -o prog 15_file_write.swift    run: ./prog
 
 import Foundation
@@ -19,7 +19,7 @@ guard let handle = FileHandle(forWritingAtPath: "out.bin") else {
 }
 
 var written: Int64 = 0
-for _ in 0..<100 {
+for _ in 0..<50 {
     handle.write(chunk)
     written += Int64(chunk.count)
 }

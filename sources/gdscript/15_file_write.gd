@@ -1,4 +1,4 @@
-# task 15 file_write — expected output: 104857600
+# task 15 file_write — expected output: 52428800
 # build: godot --headless --script 15_file_write.gd    run: godot --headless --script 15_file_write.gd
 # note: out.bin is written to the project directory, 1 MiB at a time, then flushed and
 #       closed; the printed count is the file position after the writes.
@@ -14,7 +14,7 @@ func _initialize() -> void:
 	if f == null:
 		quit(1)
 		return
-	for _i in 100:
+	for _i in 50:
 		f.store_buffer(buf)
 	f.flush()
 	var written := f.get_position()

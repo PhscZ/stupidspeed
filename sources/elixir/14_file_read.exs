@@ -1,4 +1,4 @@
-# task 14 file_read — expected output: 3442475008
+# task 14 file_read — expected output: 2389704704
 # build: none (elixir compiles the script on every run)
 # run: elixir 14_file_read.exs
 # note: like Erlang, Elixir has no mutable variables and no loop syntax, so there is no

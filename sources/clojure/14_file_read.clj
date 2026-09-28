@@ -1,4 +1,4 @@
-;; task 14 file_read — expected output: 484442112
+;; task 14 file_read — expected output: 2389704704
 ;; build: none (clojure.main compiles the file to bytecode on every run)
 ;; run: java -cp "<clojure>\clojure-1.12.0.jar;<clojure>\spec.alpha-0.5.238.jar;<clojure>\core.specs.alpha-0.4.74.jar" 14_file_read.clj
 ;; note: <clojure> is the directory holding the three Clojure runtime jars. Clojure needs

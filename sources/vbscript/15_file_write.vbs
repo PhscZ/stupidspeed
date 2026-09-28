@@ -1,6 +1,6 @@
-' task 15 file_write — expected output: 104857600
+' task 15 file_write — expected output: 52428800
 ' build: none (interpreted)    run: cscript //nologo 15_file_write.vbs
-' note: out.bin is written into the working directory, 104857600 bytes.
+' note: out.bin is written into the working directory, 52428800 bytes.
 ' note: the 1 MiB buffer is bytes 0..255 repeated 4096 times. The pattern is described
 '       once as 512 hex digits and expanded to the 1 MiB buffer with a single Replace
 '       call, so the buffer is built the way the spec asks (block repeat, not an append
@@ -17,9 +17,9 @@
 '       checked byte for byte against the pattern.
 ' note: ADODB.Stream has no fsync and no flush. SaveToFile closes the file, which is as
 '       far as the engine's I/O goes; that is the deviation from the C row's _commit.
-'       The count printed is the stream's own Position, 104857600 bytes.
+'       The count printed is the stream's own Position, 52428800 bytes.
 Const CHUNKSZ = 1048576
-Const REPEATS = 100
+Const REPEATS = 50
 
 Dim hexpat, hexbuf, doc, node, bytes, st, i, written
 

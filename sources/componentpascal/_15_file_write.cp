@@ -1,7 +1,7 @@
-(* task 15 file_write — expected output: 104857600 *)
+(* task 15 file_write — expected output: 52428800 *)
 (* build: gpcp /list- _15_file_write.cp    run: _15_file_write.exe *)
 (* note: writes out.bin into the working directory: one megabyte of the bytes 0..255
-   repeated 4096 times, written 100 times through GPBinFiles.WriteNBytes. GPBinFiles
+   repeated 4096 times, written 50 times through GPBinFiles.WriteNBytes. GPBinFiles
    buffers the stream, and CloseFile flushes it; .NET's FileStream has no fsync here,
    so the flush at the end of the buffered stream is as far as this library goes. *)
 (* note: build and run from the directory holding the source, with CROOT set to the
@@ -17,7 +17,7 @@ MODULE _15_file_write;
  IMPORT CPmain, Console, GPBinFiles;
 
  CONST CHUNK = 1048576;   (* 1 MiB *)
-       REPEATS = 100;
+       REPEATS = 50;
 
  VAR f : GPBinFiles.FILE;
      buf : POINTER TO ARRAY OF UBYTE;

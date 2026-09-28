@@ -1,4 +1,4 @@
-// task 14 file_read — expected output: 484442112
+// task 14 file_read — expected output: 2389704704
 // build: go build -o prog 14_file_read.go    run: ./prog
 // note: plain "go build" only; do not set GOGC=off or any other tuning flags
 package main

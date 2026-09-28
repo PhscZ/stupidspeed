@@ -1,4 +1,4 @@
-// task 15 file_write — expected output: 104857600
+// task 15 file_write — expected output: 52428800
 // build: dart compile exe -o prog 15_file_write.dart (aot; jit has no build step)    run: ./prog (aot) | dart 15_file_write.dart (jit)
 // note: dart:io has no separate fsync call; flushSync() flushes the file's contents to disk.
 
@@ -14,7 +14,7 @@ void main() {
 
   final RandomAccessFile out = File('out.bin').openSync(mode: FileMode.write);
   int written = 0;
-  for (int i = 0; i < 100; i++) {
+  for (int i = 0; i < 50; i++) {
     out.writeFromSync(buf, 0, chunk);
     written += chunk;
   }

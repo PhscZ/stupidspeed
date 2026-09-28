@@ -1,6 +1,6 @@
-# task 14 file_read — expected output: 484442112
+# task 14 file_read — expected output: 2389704704
 # build: none (interpreted)    run: tclsh 14_file_read.tcl
-# One pass over 100 MiB in 1 MiB chunks. The bytes are unpacked with binary scan
+# One pass over 50 MiB in 1 MiB chunks. The bytes are unpacked with binary scan
 # cu*, which turns a chunk into a list of unsigned byte values in one call, rather
 # than 1048576 separate string index operations per chunk.
 

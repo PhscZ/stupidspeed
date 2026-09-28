@@ -1,4 +1,4 @@
-;; task 14 file_read — expected output: 484442112
+;; task 14 file_read — expected output: 2389704704
 ;; build: sbcl --non-interactive --no-userinit --no-sysinit --load 14_file_read.lisp \
 ;;            --eval "(sb-ext:save-lisp-and-die \"prog.exe\" :executable t :toplevel (function main) :application-type :console)"
 ;; run: prog.exe

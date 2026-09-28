@@ -1,4 +1,4 @@
-{ task 14 file_read — expected output: 484442112 }
+{ task 14 file_read — expected output: 2389704704 }
 { build: fpc -O3 -oprogram 14_file_read.pas    run: ./program }
 { Windows x64: i386-win32 fpc + cross.x86_64-win64 add-on, build with -Px86_64; run as program.exe }
 

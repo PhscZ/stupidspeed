@@ -1,6 +1,6 @@
-' task 14 file_read — expected output: 484442112
+' task 14 file_read — expected output: 2389704704
 ' build: none (interpreted)    run: cscript //nologo 14_file_read.vbs
-' note: data.bin must be in the working directory: 104857600 bytes, the bytes 0 through
+' note: data.bin must be in the working directory: 52428800 bytes, the bytes 0 through
 '       255 repeating.
 ' note: VBScript has no byte type and cannot index the Byte() array ADODB.Stream.Read
 '       returns — the engine answers a type mismatch for element access and refuses
@@ -9,7 +9,7 @@
 '       character is one byte, and Asc(Mid(chunk, i, 1)) reads each byte back. That
 '       decodes and re-encodes through the machine's ANSI code page, so the byte values
 '       round-trip exactly, which is what the sum checks. Measured cost, end to end on
-'       the 100 MiB fixture: about 1.1 us per byte, 120 s for the whole file.
+'       the 50 MiB fixture: about 1.1 us per byte, 120 s for the whole file.
 ' note: chunks are 1 MiB, the same size the C row reads, and the loop stops when
 '       ReadText returns an empty string.
 ' note: the C row accumulates in uint64 and takes total % 2^32 at the end. VBScript's
@@ -17,7 +17,7 @@
 '       as total - Int(total / 4294967296) * 4294967296, which is the same operation and
 '       is exact in a Double because every intermediate stays below 2^53.
 ' note: the running total is a Double from the start. The engine would promote it after
-'       2^31 anyway, and 13369344000 is exact either way.
+'       2^31 anyway, and 6684672000 is exact either way.
 Const CHUNKSZ = 1048576
 
 Dim st, chunk, total, i, n
