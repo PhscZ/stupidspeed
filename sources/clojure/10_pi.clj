@@ -31,7 +31,7 @@
                 next-n (long (- (quot u2 t) (*' (long 10) n)))
                 r2 (*' (long 10) (- r (*' n t)))]
             (recur (*' (long 10) q) r2 t k l next-n (inc produced) (unchecked-add sum n)))
-          (let [u3 (+' (*' q (+ (long 1) (* (long 7) k))) (*' r l))
+          (let [u3 (+' (*' q (+ (long 2) (* (long 7) k))) (*' r l))
                 next-n (long (quot u3 (*' t l)))
                 r2 (*' (+' (*' (long 2) q) r) l)]
             (recur (*' q k) r2 (*' t l) (inc k) (+ l (long 2)) next-n produced sum))))

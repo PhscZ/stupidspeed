@@ -3,12 +3,29 @@
 # Tcl has no threads in the core, so this uses the language's own threading
 # extension, the Thread package, which is the same exception Lua's Lanes gets.
 # The extension creates threads that each contain a Tcl interpreter, so a worker is a
-# script sent to a fresh thread; the result comes back over thread::send.
+# script sent to a fresh thread.
+#
+# thread::send -async hands the script to the worker and returns at once, so all four
+# workers are dispatched before any of them has finished and the four quarters really do
+# run at the same time on four cores. Each worker sends its own partial back to the main
+# thread with a plain (synchronous) thread::send when it is done, and the main thread
+# waits for the counter to reach zero. A blocking thread::send in the dispatch loop would
+# instead wait for worker t to finish before starting worker t+1, so nothing would overlap.
 # The four ranges are fixed, so the total does not depend on the order they finish in.
 
 package require Thread
 
-set scripts {}
+set main [thread::id]
+
+# Runs in the main thread, once per worker: add one partial and count it in.
+proc report {value} {
+    global total pending
+    incr total $value
+    incr pending -1
+}
+
+set total 0
+set pending 4
 set threads {}
 
 for {set t 0} {$t < 4} {incr t} {
@@ -27,13 +44,21 @@ for {set t 0} {$t < 4} {incr t} {
             }
             return $acc
         }
+        proc run_work {main id} {
+            thread::send $main [list report [work $id]]
+        }
         thread::wait
     }]
 }
 
-set total 0
 for {set t 0} {$t < 4} {incr t} {
-    set total [expr {$total + [thread::send [lindex $threads $t] [list work $t]]}]
+    thread::send -async [lindex $threads $t] [list run_work $main $t]
+}
+
+# Each report writes `pending`, so vwait wakes on every arrival and the loop
+# re-arms until all four have reported.
+while {$pending > 0} {
+    vwait pending
 }
 
 for {set t 0} {$t < 4} {incr t} {

@@ -1,5 +1,7 @@
 (* task 03 func_sum -- expected output: 100000000 *)
-(* build: m2amd64.exe /sym:<symdir> 03_func_sum.mod  then  sblink.exe /machine:amd64 /out:prog.exe <obj> rtl-win-amd64.lib win64api.lib <mod>.lib *)
+(* build: m2amd64.exe /sym:<symdir> Func.mod, then m2amd64.exe /sym:<symdir> 03_func_sum.mod, *)
+(*        then sblink.exe /machine:amd64 /out:prog.exe Task03.obj Func.obj rtl-win-amd64.lib *)
+(*        win64api.lib Task03.lib Func.lib *)
 MODULE Task03;
 IMPORT STextIO, SLWholeIO, Func;
 VAR

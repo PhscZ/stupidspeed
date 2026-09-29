@@ -21,12 +21,19 @@
 //       on every step, which is a different program from the one every other row writes, so
 //       the natural form is used and the deviation recorded -- the same call the Erlang, Elixir
 //       and Raku rows make for the optimised-append case.
+// note: the number that is printed is the length of the text that was actually built: the
+//       scan walks the array until it reaches the first byte that is not 'x', so the output
+//       is derived from the buffer rather than written down next to the loop bound.
 module tb;
   bit [7:0] text [0:999999];
-  longint i;
+  longint i, len;
   initial begin
     for (i = 0; i < 1000000; i++) text[i] = "x";
-    $display("%0d", 1000000);
+
+    len = 0;
+    while (len < 1000000 && text[len] == "x") len++;
+
+    $display("%0d", len);
     $finish(0);
   end
 endmodule

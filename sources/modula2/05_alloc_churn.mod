@@ -17,6 +17,7 @@ VAR
 
 BEGIN
    FOR k := 0 TO 255 DO slots [k] := NIL; blks [k] := NIL END;
+   total := 0;
    (* Allocate a fresh 64-byte buffer, then free the prior slot buffer. *)
    FOR i := 0 TO 9999999 DO
       old := blks [i MOD 256];
