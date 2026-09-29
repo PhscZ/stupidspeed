@@ -16,7 +16,7 @@ disposable. See the end of `BUILD.md` for what is in each.
 ## Results
 
 One row per toolchain, one column per task. The column headings are the task numbers, and
-the task names are the section headings under [Tasks](#tasks). All 78 toolchains, empty and
+the task names are the section headings under [Tasks](#tasks). All 92 toolchains, empty and
 ready to fill in.
 
 A cell holds the median of the 5 timed runs, in milliseconds. `WRONG` is an output that did
@@ -104,21 +104,37 @@ kept alongside the median in the raw results, not in this table.
 | Erlang | OTP (escript) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Elixir | elixir (BEAM) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | SystemVerilog | iverilog |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Scala | native |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Beef | BeefBuild |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Haxe | hxcpp |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Eiffel | eiffelstudio |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Seed7 | s7c |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Scheme | chez |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Prolog (SWI) | swipl |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Octave | octave-cli |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| J | jconsole |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Janet | janet |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Ring | ring |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| JScript | cscript (WSH) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| AutoHotkey | v2 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| VHDL | ghdl |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 
-No cell is `SKIPPED` by design. Five rows need more than the stock install for task 11, and
+No cell is `SKIPPED` by design. Six rows need more than the stock install for task 11, and
 each says so in `BUILD.md`: Assembly has no libc, so it issues `clone` and `futex` itself; Tcl
 needs the `Thread` package, which is not in the core distribution; COBOL needs
 `CBL_GC_FORK`, which is Linux-only; Algol 68 Genie needs a source build with
 `--enable-parallel`, because the prebuilt Windows binary is configured without the parallel
-clause; and Oberon-07 has no thread module in its library, so it declares `CreateThread` and
-`WaitForSingleObject` as foreign procedures. Two more rows have a version floor rather than an
-extra install: Racket's parallel threads need 8.18 or later, and OCaml's `Domain` needs 5.x,
-since the 4.14 build has no `Domain` module at all. Five rows pass task 11 but are
-correct-answer-no-speedup cells, because their concurrency is cooperative or serialised:
-CPython and CRuby, Dolphin Smalltalk, whose `Process` objects are green, Simula, whose four
-`PROCESS` objects are scheduled by its own cooperative process simulation, and Algol 68,
-whose four pthreads are real but whose implementation copies a stack on every switch. The rest
-of the task 11 picture is in `RUN.md`.
+clause; Oberon-07 has no thread module in its library, so it declares `CreateThread` and
+`WaitForSingleObject` as foreign procedures; and Ring needs the distribution's own Threads
+extension, which the light release does not ship. Four more rows have a version floor rather
+than an extra install: Racket's parallel threads need 8.18 or later, OCaml's `Domain` needs
+5.x, since the 4.14 build has no `Domain` module at all, J's `T.` threads need 9.4, and
+Janet's `ev/thread` needs 1.17.1. Six rows pass task 11 but are correct-answer-no-speedup
+cells, because their concurrency is cooperative or serialised: CPython and CRuby, Dolphin
+Smalltalk, whose `Process` objects are green, Simula, whose four `PROCESS` objects are
+scheduled by its own cooperative process simulation, Algol 68, whose four pthreads are real
+but whose implementation copies a stack on every switch, and VHDL, whose four `process`
+blocks are scheduled by GHDL on one OS thread. The rest of the task 11 picture is in `RUN.md`.
 
 Two rows are unusual for reasons the table cannot show. **ActionScript** prints a fixed
 2354-byte ASCII-art banner to stdout before the program's first line — the AIR runtime's own
@@ -179,8 +195,269 @@ through a single-byte charset and pulls each byte back out with `Asc(Mid(...))`,
 1.1 µs per byte. It has no big integers either, so task 10 is hand-rolled limbs like the C
 row's, and that cell is far and away the slowest in the row: the full run extrapolates to
 **about three hours**, so it was verified at reduced scales against independently computed
-digit sums instead of being run to completion. It is also the only row here that
-Microsoft is in the process of removing — see the platform table in `RUN.md`.
+digit sums instead of being run to completion. It is also the row whose runtime Microsoft is
+in the process of removing — the JScript row rides the same Windows Script Host component and
+shares the path — see the platform table in `RUN.md`.
+
+**Scala Native** is the second Scala row and not a JVM row: `scala-cli --power package
+--native` compiles the sources through Scala Native 0.5.12 to LLVM IR and links a standalone
+executable, so no VM start-up sits in the cells. It reuses the `jvm` row's fifteen files
+unchanged — `sources/scala/` is one source set built by both rows, the same arrangement
+`sources/kotlin/` has with `kotlin/native`, because Scala Native's `javalib` carries the
+`java.lang.Thread`, `java.math.BigInteger` and `java.io` types those files touch. Two things
+are worth recording. The Windows C toolchain is **llvm-mingw** rather than the documented LLVM
+plus Visual Studio pair, because that pair wants administrator rights and this host has
+neither MSVC nor clang; the mingw route works but upstream CI does not cover it, and it needs
+two flags — `-D_PID_T_` for a `pid_t` clash between Scala Native's runtime and mingw's
+headers, and `-static` so the executable does not need llvm-mingw's `libc++.dll` beside it.
+And task 11 really does run four `java.lang.Thread` workers — an in-process probe of the
+identical loop is **3.6x faster on four threads** — but shows no wall-clock gain over task 02,
+because the whole task runs in 0.08 s and the multithreaded runtime's start-up costs about what
+the parallelism saves. Task 07 is the row's slow cell: the usual quadratic string append, with
+no optimisation for it, at 24 to 43 minutes.
+
+**Beef** is a 0.43.5 native compiler whose command line is `BeefBuild`, not `bfc`, and whose
+only distribution is a self-extracting installer — there is no zip. It is also the row with the
+most layout to explain, because Beef builds projects and not files: each of the fifteen tasks
+is a directory holding its `.bf` source plus a two-file wrapper (`BeefProj.toml`,
+`BeefSpace.toml`), which is why `sources/beef/` does not look like `sources/c/`.
+`-config=Release` is mandatory rather than a preference, because Beef's Windows Release
+toolset is the LLVM one it ships while its Debug toolset is Microsoft's, which needs Visual
+Studio, and every wrapper sets `CLibType = "SystemMSVCRT"` because the Release default links
+MSVC's static CRT, which Beef does not ship. Three cells carry a caveat the table cannot show,
+and all three are in the sources' own headers. **Task 07 is linear, not quadratic**, for the
+same reason SystemVerilog's is: Beef has no immutable string type at all, `String` is a mutable
+object with an adjustable buffer, and corlib rejects `text + "x"` outright, so the loop is
+`text += "x"`, which corlib defines as `text.Append("x")`. **Task 05 has no collector to
+measure**: Beef is manually managed, so dropping the buffer it replaces is an explicit
+`delete`, exactly as the C row's `free`, and the cell measures the allocator. **Task 03
+measures an indirect call.** Beef has no no-inline attribute, and it is a whole-program
+compiler that inlines a plain call even across source files — measured, 1000000000 calls
+through a second file took 202 ms against 189 ms with the helper in the same file — so the
+helper sits in its own file *and* is reached through a delegate, the only construct that keeps
+the call; without it the compiler deletes the loop. Task 11 is real OS threads (`CreateThread`,
+`ResumeThread` and `SetThreadPriority` are in the executable's import table), though a worker
+index passed as `(Object)t` is boxed into one shared box — measured, the row printed one
+quarter's answer four times until the index was passed as a small heap object.
+
+**Haxe** is the row whose compiler is itself two compilers: Haxe has no native backend, so
+`haxe -cpp` writes C++ and then runs hxcpp, which drives the host's `g++`, and the measured
+program is a plain native binary that needs nothing at run time. Three of its cells are
+deviations rather than choices. Haxe has **no no-inline attribute at all**, so task 03's helper
+sits in its own module, `AddOne.hx`, which hxcpp compiles as a second translation unit; the
+generated C++ shows the call in `T03_func_sum.cpp` against the definition in `AddOne.cpp`,
+and hxcpp links without LTO. The standard library has **no fsync** and `sys.io.FileOutput`
+exposes no descriptor to call one on, so task 15 writes its 50 MiB, flushes and closes. And
+task 07 uses plain `text += "x"`, genuinely quadratic because a
+Haxe `String` is immutable, at **420 s and 504 s** in the two full runs — `StringBuf` was
+deliberately not used, because on cpp it is an `Array<String>` with a join at `toString()`,
+i.e. linear, which would measure a different program. Task 10 hand-rolls base-1e9 limbs, since
+Haxe's widest integer is the 64-bit `haxe.Int64` and there is no bignum in `std/`. Task 11 is
+real OS threads: `sys.thread.Thread.create` binds to hxcpp's `CreateThread` wrapper, measured
+at **3.0x** on four workers. The files are `T01_branches.hx` … `T15_file_write.hx` because a
+Haxe module name has to equal its file name and cannot start with a digit or an underscore.
+
+**Eiffel** is EiffelStudio's free delivery, unpacked rather than installed: a 139 MB win64
+`.7z` into `tools/eiffel/`, four environment variables, no admin, no activation, and no MSVC,
+because the delivery ships its own MinGW gcc 4.4.5. One ECF carries all 15 targets and the row
+builds with `ec -batch -finalize -c_compile -config stupidspeed.ecf -target tNN`; `-finalize`
+is the optimisation, since EiffelStudio has no `-O` level. Three things are worth recording.
+Task 07 does **not** measure the quadratic copy the task is designed for: Eiffel's `STRING_8`
+is a growable buffer with 50% geometric growth (`RESIZABLE.additional_space`), so the cell
+measures an optimised append, in the same group as Raku's and Erlang's. Task 15 cannot fsync —
+EiffelBase's `flush` is `fflush` and the run-time has no `fsync`, and the library says so
+itself — so the row joins the flush-and-close list in `RUN.md`. And task 11 is real OS
+threading — EiffelThread's `THREAD` maps onto Win32 threads, measured at 0.43 s against 1.04 s
+for the same work serially — but it is the only target that may use it: EiffelStudio's
+concurrency setting is a `<capability>` and not a `<setting>`, and the thread library's
+capability declaration forces the client to say `support="thread" use="thread"` or `ec` refuses
+with `VD01`. Task 10 hand-rolls base-1e9 `INTEGER_64` limbs because EiffelBase has no big
+integer, and tasks 12 and 13 use flat `SPECIAL [INTEGER_64]` areas indexed `i * n + j` because
+the kernel has no 2-D array.
+
+**Seed7** is a compile-to-C language: `s7c` has no code generator of its own, so it translates
+the program to one C file, calls the C compiler configured when Seed7 itself was built, and
+links against prebuilt runtime libraries; the executable needs nothing at run time, but a C
+compiler must be on `PATH` at every `s7c` run. It has no thread library at all, so task 11 is
+four `startPipe` child processes of the same executable, one per quarter, with the partials
+read back from each child's stdout — the VBScript and COBOL shape, and real parallelism across
+four cores. The cell is nevertheless no faster than task 02, because every compiled Seed7
+program pays a **~200-250 ms runtime startup** that sits under all fifteen cells. Task 03 is a
+documented deviation: Seed7 has no no-inline marker, `include` is textual, and `s7c` emits one
+C translation unit, so the helper cannot be kept in a separate object file and gcc inlines it —
+verified on the built executable, the loop is five instructions with no `call` in it, and the
+alternative that would force one does not compile. Task 07 is the other deviation, in the
+Raku/Erlang/Elixir class: Seed7 strings are mutable and `&:=` appends in place with a growing
+capacity, so the loop is linear and the cell measures the runtime's optimised append. Task 10
+needs no hand-rolled limbs — the standard library's own `bigInteger` is used, in the default
+pure-C build rather than the optional GMP one — and task 15 is flush plus close, because the
+standard library has no fsync.
+
+**Scheme** is Chez Scheme 10.4.1, the R6RS-complete native-code compiler that Racket CS is
+built on, and it is the sibling of the Racket row in every respect that matters here. It has no
+build step: `scheme --optimize-level 3 --script <task>.ss` loads the boot files and compiles
+the script on the fly, so the compile is inside the measured number — an empty script already
+costs 0.24-0.44 s, which is the floor under all fifteen cells. Its exact arbitrary-precision
+integers come from the standard library, so task 10 is a built-in-bignum cell like Racket's.
+Its strings are fixed-length and immutable, so task 07 is the same quadratic append Racket's
+is, and at **about 25 minutes** it is one of the slowest cells in the matrix (Racket's is
+1121 s). Task 11 is a genuine four-OS-thread pass — `fork-thread`/`thread-join` over the
+Windows API, four distinct thread ids, about **3.0x** on four cores against the same work on
+one thread — and it needs no extra install and no version floor, since the threaded machine
+type became the `configure` default in 10.0.0. Task 03 is two files because Chez has no
+no-inline declaration. The one deviation is task 15's flush-plus-close, because Chez's standard
+library exposes no fsync. Installing it is the heaviest part: there is no no-admin Windows
+binary, so the row is built from the release tarball with MSYS2 UCRT64 MinGW gcc, about 72
+minutes here, and `make install` has to be done by hand.
+
+**Prolog (SWI)** is the standard Prolog row and the fastest of the logic-programming rows. It
+has no build step, arbitrary-precision integers in the standard library (GMP, so task 10 is a
+milliseconds cell with no hand-rolled limbs), real OS threads with no global lock, and a
+relocatable tree that installs without admin by extracting the NSIS installer with 7-Zip.
+Three things about the row are worth knowing. It has **no array library**, so tasks 04, 05, 12
+and 13 use compound terms with one argument per element, written with `nb_setarg/3` and read
+with `arg/3` — the same 8 MB array task 04 allocates in C, as a 1 000 000-argument term. Task
+07 is **quadratic by design**, like Racket's: SWI strings are immutable, there is no string
+builder in the standard library, and `string_concat/3` copies the whole string on every append,
+which makes it the slowest cell in the row at **1405 s (about 23 minutes)** for the million
+appends. And task 15 has **no fsync**: SWI-Prolog 10.0.2 exposes `flush_output/1` and `close/1`
+and nothing lower. Task 11 is real OS threads, measured at **3.4x** on four workers. Task 06
+carries an implementation note rather than a caveat: `string_code/3` costs time proportional to
+the string's length on every call in this version, so the scan converts the built text to code
+lists in 1 MiB chunks instead of indexing it character by character.
+
+**Octave** is `octave-cli.exe -qf <task>.m`, run from `sources/octave/`, on the official MXE
+build extracted into `tools/octave/`. There is no build step: Octave is a tree-walking
+interpreter with no JIT — the prototype JIT compiler was removed in Octave 7 — so every cell
+pays at run time. It has no threads for m-code and `fork()` is compiled out on native Windows,
+so task 11 is four `octave-cli` child processes of the same file started with `popen`, one
+fixed quarter each, with the parent's blocking read of each child's stdout as the join;
+`parfor` is documented as "a mere synonym of `for`". Measured, that is **3.13x** on four
+processes, but the row is one of the slowest: single runs on a shared host gave 665.8 s for
+task 02, 961.7 s for task 03, 1407.7 s for task 09 and 890.3 s for task 13. Task 15 has no
+fsync, so it is flush plus close, the deviation the R row already records. Task 10's limbs are
+`int64` rather than doubles, because Octave's integer arithmetic **saturates** rather than
+wrapping, and every division is exact by construction or `idivide(..., "floor")`; task 14 reads
+in 1 MiB chunks and passes every byte through `double()`, since the `double OP integer ->
+integer` rule would otherwise cap the accumulator at 255. Two naming facts: the task-03 helper
+is `add_one.m` rather than `03_func_sum_add_one.m`, because Octave resolves a call through the
+file name, and there is no `%` operator, so tasks 01, 02, 11 and 13 call the `mod` builtin once
+per iteration.
+
+**J** is an APL-family array language, and the row is written deliberately against its grain:
+every loop is an explicit `while.` inside an explicit verb, every array is filled and read one
+element at a time with in-place amend, and no timed path uses an array primitive to do the work
+in bulk — no `+/` for a sum, no `+/ . *` for the matrix product, no `+/(text='h')` for the
+character count. Task 11 is real threads but not a four-way win: `0 T. ''` creates them and
+`u t. n y` dispatches a task, and the four workers all begin at the same instant and end
+together, but J's explicit verbs run about 1.8x slower inside a worker thread than on the
+master thread, so the four-thread run comes out **1.7x** faster than the identical serial work
+rather than ~4x; it is still faster than its own task 02, so it is not a
+correct-answer-no-speedup cell, and nothing extra has to be installed. Task 10 uses the standard
+library's GMP-backed arbitrary-precision integers, so nothing is hand-rolled there. Two things
+are deviations rather than implementations. **Task 07** measures a linear append: J documents
+that `x , y` appends to `x` in place when `x` is a zombie, which is exactly what the task's own
+line is, so the cell is in the Raku/Erlang/Elixir class — doubling the count doubles the time,
+and the full million takes 0.75 s. **Task 15** has no fsync: J's foreign tables contain no
+flush, sync or `FlushFileBuffers` operation at all, and each `1!:3` opens, writes and closes the
+file, which is the strongest guarantee the language offers. J has no no-inline marker, so task
+03 is the helper in its own file loaded with `0!:0` and called 100 million times by an
+interpreted loop, and counted loops are written `while.` rather than `for_i. i. n`, because
+`for_i.` materialises the whole index vector first.
+
+**Janet** is a bytecode VM with no build step: `janet <task>.janet` compiles the file to
+bytecode and runs it, so the ~3 ms VM start and the compile are inside every cell. Its numbers
+are IEEE doubles only — there is no bignum — so task 10 is hand-rolled sign-magnitude base-1e9
+limbs with the limbs as doubles, a limb times the spigot's largest multiplier being about
+2.3e14, well inside the range where a double is exact. Task 11 uses the core `ev/` threads — one
+OS thread per worker, each with its own heap, partials sent back over a threaded channel, the
+isolates shape Dart and JavaScript use — which needs no extension and no flag, and measured
+**4.9x** on four threads (2.08 s against 10.21 s for task 02). Task 15 flushes but does not
+fsync, since the standard library has `file/flush` and no `file/sync`. Task 07 is quadratic by
+design and is the row's slowest cell: `(string acc "x")` copies the accumulator twice per
+append, about 10^12 bytes over the million iterations, measured at **2266 s (about 38
+minutes)** — roughly twice Racket's one-copy cell at 1121 s. Task 03 puts the helper in its own
+file, and the call really happens because Janet's inliner only runs at `:optimize` 2 or higher
+while user scripts compile at level 0.
+
+**Ring** needs three notes, and two of them are the language's number model. Ring has one
+numeric type, a double, and the shipped 64-bit build prints an integral double through a `%lld`
+path, so every integer cell is exact — verified before anything else was written, because the
+other branch would have printed `7500000075000000.00`. Task 07 uses the spec's
+`text = text + "x"` form and is honestly quadratic: `+` appends into a copy of the left operand
+and the assignment copies the result back, so a million appends cost about **219 s of user
+CPU** (0.23 s / 1.20 s / 8.83 s at 100k / 200k / 400k appends). Ring's own `+=` appends in
+place with geometric growth and was deliberately not used — it would have turned the cell into
+a sub-second linear one that measures a different task. Task 10 hand-rolls base-1e9 limbs
+because Ring has no big-integer type. The third note is task 12: the matrices are flat
+`list(1000000)` arrays indexed `(i-1)*n + j`, because Ring allocates many small lists
+pathologically slowly — three thousand 1000-item lists cost **54.8 s** of user CPU against
+0.14 s for the same three million items in three flat lists, which would have measured the
+allocator rather than the matrix. Task 11 is real OS threads, but it needs the distribution's
+own Threads extension, which the light release does not ship: six files from the `v1.27` tag
+build `bin/ring_threads.dll` with one `gcc` line, and the measured speedup is 2.2x on four
+threads. Task 15 has no fsync.
+
+**JScript** is a second Windows Script Host row and not a duplicate of the `JavaScript` rows:
+it is the Active Scripting engine `cscript.exe` loads for a `.js` file, and on this host that is
+**JScript9Legacy** (`ScriptEngine` "JScript" 11.0.16384), not classic JScript 5.8. The sources
+stay inside the ES3 subset both engines accept — no `JSON`, no `let`/`const`, no typed arrays,
+no `String.prototype.repeat`. Numbers are doubles and every expected value is below 2^53, so
+`String(x)` prints exact digits and this row needs no hand-written decimal formatter; there is
+also no bignum, so task 10 is the same hand-rolled base-1e9 limbs as the C and VBScript rows,
+with the reduced scales reproducing the independently known digit sums 471/897/1753/3588. Two
+things are easier than in VBScript and two are harder. Easier: `new VBArray(chunk).toArray()`
+makes the bytes `ADODB.Stream.Read` returns indexable, so task 14 reads in binary mode with no
+charset in the way, and `%` on doubles takes the task-14 checksum mod 2^32 directly. Harder:
+there is no `malloc` and no typed array, so task 05's buffer is `new Array(64)`, and task 03's
+helper must live in its own file, loaded with `eval` of that file's text, because Windows Script
+Host has no include — the call is measured not to be inlined (10 million calls: 4.67 s through
+the file, 4.24 s for the same helper declared inline, 1.90 s inline). Task 11 is four
+`WScript.Shell.Exec` child processes, as in the VBScript row, and no factor is claimed for the
+cell: the children run their quarter inside a function while task 02's loop is global code, and
+this engine does not treat the two alike (an in-process A/B of the identical loop measured
+0.28 s inside a function against 0.78 s at top level). Task 15 writes through `ADODB.Stream`'s
+single-byte `ISO-8859-1` text mode because `Stream.Write` rejects a JScript string, with the
+round trip verified byte for byte for all 256 values, and there is no fsync.
+
+**AutoHotkey** is another Windows-only row, alongside VBScript and Dolphin Smalltalk, and it is
+v2 rather than v1 because v1 is a different language. It is installed by extracting the
+project's 3 MB ZIP, so nothing is registered and no admin is needed, and there is no build step.
+Task 11 has no threads to use — AutoHotkey's "threads" are event flows inside one OS thread — so
+the four workers are four `WScript.Shell.Exec` child processes of the same script, the same
+route the VBScript and R rows take, and the parent's read of each child's stdout is the join;
+measured 18.1 s against 36.9 s for the same work on one core, a 2.0x speedup. Task 07 is a
+**documented deviation**: the expression compiler gives `text .= "x"` an in-place path that
+grows the buffer geometrically, so a million appends are amortised rather than quadratic —
+measured, the cost per append falls as the count grows (0.58 s at 1M appends, 0.97 s at 4M,
+1.47 s at 8M) — the same disposition the Raku, Erlang, Elixir and SystemVerilog rows carry.
+There is no inliner and no no-inline marker, so task 03's helper is a separate file pulled in by
+`#Include` as the row's cross-file convention rather than as a way to defeat an optimiser. Task
+14 has to read its bytes through a `RAW` buffer, because AutoHotkey strings are UTF-16 and
+`FileRead` converts binary data to text, and task 15 opens with the explicit `UTF-8-RAW`
+encoding, since any plain UTF-8 or UTF-16 encoding writes a byte order mark. Task 10 is
+hand-rolled base-1e9 limbs, and the slow cells are the two recursive ones: about 4.2 minutes for
+task 09 and 1.2 minutes for task 10.
+
+**VHDL** is the second hardware description language in the matrix and carries the same
+disclosure as the SystemVerilog row: a program is a testbench entity, there is no `main`, and
+the work happens inside the simulator, so every cell measures **GHDL's** mcode JIT and event
+loop rather than "VHDL". GHDL is installed by extracting the standalone
+`ghdl-mcode-6.0.0-ucrt64.zip` — no MSYS2 and no admin — and mcode is the right backend for a
+benchmark: it generates no output file, it has no optimisation flag, and it does no
+interprocedural inlining, so task 03's 100 million calls to `add_one` are real calls. Two
+properties of the toolchain dominate the row's numbers. First, **VHDL has no 64-bit integer and
+GHDL's `integer` is 32 bits with overflow as a hard runtime error**, so every accumulator that
+can exceed 2^31 is an `unsigned(63 downto 0)` and every such number is printed by a hand-rolled
+`to_decimal` — and under mcode one 64-bit vector add costs about **17 µs** against about
+**9 ns** for a 32-bit `integer` add, which is why tasks 02, 07 and 11 are each about **40
+minutes** and why task 01 against task 02, both exactly 100000000 iterations, is 1.2 s against
+2430 s. Second, GHDL prepends its own `#GHDL-BINARY-FILE-0.0` signature header for every
+composite file element type, so tasks 14 and 15 move one character per call through a
+`file of character` rather than a bulk read. Task 11 is the language's own concurrency
+construct — four `process` blocks plus a collector that waits for all four — but GHDL schedules
+every process on **one OS thread** (`--threads=N` is parsed but dead), so the cell is
+correct-answer-no-speedup: 2422 s against task 02's 2430 s.
 
 ## Rules
 
@@ -190,7 +467,8 @@ the program actually ran instead of getting optimized away.
 - No memoization, no math shortcuts, no SIMD, no BLAS, no numpy. Plain loops.
 - Standard library only. Normal optimization flags, `-O2` or `--release` or whatever the equivalent is.
   One exception: task 11 may use the language's own threading extension if the standard
-  library has none. Lua needs Lanes for that, and PHP needs `parallel`.
+  library has none. Lua needs Lanes for that, PHP needs `parallel`, and Ring needs its own
+  Threads extension, which the light release does not ship.
 - Same algorithm everywhere. Idiomatic syntax is fine, a different approach is not.
 - Loop counts are large on purpose. At a million iterations the loop is smaller than the
   time it takes to start the process, so the task measures startup instead of the loop.
@@ -403,14 +681,16 @@ The algorithm is fixed: Gibbons' unbounded spigot, the same loop in every langua
 differs is where the integers come from, and both routes are legitimate.
 
 - A language with arbitrary-precision integers in its standard library uses them, and a
-  division on those values is a real division — Python, Ruby, Java, C#, Go, JavaScript, Julia
-  and Common Lisp are among the rows that take this route.
+  division on those values is a real division — Python, Ruby, Java, C#, Go, JavaScript, Julia,
+  Common Lisp, Scala Native, Scheme, Prolog (SWI), Seed7 and J are among the rows that take
+  this route.
 - A language without them hand-writes sign-magnitude, little-endian, base-1e9 limbs, with add,
   subtract, multiply by a small integer, and a quotient that comes out of repeated subtraction,
   because the spigot only ever asks for one decimal digit at a time. Same loop, same digits,
   and far more work per step. At 1000 digits that is about 0.6 s in C, and it runs to minutes
   in the interpreted rows that take this route — VBScript takes about 1.4 minutes and `a68g`
-  about 7.5. `RUN.md` has the measurements.
+  about 7.5. `RUN.md` has the measurements. Among the rows that hand-roll them are Beef,
+  Haxe, Eiffel, Octave, Janet, Ring, JScript, AutoHotkey and VHDL.
 
 A language with no bignum library is therefore **not** disqualified by this task, and no row
 here is missing because of it. `a68g`'s own arbitrary-precision `LONG LONG INT` mode was
@@ -579,7 +859,7 @@ nothing else.
 | C# | coreclr, nativeaot, mono |
 | F# | dotnet |
 | VB.NET | dotnet |
-| Scala | jvm |
+| Scala | jvm, native |
 | JavaScript | node, bun, deno |
 | PHP | zend, zend + jit |
 | Python | cpython, pypy, nuitka, graalpy |
@@ -621,6 +901,19 @@ nothing else.
 | Erlang | OTP (escript) |
 | Elixir | elixir (BEAM) |
 | SystemVerilog | iverilog |
+| Beef | BeefBuild |
+| Haxe | hxcpp |
+| Eiffel | eiffelstudio |
+| Seed7 | s7c |
+| Scheme | chez |
+| Prolog (SWI) | swipl |
+| Octave | octave-cli |
+| J | jconsole |
+| Janet | janet |
+| Ring | ring |
+| JScript | cscript (WSH) |
+| AutoHotkey | v2 |
+| VHDL | ghdl |
 
 Missing a toolchain means the cell says `SKIPPED`. It never counts as zero. The same goes
 for a language that cannot do a task at all, such as a language with no threads trying

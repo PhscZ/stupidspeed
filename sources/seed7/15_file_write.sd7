@@ -1,0 +1,35 @@
+# task 15 file_write — expected output: 52428800
+# build: s7c -O2 prog.sd7    run: ./prog
+# note: the 1 MiB buffer is the byte cycle 0..255 repeated 4096 times, built with one
+#       'mult' call, and it is written 50 times to out.bin in binary mode ("w", not "wt").
+# note: Seed7 has flush() but no fsync: the runtime implements filFlush as fflush() and
+#       nothing else, with no fsync or FlushFileBuffers anywhere. The deviation is
+#       therefore flush + close, no fsync, the same one the Tcl, D, Julia, Nim, Dart,
+#       Pascal, COBOL and Dolphin rows note.
+# note: write(file, string) returns nothing in the standard library, so the byte count is
+#       accumulated from length(buf), as the Tcl row does.
+
+$ include "seed7_05.s7i";
+
+const proc: main is func
+  local
+    var string: buf is "";
+    var file: f is STD_NULL;
+    var integer: i is 0;
+    var integer: written is 0;
+  begin
+    for i range 0 to 255 do
+      buf &:= chr(i);
+    end for;
+    buf := buf mult 4096;
+
+    f := open("out.bin", "w");
+    for i range 1 to 50 do
+      write(f, buf);
+      written +:= length(buf);
+    end for;
+    flush(f);
+    close(f);
+
+    writeln(written);
+  end func;

@@ -1,0 +1,33 @@
+# task 01 branches — expected output: 33333334 13333333 7619048 45714285
+# build: s7c -O2 prog.sd7    run: ./prog
+# note: s7c has no code generator of its own: it translates the program to one C file and
+#       calls the C compiler that was configured when Seed7 was built, so gcc must be on
+#       PATH whenever s7c runs. The executable is named after the source file and is
+#       written beside it, which is why the build line compiles a scratch copy called
+#       prog.sd7. The executable needs no Seed7 runtime at run time.
+# note: -O2 is not optional. Without -O s7c passes no optimisation flag to the C compiler.
+
+$ include "seed7_05.s7i";
+
+const proc: main is func
+  local
+    var integer: a is 0;
+    var integer: b is 0;
+    var integer: c is 0;
+    var integer: d is 0;
+    var integer: i is 0;
+  begin
+    for i range 0 to 99999999 do
+      if i mod 3 = 0 then
+        a +:= 1;
+      elsif i mod 5 = 0 then
+        b +:= 1;
+      elsif i mod 7 = 0 then
+        c +:= 1;
+      else
+        d +:= 1;
+      end if;
+    end for;
+
+    writeln(a <& " " <& b <& " " <& c <& " " <& d);
+  end func;

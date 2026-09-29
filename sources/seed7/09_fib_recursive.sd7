@@ -1,0 +1,20 @@
+# task 09 fib_recursive — expected output: 102334155
+# build: s7c -O2 prog.sd7    run: ./prog
+
+$ include "seed7_05.s7i";
+
+const func integer: fib (in integer: n) is func
+  result
+    var integer: value is 0;
+  begin
+    if n < 2 then
+      value := n;
+    else
+      value := fib(n - 1) + fib(n - 2);
+    end if;
+  end func;
+
+const proc: main is func
+  begin
+    writeln(fib(40));
+  end func;

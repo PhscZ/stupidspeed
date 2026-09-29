@@ -1,0 +1,24 @@
+# Beef project wrapper for 03_func_sum.
+# BeefBuild compiles projects, not single files, so every task owns a project; the source
+# it builds is the .bf file listed at the bottom. TargetName/TargetDirectory pin the output
+# to <task>/out/prog.exe so the run line is the same for all fifteen tasks.
+FileVersion = 1
+
+[Project]
+Name = "03_func_sum"
+StartupObject = "Task.Program"
+
+[Configs.Release.Win64]
+TargetDirectory = "$(ProjectDir)/out"
+TargetName = "prog"
+CLibType = "SystemMSVCRT"
+
+# Two sources, so add_one is compiled into its own object file and the 100000000 calls
+# cannot be inlined. Beef has no no-inline attribute.
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "03_func_sum.bf"
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "03_func_sum_add_one.bf"

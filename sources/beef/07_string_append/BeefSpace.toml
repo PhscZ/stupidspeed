@@ -1,0 +1,5 @@
+FileVersion = 1
+Projects = {07_string_append = {Path = "."}}
+
+[Workspace]
+StartupProject = "07_string_append"

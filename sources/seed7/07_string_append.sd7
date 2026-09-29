@@ -1,0 +1,24 @@
+# task 07 string_append — expected output: 1000000
+# build: s7c -O2 prog.sd7    run: ./prog
+# note: Seed7 strings are mutable and '&:=' appends in place, so this is not the quadratic
+#       copy the task is designed to measure. The runtime grows the string geometrically
+#       (str_append -> GROW_STRI -> growStri, which doubles the capacity), so the loop is
+#       linear. The cell therefore measures the runtime's optimised append, the same caveat
+#       the Raku, Erlang and Elixir rows carry.
+# note: confirmed with the same three-point probe those rows used: 100000 / 1000000 / 4000000
+#       appends take about 250-320 ms each, i.e. flat within the ~200-250 ms runtime startup.
+#       A quadratic copy would have shown 4M appends at about 16x the 1M figure.
+
+$ include "seed7_05.s7i";
+
+const proc: main is func
+  local
+    var string: text is "";
+    var integer: i is 0;
+  begin
+    for i range 1 to 1000000 do
+      text &:= "x";
+    end for;
+
+    writeln(length(text));
+  end func;

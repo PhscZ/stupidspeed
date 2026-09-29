@@ -10,7 +10,7 @@ like for the numbers to mean anything. For compilers, see `BUILD.md`.
 | OS | x86-64, Linux, macOS or Windows | Every row is reachable on Windows and on Linux; macOS loses `msvc` and `dolphin smalltalk`. The one exception is `assembly`, which is Linux x86-64 only: it is a freestanding ELF64 binary built with `nasm -f elf64` and `ld`. `tcc`, `clang`, `flang` and `luajit` all need a little care on Windows but no WSL. |
 | CPU | 4 physical cores | Task 11 runs four threads. Every other task is pinned to one core, so more cores do not help them. |
 | RAM | 8 GB minimum, 16 GB comfortable | The tasks themselves are small: the largest allocation is task 06's 100 MB text, and task 12's three 1000x1000 arrays are 24 MB together. The 16 GB is for the JVM, GraalVM and Julia toolchains. `native-image` alone wants 2–4 GB to build. |
-| Disk | 25 GB free | 100 MiB of fixtures, plus the toolchains themselves: `BUILD.md` measured 23 GB for all 74 installed and run, of which the MSYS2 tree that `valac` needs is 2.2 GB on its own, with another 2–3 GB of scratch while reassembling MSVC and Swift. |
+| Disk | 32 GB free | 100 MiB of fixtures, plus the toolchains themselves: `BUILD.md` measured 23 GB for all 78 installed and run, and the fourteen new rows add about 6.5 GB — Octave's tree alone is 2.6 GiB, Eiffel's 1.28 GB, Beef's 845 MB and the Scala Native row's 833 MB — so budget about 30 GB for all 92. The MSYS2 tree that `valac` needs is 2.2 GB of the base total on its own, with another 2–3 GB of scratch while reassembling MSVC and Swift. |
 | Filesystem | `tmpfs` or RAM disk preferred for the file tasks | Reading 50 MiB from a spinning disk measures the disk. Anything run under WSL2 measures the WSL disk layer instead. Where the fixture lives must be recorded in the results. |
 
 ## Runtimes
@@ -86,6 +86,20 @@ Languages compiled to a static native binary need nothing. The rest need the fol
 | Elixir | elixir (BEAM) | Erlang's tree plus Elixir's | No build step. Elixir needs Erlang on `PATH` first; `elixir` then compiles the script each run. |
 | VBScript | cscript | none — `cscript.exe` ships with Windows | The runtime is a Windows component rather than something you install, which is also why the row is on borrowed time: see the platform table below. |
 | Common Lisp | sbcl | none — the dumped executable embeds the core | The build dumps a standalone `prog.exe` with `save-lisp-and-die`, so nothing has to be on `PATH` at run time. Task 11 uses `sb-thread`, which is a required part of the Windows build. |
+| Scala | native | none | Standalone `.exe`. The link is static, so not even llvm-mingw's `libc++.dll` is needed; without `--native-linking=-static` the executable dies with `STATUS_DLL_NOT_FOUND` when llvm-mingw's `bin` is off the DLL search path. |
+| Beef | BeefBuild | none — static native binary | A Release build links the Beef runtime statically. The executable imports only `kernel32.dll`, `msvcrt.dll`, `user32.dll`, `SHELL32.dll`, `ole32.dll`, `gdi32.dll`, `version.dll` and `comdlg32.dll`; no Beef DLL has to be present. Process start-up is about 110–190 ms, which is a third of the row's slowest cell. |
+| Haxe | hxcpp | none — native static binary | `-D no_shared_libs` links gcc, libstdc++ and libwinpthread statically; `objdump -p` on the produced executable lists only `KERNEL32.dll`, `USER32.dll`, `WS2_32.dll` and the `api-ms-win-crt-*` UCRT imports. Without that define hxcpp copies `libgcc_s_seh-1.dll`, `libstdc++-6.dll` and `libwinpthread-1.dll` beside the executable. |
+| Eiffel | eiffelstudio (`ec -finalize`) | none | The finalized executable links the Eiffel run-time into itself statically; the fifteen `prog.exe` files are self-contained and need no MinGW DLL. |
+| Seed7 | s7c | none | The compiled executable is self-contained and needs nothing from the Seed7 tree at run time. Only the compile needs `gcc` on `PATH`. |
+| Scheme | chez | none — the installed Chez tree is the runtime (`bin/ta6nt/scheme.exe` plus `boot/ta6nt/scheme.boot`) | No build step. The tree is relocatable but must move as a unit: on Windows the boot files are found at `<exe>\..\..\boot\<machine type>` and in the executable's own directory. It must be the **threaded** build (`ta6nt`) — a non-threaded build has no `fork-thread` and task 11 cannot run. `--optimize-level 3 --script <task>.ss` is the run line; the boot-file load and the on-the-fly compile are part of every measured run. |
+| Prolog (SWI) | swipl | the extracted SWI-Prolog tree (`tools/swipl/bin/swipl.exe`) | No build step. The tree is relocatable — it finds its home from the executable's own path, with `SWI_HOME_DIR` or `--home` as an override. Run from `sources/swipl/`, because task 03 loads `03_func_sum_add_one.pl` relative to the source file and task 14 reads `data.bin` from the working directory. |
+| Octave | octave-cli | the extracted Octave tree | No build step. `octave-cli.exe -qf <task>.m`, run from `sources/octave/`. No threads in core and `fork` is not implemented on native Windows, so task 11 starts four `octave-cli` child processes; Octave exposes no `fsync`, so task 15 flushes and closes. Task 03 loads `add_one.m` from the working directory. |
+| J | jconsole | the extracted `j9.7` tree | No build step. The profile loads the standard library, which is what provides `exit`, `stdout`, `echo` and `LF`; run `jconsole.exe <task>.ijs` and end the script with `exit 0`, or jconsole drops into its interactive prompt. `-jprofile` breaks this and must not be used. `j.dll` needs the VC++ x64 runtime. |
+| Janet | janet | none — the extracted install tree is the runtime | No build step; `janet` compiles the script each run. The binary needs the MSVC runtime (`vcruntime140.dll`); the release also ships a static Cosmopolitan `janet.com` as a fallback. Task 11 uses the core `ev/` threads, so nothing extra is installed. |
+| Ring | ring | none — the extracted tree is the runtime | No build step; the tree has to stay intact, because `load` resolves `ring/bin` and `ring/bin/load` relative to the executable rather than to the working directory. Task 11 also needs `bin\ring_threads.dll` beside `ring.exe`, which the light release does not ship; see `BUILD.md`. |
+| JScript | cscript | none — `cscript.exe` ships with Windows | Windows Script Host's Active Scripting JScript engine, which is not the `JavaScript` row's node/bun/deno. The `.js` extension is mapped to it; `//E:JScript` is passed explicitly. On Windows 11 24H2 and later the engine is JScript9Legacy, which reports 11.0.16384, rather than classic JScript 5.8. Task 03 needs `03_func_sum_add_one.js` beside it; tasks 14 and 15 need the working directory to hold `data.bin` and to be writable for `out.bin`. |
+| AutoHotkey | v2 | none — the extracted ZIP is the runtime (Windows-only) | No build step. `AutoHotkey64.exe /ErrorStdOut <task>.ahk`; the interpreter prints nothing on start-up, so the row's stdout is exactly the one expected line. Task 11 needs no extra install: the four workers are four child processes. |
+| VHDL | ghdl | none — the extracted tree is the runtime | Two commands, not one: `ghdl -a --std=08 <task>.vhd` then `ghdl -r --std=08 <unit>`. The measured run is the `ghdl -r` one, which with mcode also elaborates and generates code. Tasks 14 and 15 run from `sources/vhdl/` so that `data.bin`/`out.bin` resolve. |
 
 ### JVM versions are not interchangeable
 
@@ -139,11 +153,21 @@ verified by running the task or by reading the official documentation.
 ### Real OS threads, no problem
 
 C, C++, Rust, Zig, Go, D, Swift, Ada, Pascal, Java, Kotlin (both rows), C#, F#, VB.NET,
-Scala, Nim, Odin, Julia (`-t4`), Fortran (OpenMP, needs `-fopenmp`), Perl (ithreads),
+Scala (both rows), Nim, Odin, Julia (`-t4`), Fortran (OpenMP, needs `-fopenmp`), Perl (ithreads),
 PHP (`parallel`, needs a ZTS build), PowerShell (runspace pools), Crystal (`Fiber::ExecutionContext::Parallel`),
 Objective-C (`NSThread`), Modula-2 (Win32 `Threads` module), Modula-3 (`Thread.Fork`), BASIC (`THREADCREATE`),
 Groovy (`java.lang.Thread`), Clojure (`java.lang.Thread` interop, not `future`), Common Lisp (`sb-thread:make-thread` on real Win32 threads), OCaml (`Domain.spawn`/`Domain.join`, OCaml 5 only), Erlang and Elixir (`spawn` onto a BEAM scheduler, one per core, no global lock), Raku (`start`, which MoarVM runs through `uv_thread_create`), Vala (`GLib.Thread`), Component Pascal (the .NET `Threading` module,
 via `REGISTER` on a bound method with the foreign `Th.ThreadStart` delegate), C3 (`std::thread`),
+Beef (`System.Threading.Thread`; `CreateThread`, `ResumeThread` and `SetThreadPriority` are in the
+executable's import table), Haxe (`sys.thread.Thread.create`, which hxcpp implements as
+`CreateThread`), Eiffel (EiffelThread's `THREAD` mapped onto Win32 threads, with the project's
+concurrency capability set to `thread`), Scheme (`fork-thread`/`thread-join` on a threaded
+`ta6nt` build, directly on the Windows API), Prolog (SWI) (`library(thread)`: `thread_create/3` +
+`thread_join/2`, partials returned through `thread_send_message/2` because the goal is copied),
+J (`0 T. ''` plus `u t. n y` tasks, futex-based threadpools with no GIL; measured 1.7x rather than
+4x, because J's explicit verbs run about 1.8x slower inside a worker thread than on the master
+thread), Ring (the distribution's own Threads extension, a TinyCThread binding over Win32 threads
+with no GIL — the light release does not ship it, see below),
 Oberon-07 (raw `CreateThread` + `WaitForSingleObject` declared as foreign procedures, no thread
 module in its library),
 Assembly (raw `clone` + `futex` syscalls, no libc).
@@ -158,6 +182,7 @@ the Windows calling convention, so the procedure *and* the procedure type both c
 | Language | What it has | Measured |
 |---|---|---|
 | Algol 68 | a real parallel clause, `PAR (unit, unit, unit, unit)`, four pthreads | `7500000075000000`, in the same ~2.5 minutes as task 02 — a correct-answer-no-speedup cell |
+| VHDL | four `process` blocks, each owning a fixed quarter of task 02's range, plus a fifth collector process that waits for all four (`wait until done = "1111"`) and sums the partials | `7500000075000000`, **2422 s** against task 02's 2430 s — 1.003x, i.e. noise, so a correct-answer-no-speedup cell |
 
 Algol 68's parallel clause is not a broken feature and not a mis-written program: the
 implementation copies a whole stack on every unit switch, and its own source says the clause
@@ -181,8 +206,13 @@ Treat the cell like CPython's and CRuby's.
 | VBScript | four `WScript.Shell.Exec` child processes, one per quarter, partials read back from each child's stdout | `7500000075000000`, **3.41x on 4 processes** |
 | SystemVerilog | `fork`/`join` with four tasks, each owning a fixed quarter. The processes are scheduled by the simulator on one thread, so this is correct-answer-no-speedup. | `7500000075000000`, no speedup |
 | Racket | `(thread thunk #:pool 'own #:keep 'results)`: each thread gets its own OS thread with the heap shared, and `thread-wait` returns the result. Plain `thread` is green and `future` serialises at blocking operations, so neither is used. | `7500000075000000`, real multicore work |
+| Janet | `ev/spawn-thread`/`ev/thread` + `ev/thread-chan`: one OS thread per worker, each with its own heap, partials sent back over a threaded channel (the isolates shape Dart and JavaScript use) | `7500000075000000`, **4.9x on 4 threads** |
+| Octave | four `octave-cli` child processes of the same file, one per quarter, started with `popen` and joined by reading each child's stdout; the worker index travels in the environment | `7500000075000000`, **3.13x on 4 processes** |
+| Seed7 | four `startPipe` child processes of the same executable, one per quarter, partials read back from each child's stdout with `getln(childStdOut(p))` and joined with `waitFor` | `7500000075000000`, real parallelism across four cores |
+| JScript | four `WScript.Shell.Exec` child processes, one per quarter, partials read back from each child's stdout | `7500000075000000`, real parallelism on four cores, but not a clean 4x over task 02 — see below |
+| AutoHotkey | four `WScript.Shell.Exec` child processes of the same script, one per quarter, each printing its partial sum to stdout; the parent reads each child's `StdOut`, which blocks until that child exits and is therefore the join | `7500000075000000`, real parallelism across four cores; see the note below |
 
-### The six that need explaining
+### The eight that need explaining
 
 **Lua.** Stock Lua has no threads, only coroutines, which are cooperative and
 single-threaded. But `lanes` is a mature C extension that wraps real OS threads, and it
@@ -238,6 +268,34 @@ synchronous and would wait for worker *t* to finish before starting worker *t+1*
 four quarters serialised on one core. Measured at a quarter scale, the async form runs the
 same work in 0.87 s against 2.7 s for the serial one, a 3.1x speedup on four threads.
 
+**VHDL.** VHDL's processes are the language's own concurrency construct — a process is a
+concurrent statement and the simulation cycle is defined to execute the resumed processes in
+an arbitrary order — so task 11 is expressed in-language exactly as SystemVerilog's
+`fork`/`join` expresses it. But every shipped GHDL build schedules those processes on **one OS
+thread**: `src/grt/grt-threads.ads` is `package Grt.Threads renames Grt.Unithread`,
+`grt-unithread.adb` is the "mono-thread version" whose `Run_Parallel (Subprg)` just calls
+`Subprg.all` on the calling thread, and `grt-processes.adb` takes the sequential loop over
+resumed processes when `Nbr_Threads = 1`, its own comment saying "there is no real locks,
+since the kernel is single threading". `--threads=N` is parsed but dead: its help line is
+commented out, GHDL's author calls it "dead code of an aborted effort", and the pthread
+process-parallel kernel sits behind a commented-out `GRT_USE_PTHREADS=y` build switch that is
+pthread (Unix) only, so no Windows build has it. The run line therefore does not pass
+`--threads`, which would look like an attempted speedup and does nothing. Measured: task 11 at
+2422 s against task 02's 2430 s — 1.003x, i.e. noise, both doing the same 100000000 iterations
+of the same switch. The answer is right and the row is single-core for this task, like Simula,
+CPython, CRuby and SystemVerilog's `fork`/`join`.
+
+**Ring.** The core language has no thread keyword, but the distribution's own Threads
+extension (`load "threads.ring"`, a TinyCThread binding over Win32 threads) creates real OS
+threads, and the VM has no GIL: `ring_vm_createthreadstate` gives each worker its own VM state
+that **shares the global scope**, so each worker writes its quarter's partial into its own slot
+of a global list and the parent sums the four after `thrd_join`. The partials cannot come back
+through `thrd_join` itself, whose result is a C `int`, and a quarter of this task is about
+1.9e15. Measured: 8.1–10.4 s wall with about 3.3 cores busy, against 20.2–22.4 s wall for the
+same four quarters run one after another in the same function — a real 2.2x on four threads.
+The extension is not in the light release; `BUILD.md` records the six files and the one `gcc`
+line that build it.
+
 ### Cannot do it
 
 **GDScript.** Godot has a `Thread` class and it works, but it is awkward to use for this
@@ -259,8 +317,10 @@ Task 11 says "start 4 threads". Under that wording:
 - Pass: assembly (`clone` + `futex`), Oberon-07 (`CreateThread`), and everything in the
   threads list above.
 - Pass, but with processes rather than threads: R, COBOL on Linux (`CBL_GC_FORK`), VBScript
-  (`WScript.Shell.Exec` children), and JavaScript if you count worker threads as not being
-  threads. ActionScript belongs here too:
+  (`WScript.Shell.Exec` children), Octave (four `octave-cli` children via `popen`), Seed7
+  (four `startPipe` children), JScript and AutoHotkey (both four `WScript.Shell.Exec` children
+  of the same script), and JavaScript if you count worker threads as not being threads.
+  ActionScript belongs here too:
   AIR `Worker`s run on real OS threads but are separate AVM2 instances with no shared memory,
   so they are isolates rather than threads in the same sense Dart's are.
 - Pass, with the GIL/GVL caveat recorded: CPython, CRuby, Dolphin Smalltalk, whose `Process`
@@ -268,8 +328,11 @@ Task 11 says "start 4 threads". Under that wording:
   objects are scheduled cooperatively by its own process simulation. `jruby` and Groovy are
   unaffected and use real JVM threads. Algol 68 belongs in this group for a different reason —
   its four pthreads are real and overlap, but the implementation's stack copying costs more
-  than the parallelism returns, so it is a correct-answer-no-speedup cell too.
+  than the parallelism returns, so it is a correct-answer-no-speedup cell too. VHDL is here for
+  the third reason: its four `process` blocks are the language's own concurrency, but every
+  shipped GHDL build schedules them on one OS thread, so it is a correct-answer-no-speedup cell.
 - Pass, but only with an extra install or flag: Lua (Lanes), Tcl (the `Thread` package),
+  Ring (the Threads extension, which the light release omits),
   PHP (`parallel` on a ZTS build), Julia (`-t4`), Fortran (`-fopenmp`), Algol 68 Genie (a
   source build with `--enable-parallel`). Without the flag Julia and Fortran still print the
   right answer, because their loops fall back to serial; without it a68g refuses to parse `PAR`
@@ -309,7 +372,8 @@ below — so it writes to the application storage directory instead. The bytes r
 and both answers, are identical to every other row's; only where the files sit differs.
 
 **No fsync.** `FileStream` has no commit call, so task 15's deviation is flush and close,
-the same one Tcl, D, Julia, Nim, Dart, Pascal, COBOL and Dolphin note.
+the same one Tcl, D, Julia, Nim, Dart, Pascal, COBOL, Dolphin, Haxe, Eiffel, Seed7, Scheme,
+Prolog (SWI), Octave, J, Janet, Ring, JScript and VHDL note.
 
 **No filesystem work in the constructor.** AIR has not finished setting up the filesystem and
 security context while the application class's constructor is running, so a synchronous
@@ -392,7 +456,7 @@ iterations, the loop is smaller than the noise in starting the process.
 
 ## Expected cost
 
-Every task runs six times, in 78 toolchains.
+Every task runs six times, in 92 toolchains.
 
 - Fast compiled languages: under a second per run, so about **1.5 hours** for the matrix.
 - The 100-million-iteration tasks take 10 to 15 seconds in CPython.
@@ -401,7 +465,7 @@ Every task runs six times, in 78 toolchains.
   are 100 and 331 million interpreted calls, and 06 and 14 walk 100 million items one at a
   time. Task 11 was measured at the full 100000000 iterations and prints the right answer;
   see the section above.
-- The six new rows are mostly slow, and they hold the slowest cells in the matrix:
+- The new rows are mostly slow, and they hold the slowest cells in the matrix:
   - **Component Pascal** task 10 is a .NET assembly running the same bounds-checked spigot; at
     10000 digits it took about 5 minutes a run, so about **3 s** at 1000.
   - **Racket** task 07 takes about **19 minutes** a run (1121 s measured): Racket strings are
@@ -462,6 +526,40 @@ Every task runs six times, in 78 toolchains.
     so nobody reads the cell as measured. The alternative, if a four-day cell is judged
     unacceptable, is to `SKIPPED` it with this measurement as the reason — that is a
     documentation change, not a code one.
+  - **Janet** task 07 takes about **38 minutes** a run (2266.6 s measured, one full run): Janet
+    strings are immutable and `(string acc "x")` allocates a fresh buffer, copies the
+    accumulator into it and then allocates the result string, so a million appends copy about
+    10^12 bytes — twice what Racket's one-copy version copies, and the measured 2266 s is about
+    twice Racket's 1121 s. Every other Janet cell is seconds (the slowest are task 09 at 24 s
+    and task 13 at 16 s), so this is the row's slowest cell.
+  - **Scheme** task 07 is the same quadratic append Racket's is: Chez strings are fixed-length and
+    immutable, so the million appends copy about 5x10^11 bytes and the run takes about **25
+    minutes** (1477 s measured; two further full runs gave 1780 s and 3841 s under contention).
+  - **Prolog (SWI)** task 07 is quadratic for the same reason and measures **1405 s (23
+    minutes)**: SWI strings are immutable, the standard library has no string builder, and
+    `string_concat/3` copies the whole string on every append.
+  - **Ring** task 07 uses the spec's `text = text + "x"` form and is honestly quadratic: `+`
+    appends into a copy of the left operand and the assignment copies the result back, so the
+    million appends cost about **219 s of user CPU** (857 s wall measured, on a host with under
+    1 GB of free memory). Ring's own `+=` appends in place and was deliberately not used.
+  - **VHDL** is dominated by its 64-bit accumulator, not by any one task: under mcode a 64-bit
+    vector add costs about **17 us** against about **9 ns** for a 32-bit `integer` add, so tasks
+    02 and 11 take about **40 minutes each** (2430 s and 2422 s) and task 07 about **42 minutes**
+    (2517 s), while task 01's identical loop count with four 32-bit counters takes 1.2 s — a
+    factor of about 2000 for the same work. Task 10 is not a slow cell here: **2.7 s** at 1000
+    digits, because the spigot's limb count stays small.
+  - **Octave** is a tree-walking interpreter with no JIT, so its 100-million-iteration cells are
+    minutes each: task 01 479 s, 02 666 s, 03 962 s, 05 289 s, 06 490 s, 08 461 s, 09 1408 s
+    (fib(40)), 11 213 s, 13 890 s and 14 360 s. One pass of the whole row is about 1.8 hours, so
+    six runs per cell is roughly **11 hours**.
+  - **Haxe** task 07 is quadratic because a Haxe `String` is immutable and every iteration copies
+    the whole thing: measured at **420 s and 504 s** on two full runs, the row's slow cell.
+    `StringBuf` was deliberately not used — on cpp it is an `Array<String>` with a join at
+    `toString()`, i.e. linear, which would have measured a different program.
+  - **AutoHotkey** task 09 is about **4.2 minutes** (249.1 s for ~331 million interpreted calls)
+    and task 10 about 1.2 minutes (73.4 s at 1000 digits); its four 100-million-iteration loops
+    are 30 to 50 seconds each. Task 07 is *not* slow and that is the point: the expression
+    compiler gives `text .= "x"` an in-place path, so the million appends take 1.8 s.
   - The compiled rows (C3, Vala) are in the normal range, with C3's task 07 the outlier at
     about 2.5 minutes because appending to a string a million times is quadratic by design.
 - Measured slow cells elsewhere: Java task 07 at 514 s, Modula-3 task 10 at 206 s, Modula-2
@@ -510,15 +608,33 @@ discovering halfway through a run.
 | oberon-07 (akron) | yes | no | yes, the repository ships a Windows `Compiler.exe`; on Linux the compiler has to be built from source with `make lin64` |
 | vbscript (cscript) | no | no | yes, and only ever Windows: it is a Windows Script Host component with no port. It is also being **withdrawn by Microsoft** — a Feature on Demand in Windows 11 24H2, enabled by default at first, then disabled by default, then removed — so this row will eventually become `SKIPPED` on new installs. |
 | actionscript (AIR) | no | yes | yes. The SDK's captive runtime — what `-target cmdline` bundles into a standalone app — ships for `win`, `win64` and `mac` only (`runtimes/air-captive/`), so a self-contained bundle is possible on Windows and macOS and **not** on Linux, which gets only the non-captive runtime. Verified on Windows; the macOS path is untested here. |
+| scala (native) | untested | untested | yes, via the portable llvm-mingw zip (no MSVC, no admin); the documented route wants Visual Studio's C++ workload |
+| beef | untested | untested | yes, Windows x64 only as verified here; Beef's Linux and macOS back ends were not exercised, and its installer is Windows-specific |
+| haxe (hxcpp) | untested | untested | yes, the official win64 zip plus a 64-bit MinGW `g++`, verified on Windows only |
+| eiffel (eiffelstudio) | untested | untested | yes, the win64 `.7z` unpacked in place; the delivery ships its own MinGW gcc, so no MSVC is needed. Verified on Windows only |
+| seed7 (s7c) | untested | untested | yes, built from the source release with MSYS2's MSVCRT MinGW gcc; the only prebuilt Windows artifact is an admin-requiring installer. Verified on Windows only |
+| scheme (chez) | untested | untested | yes, built from the release tarball with MSYS2 UCRT64 MinGW gcc; `make install` has to be done by hand. Verified on Windows only |
+| prolog (swipl) | untested | untested | yes, the official x64-win64 NSIS installer extracted with 7-Zip; the tree is self-locating. Verified on Windows only |
+| octave (octave-cli) | untested | untested | yes, the official MXE w64 `.7z` (or the user-scope winget package). Verified on Windows only |
+| j (jconsole) | untested | untested | yes, the Windows x64 base zip; `j.dll` needs the VC++ x64 runtime. Verified on Windows x64 only |
+| janet | untested | untested | yes, the per-user Windows x64 MSI. Verified on Windows only |
+| ring | untested | untested | yes (the light release is a no-admin ZIP); its macOS and Linux support was not exercised |
+| jscript (cscript) | no | no | yes, and only ever Windows: it is the same Windows Script Host component as the VBScript row and shares its deprecation path. On Windows 11 24H2 and later the engine is the replacement JScript9Legacy, which reports 11.0.16384 on this host. |
+| autohotkey (v2) | no | no | yes, and only ever Windows: the official project builds Win32 and x64 Windows targets and nothing else. |
+| vhdl (ghdl) | untested | untested | yes, the standalone `ghdl-mcode-6.0.0-ucrt64.zip`; no MSYS2 needed. Verified on Windows only |
 
 **Windows reaches every row**; it is the only host that does. Linux loses `actionscript`
-(no captive runtime), `dolphin smalltalk` (Windows-only VM) and `vbscript` (a Windows Script
-Host component, and one Microsoft is removing). Windows loses `assembly`, and
+(no captive runtime), `dolphin smalltalk` (Windows-only VM), `vbscript` and `jscript`
+(Windows Script Host components, and ones Microsoft is removing) and `autohotkey` (the
+official project builds only Windows targets). Windows loses `assembly`, and
 loses Tcl's task 11 unless the distribution bundles the `Thread` package. macOS loses
 `assembly`, `msvc` and `dolphin smalltalk`, which exists nowhere else, plus the Windows
-PowerShell 5.1 row (use `pwsh` there), and the two rows whose toolchain ships Windows-only
+PowerShell 5.1 row (use `pwsh` there), the Windows-only scripting rows (`vbscript`, `jscript`
+and `autohotkey`), and the two rows whose toolchain ships Windows-only
 binaries: `oberon-07` (build the compiler with `make lin64` instead) and `component pascal`,
-which is .NET-only by construction and has no non-Windows release. Whichever host you pick,
+which is .NET-only by construction and has no non-Windows release. The fourteen new rows were
+all verified on Windows x64; where a material file did not exercise Linux or macOS, the table
+says `untested` rather than guessing. Whichever host you pick,
 run the whole matrix on it, because numbers are only comparable within a run.
 
 ### Cygwin-hosted toolchains: native or cross-compiled

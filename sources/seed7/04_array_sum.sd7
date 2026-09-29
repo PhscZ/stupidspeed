@@ -1,0 +1,24 @@
+# task 04 array_sum — expected output: 499999500000
+# build: s7c -O2 prog.sd7    run: ./prog
+# note: a Seed7 array carries its own index range; '1000000 times 0' creates one indexed
+#       1 .. 1000000, so the loop counts 1 .. 1000000 and stores i - 1 to keep the same
+#       0-based values the other rows fill in.
+
+$ include "seed7_05.s7i";
+
+const proc: main is func
+  local
+    var array integer: arr is 1000000 times 0;
+    var integer: total is 0;
+    var integer: i is 0;
+  begin
+    for i range 1 to 1000000 do
+      arr[i] := i - 1;
+    end for;
+
+    for i range 1 to 1000000 do
+      total +:= arr[i];
+    end for;
+
+    writeln(total);
+  end func;

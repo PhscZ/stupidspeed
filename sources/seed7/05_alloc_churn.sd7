@@ -1,0 +1,30 @@
+# task 05 alloc_churn — expected output: 1274991808
+# build: s7c -O2 prog.sd7    run: ./prog
+# note: Seed7 has no raw malloc; the closest thing to a 64-byte buffer is a 64-character
+#       string, which is what this uses. Strings are heap objects with their own lifetime
+#       management, so the buffer a slot replaces is released by the runtime rather than by
+#       an explicit free, and 'slots' keeps the current 256 buffers reachable exactly as
+#       the other rows' slot array does.
+# note: the store into the buffer is '@:=' rather than '[i] :=': a string index is not an
+#       assignable location in Seed7, only a readable one, and 'buf[1] := chr(...)' is a
+#       compile error ("Variable expected ... found expression of type func char").
+
+$ include "seed7_05.s7i";
+
+const proc: main is func
+  local
+    var array string: slots is 256 times "";
+    var string: buf is "";
+    var integer: total is 0;
+    var integer: i is 0;
+  begin
+    for i range 0 to 9999999 do
+      buf := "\0;" mult 64;
+      buf @:= [1] chr(i mod 256);
+      total +:= ord(buf[1]);
+
+      slots[(i mod 256) + 1] := buf;
+    end for;
+
+    writeln(total);
+  end func;

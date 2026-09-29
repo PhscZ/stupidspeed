@@ -1,0 +1,22 @@
+# task 08 average — expected output: 0.498046875
+# build: s7c -O2 prog.sd7    run: ./prog
+# note: 'float' is a 64-bit IEEE double. str(float) prints [-]ddd.ddd with as many digits
+#       after the point as needed and never leaves a trailing zero, and 0.498046875 is
+#       exactly representable, so it prints unchanged.
+
+$ include "seed7_05.s7i";
+  include "float.s7i";
+
+const proc: main is func
+  local
+    var float: total is 0.0;
+    var float: reading is 0.0;
+    var integer: i is 0;
+  begin
+    for i range 0 to 99999999 do
+      reading := float(i mod 256) / 256.0;
+      total +:= reading;
+    end for;
+
+    writeln(total / 100000000.0);
+  end func;

@@ -1,0 +1,11 @@
+# task 03 func_sum — helper file, included by 03_func_sum.sd7.
+# The helper sits in its own file, but Seed7 gives the row no way to keep the call real:
+# there is no INLINE/NOINLINE marker anywhere in the language, 'include' is textual
+# inclusion, and s7c emits exactly one C translation unit per program, so a separate
+# object file (the Fortran, Modula-2, Vala, Tcl and SystemVerilog route) does not exist.
+# The C function s7c generates is 'static' and has a single call site, so gcc -O2 inlines
+# it and the 100000000 calls fold into the loop. The cell therefore measures the loop,
+# not 100000000 function calls.
+
+const func integer: add_one (in integer: n) is
+  return n + 1;

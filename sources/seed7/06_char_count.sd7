@@ -1,0 +1,25 @@
+# task 06 char_count — expected output: 10000000
+# build: s7c -O2 prog.sd7    run: ./prog
+# note: the 100 MB text is built with one 'mult' call rather than by appending in a loop.
+#       Seed7 characters are UTF-32, so the text occupies about 400 MB while it is alive;
+#       that is the runtime's own representation of a string and not an extra copy. Measured
+#       peak working set for this task: about 390 MB, against 12 to 24 MB for the others.
+
+$ include "seed7_05.s7i";
+
+const proc: main is func
+  local
+    var string: text is "";
+    var integer: count is 0;
+    var integer: i is 0;
+  begin
+    text := "abcdefghij" mult 10000000;
+
+    for i range 1 to length(text) do
+      if text[i] = 'h' then
+        count +:= 1;
+      end if;
+    end for;
+
+    writeln(count);
+  end func;

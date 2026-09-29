@@ -1,0 +1,49 @@
+# task 12 matrix_add — expected output: 999000000
+# build: s7c -O2 prog.sd7    run: ./prog
+# note: a two-dimensional array must be given a named type at the top level in Seed7.
+#       Written as 'array array integer' in two places the compiler treats the two
+#       occurrences as different types and fails with a NO_MATCH error, so 'matrix' is
+#       declared once and used everywhere.
+# note: Seed7 arrays carry their own index range and 'n times n times 0' makes one indexed
+#       1 .. n, so the loops count 1 .. n and subtract 1 to keep the same 0-based values
+#       the other rows use.
+
+$ include "seed7_05.s7i";
+
+const type: matrix is array array integer;
+
+const proc: main is func
+  local
+    const integer: n is 1000;
+    var matrix: a is 0 times 0 times 0;
+    var matrix: b is 0 times 0 times 0;
+    var matrix: c is 0 times 0 times 0;
+    var integer: total is 0;
+    var integer: i is 0;
+    var integer: j is 0;
+  begin
+    a := n times n times 0;
+    b := n times n times 0;
+    c := n times n times 0;
+
+    for i range 1 to n do
+      for j range 1 to n do
+        a[i][j] := (i - 1) + (j - 1);
+        b[i][j] := (i - 1) - (j - 1);
+      end for;
+    end for;
+
+    for i range 1 to n do
+      for j range 1 to n do
+        c[i][j] := a[i][j] + b[i][j];
+      end for;
+    end for;
+
+    for i range 1 to n do
+      for j range 1 to n do
+        total +:= c[i][j];
+      end for;
+    end for;
+
+    writeln(total);
+  end func;

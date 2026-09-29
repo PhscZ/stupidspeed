@@ -1,0 +1,23 @@
+# task 02 switch_case — expected output: 7500000075000000
+# build: s7c -O2 prog.sd7    run: ./prog
+# note: 'integer' is 64-bit signed and every arithmetic operation is overflow-checked, so
+#       7500000075000000 (below 2^63) prints exactly and does not wrap.
+
+$ include "seed7_05.s7i";
+
+const proc: main is func
+  local
+    var integer: acc is 0;
+    var integer: i is 0;
+  begin
+    for i range 0 to 99999999 do
+      case i mod 4 of
+        when {0}: acc +:= 1;
+        when {1}: acc +:= i;
+        when {2}: acc +:= 2 * i;
+        when {3}: acc +:= 3 * i;
+      end case;
+    end for;
+
+    writeln(acc);
+  end func;

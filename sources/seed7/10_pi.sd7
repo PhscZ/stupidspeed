@@ -1,0 +1,68 @@
+# task 10 pi — expected output: 4470
+# build: s7c -O2 prog.sd7    run: ./prog
+# note: the state of Gibbons' unbounded spigot is kept in the standard library's
+#       'bigInteger' (bigint.s7i), which is the runtime's own pure-C arbitrary-precision
+#       type: no hand-rolled limbs are needed here, unlike the C row. The digits are never
+#       printed, only their sum.
+# note: the runtime can optionally be built against GMP, but this build is the default
+#       big_rtl.c one, so the measurement is of the Seed7 standard library and not of an
+#       external bignum package.
+# note: 'integer' is 64-bit and checked, and only the single settled digit is converted
+#       from bigInteger back to integer, so no intermediate overflows.
+
+$ include "seed7_05.s7i";
+  include "bigint.s7i";
+
+const proc: main is func
+  local
+    var bigInteger: q is 0_;
+    var bigInteger: r is 0_;
+    var bigInteger: t is 0_;
+    var bigInteger: u is 0_;
+    var bigInteger: v is 0_;
+    var integer: k is 1;
+    var integer: l is 3;
+    var integer: n is 3;
+    var integer: next is 0;
+    var integer: sum is 0;
+    var integer: produced is 0;
+  begin
+    q := 1_;
+    r := 0_;
+    t := 1_;
+
+    while produced < 1000 do
+      u := 4_ * q + r;
+      v := t * bigInteger(n + 1);
+
+      if u < v then
+        # the digit n is settled
+        sum +:= n;
+        incr(produced);
+
+        u := 10_ * (3_ * q + r);
+        next := integer(u div t) - 10 * n;
+
+        v := r - t * bigInteger(n);
+        r := 10_ * v;
+        q := 10_ * q;
+
+        n := next;
+      else
+        # not settled yet: widen the state by one more term
+        u := q * bigInteger(7 * k + 2) + r * bigInteger(l);
+        v := t * bigInteger(l);
+        next := integer(u div v);
+
+        r := (2_ * q + r) * bigInteger(l);
+        q := q * bigInteger(k);
+        t := t * bigInteger(l);
+
+        incr(k);
+        l +:= 2;
+        n := next;
+      end if;
+    end while;
+
+    writeln(sum);
+  end func;

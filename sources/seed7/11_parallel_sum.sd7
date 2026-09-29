@@ -1,0 +1,74 @@
+# task 11 parallel_sum — expected output: 7500000075000000
+# build: s7c -O2 prog.sd7    run: ./prog
+# note: Seed7 has no thread library at all. Its only concurrency facility is process.s7i,
+#       so this is four child processes rather than four threads, the same shape the
+#       VBScript and COBOL rows use and the R row uses with PSOCK workers. The benchmark
+#       accepts it as "pass, but with processes rather than threads", and unlike the R and
+#       COBOL rows it is real parallelism on Windows: four cores work at once.
+# note: the parent starts four copies of this same executable with startPipe, handing each
+#       child its worker index as its only argument. Each child computes one quarter of
+#       task 02's switch and prints its partial; the parent reads the partial with getln on
+#       childStdOut and joins with waitFor, then adds the four partials.
+# note: each worker owns a fixed quarter, so which one finishes first cannot change the
+#       answer. The child's path comes from path(PROGRAM), so the parent can be started
+#       from any working directory.
+# note: measured: one child (a quarter of the work) takes about 240 ms and the full four-child
+#       run about 350 ms, where four children one after another would be about 960 ms, so the
+#       four really do run at the same time. The wall time is nevertheless dominated by the
+#       ~200-250 ms Seed7 runtime startup that every compiled Seed7 program pays, so this cell
+#       comes out no faster than task 02, which does the whole 100000000 iterations in one
+#       process. The answer is right and the parallelism is real; the speedup is not visible at
+#       these loop counts.
+
+$ include "seed7_05.s7i";
+  include "process.s7i";
+
+const integer: SPAN is 25000000;
+
+const func integer: workRange (in integer: t) is func
+  result
+    var integer: acc is 0;
+  local
+    var integer: lo is 0;
+    var integer: hi is 0;
+    var integer: i is 0;
+  begin
+    lo := t * SPAN;
+    hi := lo + SPAN;
+    for i range lo to hi - 1 do
+      case i mod 4 of
+        when {0}: acc +:= 1;
+        when {1}: acc +:= i;
+        when {2}: acc +:= 2 * i;
+        when {3}: acc +:= 3 * i;
+      end case;
+    end for;
+  end func;
+
+const proc: main is func
+  local
+    var array process: kids is 0 times process.value;
+    var array string: parameters is 0 times "";
+    var file: out is STD_NULL;
+    var integer: t is 0;
+    var integer: total is 0;
+  begin
+    if length(argv(PROGRAM)) = 1 then
+      # child: compute one quarter and print it
+      writeln(workRange(integer(argv(PROGRAM)[1])));
+    else
+      for t range 0 to 3 do
+        parameters := 0 times "";
+        parameters &:= str(t);
+        kids &:= startPipe(path(PROGRAM), parameters);
+      end for;
+
+      for t range 1 to 4 do
+        out := childStdOut(kids[t]);
+        total +:= integer(getln(out));
+        waitFor(kids[t]);
+      end for;
+
+      writeln(total);
+    end if;
+  end func;
