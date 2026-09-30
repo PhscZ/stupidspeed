@@ -10,7 +10,7 @@ like for the numbers to mean anything. For compilers, see `BUILD.md`.
 | OS | x86-64, Linux, macOS or Windows | Every row is reachable on Windows and on Linux; macOS loses `msvc` and `dolphin smalltalk`. The one exception is `assembly`, which is Linux x86-64 only: it is a freestanding ELF64 binary built with `nasm -f elf64` and `ld`. `tcc`, `clang`, `flang` and `luajit` all need a little care on Windows but no WSL. |
 | CPU | 4 physical cores | Task 11 runs four threads. Every other task is pinned to one core, so more cores do not help them. |
 | RAM | 8 GB minimum, 16 GB comfortable | The tasks themselves are small: the largest allocation is task 06's 100 MB text, and task 12's three 1000x1000 arrays are 24 MB together. The 16 GB is for the JVM, GraalVM and Julia toolchains. `native-image` alone wants 2–4 GB to build. |
-| Disk | 32 GB free | 100 MiB of fixtures, plus the toolchains themselves: `BUILD.md` measured 23 GB for all 78 installed and run, and the fourteen new rows add about 6.5 GB — Octave's tree alone is 2.6 GiB, Eiffel's 1.28 GB, Beef's 845 MB and the Scala Native row's 833 MB — so budget about 30 GB for all 92. The MSYS2 tree that `valac` needs is 2.2 GB of the base total on its own, with another 2–3 GB of scratch while reassembling MSVC and Swift. |
+| Disk | 32 GB free | 100 MiB of fixtures, plus the toolchains themselves: `BUILD.md` measured 23 GB for all 78 installed and run, and the fourteen rows before the newest four add about 6.5 GB — Octave's tree alone is 2.6 GiB, Eiffel's 1.28 GB, Beef's 845 MB and the Scala Native row's 833 MB — and the four newest add about 1.3 GB, mostly Dyalog's 855 MB interpreter tree, so budget about 31 GB for all 96. The MSYS2 tree that `valac` needs is 2.2 GB of the base total on its own, with another 2–3 GB of scratch while reassembling MSVC and Swift. |
 | Filesystem | `tmpfs` or RAM disk preferred for the file tasks | Reading 50 MiB from a spinning disk measures the disk. Anything run under WSL2 measures the WSL disk layer instead. Where the fixture lives must be recorded in the results. |
 
 ## Runtimes
@@ -100,6 +100,10 @@ Languages compiled to a static native binary need nothing. The rest need the fol
 | JScript | cscript | none — `cscript.exe` ships with Windows | Windows Script Host's Active Scripting JScript engine, which is not the `JavaScript` row's node/bun/deno. The `.js` extension is mapped to it; `//E:JScript` is passed explicitly. On Windows 11 24H2 and later the engine is JScript9Legacy, which reports 11.0.16384, rather than classic JScript 5.8. Task 03 needs `03_func_sum_add_one.js` beside it; tasks 14 and 15 need the working directory to hold `data.bin` and to be writable for `out.bin`. |
 | AutoHotkey | v2 | none — the extracted ZIP is the runtime (Windows-only) | No build step. `AutoHotkey64.exe /ErrorStdOut <task>.ahk`; the interpreter prints nothing on start-up, so the row's stdout is exactly the one expected line. Task 11 needs no extra install: the four workers are four child processes. |
 | VHDL | ghdl | none — the extracted tree is the runtime | Two commands, not one: `ghdl -a --std=08 <task>.vhd` then `ghdl -r --std=08 <unit>`. The measured run is the `ghdl -r` one, which with mcode also elaborates and generates code. Tasks 14 and 15 run from `sources/vhdl/` so that `data.bin`/`out.bin` resolve. |
+| Standard ML | Poly/ML | `PolyLib.dll` must be beside the executable | No build step at run time: the `.obj` the compiler exports contains the whole heap image, and the stub's `WinMain` loads it. Without `PolyLib.dll` next to the `.exe` the program dies before `main` with `STATUS_DLL_NOT_FOUND` and prints nothing. An exported program has no banner and no prompt — the top-level loop never starts — so the row's stdout is exactly the one expected line. Start-up floor about 65 ms. Tasks 14 and 15 run from `sources/standardml/` so that `data.bin`/`out.bin` resolve; task 14 reads in 65536-byte chunks. |
+| Terra | terra | none, but the interpreter needs `VCINSTALLDIR` set and `INCLUDE` pointing at a C sysroot | No build step: `terra.exe <task>.t` compiles and JITs on every run, so that compile is inside the measured number, and an empty program still costs 36-50 ms. **`VCINSTALLDIR` must be non-nil or the interpreter aborts before opening the file** with `Can't find windows SDK version 8.1 or 10!` — it is a switch, the path is never read. `INCLUDE` is needed only by task 11, which includes `windows.h`; on this host it points at `tools/llvm-mingw/include`. Nothing is linked, so no MSVC and no Windows SDK are required. Task 15 syncs through `_commit`, so this row is not in the flush-and-close group. Tasks 14 and 15 run from `sources/terra/` so that `data.bin`/`out.bin` resolve. |
+| Dyalog APL | dyalog | the extracted interpreter tree | No build step: `dyascript.exe -script <task>.dyalog`, run from `sources/dyalog/`. **`dyascript.exe` is the console build**; `dyalog.exe`, `dyalogrt.exe` and `dyaedit.exe` are GUI-subsystem programs whose output never reaches a console. `-script` is mandatory — without it the interpreter starts a Session instead of running the file. `⎕IO←0` and `⎕PP←17` are required in every source: the default `⎕PP` of 10 prints task 02's total as `7.500000075E15`, which is `WRONG`. Runs unregistered, with nothing on stdout or stderr at start-up; the `UNREGISTERED` banner is interactive-mode-only and goes to stderr. Start-up floor about 0.2-0.25 s. Task 03 loads `AddOne.dyalog` with `2 ⎕FIX`; tasks 14 and 15 use the working directory for `data.bin`/`out.bin`. |
+| Nelua | nelua | none — native static binary | The compiled executable is self-contained and needs nothing at run time; only the compile needs the toolchain tree and a C compiler. `nelua.bat` has to be invoked through `cmd.exe`, and the build must run from `sources/nelua/` because `require` resolves against the working directory. Task 03's helper is a second module with `<noinline>`. Task 15 syncs through `_commit`, so this row is not in the flush-and-close group either. Tasks 14 and 15 run from `sources/nelua/` so that `data.bin`/`out.bin` resolve. |
 
 ### JVM versions are not interchangeable
 
@@ -170,7 +174,16 @@ thread), Ring (the distribution's own Threads extension, a TinyCThread binding o
 with no GIL — the light release does not ship it, see below),
 Oberon-07 (raw `CreateThread` + `WaitForSingleObject` declared as foreign procedures, no thread
 module in its library),
-Assembly (raw `clone` + `futex` syscalls, no libc).
+Assembly (raw `clone` + `futex` syscalls, no libc),
+Standard ML (Poly/ML's `Thread.Thread.fork`, whose Windows arm is literally `CreateThread` in
+`libpolyml/processes.cpp`; measured **3.30x** on four workers, with `Thread.Mutex` +
+`Thread.ConditionVar` for the join — note the nesting, the functions live in `Thread.Thread`,
+not `Thread`),
+Terra (`CreateThread` through `terralib.includec("windows.h")`; measured **3.72x** with four
+distinct thread ids and a process CPU/wall ratio of 4.75),
+Nelua (`require 'C.threads'`, the standard library's C11 binding over `CreateThread`, with the
+GC's `nogc` pragma because a collected allocator shared across raw threads is not safe; measured
+**3.5x**).
 
 The last two are the same kind of row: a language with no thread facility that gets real threads
 anyway by declaring the operating system's own calls, which is legitimate under the task's
@@ -183,6 +196,7 @@ the Windows calling convention, so the procedure *and* the procedure type both c
 |---|---|---|
 | Algol 68 | a real parallel clause, `PAR (unit, unit, unit, unit)`, four pthreads | `7500000075000000`, in the same ~2.5 minutes as task 02 — a correct-answer-no-speedup cell |
 | VHDL | four `process` blocks, each owning a fixed quarter of task 02's range, plus a fifth collector process that waits for all four (`wait until done = "1111"`) and sums the partials | `7500000075000000`, **2422 s** against task 02's 2430 s — 1.003x, i.e. noise, so a correct-answer-no-speedup cell |
+| Dyalog APL | `f&Y`, the language's own spawn operator, with `⎕TSYNC` as the join. `⎕TID` is 0 on the master and `1 2 3 4` in the four workers, and `⎕TNUMS` reports `0 4 3 2 1`, so four threads really are created. | `7500000075000000`, **0.99 CPU per wall second** (124.05 s CPU in 125.24 s wall, measured with `GetProcessTimes` over all threads), and four 5 M-iteration workers take 4.12x the time of one — exactly serial. The threaded form is *slower* than the identical serial work (86.2 s against 73.8 s), because the spawn and `⎕TSYNC` bookkeeping is pure overhead. |
 
 Algol 68's parallel clause is not a broken feature and not a mis-written program: the
 implementation copies a whole stack on every unit switch, and its own source says the clause
@@ -190,6 +204,14 @@ implementation copies a whole stack on every unit switch, and its own source say
 one" (`rts-parallel.c`). Four pthreads really are created, the units really do overlap, and
 the four-way answer is right; the bookkeeping simply costs more than the parallelism saves.
 Treat the cell like CPython's and CRuby's.
+
+Dyalog is in this group for the same reason seen from the other side: the threads are real and
+`⎕TID` proves there are four of them, but the interpreter switches between them at statement
+boundaries inside one execution engine, so APL code in a defined function is serialised. A probe
+that spawns a background `:While 1` counter and then runs a 2 000 000-iteration loop on the
+master **starved the master for its whole timeout**, which is the same fact from the other
+direction. This is not the J row's position: J's `T.`/`t.` threads measure 1.7x, Dyalog's `&`
+gives none.
 
 ### Works, but not with shared-memory threads
 
@@ -212,7 +234,7 @@ Treat the cell like CPython's and CRuby's.
 | JScript | four `WScript.Shell.Exec` child processes, one per quarter, partials read back from each child's stdout | `7500000075000000`, real parallelism on four cores, but not a clean 4x over task 02 — see below |
 | AutoHotkey | four `WScript.Shell.Exec` child processes of the same script, one per quarter, each printing its partial sum to stdout; the parent reads each child's `StdOut`, which blocks until that child exits and is therefore the join | `7500000075000000`, real parallelism across four cores; see the note below |
 
-### The eight that need explaining
+### The nine that need explaining
 
 **Lua.** Stock Lua has no threads, only coroutines, which are cooperative and
 single-threaded. But `lanes` is a mature C extension that wraps real OS threads, and it
@@ -296,6 +318,18 @@ same four quarters run one after another in the same function — a real 2.2x on
 The extension is not in the light release; `BUILD.md` records the six files and the one `gcc`
 line that build it.
 
+**Terra.** The mechanism is ordinary — four `CreateThread` workers through
+`terralib.includec("windows.h")`, joined with `WaitForSingleObject`, measured at 3.72x with four
+distinct thread ids and a process CPU/wall ratio of 4.75 — but the *cell* needs a note because
+of what it costs. Terra is the only row whose task 11 includes a C header, and parsing
+`windows.h` with the bundled clang takes **1.3-1.7 s**, which dominates the cell's ~1.3 s total:
+the threaded work itself is about 13 ms. So this cell measures a header parse plus the
+parallelism, not the parallelism alone, and it is the only task in that row that pays the cost.
+That is also why the row needs no MSVC and no Windows SDK — nothing is ever linked, and the one
+header is read by Terra's own clang. The same `INCLUDE` that makes this task work is what
+`VCINSTALLDIR` gates: without a non-nil `VCINSTALLDIR` the interpreter aborts before it opens
+any file at all.
+
 ### Cannot do it
 
 **GDScript.** Godot has a `Thread` class and it works, but it is awkward to use for this
@@ -331,12 +365,19 @@ Task 11 says "start 4 threads". Under that wording:
   than the parallelism returns, so it is a correct-answer-no-speedup cell too. VHDL is here for
   the third reason: its four `process` blocks are the language's own concurrency, but every
   shipped GHDL build schedules them on one OS thread, so it is a correct-answer-no-speedup cell.
+  Dyalog APL is here for the fourth: `&` creates four threads that `⎕TID` can name, but the
+  interpreter serialises them inside one execution engine, measured at 0.99 CPU per wall second.
 - Pass, but only with an extra install or flag: Lua (Lanes), Tcl (the `Thread` package),
   Ring (the Threads extension, which the light release omits),
   PHP (`parallel` on a ZTS build), Julia (`-t4`), Fortran (`-fopenmp`), Algol 68 Genie (a
   source build with `--enable-parallel`). Without the flag Julia and Fortran still print the
   right answer, because their loops fall back to serial; without it a68g refuses to parse `PAR`
   at all.
+- Pass, but only with the toolchain's own environment set: Terra, whose interpreter refuses to
+  start without a non-nil `VCINSTALLDIR` and whose task 11 needs `INCLUDE` pointing at a C
+  sysroot for `windows.h`. Standard ML and Nelua need no flag, but both need a build step that
+  is not a single command (Poly/ML's exported object plus a `gcc` link; Nelua's repository
+  interpreter built once with `mingw32-make`).
 
 If the task instead says "4 concurrent workers", everything above passes and the comparison
 becomes "does this language use more than one core", which is the more useful question. That
@@ -456,7 +497,7 @@ iterations, the loop is smaller than the noise in starting the process.
 
 ## Expected cost
 
-Every task runs six times, in 92 toolchains.
+Every task runs six times, in 96 toolchains.
 
 - Fast compiled languages: under a second per run, so about **1.5 hours** for the matrix.
 - The 100-million-iteration tasks take 10 to 15 seconds in CPython.
@@ -562,6 +603,23 @@ Every task runs six times, in 92 toolchains.
     compiler gives `text .= "x"` an in-place path, so the million appends take 1.8 s.
   - The compiled rows (C3, Vala) are in the normal range, with C3's task 07 the outlier at
     about 2.5 minutes because appending to a string a million times is quadratic by design.
+  - **Standard ML** is a fast row with one slow cell, like the other native compilers: every cell
+    except task 07 is under a second, and task 07 is **95-96 s** because `^` copies the whole
+    string per append. Its start-up floor is 65 ms, and `PolyLib.dll` has to be beside the
+    executable or the program prints nothing at all.
+  - **Terra** is fast except for task 07, which is the same quadratic copy in Lua strings at
+    **176-454 s** — the spread is this host, not the row, since the cell copies 465 GiB and the
+    machine is memory-bandwidth-bound — and except for task 11, whose ~1.3 s is almost all
+    `includec("windows.h")`, the only C header any task in that row includes. Everything else is
+    0.07-0.5 s. The start-up floor is 36-50 ms.
+  - **Nelua** is a native row with no VM: every cell is milliseconds except task 07 at **68-89 s**
+    (quadratic by design) and task 05 at about 0.5 s. Its start-up floor is 13-17 ms, the same as
+    an empty C program compiled by the same gcc.
+  - **Dyalog APL** is the slowest of the four by a wide margin, and its cost is spread evenly
+    rather than concentrated in one cell: the 100-million-iteration tasks are **59-126 s** each
+    (02 is 122.7 s, 09 126.4 s, 11 125.2 s), task 13 is 175.9 s and task 10, the hand-rolled
+    1000-digit spigot, is 100.3 s. Its start-up floor is 0.2-0.25 s. Task 07 is *not* slow here —
+    375 ms for the million appends, because `,←` grows in place.
 - Measured slow cells elsewhere: Java task 07 at 514 s, Modula-3 task 10 at 206 s, Modula-2
   task 10 at 115 s.
 - **Nothing is cut off, so a pass has no upper bound.** The compiled rows are all under a
@@ -622,6 +680,10 @@ discovering halfway through a run.
 | jscript (cscript) | no | no | yes, and only ever Windows: it is the same Windows Script Host component as the VBScript row and shares its deprecation path. On Windows 11 24H2 and later the engine is the replacement JScript9Legacy, which reports 11.0.16384 on this host. |
 | autohotkey (v2) | no | no | yes, and only ever Windows: the official project builds Win32 and x64 Windows targets and nothing else. |
 | vhdl (ghdl) | untested | untested | yes, the standalone `ghdl-mcode-6.0.0-ucrt64.zip`; no MSYS2 needed. Verified on Windows only |
+| standard ml (poly/ml) | untested | untested | yes, the `PolyML5.9.1-64bit.msi` administratively extracted, plus a MinGW `gcc` to link the exported object and build the two missing pieces the MSI omits. Verified on Windows x64 only. The MSI is the only Windows asset and v5.9.2 ships none, so the version is pinned at 5.9.1 there |
+| terra | untested | untested | yes, the official `terra-Windows-x86_64-*.7z`; no admin and no MSVC, but the interpreter **requires a non-nil `VCINSTALLDIR`** or it aborts before running any file, and `INCLUDE` must point at a C sysroot for the one task that includes `windows.h`. Verified on Windows x64 only |
+| dyalog | untested | untested | yes, the 20.0 Unicode Windows distribution administratively extracted. Runs unregistered with nothing on stdout. Verified on Windows x64 only; the download page's other platforms get `.deb`/`.rpm` and a macOS `.pkg`, none of which were exercised here |
+| nelua | untested | untested | yes, the git repository plus a C compiler and its own bundled Lua interpreter. No admin. Verified on Windows x64 only |
 
 **Windows reaches every row**; it is the only host that does. Linux loses `actionscript`
 (no captive runtime), `dolphin smalltalk` (Windows-only VM), `vbscript` and `jscript`
@@ -632,7 +694,7 @@ loses Tcl's task 11 unless the distribution bundles the `Thread` package. macOS 
 PowerShell 5.1 row (use `pwsh` there), the Windows-only scripting rows (`vbscript`, `jscript`
 and `autohotkey`), and the two rows whose toolchain ships Windows-only
 binaries: `oberon-07` (build the compiler with `make lin64` instead) and `component pascal`,
-which is .NET-only by construction and has no non-Windows release. The fourteen new rows were
+which is .NET-only by construction and has no non-Windows release. The eighteen newest rows were
 all verified on Windows x64; where a material file did not exercise Linux or macOS, the table
 says `untested` rather than guessing. Whichever host you pick,
 run the whole matrix on it, because numbers are only comparable within a run.

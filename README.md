@@ -16,7 +16,7 @@ disposable. See the end of `BUILD.md` for what is in each.
 ## Results
 
 One row per toolchain, one column per task. The column headings are the task numbers, and
-the task names are the section headings under [Tasks](#tasks). All 92 toolchains, empty and
+the task names are the section headings under [Tasks](#tasks). All 96 toolchains, empty and
 ready to fill in.
 
 A cell holds the median of the 5 timed runs, in milliseconds. `WRONG` is an output that did
@@ -118,23 +118,32 @@ kept alongside the median in the raw results, not in this table.
 | JScript | cscript (WSH) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | AutoHotkey | v2 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | VHDL | ghdl |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Standard ML | Poly/ML |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Terra | terra |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Dyalog APL | dyalog |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Nelua | nelua |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 
-No cell is `SKIPPED` by design. Six rows need more than the stock install for task 11, and
+No cell is `SKIPPED` by design. Seven rows need more than the stock install for task 11, and
 each says so in `BUILD.md`: Assembly has no libc, so it issues `clone` and `futex` itself; Tcl
 needs the `Thread` package, which is not in the core distribution; COBOL needs
 `CBL_GC_FORK`, which is Linux-only; Algol 68 Genie needs a source build with
 `--enable-parallel`, because the prebuilt Windows binary is configured without the parallel
 clause; Oberon-07 has no thread module in its library, so it declares `CreateThread` and
-`WaitForSingleObject` as foreign procedures; and Ring needs the distribution's own Threads
-extension, which the light release does not ship. Four more rows have a version floor rather
+`WaitForSingleObject` as foreign procedures; Ring needs the distribution's own Threads
+extension, which the light release does not ship; and Terra needs a C sysroot on `INCLUDE` for
+the one task that includes `windows.h`, and a non-nil `VCINSTALLDIR` before the interpreter
+will start at all. Four more rows have a version floor rather
 than an extra install: Racket's parallel threads need 8.18 or later, OCaml's `Domain` needs
 5.x, since the 4.14 build has no `Domain` module at all, J's `T.` threads need 9.4, and
-Janet's `ev/thread` needs 1.17.1. Six rows pass task 11 but are correct-answer-no-speedup
+Janet's `ev/thread` needs 1.17.1. Seven rows pass task 11 but are correct-answer-no-speedup
 cells, because their concurrency is cooperative or serialised: CPython and CRuby, Dolphin
 Smalltalk, whose `Process` objects are green, Simula, whose four `PROCESS` objects are
 scheduled by its own cooperative process simulation, Algol 68, whose four pthreads are real
-but whose implementation copies a stack on every switch, and VHDL, whose four `process`
-blocks are scheduled by GHDL on one OS thread. The rest of the task 11 picture is in `RUN.md`.
+but whose implementation copies a stack on every switch, VHDL, whose four `process`
+blocks are scheduled by GHDL on one OS thread, and Dyalog APL, whose `&` spawn really does
+create four threads but which serialises them inside one execution engine — measured at 0.99
+CPU per wall second, and slower than the same work run serially. The rest of the task 11
+picture is in `RUN.md`.
 
 Two rows are unusual for reasons the table cannot show. **ActionScript** prints a fixed
 2354-byte ASCII-art banner to stdout before the program's first line — the AIR runtime's own
@@ -458,6 +467,136 @@ composite file element type, so tasks 14 and 15 move one character per call thro
 construct — four `process` blocks plus a collector that waits for all four — but GHDL schedules
 every process on **one OS thread** (`--threads=N` is parsed but dead), so the cell is
 correct-answer-no-speedup: 2422 s against task 02's 2430 s.
+
+**Standard ML** is Poly/ML 5.9.1, the only one of the three implementations that can be a row
+here, and the reason is task 11. Poly/ML's `Thread.Thread.fork` reaches
+`PolyThreadForkThread`, whose Windows arm is literally `CreateThread(NULL, 0, NewThreadFunction,
+newTaskData, 0, NULL)` in `libpolyml/processes.cpp`, so the four workers are real OS threads
+with no green fallback and no setting to turn it on: measured **3.30x** on four workers inside
+one process. **SML/NJ** was rejected as the primary because its only Windows build is 32-bit
+(`smlnj-110.99.8.msi`, `boot.x86-win32`) and its CML threads are green, and **MLton** was
+rejected outright because it has no concurrency at all, which would make task 11 unreachable —
+the same reason AWK was removed from this benchmark. Installing Poly/ML is a lesson in how
+little the Windows distribution contains: the release's only Windows asset is a 3.03 MB MSI
+whose complete payload is **three files** (`PolyML.exe`, `PolyLib.dll`, `PolyPerf.dll`) with no
+`polyc`, no `poly` launcher and no import library, so the row builds a `polystub.obj` from the
+matching source tarball's `libpolymain/polystub.c`, makes `libpolyml.a` with
+`gendef`/`dlltool` over `PolyLib.dll`, and drives the two steps `polyc` would have driven by
+hand: `PolyML.exe -q --error-exit --script <drv>.ML` exports a whole heap image to a `.obj`, and
+`gcc -Wl,-u,WinMain -mconsole` links it. **`PolyLib.dll` has to sit beside the produced
+executable** — without it the program dies before `main` with `STATUS_DLL_NOT_FOUND` and no
+output at all. There is no build step at run time, and an exported program that does nothing
+takes **65 ms**, which is the floor under all fifteen cells. Three things about the row are
+worth knowing. Task 10 needs no hand-rolled limbs: `IntInf` is in the Basis and the row uses it
+directly, at 0.24 s for 1000 digits. Task 07 is quadratic by design and is the row's slow cell
+by two orders of magnitude — `string` is immutable and `^` copies, so a million appends copy
+about 5x10^11 bytes and take **95.4 s**, the same figure Racket's one-copy cell records. And
+task 03 needs two things at once, not one: the helper in its own file *and*
+`PolyML.Compiler.maxInlineSize := 0` set **before** the helper is loaded. Poly/ML has no
+per-function no-inline annotation, and a separate file alone is not enough — the assembly dump
+shows the "call" compiled to the same `AddRR64 rax <= 2` as a hand-inlined `v + 1`, and 100
+million of them took 0.063 s. With the knob the assembly contains
+`CallAddress CODE "add_one(1)"`. Two more deviations are recorded: task 14 reads in
+**65536-byte** chunks because a 1 MiB `BinIO.inputN` over this file is correct only 3 times in
+24, dying with `Run out of store - interrupting threads` the rest of the time — the cause is
+that Poly/ML's `defaultSpaceSize` is exactly 1 MiB of words, so a 1 MiB request is one whole
+segment — and task 15 flushes and closes because no `fsync` is reachable on Windows: `Posix` is
+not built there, no `FlushFileBuffers` call exists anywhere in the 5.9.1 tree, and `BinIO`
+streams are opaque so there is no handle for the FFI to take. Binary I/O itself works and is
+byte-exact, which had to be proven rather than assumed: `data.bin` has a 0x1A at offset 26, and
+`BinIO` delivers it as data while `TextIO` on the same bytes stops at 12 and translates the CRs
+away.
+
+**Terra** is a Lua-embedded low-level language, and its row has one property no other row has:
+**the interpreter will not start at all without a Visual Studio developer console**. Before the
+user's file is opened, `terralib.lua` runs a toolchain probe that wants `VCINSTALLDIR` or the
+`KitsRoot10` registry key, and this host has neither MSVC nor the Windows SDK, so
+`print("hello terra")` dies with `Can't find windows SDK version 8.1 or 10!` and exit code 1.
+The fix is to satisfy the probe's first branch with the toolchain that is present: `VCINSTALLDIR`
+only has to be **non-nil** — it is a switch, and the directory it names is never read unless
+Terra is asked to link — and `INCLUDE` points at the local mingw-w64 headers, which is what lets
+the bundled clang find `windows.h`. Nothing links, so no MSVC is needed. Terra ships as a 61 MB
+`.7z` holding a 158 MB `terra.exe` that has LLVM 22.1 and clang inside it, and its start-up floor
+is **36-50 ms**, which is the opposite of what that size suggests: no LLVM backend is
+initialised until the first `terra` definition is compiled. Task 03 needs no substitute for a
+missing marker — Terra has a real one, `setinlined(false)`, which sets LLVM's `noinline` — and
+without it the cross-file call is inlined anyway and the whole hundred-million-iteration loop
+reduces to `smax(n, 0)`, i.e. it is deleted. Task 11 is four `CreateThread` workers through
+`includec("windows.h")`, measured at **3.72x** with four distinct thread ids and a process
+CPU/wall ratio of 4.75, so it is a plain pass rather than a correct-answer-no-speedup cell; that
+cell's 1.28 s is mostly the 1.3-1.7 s header parse, since it is the only task that includes a C
+header. Task 07 is honestly quadratic in Lua strings, at **176-454 s** for the million appends —
+the spread is the host, not the row, because the cell copies 465 GiB and this machine is
+memory-bandwidth-bound — and task 15 **syncs for real**: `_commit`, the CRT's `fsync`, resolves
+and returns 0, so this row is *not* in the flush-and-close group. Two traps shaped the sources.
+`terralib.includec("windows.h")` needs one extra flag, `-fgnuc-version=4.2.1`, because Terra's
+clang runs in MSVC mode on Windows while mingw-w64's `_mingw.h` defines `__attribute__(x)` away
+when `__GNUC__` is undefined; and `C.printf` from `includec("stdio.h")` **kills the process
+silently** with exit code 5 and no diagnostic, because mingw-w64 renames `printf` to
+`__mingw_printf` and the JIT cannot resolve that symbol out of the static archive, so the row
+prints through Lua.
+
+**Dyalog APL** is the second APL-family row and, like the J row, it is written deliberately
+against the grain: explicit `:While`/`:Select`/`:If`, element-at-a-time amend, and no array
+primitive doing the work in bulk — no `+/`, no `+.×`, no `+/'h'=text`. It is also the row whose
+licence question had to be settled first: Dyalog normally wants a serial number, and the answer
+is that an **unregistered** interpreter runs a script with nothing at all on stdout or stderr —
+`dyascript.exe -script <file>` prints only the program's own bytes, the `UNREGISTERED` banner is
+interactive-mode-only and goes to stderr, and no ActionScript-style offset is needed. Two
+settings are load-bearing in every file: `⎕IO←0` and **`⎕PP←17`**, because the default `⎕PP` is
+10 and `⍕` of task 02's total then prints `7.500000075E15` instead of the exact digits, which
+would make every numeric cell `WRONG`. Dyalog has **no 64-bit integer type and no bignum** —
+`⎕DR` of `2*62` is 645, a 64-bit float, and `2*53+1` is `2*53` — so task 10 hand-rolls
+sign-magnitude base-1e9 limbs like the Janet row, and the arithmetic argument is the same one:
+the spigot's largest multiplier is 23200 at 1000 digits, so a limb times a multiplier stays
+inside the 2^53 where a double is exact. All fifteen expected outputs are below 2^53, so the
+row is exact throughout. Task 11 is the language's own `&` spawn with `⎕TSYNC` as the join, and
+it is a **correct-answer-no-speedup** cell, measured rather than assumed: four spawned workers
+consume **0.99 cores** (124.05 s CPU in 125.24 s wall), four 5 M-iteration workers take 4.12x
+the time of one, and the threaded form is *slower* than the identical serial work because the
+spawn and `⎕TSYNC` bookkeeping is pure overhead. That puts Dyalog in the CPython/CRuby/Simula
+class and is not the J row's position, where `T.`/`t.` measure 1.7x. Task 07 is a recorded
+deviation in the Raku/Erlang/Elixir/Eiffel/Seed7/J class — `text,←'x'` appends in place, and the
+loop is linear (31/79/156/297 ms at 100k/200k/400k/800k) where a quadratic copy would quadruple
+per doubling — and task 15 flushes rather than fsyncs. Two structural facts cost real time. A
+**dyadic tradfn is declared infix** — the header is `∇ r←a badd b`, not `∇ r←badd a b`, and the
+second form is not a syntax error, it silently defines a function named `a` and fails later as
+an undefined name at the call site. And APL is **right-associative**, so `ai-bi-borrow` parses as
+`ai-(bi-borrow)`, the same trap the J row records for `i * n + j`; every such expression in the
+row is parenthesised. One more property of the language shapes every file: a **dfn cannot
+contain control structures** ("dfns do not support control structures or branch"), so every
+function here is a tradfn, and locals must be declared after the semicolon in the header or they
+are globals — which in a threaded program is a data race rather than merely a leak.
+
+**Nelua** is a Lua-syntax language that compiles to C and then to a native binary, so its
+executable starts in the same time as a C one — measured, an empty Nelua program's minimum is
+0.0135 s against 0.0136 s for an empty C program compiled by the same gcc. There is no VM and
+nothing to install at run time; the toolchain is the git repository itself, and the row needed
+one thing built from it: the host's Lua 5.4.6 cannot run the compiler because Nelua's
+`runner.lua` requires the C modules `lfs`, `hasher` and `lpeglabel`, which are not installed and
+cannot be added without `luarocks`, so the repository's own bundled interpreter is built once
+with `mingw32-make` from `src/onelua.c` and its companions in 24 s. `-r` (`--release`) is this
+compiler's `-O2` equivalent — literally `gcc ... -O2 -DNDEBUG` — and it also turns on the
+compiler's `nochecks` pragma; `-M`/`--maximum-performance` is deliberately not used, because it
+adds `-Ofast -march=native -flto=auto`, which is past "normal optimization flags". Three cells
+carry a disclosure. Task 03 needs the helper in its own file **and** `<noinline>`, because
+Nelua's compiler concatenates every required module into one C translation unit, so gcc sees the
+helper's body and deletes the loop after inlining — measured, a plain cross-file call gives
+0.0000 s against 0.0227 s with the annotation. Task 07 is honestly quadratic, because a Nelua
+`string` is immutable and `..` allocates and copies; `lib/stringbuilder.nelua` ships with the
+standard library and is deliberately not used, the same disclosure Haxe makes for `StringBuf`.
+And task 15 syncs for real through `_commit`, reachable with Nelua's own C-interop annotation,
+so this row is not in the flush-and-close group either. Task 11 is four real OS threads through
+`require 'C.threads'` — the standard library's C11 binding, which is Nelua's own facility rather
+than a third-party extension — measured at **3.5x** on four workers, with the GC's own
+`nogc` pragma needed because a garbage-collected allocator shared across raw `CreateThread`
+threads is not safe. Task 05 leaves the collector on, which is Nelua's default allocator: it
+wraps `malloc`/`free` and registers every pointer in a hashmap, running a conservative
+stop-the-world mark-and-sweep when tracked memory doubles, and ten million 64-byte allocations
+never take tracked memory above 32 KB. One measurement worth keeping: task 09's `fib(40)` prints
+in 0.107 s, which is faster than 331 million real calls should be, and the cause is gcc, not the
+language — a plain C program with the same function and flags measures 0.115-0.119 s on the same
+host, so the C row and this one are doing the same thing.
 
 ## Rules
 
@@ -914,6 +1053,10 @@ nothing else.
 | JScript | cscript (WSH) |
 | AutoHotkey | v2 |
 | VHDL | ghdl |
+| Standard ML | Poly/ML |
+| Terra | terra |
+| Dyalog APL | dyalog |
+| Nelua | nelua |
 
 Missing a toolchain means the cell says `SKIPPED`. It never counts as zero. The same goes
 for a language that cannot do a task at all, such as a language with no threads trying
@@ -977,6 +1120,8 @@ of magnitude too slow, not for being impossible.
 |---|---|
 | Object Pascal | The `pascal` row *is* Object Pascal — `fpc` in `{$mode objfpc}`. "Not Delphi" is exactly what Free Pascal is. |
 | Turbo Pascal mode | `fpc -Mtp` is the same compiler as the `pascal` row, so it would be a second column for one implementation. It does work: `-Mtp` keeps `Int64`, and a task-02 program compiled that way prints the exact total. |
+| SML/NJ | A second implementation of the Standard ML row, not a second language, and the weaker one: its only Windows build is 32-bit (`smlnj-110.99.8.msi`, `boot.x86-win32`) and its CML threads are green, so its task 11 could only ever be a correct-answer-no-speedup cell. Poly/ML gives real `CreateThread` threads and a 64-bit build. |
+| MLton | Also a Standard ML implementation, and it cannot be a row at all: it has **no concurrency of any kind**, so task 11 is unreachable and the row could never be complete — the same reason AWK, Squirrel, Oberon-2 and BCPL were removed. It is the fastest SML compiler, which is exactly why the exclusion is worth recording: the speed is not worth a partial row. |
 
 **Written, then removed.**
 
@@ -1025,8 +1170,12 @@ mind.
   Every row that hand-writes the base-1e9 limbs for task 10 pays more for it than for
   anything else — VBScript takes about 1.4 minutes at 1000 digits, and `a68g`, whose
   interpreter is around 900x slower than C on limb arithmetic, about 7.5 minutes. The
-  slowest cell that is not task 10 is **Racket task 07 at 1121 s**, where appending to an
-  immutable string copies about 5x10^11 bytes in total. `RUN.md` records the measurements,
+  slowest cell that is not task 10 is **Janet task 07 at 2266 s** and **Racket task 07 at
+  1121 s**, where appending to an immutable string copies about 5x10^11 bytes in total. Four
+  rows of the newest batch put their slow cell in the same place and for the same reason —
+  Standard ML at 95-96 s, Nelua at 68-89 s and Terra at 176-454 s all copy the whole string per
+  append, and Dyalog APL is the exception that proves the rule, at 375 ms, because `,←` grows
+  in place. `RUN.md` records the measurements,
   and for `a68g` the two options for it.
 - Wrong output means `WRONG` and the timing is thrown away.
 - Everything pinned to one core, except task 11 which gets four.

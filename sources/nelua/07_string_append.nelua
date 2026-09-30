@@ -1,0 +1,38 @@
+-- task 07 string_append — expected output: 1000000
+-- build: cmd.exe /c "..\..\tools\nelua\nelua.bat" -r -o 07_string_append.exe 07_string_append.nelua
+-- run: ./07_string_append.exe
+-- measured: 68.25 s, 72.95 s and 88.64 s wall clock for the full million appends on a
+--       host that was shared with another benchmark; the 800000-append point of the same
+--       code measured 20.3 s earlier in the day and 60.0 s later under load, so the
+--       absolute seconds for this cell depend heavily on how busy the machine is (the
+--       loop is allocation-bound: it allocates a fresh buffer on every one of the
+--       million iterations).
+-- note: Nelua's `string` is immutable — `..` allocates a fresh buffer, copies the
+--       accumulator into it and then appends the new bytes — so this loop copies about
+--       5x10^11 bytes over the million iterations. That is the quadratic copy the task
+--       exists to measure, and this is the row's slowest cell by two orders of
+--       magnitude.
+-- note: measured on this host, built with -r, one run to 800000:
+--         100000 appends   0.3228 s
+--         200000 appends   0.9763 s   (3.02x)
+--         400000 appends   4.2861 s   (4.39x)
+--         800000 appends  20.3444 s   (4.75x)
+--       about 4x per doubling, which is the quadratic curve; the full 1000000-append
+--       run is in the region of 40 s [INFERENCE from the measured scaling].
+-- note: the standard library ships lib/stringbuilder.nelua, a growable buffer that
+--       would make this linear, and it is deliberately not used: that would measure a
+--       different program. It is the same disclosure the Haxe row makes for StringBuf
+--       and the SystemVerilog and Beef rows make for their mutable strings.
+-- note: the printed value is the length, so the loop cannot be deleted.
+-- note: `require 'string'` is required for `..` itself: Nelua's concatenation operator
+--       is defined by the string module, and without it the compiler rejects
+--       `text .. 'x'` with "invalid operation between types 'string' and 'string'".
+require 'string'
+
+local text: string = ''
+
+for i = 1, 1000000 do
+  text = text .. 'x'
+end
+
+print(#text)

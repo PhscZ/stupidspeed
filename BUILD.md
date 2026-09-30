@@ -7,7 +7,7 @@ Convention below: `<task>` is the task's own name, so the source for task 01 in 
 `sources/c/01_branches.c`, and the output is `prog`. Add the thread flag where a language
 needs one, because task 11 uses four threads.
 
-Thirteen things do not follow the flat `<task>.<ext>` layout, and each says why:
+Fourteen things do not follow the flat `<task>.<ext>` layout, and each says why:
 
 - **C#, F# and VB.NET** keep a folder per task (`01_branches/01_branches.csproj`) because the
   .NET SDK does not support several projects in one directory: `dotnet build` with no project
@@ -63,7 +63,17 @@ Thirteen things do not follow the flat `<task>.<ext>` layout, and each says why:
   rather than necessity: Seed7 has no no-inline marker at all, and `s7c` emits one C translation
   unit whatever the file split, so its helper is inlined anyway; and AutoHotkey has no inlining
   pass to defeat, so its `#Include` split is the row's cross-file convention. Neither row claims
-  a real call on that account.
+  a real call on that account. **Terra, Nelua and Standard ML task 03** join this group with
+  `03_func_sum_add_one.t`, `.nelua` and `.sml`. Terra and Nelua have real no-inline facilities
+  (`setinlined(false)` and `<noinline>`), and both need them *as well as* the file split — Terra
+  inlines a plain cross-file call and then deletes the loop, and Nelua concatenates every
+  required module into one C translation unit, so the same thing happens. Standard ML has no
+  per-function marker at all and needs `PolyML.Compiler.maxInlineSize := 0` set before the
+  helper is loaded, because a separate file alone is not enough there either.
+- **Standard ML** keeps a build driver per task, `build/<task>.ML`, holding
+  `use "<task>.sml"; PolyML.export ("<task>", main);`, because the MSI ships no `polyc` and the
+  two steps it would have driven are run by hand (see the toolchain table). The task sources
+  themselves are flat: `01_branches.sml` … `15_file_write.sml`.
 
 Swift is flat like everything else: `swiftc -O -o prog <task>.swift`. The rule that top-level
 code needs a file called `main.swift` only applies when several files are passed in one
@@ -98,7 +108,7 @@ builds on Windows too, including `flang` and `luajit`. The one row that is *not*
 `assembly`: it is a freestanding ELF64 binary built with `nasm -f elf64` and `ld`, so it is
 Linux x86-64 only. See `RUN.md` for the full platform breakdown.
 
-Disk: **30 GB measured** for all 92 toolchains, installed and run on one Windows x64 host.
+Disk: **31 GB measured** for all 96 toolchains, installed and run on one Windows x64 host.
 The heavy terms are LLVM (4.0 GB), Swift (3.2 GB), the AIR SDK (1.6 GB), GNAT with its MSYS2
 runtime (1.8 GB, which also supplies `flang`), MSVC (1.2 GB once reassembled from a 2.5 GB
 layout), Julia (1.1 GB), Perl (1.0 GB), the .NET SDK (0.7 GB) and GraalVM (0.7 GB); most other
@@ -121,6 +131,15 @@ Beef 845 MB, the Scala Native pair (scala-cli 131 MB plus the portable llvm-ming
 27 MB of Scala Native artifacts in the package cache), the SWI-Prolog tree 133 MB, Haxe with
 Neko and hxcpp 112 MB, GHDL 72 MB, the Seed7 tree 65 MB (from a 47 MB source tree, once its
 build objects exist), Ring 19 MB, J 16 MB, Janet 8 MB, Chez Scheme 7 MB and AutoHotkey 4.4 MB.
+The four rows after those add about 1.3 GB and are dominated by one term: **Dyalog at 855 MB**,
+whose Windows distribution is an interpreter tree rather than a single binary (the 20.0 zip is
+256 MB and the extracted tree carries the interpreter, the SALT library and the .NET bridge).
+The rest are small: **Terra at 403 MB** — a 61 MB `.7z` holding a 341 MB tree whose `terra.exe`
+is 158 MB because LLVM 22.1 and clang are inside it — then **Poly/ML at 11 MB** (the MSI's whole
+payload is three files, plus the tarball's stub and a 187 KB import library) and **Nelua at
+6 MB**, which is the git repository and its 502 KB self-built interpreter. Terra needs no MSVC
+and no Windows SDK, and Nelua's interpreter is 502 KB because it is the repository's own
+`src/onelua.c` build, not a separate Lua install.
 Budget another 2-3 GB of scratch space while reassembling MSVC and Swift, since both go
 through a multi-gigabyte download that is deleted afterwards. Package caches do not count and
 can be far larger than the toolchains themselves.
@@ -133,6 +152,12 @@ is the practical way to get a working `flang` on Windows.
 ## Toolchains
 
 ### Compiled to native code — nothing needed at run time
+
+The output is a native executable in every row below, and for most of them that executable needs
+nothing but the operating system. Three rows are exceptions and say so in their own entry: Vala's
+binary imports `libglib-2.0-0.dll` whenever the code touches GLib, COBOL's imports `libcob-4.dll`,
+and Standard ML's needs `PolyLib.dll` beside it — in that last case the exported `.obj` is a whole
+heap image and the DLL is the runtime that loads it, so the pair has to travel together.
 
 | Language | Toolchain | Minimum | Install | Build |
 |---|---|---|---|---|
@@ -178,6 +203,8 @@ is the practical way to get a working `flang` on Windows.
 | Eiffel | eiffelstudio | 25.12 | ftp.eiffel.com/pub/download, win64 `.7z` (139 MB) extracted — no admin, no activation | `ec -batch -finalize -c_compile -config stupidspeed.ecf -target tNN`, run from `sources/eiffel/`; the executable is `EIFGENs/<tNN>/F_code/prog.exe`. `-finalize` is the optimisation — EiffelStudio has no `-O` level, its knob is the compilation mode (`-melt`, `-freeze`, `-finalize`). The delivery ships its own MinGW gcc 4.4.5, so no MSVC is needed. One ECF carries all 15 targets, and only task 11 sets the concurrency capability to `thread`. |
 | Seed7 | s7c | 2026-07-11 (interpreter 5.4.10, s7c 3.5.10) | source release `seed7_05_20260711.tgz` (4.5 MB), built with MSYS2's MSVCRT MinGW gcc: `cp mk_msys.mak makefile`, `make -f mk_msys.mak depend`, `make -f mk_msys.mak`, `make -f mk_msys.mak s7c` | `s7c -O2 prog.sd7` -> `prog.exe`. **There is no output-name flag**: s7c names the executable after the source file and writes it beside the source, so the build copies the task to `prog.sd7` in a scratch directory first. `-O2` is required — without `-O` s7c passes no optimisation flag to the C compiler it drives. |
 | Scala | native | 0.5 (0.5.12 measured) | scala-cli plus a C toolchain; on Windows the portable llvm-mingw zip, no admin | `scala-cli --power package <task>.scala --native -S 3.9.0 --native-version 0.5.12 --native-mode release-fast --native-clang <llvm-mingw>/bin/clang.exe --native-clangpp <llvm-mingw>/bin/clang++.exe --native-compile=-D_PID_T_ --native-linking=-static -o prog.exe`, then `prog.exe`. Builds `sources/scala/`, the same fifteen files as the `jvm` row. `--native-mode release-fast` is mandatory: the default `debug` mode compiles with `-O0` and measured 0.270 s against 0.074 s on task 02. |
+| Standard ML | Poly/ML | 5.9.1 | github.com/polyml/polyml releases, `PolyML5.9.1-64bit.msi` (3.03 MB), extracted with `msiexec /a <msi> TARGETDIR=<dir> /qn` — no admin. **v5.9.2 is newer but has no Windows asset at all**; 5.9.1 is the one. | Two steps, and they are the two `polyc` would have driven, because the MSI ships no `polyc` and no import library (see below): `PolyML.exe -q --error-exit --script build/<task>.ML` exports a whole heap image to `<task>.obj`, where the driver file contains `use "<task>.sml"; PolyML.export ("<task>", main);`, then `gcc -Wl,-u,WinMain -mconsole -o prog.exe <task>.obj polystub.obj -Ltools/polyml -lpolyml`. **`PolyLib.dll` must sit beside the produced executable** or it dies before `main` with `STATUS_DLL_NOT_FOUND` and no output. Task 03 loads `03_func_sum_add_one.sml` with `use` and sets `PolyML.Compiler.maxInlineSize := 0` **before** it — a separate file alone is not enough. Task 14 reads in 65536-byte chunks. |
+| Nelua | nelua | 0.2.0-dev (`a5845056`) | `git clone --depth 1 https://github.com/edubart/nelua-lang tools/nelua` (6 MB, no installer, no admin), then build the repository's own Lua interpreter once: `mingw32-make` in `tools/nelua/`, which compiles `src/onelua.c` with its `lfs`, `hasher` and `lpeglabel` companions into `nelua-lua.exe` (24 s). The host's own Lua cannot run the compiler: `runner.lua` requires those three C modules and there is no `luarocks` here to add them. | `cmd.exe /c tools/nelua/nelua.bat -r -o prog.exe <task>.nelua`, run from `sources/nelua/` — the launcher has to go through `cmd.exe`, and `require` resolves against the **working directory**, not the source file's, so the build must run from the row's directory (`-L sources/nelua` also works). `-r` (`--release`) is this compiler's `-O2` equivalent, literally `gcc ... -fwrapv -fno-strict-aliasing -O2 -DNDEBUG`, and it also turns on the compiler's `nochecks` pragma; `-M`/`--maximum-performance` is deliberately not used because it adds `-Ofast -march=native -flto=auto`. Task 03's helper is in its own file **and** marked `<noinline>`: Nelua concatenates every required module into one C translation unit, so a plain cross-file call is inlined and the loop is deleted. |
 
 ### Compiled to bytecode — the VM is needed on every run
 
@@ -241,8 +268,10 @@ time is zero. Everything is paid at run time.
 | Ring | ring |
 | JScript | cscript (WSH) |
 | AutoHotkey | v2 |
+| Terra | terra |
+| Dyalog APL | dyalog |
 
-Sixteen of these need more than a run command.
+Eighteen of these need more than a run command.
 
 **Dolphin** is
 `Dolphin8 DPRO.img8 -u -f <task>.st -q`, the same form Dolphin's own `TestDPRO.cmd` uses.
@@ -658,6 +687,71 @@ measured 2422 s against task 02's 2430 s is 1.003x, i.e. noise. The row is slow 
 reason rather than a language one: under mcode a 64-bit vector add costs about **17 µs** against
 about **9 ns** for a 32-bit `integer` add, which is what turns a 1.5 s task into a 40-minute one.
 
+**Terra** is a 61 MB Windows `.7z` (`terra-Windows-x86_64-<hash>.7z`) whose `bin/terra.exe` is
+158 MB — LLVM 22.1 and clang are inside it — extracted with 7-Zip; no installer, no registry,
+no admin. Nothing is linked at build time, so **no MSVC and no Windows SDK are needed**, but
+the interpreter will not start without one of them unless it is told otherwise: `terralib.lua`
+runs a toolchain probe before it opens the user's file, and with neither `VCINSTALLDIR` nor the
+`KitsRoot10` registry key it aborts with `Can't find windows SDK version 8.1 or 10!` and exit
+code 1 — for `print("hello terra")`, not just for a program that links something. The fix is to
+satisfy the probe's first branch with the toolchain that *is* on the machine: `VCINSTALLDIR`
+only has to be **non-nil** (it is the switch, and the directory it names is never read unless
+Terra is asked to link), and `INCLUDE` must point at a C sysroot — this repository's existing
+`tools/llvm-mingw/include` — because that is what the bundled clang is given as `-I` entries
+when a task includes a C header. `LIB` is read only by `terra.getvclinker` and is set to keep
+that call from failing on a `nil`. Two traps shaped the sources. `terralib.includec("windows.h")`
+needs one extra flag, `-fgnuc-version=4.2.1`: Terra's clang runs in **MSVC mode** on Windows
+(`terralib.lua` applies that flag on every platform except Windows), while mingw-w64's `_mingw.h`
+defines `__attribute__(x)` away when `__GNUC__` is undefined, so without it the header tree fails
+with 4583 errors inside `mmintrin.h`. And `C.printf` from `includec("stdio.h")` **kills the
+process silently** — exit code 5, no diagnostic — because mingw-w64 renames `printf` to
+`__mingw_printf` through `__MINGW_ASM_CALL` and that symbol lives in a static archive the JIT
+cannot resolve; the row therefore prints through Lua. Task 03 needs no substitute for a
+no-inline marker, because Terra has a real one, `setinlined(false)`, which sets LLVM's
+`noinline`; without it the cross-file call is inlined anyway and the whole
+hundred-million-iteration loop reduces to `smax(n, 0)` — it is deleted, not merely fast. Task 11
+is four `CreateThread` workers through `includec("windows.h")`, real threads measured at 3.72x
+with four distinct thread ids and a process CPU/wall ratio of 4.75; that cell's ~1.3 s is mostly
+the header parse, since it is the only task in the row that includes a C header. Task 15 **syncs
+for real**: `_commit` (the CRT's `fsync`, `FlushFileBuffers` underneath) resolves and returns 0,
+so this row is not in the flush-and-close group — but note that `_commit(-1)` does not return
+-1, the CRT's invalid-parameter handler terminates the process, so it is only ever called on a
+descriptor the program just opened. Binary modes are mandatory: text mode wrote 6 bytes for
+`"A\nB\n"` against 4 in binary, because a CR is inserted before every LF.
+
+**Dyalog APL** is a 20.0 Unicode Windows distribution, and the download page offers it as a
+**zip** containing `setup.exe` and `setup_64_unicode.msi`; the MSI is extracted with
+`msiexec /a <msi> /qn TARGETDIR=<dir>`, the same no-admin route SBCL, Raku and Janet use, and
+the interpreter tree then moves as a unit. There is no portable interpreter-only package on any
+platform — Linux gets `.deb`/`.rpm`, macOS a `.pkg` — so this is the only route. Two things
+about it matter more than the install. First, **it runs unregistered**: no licence file, no
+serial, no registration step, and `dyascript.exe -script <file>` writes nothing at all to stdout
+or stderr at start-up, so the row's cells are the program's own bytes and no ActionScript-style
+offset is needed. The `UNREGISTERED - not for commercial use` banner is interactive-mode-only
+and goes to **stderr**. Second, the right binary is `dyascript.exe`: `dyalog.exe`,
+`dyalogrt.exe` and `dyaedit.exe` are GUI-subsystem programs (PE subsystem 2) whose output never
+reaches a console, while `dyascript.exe` is the console one (subsystem 3). `-script` is
+mandatory rather than cosmetic — without it the interpreter does not run the file at all, it
+starts a Session. `⎕IO←0` and **`⎕PP←17`** are load-bearing in every file: the default `⎕PP` is
+10 and `⍕` of task 02's total then prints `7.500000075E15` instead of the exact digits, which
+would make every numeric cell `WRONG`. Dyalog has no 64-bit integer type and no bignum — `⎕DR`
+of `2*62` is 645, a 64-bit float, and `2*53+1` is `2*53` — so task 10 hand-rolls base-1e9 limbs.
+Three structural facts shape the whole row. **A dyadic tradfn is declared infix**: the header is
+`∇ r←a badd b`, not `∇ r←badd a b`, and the second form is not a syntax error — it silently
+defines a function named `a` and the failure surfaces later as an undefined name at the call
+site. **APL is right-associative**, so `ai-bi-borrow` parses as `ai-(bi-borrow)`, the same trap
+the J row records for `i * n + j`. And **a dfn cannot contain control structures** — "dfns do
+not support control structures or branch" — so every loop in this row lives in a tradfn, with
+its locals declared after the semicolon in the header, because an undeclared name assigned
+inside a tradfn is a global, which under task 11 is a data race rather than merely a leak. Task
+11 is the language's own `&` spawn joined by `⎕TSYNC`, and it is a correct-answer-no-speedup
+cell measured rather than assumed: four workers consume 0.99 CPU per wall second, four 5 M
+workers take 4.12x the time of one, and the threaded form is slower than the identical serial
+work. Task 07 appends in place (`text,←'x'`) and is linear; task 15 flushes rather than fsyncs,
+because the `⎕N*` foreign functions contain no flush, sync or `FlushFileBuffers` operation —
+`⎕NA` could call `kernel32|FlushFileBuffers` directly, but that is a DLL call the task did not
+ask for, so the deviation is recorded rather than taken.
+
 VBScript and JScript are also the rows here that are being withdrawn. Microsoft's phased
 deprecation makes the Windows Script Host engines a Feature on Demand in Windows 11 24H2 —
 present and enabled at first — then disables them by default, and finally removes them;
@@ -700,6 +794,9 @@ and the slowest thing on this page to set up.
 | octave-cli | nothing but its own `post-install.bat`, run once through `cmd.exe` from the extracted root before the first start. It converts the root to 8.3 form, writes `mingw64/bin/qt.conf` with absolute `Prefix` paths, runs `bash --login -c echo` to register the MSYS environment, rebuilds the fontconfig cache and runs `pkg rebuild`; on this host it prints one complaint from the MSYS login shell's `PATH` walk, which is not an Octave error, and exits 0. |
 | chez | a MinGW gcc and GNU Make, because there is no no-admin Windows binary to unpack. The build runs from the MSYS2 UCRT64 shell with `mingw-w64-ucrt-x86_64-gcc` (plus `pacman -S make`) and bootstraps from the bytecode boot files in `boot/pb`, so no existing Chez is needed; zlib has to be built once **serially** in each workarea first, because under `make -j8` both `pb/zlib` and `ta6nt/zlib` die with `collect2.exe: error: ld returned 32 exit status` and `libz.a` is missing at link time. `make install` does not work either — `makefiles/installsh` is a `/bin/sh` script that `zuo` hands to `cmd.exe` — so the four installed files are placed by hand. |
 | ring, for task 11 only | the Threads extension, which the light release does not ship: `bin/load/threads.ring`, `extensions/ringthreads/{ring_threads.c,ring_threads.rh,threads.ring}` and its bundled `tinycthread/{tinycthread.c,tinycthread.h}` from the `v1.27` tag, compiled with `gcc -O2 -shared -o bin/ring_threads.dll ring_threads.c -I../../language/include ../../bin/ring.dll`. The light release carries the headers and the import library, so no MSVC is needed, and the DLL must end up beside `ring.exe` in `bin/`, which is where the loader looks. |
+| poly/ml | a C compiler **and three files the MSI does not ship**, all built once from the matching source tarball (`polyml-5.9.1.tar.gz`). The MSI's complete payload is `PolyML.exe`, `PolyLib.dll` and `PolyPerf.dll` — no `polyc`, no `poly` launcher, no import library, no `libpolymain` — so the row builds them: `gcc -c -O2 -o polystub.obj src/polystub.c` (with `winconfig.h` and `polyexports.h` beside it, which `polystub.c` includes) for the `WinMain` start-up stub, and `gendef PolyLib.dll && dlltool -d PolyLib.def -l libpolyml.a -D PolyLib.dll` for the link library (247 exports). `polyc` is a shell script and there is no `sh` in the MSI, which is why the two steps it performs are driven by hand. MinGW gcc is enough; MSVC is not needed. |
+| terra (Windows) | a **non-nil `VCINSTALLDIR`** and an `INCLUDE` pointing at a C sysroot, or the interpreter will not start at all — see the paragraph below. `LIB` is needed only by `terra.getvclinker`. On this host the sysroot is the `tools/llvm-mingw/include` tree that the Scala Native row already needs, so nothing extra is installed for Terra itself. No MSVC, no Windows SDK, and nothing is linked. |
+| nelua | a C compiler (the `gcc` the row already has) and a Lua 5.4 or 5.3 interpreter that has `lfs`, `hasher` and `lpeglabel`. The host's stock Lua does **not** — Nelua's `runner.lua` requires all three and there is no `luarocks` on this machine to add them — so the repository's own bundled interpreter is built once from `src/onelua.c` and its companions with `mingw32-make` in `tools/nelua/` (24 s), which is what `nelua.bat` then uses. |
 
 ## Things that are hard or not really possible
 

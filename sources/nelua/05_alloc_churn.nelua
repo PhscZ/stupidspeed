@@ -1,0 +1,47 @@
+-- task 05 alloc_churn — expected output: 1274991808
+-- build: cmd.exe /c "..\..\tools\nelua\nelua.bat" -r -o 05_alloc_churn.exe 05_alloc_churn.nelua
+-- run: ./05_alloc_churn.exe
+-- measured: 0.4238 s wall clock (min of 2 runs), against 0.3912 s for the ten million
+--       allocations as timed inside the program.
+-- note: which allocator is in play. Nelua's `default_allocator` resolves through
+--       lib/allocators/default.nelua to `gc_allocator` whenever the GC is enabled, and
+--       the GC is on by default (no flag, no pragma). So `new(@[64]byte)` is
+--       GCAllocator:alloc, which does two things: it calls
+--       `general_allocator:alloc`, i.e. plain C `malloc` from <stdlib.h>, and it
+--       registers the pointer in the collector's hashmap. lib/allocators/gc.nelua
+--       describes the collector itself as "a simple mark-and-sweep garbage collector …
+--       stop-the-world … conservative, that is, it scans the heap and stack memory
+--       assuming any bit pattern could be a pointer", with `pause = 200` meaning it
+--       starts a cycle once tracked memory has doubled. So the cell measures malloc/free
+--       *and* the collector's per-allocation bookkeeping and periodic sweeps.
+-- note: measured on this host with the collector active, reporting
+--       collectgarbage('count') every 1000 iterations:
+--         100000    allocations 0.0044 s, tracked memory never above 31.9 KB
+--         1000000   allocations 0.0421 s, never above 32.3 KB
+--         2000000   allocations 0.0827 s, never above 32.3 KB
+--         10000000  allocations 0.3912 s, never above 32.1 KB   <- this task's scale
+--       The cost is linear at about 39 ns per allocation. The collector is running
+--       throughout and is not the bottleneck, because only the 256 slots are reachable,
+--       so almost every buffer is garbage the moment it is dropped. With
+--       collectgarbage('stop') the same 1M loop took 0.2546 s (and 0.1699 s on a second
+--       run) and tracked memory grew to 61 MB — batch sweeping beats freeing one buffer
+--       at a time, and the 32 KB figure is what keeps peak memory flat.
+-- note: storing into `slots` is what the spec asks for and what makes the replaced
+--       buffer garbage for the collector — the same thing the C row's
+--       free(slots[slot]) does by hand, and the Janet row's `(put slots ... buf)`.
+--       Without the store the whole loop would be dead code.
+-- note: the total 1274991808 stays below 2^63, so it is exact.
+-- note: `require 'allocators.default'` is what brings `new` into scope.
+require 'allocators.default'
+
+local slots: [256]*[64]byte
+local total: integer = 0
+
+for i = 0, 9999999 do
+  local buf: *[64]byte = new(@[64]byte)
+  buf[0] = (@byte)(i % 256)
+  total = total + (@integer)(buf[0])
+  slots[i % 256] = buf
+end
+
+print(total)

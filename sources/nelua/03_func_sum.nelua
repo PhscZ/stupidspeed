@@ -1,0 +1,46 @@
+-- task 03 func_sum — expected output: 100000000
+-- build: cmd.exe /c "..\..\tools\nelua\nelua.bat" -r -o 03_func_sum.exe 03_func_sum.nelua
+-- run: ./03_func_sum.exe
+-- measured: 0.0502 s wall clock (min of 3 runs), against 0.0230 s for the call loop as
+--       timed inside the program. A hundred million calls in 23 ms sounds impossible,
+--       so it was checked against plain C: `__attribute__((noinline)) long long
+--       add_one(...)` called 1e8 times in a C loop built by the same gcc with the same
+--       -O2 takes 0.0277 s and 0.0279 s on this host, with a real `call` in the loop in
+--       the disassembly. 0.23-0.28 ns per iteration is what this CPU (i7-12700) does
+--       for a predicted call+return plus three more instructions.
+-- note: add_one lives in its own file, 03_func_sum_add_one.nelua, so the call crosses
+--       a module boundary, the same two-file shape the Fortran, Tcl, Vala, Racket and
+--       Janet rows use. `require` is Nelua's module import; the helper is declared
+--       `global function` because Nelua has no implicit globals, so a plain `function`
+--       would not be visible outside its own module.
+-- note: `require` resolves against the **working directory**, not the source file's
+--       directory: the default module search path is
+--       `.\?.nelua;.\?\init.nelua;<nelua lib>\?.nelua;<nelua lib>\?\init.nelua`.
+--       Running the compiler from anywhere else fails with
+--       `error: in require: module '03_func_sum_add_one' not found`. The build line
+--       above is therefore run from sources/nelua/; `-L sources/nelua` works too and
+--       was verified.
+-- note: the helper carries `<noinline>`. A separate file alone is NOT enough in Nelua:
+--       the compiler concatenates every required module into one C translation unit, so
+--       gcc sees the helper's body and inlines a plain cross-file call, after which the
+--       whole loop is dead code. Measured on this host with 1e8 calls, four variants:
+--         helper in the same file, plain      0.0000 s   (loop deleted)
+--         helper in the same file, <noinline> 0.0231 s
+--         helper in a second file, plain      0.0000 s   (loop deleted)
+--         helper in a second file, <noinline> 0.0227 s
+--       The generated C carries `static NELUA_NOINLINE int64_t
+--       n03_func_sum_add_one_add_one(int64_t n);` and calls it from the loop, and
+--       `objdump -d` of the built executable shows exactly one `call` to it inside the
+--       0x5f5e100-iteration loop. The spec allows "its own file, or mark it no-inline";
+--       Nelua needs the marker, so this row does both.
+-- note: the value stays below 2^63 and is printed as plain digits.
+require '03_func_sum_add_one'
+
+local N: integer = 100000000
+local value: integer = 0
+
+for i = 1, N do
+  value = add_one(value)
+end
+
+print(value)

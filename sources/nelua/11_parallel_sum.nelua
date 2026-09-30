@@ -1,0 +1,96 @@
+-- task 11 parallel_sum — expected output: 7500000075000000
+-- build: cmd.exe /c "..\..\tools\nelua\nelua.bat" -r -o 11_parallel_sum.exe 11_parallel_sum.nelua
+-- run: ./11_parallel_sum.exe
+-- note: the mechanism is the Windows API declared through Nelua's own C-interop
+--       annotation: `@cinclude '<windows.h>'` plus `CreateThread`/`WaitForSingleObject`/
+--       `CloseHandle`. Each worker is a real OS thread with its own stack, the four are
+--       started before any of them is waited for, and `WaitForSingleObject` on each
+--       handle is the join — the same shape the Oberon-07 row uses, and the same
+--       primitive that the standard library's `C.threads` binding ends up in (mingw's
+--       C11 `thrd_create` is a winpthreads wrapper around `CreateThread`).
+-- note: the alternative from the standard library is `require 'C.threads'`, which is
+--       also a real-thread route, but its prologue refuses to compile unless the whole
+--       program sets `## pragmas.nogc = true`:
+--       `static_error "multithreading and GC is not supported, please enable pragma
+--       'nogc'"`. Nelua's collector is conservative and scans the stack, so it cannot
+--       run with four threads. This source takes the same pragma for the same reason —
+--       it is set below — but reaches the OS directly, so it needs nothing from the
+--       standard library beyond the language itself.
+-- measured: 0.0422 s wall clock for the whole cell (min of 3 runs), against task 02's
+--       0.0455 s — the two do exactly the same work, one on four threads and one on one.
+--       The parallelism is real, but the cell is so short that process start-up eats most
+--       of the gain, which is the same situation the Scala Native row describes. The
+--       evidence is the in-process pair: the identical worker function run serially in
+--       one thread took 0.069-0.072 s and the four-thread run 0.018-0.024 s, i.e.
+--       3.0x-3.8x on four threads across repeated runs on a host that was shared with
+--       another benchmark. The four workers really are distinct OS threads:
+--       `GetCurrentThreadId` returns four different ids plus the main thread's, and
+--       `objdump -p` on the executable shows `CreateThread` imported from KERNEL32.dll.
+-- note: each worker owns a fixed quarter, so which one finishes first cannot change the
+--       answer. The partials are written into a module-level array and summed after all
+--       four joins, so there is no shared mutable state during the run and no data race.
+-- note: the total 7500000075000000 stays below 2^63, so the int64 sum is exact.
+## pragmas.nogc = true
+
+local function CreateThread(lpThreadAttributes: pointer, dwStackSize: usize,
+    lpStartAddress: function(pointer): uint32, lpParameter: pointer,
+    dwCreationFlags: uint32, lpThreadId: *uint32): pointer
+  <cimport, nodecl, cinclude '<windows.h>'>
+end
+
+local function WaitForSingleObject(hHandle: pointer, dwMilliseconds: uint32): uint32
+  <cimport, nodecl, cinclude '<windows.h>'>
+end
+
+local function CloseHandle(hObject: pointer): cint
+  <cimport, nodecl, cinclude '<windows.h>'>
+end
+
+local WORK: integer = 25000000
+
+local function work_range(t: integer): integer
+  local acc: integer = 0
+  for i = t * WORK, (t + 1) * WORK - 1 do
+    local m: integer = i % 4
+    if m == 0 then
+      acc = acc + 1
+    elseif m == 1 then
+      acc = acc + i
+    elseif m == 2 then
+      acc = acc + 2 * i
+    else
+      acc = acc + 3 * i
+    end
+  end
+  return acc
+end
+
+local args: [4]integer = {0, 1, 2, 3}
+local results: [4]integer
+
+local function worker(arg: pointer): uint32
+  local p: *integer = (@*integer)(arg)
+  results[$p] = work_range($p)
+  return 0
+end
+
+local handles: [4]pointer
+
+for i = 0, 3 do
+  handles[i] = CreateThread(nilptr, 0, worker, &args[i], 0, nilptr)
+  if handles[i] == nilptr then
+    print('CreateThread failed')
+  end
+end
+
+for i = 0, 3 do
+  WaitForSingleObject(handles[i], 4294967295_u32)
+  CloseHandle(handles[i])
+end
+
+local total: integer = 0
+for i = 0, 3 do
+  total = total + results[i]
+end
+
+print(total)

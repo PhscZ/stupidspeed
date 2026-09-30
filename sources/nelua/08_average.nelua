@@ -1,0 +1,23 @@
+-- task 08 average — expected output: 0.498046875
+-- build: cmd.exe /c "..\..\tools\nelua\nelua.bat" -r -o 08_average.exe 08_average.nelua
+-- run: ./08_average.exe
+-- measured: 0.0634 s wall clock (min of 3 runs), against 0.0467 s for the loop as timed
+--       inside the program.
+-- note: `-r` is this compiler's `-O2` equivalent (gcc `-O2 -DNDEBUG` plus the
+--       compiler's `nochecks` pragma); see 01_branches.nelua.
+-- note: `number` is a float64 and `integer` is int64, so `(@number)(i % 256) / 256.0`
+--       is a real conversion followed by a real division. Each reading is a multiple of
+--       1/256, which is exact in binary, and the total 49804687.5 is far below 2^53, so
+--       the sum is exact and every language prints the same digits.
+-- note: `print` on a float uses Lua's `%.14g`, which prints 0.498046875 in full.
+--       `string.format('%g', ...)` would round it to 0.498047, so plain `print` is used.
+--       Measured with the same value: print/tostring/%.9f/%.17g all give 0.498046875.
+-- note: measured on this host, built with -r: 0.0467 s for the 1e8-iteration loop.
+local total: number = 0.0
+
+for i = 0, 99999999 do
+  local reading: number = (@number)(i % 256) / 256.0
+  total = total + reading
+end
+
+print(total / 100000000)

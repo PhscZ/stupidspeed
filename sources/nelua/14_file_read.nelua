@@ -1,0 +1,50 @@
+-- task 14 file_read — expected output: 2389704704
+-- build: cmd.exe /c "..\..\tools\nelua\nelua.bat" -r -o 14_file_read.exe 14_file_read.nelua
+-- run: ./14_file_read.exe
+-- measured: 0.0693 s wall clock (min of 3 runs), against 0.0143 s for the whole 52428800
+--       bytes as timed inside the program. The file is read from the working directory,
+--       so this must be run from sources/nelua/.
+-- note: data.bin is 52428800 bytes, the bytes 0..255 repeating, opened from the working
+--       directory and read through the standard library's `io` module: `io.open` returns
+--       a `filestream` and `f:read(n)` returns a string of up to n bytes. It is read in
+--       1 MiB chunks, never a byte per call.
+-- note: the bytes are added one at a time in a loop, which is the per-byte accumulation
+--       the task asks for. **Nelua strings are 1-based** while arrays are 0-based, so
+--       the walk is `for i = 1, #chunk do`; under -r there is no bounds check, and a
+--       0-based loop over a string silently reads the byte before the buffer and drops
+--       the last one, which is exactly what a first draft of this file did (it printed
+--       2389692154, short by one byte per 1 MiB chunk). `f:read` returning a short chunk
+--       is handled by breaking only on a zero-length read, so no bytes can be skipped.
+--       The total before the modulus is 6684672000, far below 2^63, so the int64
+--       accumulator is exact, and the modulus is taken once at the end.
+-- note: deviation — chunked reads with a per-byte accumulation loop. Reading a byte at a
+--       time through the standard library would put a call and a buffer check on every
+--       byte and measure the I/O library rather than the file; the R and Octave rows
+--       record the same deviation in sources/r/14_file_read.R and 14_file_read.m.
+-- note: measured on this host, built with -r: 0.0143 s for the 52428800 bytes, sum
+--       6684672000, mod 2^32 = 2389704704. The same file read through raw C stdio
+--       measured the same 0.0143 s, so the io module's chunk read is not the cost.
+require 'io'
+require 'filestream'
+
+local CHUNK: usize = 1048576
+
+local f: filestream, err: string = io.open('data.bin', 'rb')
+if not f:isopen() then
+  print('cannot open data.bin: ' .. err)
+end
+
+local total: integer = 0
+while true do
+  local chunk: string = f:read(CHUNK)
+  if #chunk == 0 then
+    break
+  end
+  for i = 1, #chunk do
+    total = total + (@integer)(chunk[i])
+  end
+end
+
+f:close()
+
+print(total % 4294967296)
