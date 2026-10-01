@@ -150,18 +150,6 @@ int cmpSigned(const Big& a, const Big& b) {
     return a.neg ? -c : c;
 }
 
-// Value of the top k limb positions of x as a double; only used to seed a quotient guess.
-double topValue(const Big& x, size_t k) {
-    double v = 0.0;
-    const long long n = static_cast<long long>(x.d.size());
-    for (size_t p = 0; p < k; ++p) {
-        v *= 1e9;
-        const long long idx = n - static_cast<long long>(k) + static_cast<long long>(p);
-        if (idx >= 0 && idx < n) v += static_cast<double>(x.d[static_cast<size_t>(idx)]);
-    }
-    return v;
-}
-
 unsigned long long toU64(const Big& x) {  // magnitude, assumed to fit in 64 bits
     unsigned long long v = 0;
     for (size_t i = x.d.size(); i-- > 0;) {
@@ -170,34 +158,25 @@ unsigned long long toU64(const Big& x) {  // magnitude, assumed to fit in 64 bit
     return v;
 }
 
-// floor(num / den) with den > 0; the caller guarantees |num / den| < 1000000000.
+// floor(num / den) with den > 0. The spigot only ever asks for a quotient below a
+// hundred, which is what makes the repeated-subtraction loop below cheap.
 Big divFloorSmallQ(const Big& num, const Big& den) {
     const bool negative = num.neg;
     unsigned long long q = 0;
-    Big prod;  // den * q
     bool exact = true;
 
     if (cmpMag(num, den) >= 0) {
-        double est = topValue(num, 3) / topValue(den, 3);
-        for (size_t i = 0; i < num.d.size() - den.d.size(); ++i) {
-            est *= 1e9;
-        }
-        if (!(est >= 0.0)) est = 0.0;
-        if (est > 9.0e8) est = 9.0e8;
-        q = static_cast<unsigned long long>(est);
-
-        prod = mulMag(den, q);
-        while (cmpMag(prod, num) > 0) {
-            --q;
-            prod = subMag(prod, den);
-        }
+        // floor(|num| / |den|) by repeated subtraction, the same method the C row's
+        // big_quot uses. The spigot only ever asks for a small quotient, so this
+        // terminates in a few steps and needs no estimate.
+        Big acc;  // = den * q, starts at zero
         for (;;) {
-            Big next = addMag(prod, den);
+            Big next = addMag(acc, den);
             if (cmpMag(next, num) > 0) break;
+            acc = next;
             ++q;
-            prod = next;
         }
-        exact = cmpMag(prod, num) == 0;
+        exact = cmpMag(acc, num) == 0;
     } else {
         exact = num.isZero();
     }

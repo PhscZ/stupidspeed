@@ -16,7 +16,7 @@ disposable. See the end of `BUILD.md` for what is in each.
 ## Results
 
 One row per toolchain, one column per task. The column headings are the task numbers, and
-the task names are the section headings under [Tasks](#tasks). All 96 toolchains, empty and
+the task names are the section headings under [Tasks](#tasks). All 102 toolchains, empty and
 ready to fill in.
 
 A cell holds the median of the 5 timed runs, in milliseconds. `WRONG` is an output that did
@@ -122,6 +122,12 @@ kept alongside the median in the raw results, not in this table.
 | Terra | terra |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Dyalog APL | dyalog |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Nelua | nelua |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| C | clang (wasm32-wasip1) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| C++ | clang++ (wasm32-wasip1) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Rust | rustc (wasm32-wasip1) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Go | gc (wasip1) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| AssemblyScript | asc (wasip1) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| WebAssembly | hand-written WAT |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 
 No cell is `SKIPPED` by design. Seven rows need more than the stock install for task 11, and
 each says so in `BUILD.md`: Assembly has no libc, so it issues `clone` and `futex` itself; Tcl
@@ -132,18 +138,22 @@ clause; Oberon-07 has no thread module in its library, so it declares `CreateThr
 `WaitForSingleObject` as foreign procedures; Ring needs the distribution's own Threads
 extension, which the light release does not ship; and Terra needs a C sysroot on `INCLUDE` for
 the one task that includes `windows.h`, and a non-nil `VCINSTALLDIR` before the interpreter
-will start at all. Four more rows have a version floor rather
+will start at all. Nine more rows have a version floor rather
 than an extra install: Racket's parallel threads need 8.18 or later, OCaml's `Domain` needs
-5.x, since the 4.14 build has no `Domain` module at all, J's `T.` threads need 9.4, and
-Janet's `ev/thread` needs 1.17.1. Seven rows pass task 11 but are correct-answer-no-speedup
+5.x, since the 4.14 build has no `Domain` module at all, J's `T.` threads need 9.4, Janet's
+`ev/thread` needs 1.17.1, and the five WebAssembly rows need **wasmtime 46.0.3 or older**,
+because the `wasi-threads` API their task 11 uses was deleted in 47 and the flag that enables it
+became an unconditional error, so those five cells cannot be run on a current runtime. Eight
+rows pass task 11 but are correct-answer-no-speedup
 cells, because their concurrency is cooperative or serialised: CPython and CRuby, Dolphin
 Smalltalk, whose `Process` objects are green, Simula, whose four `PROCESS` objects are
 scheduled by its own cooperative process simulation, Algol 68, whose four pthreads are real
 but whose implementation copies a stack on every switch, VHDL, whose four `process`
-blocks are scheduled by GHDL on one OS thread, and Dyalog APL, whose `&` spawn really does
+blocks are scheduled by GHDL on one OS thread, Dyalog APL, whose `&` spawn really does
 create four threads but which serialises them inside one execution engine — measured at 0.99
-CPU per wall second, and slower than the same work run serially. The rest of the task 11
-picture is in `RUN.md`.
+CPU per wall second, and slower than the same work run serially — and Go's wasm row, whose
+goroutines are multiplexed onto the single wasm thread because Go's `wasip1` port has no thread
+support. The rest of the task 11 picture is in `RUN.md`.
 
 Two rows are unusual for reasons the table cannot show. **ActionScript** prints a fixed
 2354-byte ASCII-art banner to stdout before the program's first line — the AIR runtime's own
@@ -597,6 +607,76 @@ never take tracked memory above 32 KB. One measurement worth keeping: task 09's 
 in 0.107 s, which is faster than 331 million real calls should be, and the cause is gcc, not the
 language — a plain C program with the same function and flags measures 0.115-0.119 s on the same
 host, so the C row and this one are doing the same thing.
+
+**The six WebAssembly rows** are one target and six front ends, and they are the only rows in the
+matrix whose program is not what the machine executes: a `.wasm` module is instantiated and
+compiled by a runtime before the first instruction runs, so every cell here measures
+**wasmtime's** compilation and execution of the module rather than the machine's execution of the
+source. That is the disclosure the SystemVerilog row carries for Icarus and the GDScript row for
+Godot, and it applies to all six equally. Four of them reuse an existing source set unchanged —
+`sources/c/`, `sources/cpp/`, `sources/rust/` and `sources/go/` — which is the arrangement
+`sources/scala/` already has with the `jvm` row, because those four were written for a POSIX
+target and their thread paths have a WebAssembly counterpart. The C row needs no source change at
+all: `11_parallel_sum.c` already picks its pthread branch under `#else` of `#if defined(_WIN32)`,
+and wasm32 is not `_WIN32`.
+
+**Task 11 pins the runtime, and it is the only cell in the matrix with that property.**
+`wasi-threads` — the API by which a module asks the host to create a thread — was deleted in
+wasmtime 47 by an accepted RFC, and the `-S threads` flag is an unconditional error from that
+release. On 49 the flag is still printed by `-S help` and then errors when used, which is
+misleading. The rows therefore pin **wasmtime 46.0.3**, the last release that implements the API,
+and task 11 cannot be run on a current runtime at all. When it does run, the four quarters are
+real OS threads on real cores: the hand-written row measured **2.66x** on four workers, 0.142 s
+against task 02's 0.379 s over the same 100000000 iterations. C, C++, Rust and AssemblyScript
+reach the same API through their own runtimes, so five of the six pass as genuinely parallel.
+
+**Go is the sixth, and it is a correct-answer-no-speedup cell.** Go's `wasip1` port has no thread
+support, so goroutines are multiplexed onto the single wasm thread; the four quarters are correct
+and serial, the same disposition CPython, CRuby and Simul get. It also has the row's one run-line
+difference: Go opens its preopens by WASI name and expects `/`, so tasks 14 and 15 need
+`--dir=<host dir>::/` where every other row works with `--dir=.` and Go alone prints
+`Bad file number` without it.
+
+**Two rows carry a slow cell worth budgeting for.** Task 07 is honestly quadratic in both,
+because the append is a copy: AssemblyScript takes **484.6 s** (8 minutes) and the hand-written
+row **623.8 s** (10m24s) per run, which puts them between VBScript's 576 s and Racket's 1121 s.
+One pass of either cell is about an hour. Everything else in both rows is under two seconds.
+
+**Task 02 is the one cell where the engine, not the language, decides the answer.** The task
+exists to ask whether a jump table is worth it, and under wasmtime's Cranelift the hand-written
+row's dispatch runs **3.1x faster** than the same task compiled from C (384 ms against 1193 ms,
+both modules containing `br_table`), while under V8's WebAssembly engine the same compiled module
+runs it in 231 ms — a 5x spread across engines on one binary. The other six tasks measured within
+1.5x of each other across the two engines. Read column 02 for these rows with that in mind: it is
+the only column where "written by hand" beats "written by a compiler" by a wide margin, and the
+margin is a property of the runtime's code generator rather than of the program.
+
+**AssemblyScript** is the only row here whose source language was designed for WebAssembly: it
+compiles through Binaryen, its strings are immutable so task 07 is quadratic by design, and its
+`--runtime incremental` allocator is the collector task 05 exercises. It needs one wiring
+argument per task (`--use abort=<task>/abortImpl`) so that the module imports nothing from `env`
+except the memory task 11 requires, and `asc` must be run with the row's directory as the working
+directory because that specifier resolves against the source file.
+
+**The hand-written row** has no compiler and no assembler in its toolchain at all: the fifteen
+files are WebAssembly text and `wasmtime run prog.wat` is the whole build, which makes it the
+direct sibling of the `assembly` row and the only row in the matrix with a zero-install
+toolchain. Measured, the runtime's text parser costs nothing — 51 ms against 52 ms for the
+equivalent binary module. Two cells need work that no compiler would have written for it: task 05
+has ten million 64-byte allocations served by a hand-written free-list allocator over a fixed
+arena, because WebAssembly has no `malloc`; and task 10 is the C row's hand-rolled base-1e9
+sign-magnitude limb code, ported limb for limb. Task 07 is the slowest cell in the row at 623.8 s
+because the append's walk to the terminator is a byte-at-a-time scan here, where the C row's
+`strcat` reaches glibc's word-at-a-time `strlen`.
+
+**One failure mode in this group is silent, and it is worth stating.** A `wasi-threads` module
+must import its memory from `env` *and* export it. With only an exported memory the module still
+instantiates, `thread-spawn` still returns a valid positive thread id, and `wasi_thread_start`
+**does** run — but every store the worker makes is lost, so the parent reads zeros and task 11
+prints `0` instead of `7500000075000000`, with no diagnostic. The C and C++ rows get the pair from
+the linker flags `-Wl,--import-memory -Wl,--export-memory`; the hand-written row spells it out.
+It was found by measurement, not by reading a spec, and it is the reason this row's task 11 was
+verified by its output rather than by the absence of an error.
 
 ## Rules
 
@@ -1057,6 +1137,12 @@ nothing else.
 | Terra | terra |
 | Dyalog APL | dyalog |
 | Nelua | nelua |
+| C | wasm32-wasip1 (clang) |
+| C++ | wasm32-wasip1 (clang++) |
+| Rust | wasm32-wasip1 (rustc) |
+| Go | wasip1 (gc) |
+| AssemblyScript | wasip1 (asc) |
+| WebAssembly | hand-written WAT |
 
 Missing a toolchain means the cell says `SKIPPED`. It never counts as zero. The same goes
 for a language that cannot do a task at all, such as a language with no threads trying

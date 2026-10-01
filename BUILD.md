@@ -56,6 +56,14 @@ Fourteen things do not follow the flat `<task>.<ext>` layout, and each says why:
   its own: the fifteen files are one source set built by both rows, the same arrangement
   `sources/kotlin/` has with `kotlin/native`, because Scala Native 0.5.x's `javalib` implements
   every JDK type those files use (`java.lang.Thread`, `java.math.BigInteger`, `java.io`).
+- **The four compiled WebAssembly rows** share `sources/c/`, `sources/cpp/`, `sources/rust/` and
+  `sources/go/` with their native rows rather than getting directories of their own, for the same
+  reason: those four source sets were already written for a POSIX target, and their thread paths
+  have a WebAssembly counterpart — `pthread_create` for C, `std::thread` for C++ and Rust, and
+  goroutines for Go — so the same fifteen files build for both targets. The C row needs no source
+  change at all, because `11_parallel_sum.c` selects its pthread branch under `#else` of
+  `#if defined(_WIN32)` and wasm32 is not `_WIN32`. Only AssemblyScript and the hand-written row
+  have a directory of their own, since nothing else compiles to those two.
 - **Scheme, Prolog (SWI), Janet, Ring, JScript, AutoHotkey, VHDL and Seed7 task 03** each keep the
   helper in a second file beside the task — `03_func_sum_add_one.ss`, `.pl`, `.janet`, `.ring`,
   `.js`, `.ahk`, `.vhd` and `.s7i` — which is the same shape as the Fortran, Tcl, Vala and
@@ -205,6 +213,49 @@ heap image and the DLL is the runtime that loads it, so the pair has to travel t
 | Scala | native | 0.5 (0.5.12 measured) | scala-cli plus a C toolchain; on Windows the portable llvm-mingw zip, no admin | `scala-cli --power package <task>.scala --native -S 3.9.0 --native-version 0.5.12 --native-mode release-fast --native-clang <llvm-mingw>/bin/clang.exe --native-clangpp <llvm-mingw>/bin/clang++.exe --native-compile=-D_PID_T_ --native-linking=-static -o prog.exe`, then `prog.exe`. Builds `sources/scala/`, the same fifteen files as the `jvm` row. `--native-mode release-fast` is mandatory: the default `debug` mode compiles with `-O0` and measured 0.270 s against 0.074 s on task 02. |
 | Standard ML | Poly/ML | 5.9.1 | github.com/polyml/polyml releases, `PolyML5.9.1-64bit.msi` (3.03 MB), extracted with `msiexec /a <msi> TARGETDIR=<dir> /qn` — no admin. **v5.9.2 is newer but has no Windows asset at all**; 5.9.1 is the one. | Two steps, and they are the two `polyc` would have driven, because the MSI ships no `polyc` and no import library (see below): `PolyML.exe -q --error-exit --script build/<task>.ML` exports a whole heap image to `<task>.obj`, where the driver file contains `use "<task>.sml"; PolyML.export ("<task>", main);`, then `gcc -Wl,-u,WinMain -mconsole -o prog.exe <task>.obj polystub.obj -Ltools/polyml -lpolyml`. **`PolyLib.dll` must sit beside the produced executable** or it dies before `main` with `STATUS_DLL_NOT_FOUND` and no output. Task 03 loads `03_func_sum_add_one.sml` with `use` and sets `PolyML.Compiler.maxInlineSize := 0` **before** it — a separate file alone is not enough. Task 14 reads in 65536-byte chunks. |
 | Nelua | nelua | 0.2.0-dev (`a5845056`) | `git clone --depth 1 https://github.com/edubart/nelua-lang tools/nelua` (6 MB, no installer, no admin), then build the repository's own Lua interpreter once: `mingw32-make` in `tools/nelua/`, which compiles `src/onelua.c` with its `lfs`, `hasher` and `lpeglabel` companions into `nelua-lua.exe` (24 s). The host's own Lua cannot run the compiler: `runner.lua` requires those three C modules and there is no `luarocks` here to add them. | `cmd.exe /c tools/nelua/nelua.bat -r -o prog.exe <task>.nelua`, run from `sources/nelua/` — the launcher has to go through `cmd.exe`, and `require` resolves against the **working directory**, not the source file's, so the build must run from the row's directory (`-L sources/nelua` also works). `-r` (`--release`) is this compiler's `-O2` equivalent, literally `gcc ... -fwrapv -fno-strict-aliasing -O2 -DNDEBUG`, and it also turns on the compiler's `nochecks` pragma; `-M`/`--maximum-performance` is deliberately not used because it adds `-Ofast -march=native -flto=auto`. Task 03's helper is in its own file **and** marked `<noinline>`: Nelua concatenates every required module into one C translation unit, so a plain cross-file call is inlined and the loop is deleted. |
+
+### Compiled to WebAssembly — the runtime is the VM, and the module is the program
+
+The output is a `.wasm` module, so a WebAssembly runtime starts on every measured run. Six rows
+share one runtime, **wasmtime**, pinned to **46.0.3** for the reason in the `wasi-threads` note
+below; the install is the release zip extracted under `tools/wasmtime46/`, no installer and no
+admin. Four of the six reuse an existing row's sources unchanged — `sources/c/`, `sources/cpp/`,
+`sources/rust/` and `sources/go/` — the same arrangement `sources/scala/` has with the `jvm` row,
+because those four source sets were already written for a POSIX target and their thread paths
+(`pthread_create`, `std::thread`, `std::thread`, goroutines) have a WebAssembly counterpart. Only
+`AssemblyScript` and the hand-written `WebAssembly` row have a source directory of their own.
+
+The C and C++ rows need no source change at all: `sources/c/11_parallel_sum.c` already selects its
+pthread branch under `#else` of `#if defined(_WIN32)`, and wasm32 is not `_WIN32`.
+
+| Language | Toolchain | Minimum | Install | Build |
+|---|---|---|---|---|
+| C | wasm32-wasip1 (clang) | wasi-sdk 34 (LLVM 23.1) | wasi-sdk release tarball, `wasi-sdk-34.0-x86_64-windows.tar.gz` (619 MB), extracted into `tools/wasi-sdk/` — no installer, no admin | `clang --target=wasm32-wasip1 -O2 -o prog.wasm <task>.c`. Task 11 adds `-pthread --target=wasm32-wasip1-threads -Wl,--import-memory -Wl,--export-memory -Wl,--shared-memory -Wl,--max-memory=2147483648`. |
+| C++ | wasm32-wasip1 (clang++) | as above | as above | `clang++ --target=wasm32-wasip1 -O2 -fno-exceptions -o prog.wasm <task>.cpp`. **`-fno-exceptions` is required**: `libc++abi` is not in the sysroot's default link, so tasks 08 and 10 fail at link with `undefined symbol: __cxa_allocate_exception` without it. Task 11 adds the same four thread flags as the C row. |
+| Rust | wasm32-wasip1 (rustc) | 1.90 | `rustup target add wasm32-wasip1` (tier 2, prebuilt std) | `rustc --target wasm32-wasip1 -O -o prog.wasm <task>.rs`. Task 11 uses `--target wasm32-wasip1-threads`, which is a **tier 3** target and has no prebuilt std — `rustup target add` fetches a std it has to build locally. |
+| Go | wasip1 (gc) | 1.26 | none — the installed toolchain has the target | `GOOS=wasip1 GOARCH=wasm go build -o prog.wasm <task>.go`. |
+| AssemblyScript | wasip1 (asc) | 0.28 | `npm install assemblyscript` into `tools/assemblyscript/` | `asc <task>.ts -O2 --outFile prog.wasm --runtime incremental --use abort=<task>/abortImpl`. **`asc` must be run with the row's directory as the working directory**, because the `--use abort=…` specifier is resolved relative to the source file. Task 11 adds `--enable threads --importMemory --sharedMemory --maximumMemory 1024`. |
+| WebAssembly | hand-written WAT | none | none — the runtime is the whole toolchain | **No build step.** `wasmtime run <task>.wat` parses the text on every run; measured, that costs 51 ms against 52 ms for the equivalent binary module, i.e. nothing. |
+
+Run lines, all six rows: `wasmtime run prog.wasm`. Task 11 adds
+`-S threads=y -W threads=y -W shared-memory=y`. Tasks 14 and 15 add `--dir=.` **from a directory
+holding `data.bin`**. Go is the exception on the file tasks: it opens its preopens by the WASI
+name and expects it to be `/`, so its two cells need `--dir=<host dir>::/` and print
+`Bad file number` with the plain `--dir=.` every other row uses.
+
+**`wasi-threads` was deleted in wasmtime 47.** The accepted RFC
+(`rfcs/accepted/wasmtime-remove-wasi-threads.md`) removes the `wasmtime-wasi-threads` crate in
+47 and makes the `-S threads` flag an unconditional error; on 49 the flag still appears in
+`-S help` and then errors when used, which is misleading. Task 11 therefore pins the runtime to
+46.0.3, the last release that implements the API.
+
+**The one silent failure worth knowing.** A `wasi-threads` module must import its memory from
+`env` **and** export it — `(import "env" "memory" (memory … shared))` plus
+`(export "memory" (memory 0))`. With only an exported memory the module still instantiates,
+`thread-spawn` still returns a valid positive thread id, and `wasi_thread_start` **does** run —
+but every store the worker makes is lost, so the parent reads zeros and task 11 prints `0`
+instead of `7500000075000000`, with no diagnostic of any kind. The C and C++ rows get the pair
+from `-Wl,--import-memory -Wl,--export-memory`; the hand-written row spells it out.
 
 ### Compiled to bytecode — the VM is needed on every run
 

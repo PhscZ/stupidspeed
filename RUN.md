@@ -10,7 +10,7 @@ like for the numbers to mean anything. For compilers, see `BUILD.md`.
 | OS | x86-64, Linux, macOS or Windows | Every row is reachable on Windows and on Linux; macOS loses `msvc` and `dolphin smalltalk`. The one exception is `assembly`, which is Linux x86-64 only: it is a freestanding ELF64 binary built with `nasm -f elf64` and `ld`. `tcc`, `clang`, `flang` and `luajit` all need a little care on Windows but no WSL. |
 | CPU | 4 physical cores | Task 11 runs four threads. Every other task is pinned to one core, so more cores do not help them. |
 | RAM | 8 GB minimum, 16 GB comfortable | The tasks themselves are small: the largest allocation is task 06's 100 MB text, and task 12's three 1000x1000 arrays are 24 MB together. The 16 GB is for the JVM, GraalVM and Julia toolchains. `native-image` alone wants 2–4 GB to build. |
-| Disk | 32 GB free | 100 MiB of fixtures, plus the toolchains themselves: `BUILD.md` measured 23 GB for all 78 installed and run, and the fourteen rows before the newest four add about 6.5 GB — Octave's tree alone is 2.6 GiB, Eiffel's 1.28 GB, Beef's 845 MB and the Scala Native row's 833 MB — and the four newest add about 1.3 GB, mostly Dyalog's 855 MB interpreter tree, so budget about 31 GB for all 96. The MSYS2 tree that `valac` needs is 2.2 GB of the base total on its own, with another 2–3 GB of scratch while reassembling MSVC and Swift. |
+| Disk | 32 GB free | 100 MiB of fixtures, plus the toolchains themselves: `BUILD.md` measured 23 GB for all 78 installed and run, and the fourteen rows before the newest four add about 6.5 GB — Octave's tree alone is 2.6 GiB, Eiffel's 1.28 GB, Beef's 845 MB and the Scala Native row's 833 MB — and the four newest add about 1.3 GB, mostly Dyalog's 855 MB interpreter tree, so budget about 31 GB for all 96. The six WebAssembly rows add about **1.7 GB**: the wasi-sdk tree is 1.5 GiB, unpacked from a 591 MiB tarball that has to sit beside it while it extracts, the AssemblyScript package is 102 MiB and the wasmtime zip 44 MiB, and the hand-written row installs nothing at all. Budget about 33 GB for all 102. The MSYS2 tree that `valac` needs is 2.2 GB of the base total on its own, with another 2–3 GB of scratch while reassembling MSVC and Swift. |
 | Filesystem | `tmpfs` or RAM disk preferred for the file tasks | Reading 50 MiB from a spinning disk measures the disk. Anything run under WSL2 measures the WSL disk layer instead. Where the fixture lives must be recorded in the results. |
 
 ## Runtimes
@@ -86,6 +86,7 @@ Languages compiled to a static native binary need nothing. The rest need the fol
 | Elixir | elixir (BEAM) | Erlang's tree plus Elixir's | No build step. Elixir needs Erlang on `PATH` first; `elixir` then compiles the script each run. |
 | VBScript | cscript | none — `cscript.exe` ships with Windows | The runtime is a Windows component rather than something you install, which is also why the row is on borrowed time: see the platform table below. |
 | Common Lisp | sbcl | none — the dumped executable embeds the core | The build dumps a standalone `prog.exe` with `save-lisp-and-die`, so nothing has to be on `PATH` at run time. Task 11 uses `sb-thread`, which is a required part of the Windows build. |
+| C, C++, Rust, Go, AssemblyScript, WebAssembly (all six wasm rows) | wasmtime 46.0.3 | the `wasmtime.exe` from the release zip under `tools/wasmtime46/` | `wasmtime run prog.wasm`. Tasks 14 and 15 add `--dir=.` from a directory holding `data.bin`; Go's two cells need `--dir=<host>::/` instead, because Go opens its preopens by the WASI name and expects `/`. Task 11 adds `-S threads=y -W threads=y -W shared-memory=y` and **needs 46**, because `wasi-threads` was deleted in 47. Startup is part of every cell: measured, a no-op module costs 44 ms against 30 ms for a native executable and 31 ms for `wasmtime-min`. |
 | Scala | native | none | Standalone `.exe`. The link is static, so not even llvm-mingw's `libc++.dll` is needed; without `--native-linking=-static` the executable dies with `STATUS_DLL_NOT_FOUND` when llvm-mingw's `bin` is off the DLL search path. |
 | Beef | BeefBuild | none — static native binary | A Release build links the Beef runtime statically. The executable imports only `kernel32.dll`, `msvcrt.dll`, `user32.dll`, `SHELL32.dll`, `ole32.dll`, `gdi32.dll`, `version.dll` and `comdlg32.dll`; no Beef DLL has to be present. Process start-up is about 110–190 ms, which is a third of the row's slowest cell. |
 | Haxe | hxcpp | none — native static binary | `-D no_shared_libs` links gcc, libstdc++ and libwinpthread statically; `objdump -p` on the produced executable lists only `KERNEL32.dll`, `USER32.dll`, `WS2_32.dll` and the `api-ms-win-crt-*` UCRT imports. Without that define hxcpp copies `libgcc_s_seh-1.dll`, `libstdc++-6.dll` and `libwinpthread-1.dll` beside the executable. |
@@ -184,6 +185,20 @@ distinct thread ids and a process CPU/wall ratio of 4.75),
 Nelua (`require 'C.threads'`, the standard library's C11 binding over `CreateThread`, with the
 GC's `nogc` pragma because a collected allocator shared across raw threads is not safe; measured
 **3.5x**).
+
+**The five WebAssembly rows that pass** are one mechanism, and it is a third kind: C, C++, Rust,
+AssemblyScript and the hand-written WAT row all reach the host's thread API through
+`wasi-threads` — the module imports `wasi::thread-spawn`, exports `wasi_thread_start`, and the
+runtime creates the OS thread, hands it the module's shared memory, and calls the export on it.
+The four quarters are real OS threads on real cores; the hand-written row measured **2.66x** on
+four workers (0.142 s against task 02's 0.379 s, both 100000000 iterations). It is neither a
+language facility nor a foreign declaration of the OS's own calls, so it sits between the two
+kinds already described. It is also the only task-11 mechanism in the matrix that depends on the
+runtime's **version**: `wasi-threads` was deleted in wasmtime 47, so every one of these cells
+needs wasmtime 46.0.3 or older and cannot be run on a current runtime at all. Go is the exception
+among the six and is described under the no-speedup group below, because Go's wasip1 port has no
+thread support: goroutines there are multiplexed onto the single wasm thread, so its cell is
+correct and serial.
 
 The last two are the same kind of row: a language with no thread facility that gets real threads
 anyway by declaring the operating system's own calls, which is legitimate under the task's
@@ -497,7 +512,7 @@ iterations, the loop is smaller than the noise in starting the process.
 
 ## Expected cost
 
-Every task runs six times, in 96 toolchains.
+Every task runs six times, in 102 toolchains.
 
 - Fast compiled languages: under a second per run, so about **1.5 hours** for the matrix.
 - The 100-million-iteration tasks take 10 to 15 seconds in CPython.
@@ -622,6 +637,14 @@ Every task runs six times, in 96 toolchains.
     375 ms for the million appends, because `,←` grows in place.
 - Measured slow cells elsewhere: Java task 07 at 514 s, Modula-3 task 10 at 206 s, Modula-2
   task 10 at 115 s.
+- **The six WebAssembly rows** are the cheapest of the recent additions except for one cell each.
+  Task 07 is quadratic in AssemblyScript and in the hand-written row, because the append copies
+  the whole string: measured **484.6 s** and **623.8 s** a run, which puts them between
+  VBScript's 576 s and Racket's 1121 s, and one pass of either cell is about an hour. Everything
+  else in those two rows is under two seconds, and the other four rows are compiled code whose
+  cells are in the normal range. Every one of the six pays the runtime's module load and compile
+  on every run, measured at **44 ms** for a no-op module against 30 ms for a native executable
+  and 31 ms for `wasmtime-min`.
 - **Nothing is cut off, so a pass has no upper bound.** The compiled rows are all under a
   second per run, but one of the slow cells above can outweigh the entire rest of the matrix,
   and it runs six times. Budget from the slowest cells, not from the average.
@@ -684,6 +707,7 @@ discovering halfway through a run.
 | terra | untested | untested | yes, the official `terra-Windows-x86_64-*.7z`; no admin and no MSVC, but the interpreter **requires a non-nil `VCINSTALLDIR`** or it aborts before running any file, and `INCLUDE` must point at a C sysroot for the one task that includes `windows.h`. Verified on Windows x64 only |
 | dyalog | untested | untested | yes, the 20.0 Unicode Windows distribution administratively extracted. Runs unregistered with nothing on stdout. Verified on Windows x64 only; the download page's other platforms get `.deb`/`.rpm` and a macOS `.pkg`, none of which were exercised here |
 | nelua | untested | untested | yes, the git repository plus a C compiler and its own bundled Lua interpreter. No admin. Verified on Windows x64 only |
+| c/c++/rust/go/assemblyscript/webassembly (`wasmtime 46.0.3`) | yes, all six | yes, all six | yes, all six. The runtime is a portable release zip; the only Windows-specific piece is the wasi-sdk tarball for the C and C++ rows, which ships `x86_64-windows` and `x86_64-linux` builds of the same thing. Task 11 is the version-sensitive cell on every platform: `wasi-threads` was deleted in wasmtime 47, so **46.0.3 or older is required** and the row cannot be run on a current runtime. Verified on Windows x64 only |
 
 **Windows reaches every row**; it is the only host that does. Linux loses `actionscript`
 (no captive runtime), `dolphin smalltalk` (Windows-only VM), `vbscript` and `jscript`
