@@ -1,5 +1,6 @@
 -- task 10 pi — expected output: 4470
 -- build: none (interpreted)    run: lua 10_pi.lua (PUC Lua 5.4)    also runs on LuaJIT: luajit 10_pi.lua
+-- build (wasm): lua.wasm is the wasm32-wasip1 build of this same interpreter (see BUILD.md); run: wasmtime -W exceptions=y --dir . lua.wasm <task>.lua
 -- Lua has no arbitrary-precision integers, so the Gibbons unbounded spigot runs on
 -- hand-written bignums: base 1e9 limbs in a table, multiply by a small integer, and
 -- divide by a bignum whose quotient is a single digit (found by one estimated multiply

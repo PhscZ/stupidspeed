@@ -1,6 +1,8 @@
 # task 10 pi — expected output: 4470
 # build: python 10_pi.py | pypy 10_pi.py | graalpy 10_pi.py | nuitka --standalone 10_pi.py    run: python 10_pi.py
 # note: Gibbons' unbounded spigot on Python's native arbitrary-precision ints; only the sum of the first 1000 emitted digits is printed, never the digits.
+# build (cython): cython --embed -3 --module-name _10_pi -o _10_pi.c 10_pi.py, then gcc -O2 -DMS_WIN64 -municode -I <python>/include -o prog _10_pi.c -L <python>/libs -lpython3xx
+# build (wasm): python.wasm is the wasm32-wasip1-threads build of CPython (see BUILD.md); run: wasmtime -S threads=y -W threads=y -W shared-memory=y --dir . python.wasm <task>.py
 
 DIGITS = 1000
 

@@ -1,5 +1,6 @@
 # task 08 average — expected output: 0.498046875
 # build: none (interpreted)    run: ruby 08_average.rb (cruby) | ruby --yjit 08_average.rb (cruby+yjit) | jruby 08_average.rb (jruby, needs Java 25)
+# build (wasm): ruby.wasm is the wasip1 build from ruby/ruby.wasm (see BUILD.md); run: wasmtime --dir . ruby.wasm <task>.rb
 # The stock Windows CRuby build has no YJIT: `ruby --yjit` warns "Ruby was built without YJIT support".
 
 total = 0.0

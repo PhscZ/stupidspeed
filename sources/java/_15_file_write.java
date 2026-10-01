@@ -1,6 +1,8 @@
 // task 15 file_write — expected output: 52428800
 // build: javac _15_file_write.java    run: java _15_file_write
 // build (graalvm native-image): native-image -O2 _15_file_write    run: ./_15_file_write
+// run (graalvm jit): the same javac class file under GraalVM's java, which enables the Graal JIT by default
+// run (loom): the same javac class file on a JDK 21+; task 11's loom variant is sources/java-loom/_11_parallel_sum.java
 // Writes the 1 MiB 0..255 pattern 50 times, then flush() and fsync via getFD().sync().
 
 import java.io.FileOutputStream;

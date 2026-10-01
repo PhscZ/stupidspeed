@@ -1,5 +1,6 @@
 # task 06 char_count — expected output: 10000000
 # build: none (interpreted)    run: ruby 06_char_count.rb (cruby) | ruby --yjit 06_char_count.rb (cruby+yjit) | jruby 06_char_count.rb (jruby, needs Java 25)
+# build (wasm): ruby.wasm is the wasip1 build from ruby/ruby.wasm (see BUILD.md); run: wasmtime --dir . ruby.wasm <task>.rb
 # The stock Windows CRuby build has no YJIT: `ruby --yjit` warns "Ruby was built without YJIT support".
 
 text = 'abcdefghij' * 10_000_000

@@ -10,7 +10,7 @@ like for the numbers to mean anything. For compilers, see `BUILD.md`.
 | OS | x86-64, Linux, macOS or Windows | Every row is reachable on Windows and on Linux; macOS loses `msvc` and `dolphin smalltalk`. The one exception is `assembly`, which is Linux x86-64 only: it is a freestanding ELF64 binary built with `nasm -f elf64` and `ld`. `tcc`, `clang`, `flang` and `luajit` all need a little care on Windows but no WSL. |
 | CPU | 4 physical cores | Task 11 runs four threads. Every other task is pinned to one core, so more cores do not help them. |
 | RAM | 8 GB minimum, 16 GB comfortable | The tasks themselves are small: the largest allocation is task 06's 100 MB text, and task 12's three 1000x1000 arrays are 24 MB together. The 16 GB is for the JVM, GraalVM and Julia toolchains. `native-image` alone wants 2–4 GB to build. |
-| Disk | 32 GB free | 100 MiB of fixtures, plus the toolchains themselves: `BUILD.md` measured 23 GB for all 78 installed and run, and the fourteen rows before the newest four add about 6.5 GB — Octave's tree alone is 2.6 GiB, Eiffel's 1.28 GB, Beef's 845 MB and the Scala Native row's 833 MB — and the four newest add about 1.3 GB, mostly Dyalog's 855 MB interpreter tree, so budget about 31 GB for all 96. The six WebAssembly rows add about **1.7 GB**: the wasi-sdk tree is 1.5 GiB, unpacked from a 591 MiB tarball that has to sit beside it while it extracts, the AssemblyScript package is 102 MiB and the wasmtime zip 44 MiB, and the hand-written row installs nothing at all. Budget about 33 GB for all 102. The MSYS2 tree that `valac` needs is 2.2 GB of the base total on its own, with another 2–3 GB of scratch while reassembling MSVC and Swift. |
+| Disk | 32 GB free | 100 MiB of fixtures, plus the toolchains themselves: `BUILD.md` measured 23 GB for all 78 installed and run, and the fourteen rows before the newest four add about 6.5 GB — Octave's tree alone is 2.6 GiB, Eiffel's 1.28 GB, Beef's 845 MB and the Scala Native row's 833 MB — and the four newest add about 1.3 GB, mostly Dyalog's 855 MB interpreter tree, so budget about 31 GB for all 96. The six original WebAssembly rows add about **1.7 GB**: the wasi-sdk tree is 1.5 GiB, unpacked from a 591 MiB tarball that has to sit beside it while it extracts, the AssemblyScript package is 102 MiB and the wasmtime zip 44 MiB, and the hand-written row installs nothing at all. The four rows after those add about **1.3 GB**, almost all of it TinyGo's bundled LLVM tree: the GraalVM JDK and the Go SDK were already counted, and Cython is 15 MB. The three interpreted WebAssembly rows add about **0.14 GB** on top of that — the single-file `ruby.wasm` is 99 MB, CPython's module and stdlib tree are 39 MB, and the Lua build reuses the wasi-sdk tree already counted — so the nine come to about 1.85 GB and the budget is about **34 GB for all 109**. The MSYS2 tree that `valac` needs is 2.2 GB of the base total on its own, with another 2–3 GB of scratch while reassembling MSVC and Swift. |
 | Filesystem | `tmpfs` or RAM disk preferred for the file tasks | Reading 50 MiB from a spinning disk measures the disk. Anything run under WSL2 measures the WSL disk layer instead. Where the fixture lives must be recorded in the results. |
 
 ## Runtimes
@@ -25,6 +25,7 @@ Languages compiled to a static native binary need nothing. The rest need the fol
 | Rust | rustc | none | links libstdc statically by default |
 | Zig | zig | none | static by default |
 | Go | gc | none | static without cgo |
+| Go | tinygo | none | standalone executable; TinyGo's runtime is linked in. It has no fsync on Windows, so task 15 flushes by closing. |
 | D | dmd, ldc2 | libphobos | or build with `-static` |
 | Swift | swiftc | Swift runtime libraries | unless statically linked |
 | Fortran | gfortran | libgfortran | |
@@ -38,6 +39,8 @@ Languages compiled to a static native binary need nothing. The rest need the fol
 | Groovy | groovy | JRE 17 or newer | the distribution ships its own `groovy.bat` launcher |
 | Tcl | tclsh | none | task 11 also needs the `Thread` extension, see `BUILD.md` |
 | Java | openjdk | JRE 17 or newer | |
+| Java | graalvm jit | the GraalVM JDK itself, 21 or newer | no JVM flags needed: GraalVM's `java` has `UseJVMCICompiler` on by default, so it compiles the bytecode with the Graal compiler instead of HotSpot's C2 |
+| Java | loom | JRE 21 or newer | the same class files as `openjdk`; only task 11 differs, and it uses `Thread.ofVirtual()`, which is final since 21 |
 | Java | graalvm native-image | none | standalone binary |
 | Kotlin | jvm | JRE + kotlin-stdlib | |
 | Kotlin | native | none | |
@@ -53,6 +56,7 @@ Languages compiled to a static native binary need nothing. The rest need the fol
 | PHP | zend | PHP + opcache | task 11 needs the `parallel` PECL extension, which stock PHP does not ship and which requires a ZTS build. |
 | PHP | zend + jit | PHP + opcache | JIT needs `opcache.enable_cli=1`. The stock Windows zip ships no `php.ini`, so JIT is off until you write one and set `opcache.jit_buffer_size`. Same `parallel` requirement as the row above for task 11. |
 | Python | cpython, pypy, graalpy | the interpreter | |
+| Python | cython | the interpreter's `python3xx.dll` | the built `.exe` is **not** standalone: it imports the CPython DLL, so the matching CPython installation has to be beside it or on `PATH`. That DLL is the interpreter the program embeds, not a runtime for the compiled code — the loops are native. |
 | Python | nuitka | none | standalone binary |
 | Ruby | cruby + yjit | Ruby | **the stock Windows build has no YJIT**: `ruby --yjit` warns "Ruby was built without YJIT support". The `cruby + yjit` row needs a Ruby built with rustc present. |
 | Ruby | jruby | JRE + JRuby | needs Java 25 |
@@ -86,7 +90,10 @@ Languages compiled to a static native binary need nothing. The rest need the fol
 | Elixir | elixir (BEAM) | Erlang's tree plus Elixir's | No build step. Elixir needs Erlang on `PATH` first; `elixir` then compiles the script each run. |
 | VBScript | cscript | none — `cscript.exe` ships with Windows | The runtime is a Windows component rather than something you install, which is also why the row is on borrowed time: see the platform table below. |
 | Common Lisp | sbcl | none — the dumped executable embeds the core | The build dumps a standalone `prog.exe` with `save-lisp-and-die`, so nothing has to be on `PATH` at run time. Task 11 uses `sb-thread`, which is a required part of the Windows build. |
-| C, C++, Rust, Go, AssemblyScript, WebAssembly (all six wasm rows) | wasmtime 46.0.3 | the `wasmtime.exe` from the release zip under `tools/wasmtime46/` | `wasmtime run prog.wasm`. Tasks 14 and 15 add `--dir=.` from a directory holding `data.bin`; Go's two cells need `--dir=<host>::/` instead, because Go opens its preopens by the WASI name and expects `/`. Task 11 adds `-S threads=y -W threads=y -W shared-memory=y` and **needs 46**, because `wasi-threads` was deleted in 47. Startup is part of every cell: measured, a no-op module costs 44 ms against 30 ms for a native executable and 31 ms for `wasmtime-min`. |
+| C, C++, Rust, Go, AssemblyScript, WebAssembly, Ruby, Lua, Python (the nine wasm rows that run on 46) | wasmtime 46.0.3 | the `wasmtime.exe` from the release zip under `tools/wasmtime46/` | `wasmtime run prog.wasm`. Tasks 14 and 15 add `--dir=.` from a directory holding `data.bin`; Go's two cells need `--dir=<host>::/` instead, because Go opens its preopens by the WASI name and expects `/`. Task 11 adds `-S threads=y -W threads=y -W shared-memory=y` and **needs 46**, because `wasi-threads` was deleted in 47. Startup is part of every cell: measured, a no-op module costs 44 ms against 30 ms for a native executable and 31 ms for `wasmtime-min`. |
+| Lua (`wasmtime 46.0.3` or newer) | 5.4.8 | `lua.wasm`, built once with the wasi-sdk tree (see `BUILD.md`) | `wasmtime -W exceptions=y --dir . lua.wasm <task>.lua`. The `-W exceptions=y` is mandatory: Lua's `pcall`/`error` path lowers onto the exception-handling proposal, and wasmtime's `exceptions` feature is off by default, so without it the module fails to compile with `legacy_exceptions feature required for try instruction`. `--dir .` is needed on **every** cell, not just 14 and 15, because the script itself is read through the preopen. |
+| Python (`wasmtime 46.0.3`, the `-threads` module) | 3.12.2 | `python.wasm` plus its `lib/python3.12` tree, built once with the wasi-sdk (see `BUILD.md`) | `wasmtime -S threads=y -W threads=y -W shared-memory=y --dir . python.wasm <task>.py`, run from the directory holding both the module and `lib/`. **46 is mandatory here**: the module is built for `wasm32-wasip1-threads`, so 49 refuses the `-S threads` flag outright and the module's `threading.Thread` needs it. The stdlib tree has to sit beside the module, or the interpreter stops with `Could not find platform independent libraries <prefix>`. |
+| Ruby (`wasmtime 46.0.3` or newer) | 2.10.1 (CRuby 4.1.0) | the single-file `ruby.wasm` from ruby/ruby.wasm, 99 MB | `wasmtime --dir . ruby.wasm <task>.rb`. No feature flags: the module is plain wasip1 and runs on 46 and 49 alike. `--dir .` is needed on every cell, because the script itself is read through the preopen. |
 | Scala | native | none | Standalone `.exe`. The link is static, so not even llvm-mingw's `libc++.dll` is needed; without `--native-linking=-static` the executable dies with `STATUS_DLL_NOT_FOUND` when llvm-mingw's `bin` is off the DLL search path. |
 | Beef | BeefBuild | none — static native binary | A Release build links the Beef runtime statically. The executable imports only `kernel32.dll`, `msvcrt.dll`, `user32.dll`, `SHELL32.dll`, `ole32.dll`, `gdi32.dll`, `version.dll` and `comdlg32.dll`; no Beef DLL has to be present. Process start-up is about 110–190 ms, which is a third of the row's slowest cell. |
 | Haxe | hxcpp | none — native static binary | `-D no_shared_libs` links gcc, libstdc++ and libwinpthread statically; `objdump -p` on the produced executable lists only `KERNEL32.dll`, `USER32.dll`, `WS2_32.dll` and the `api-ms-win-crt-*` UCRT imports. Without that define hxcpp copies `libgcc_s_seh-1.dll`, `libstdc++-6.dll` and `libwinpthread-1.dll` beside the executable. |
@@ -108,16 +115,20 @@ Languages compiled to a static native binary need nothing. The rest need the fol
 
 ### JVM versions are not interchangeable
 
-Six rows need a JVM, and four of them disagree about which one:
+Eight rows need a JVM, and they disagree about which one:
 
 - `jruby` needs **Java 25**; on Java 24 and older it dies with `UnsupportedClassVersionError`.
 - `kotlin/native` needs **Java 17**. Its launcher mis-parses JDK 24's version string and fails with a batch syntax error.
 - `scala` needs anything modern. Oracle's `java8path` shim, if it is ahead of the real JDK on `PATH`, makes `scalac` fail on class file version 61.0.
 - `graalvm native-image` is its own JDK 25.
+- `java/graalvm jit` needs **GraalVM's own JDK**, not any JDK: a plain OpenJDK has no Graal compiler in it, so running the class files under HotSpot would silently be the `openjdk` row again. GraalVM 25 is the JDK the `native-image`, `graalpy` and `jruby` rows already need.
+- `java/loom` needs **JDK 21 or newer** for `Thread.ofVirtual()`. On JDK 17 it does not compile; on 19 and 20 it compiles only with `--enable-preview` and `--release 19 --enable-preview` at run time.
 
 Set `JAVA_HOME` per row rather than relying on whatever `java` resolves to. On a machine with
 several JDKs installed, the default `PATH` order is usually the wrong one for at least two of
-these four.
+these rows. The `openjdk` and `loom` rows are the exception that proves the rule: they are
+interchangeable apart from task 11, and the `loom` row's other fourteen cells are the `openjdk`
+row's cells, so a difference there is a difference in the JDK rather than in the row.
 
 ## PowerShell is a real language
 
@@ -157,7 +168,10 @@ verified by running the task or by reading the official documentation.
 
 ### Real OS threads, no problem
 
-C, C++, Rust, Zig, Go, D, Swift, Ada, Pascal, Java, Kotlin (both rows), C#, F#, VB.NET,
+C, C++, Rust, Zig, Go, D, Swift, Ada, Pascal, Java (both rows: `openjdk` uses
+`java.lang.Thread` and `loom` uses `Thread.ofVirtual()`, and the virtual threads are just as
+parallel — an in-process probe of the identical loop measured **2.92x** for four virtual threads
+and **2.92x** for four platform threads on a 20-core host), Kotlin (both rows), C#, F#, VB.NET,
 Scala (both rows), Nim, Odin, Julia (`-t4`), Fortran (OpenMP, needs `-fopenmp`), Perl (ithreads),
 PHP (`parallel`, needs a ZTS build), PowerShell (runspace pools), Crystal (`Fiber::ExecutionContext::Parallel`),
 Objective-C (`NSThread`), Modula-2 (Win32 `Threads` module), Modula-3 (`Thread.Fork`), BASIC (`THREADCREATE`),
@@ -212,6 +226,7 @@ the Windows calling convention, so the procedure *and* the procedure type both c
 | Algol 68 | a real parallel clause, `PAR (unit, unit, unit, unit)`, four pthreads | `7500000075000000`, in the same ~2.5 minutes as task 02 — a correct-answer-no-speedup cell |
 | VHDL | four `process` blocks, each owning a fixed quarter of task 02's range, plus a fifth collector process that waits for all four (`wait until done = "1111"`) and sums the partials | `7500000075000000`, **2422 s** against task 02's 2430 s — 1.003x, i.e. noise, so a correct-answer-no-speedup cell |
 | Dyalog APL | `f&Y`, the language's own spawn operator, with `⎕TSYNC` as the join. `⎕TID` is 0 on the master and `1 2 3 4` in the four workers, and `⎕TNUMS` reports `0 4 3 2 1`, so four threads really are created. | `7500000075000000`, **0.99 CPU per wall second** (124.05 s CPU in 125.24 s wall, measured with `GetProcessTimes` over all threads), and four 5 M-iteration workers take 4.12x the time of one — exactly serial. The threaded form is *slower* than the identical serial work (86.2 s against 73.8 s), because the spawn and `⎕TSYNC` bookkeeping is pure overhead. |
+| Go (tinygo) | TinyGo's default `tasks` scheduler: the goroutines are cooperative and every one of them runs on the single OS thread. `-scheduler=cores` and `-scheduler=threads` cannot be substituted on this host — they do not build for Windows/amd64 at all, the first stopping on `undefined: calleeSavedRegs` and the second on `undefined: threadID`, because neither has a Windows implementation in `internal/task`. | `7500000075000000`, and the work is serial: an in-process probe of the identical loop measured **0.89x** (43.6 ms on four goroutines against 39.0 ms serially), and the row's own task 11 (432 ms) is slower than its task 02 (283 ms). |
 
 Algol 68's parallel clause is not a broken feature and not a mis-written program: the
 implementation copies a whole stack on every unit switch, and its own source says the clause
@@ -237,7 +252,11 @@ gives none.
 | R | `PSOCK` cluster: separate R processes | `7500000075000000` (timing not measured, see below) |
 | Lua | needs the Lanes C extension (or llthreads2) | `7500000075000000`, **3.56x on 4 threads** |
 | Python | threads exist but the GIL serializes them | correct, **0.97x** — use `multiprocessing` for 2.3x |
+| Python (wasip1) | the same `threading.Thread` source, running inside wasmtime; CPython's GIL is still there | correct, and the work is serial for the same reason the `cpython` row's is |
+| Python (cython) | the same `threading.Thread` source, compiled; Cython runs it under the same GIL | correct, and measured serial: an in-process probe of the identical loop gave **1.03x** on four threads, against CPython's 0.97x. Cython does not release the GIL from a pure-mode module |
 | Ruby (CRuby) | threads exist but the GVL serializes them | correct, no speedup |
+| Ruby (ruby.wasm) | no threads at all: CRuby's WASI build is configured `THREAD_MODEL=none`, so `Thread.new` raises `initialize() function is unimplemented on this machine`, and `Ractor.new` is stubbed the same way. The four workers are **Fibers**, the language's own cooperative concurrency. | `7500000075000000`, and the work is serial: measured, the fiber version takes 20.7 s against the native serial task 02's 19.8-27.0 s |
+| Lua (lua.wasm) | no threads: the native rows use the Lanes C extension, which is a pthreads binding with no wasm build. The four workers are **coroutines**, the language's own cooperative concurrency. | `7500000075000000`, and the work is serial: measured, the coroutine version takes 2.3 s against task 02's 2.6 s |
 | Simula | `SIMULATION`/`PROCESS`, the language's own process simulation: cooperative and green | `7500000075000000`, **1.9x slower** than task 02 |
 | ActionScript | AIR `Worker`: separate AVM2 instances, no shared memory, results via shared properties | `7500000075000000`, **2.91x on 4 workers** |
 | VBScript | four `WScript.Shell.Exec` child processes, one per quarter, partials read back from each child's stdout | `7500000075000000`, **3.41x on 4 processes** |
@@ -374,7 +393,18 @@ Task 11 says "start 4 threads". Under that wording:
   so they are isolates rather than threads in the same sense Dart's are.
 - Pass, with the GIL/GVL caveat recorded: CPython, CRuby, Dolphin Smalltalk, whose `Process`
   objects are green and multiplexed onto one OS thread, and Simula, whose four `PROCESS`
-  objects are scheduled cooperatively by its own process simulation. `jruby` and Groovy are
+  objects are scheduled cooperatively by its own process simulation. `Cython` belongs here too:
+  its task 11 is the `cpython` row's `threading.Thread` source compiled unchanged, and
+  pure-mode Cython does not release the GIL, so the four workers serialise exactly as CPython's
+  do. `Go (tinygo)` belongs
+  here too: TinyGo's `tasks` scheduler is cooperative, so its four goroutines run one after
+  another on a single OS thread, and the same is true of the `Ruby (ruby.wasm)` and
+  `Lua (lua.wasm)` rows, whose task 11 is Fibers and coroutines because their wasip1 builds
+  have no threads at all. The `Python (wasip1)` row is in this group too, and it is the only
+  one that really does start four OS threads: CPython's `-threads` WASI build supports
+  `threading.Thread` and wasmtime's `wasi-threads` creates them, but the GIL serialises the
+  work exactly as it does in the native row, so the answer is right and the speedup is not
+  real. `jruby` and Groovy are
   unaffected and use real JVM threads. Algol 68 belongs in this group for a different reason —
   its four pthreads are real and overlap, but the implementation's stack copying costs more
   than the parallelism returns, so it is a correct-answer-no-speedup cell too. VHDL is here for
@@ -512,7 +542,7 @@ iterations, the loop is smaller than the noise in starting the process.
 
 ## Expected cost
 
-Every task runs six times, in 102 toolchains.
+Every task runs six times, in 109 toolchains.
 
 - Fast compiled languages: under a second per run, so about **1.5 hours** for the matrix.
 - The 100-million-iteration tasks take 10 to 15 seconds in CPython.
@@ -637,7 +667,7 @@ Every task runs six times, in 102 toolchains.
     375 ms for the million appends, because `,←` grows in place.
 - Measured slow cells elsewhere: Java task 07 at 514 s, Modula-3 task 10 at 206 s, Modula-2
   task 10 at 115 s.
-- **The six WebAssembly rows** are the cheapest of the recent additions except for one cell each.
+- **The six original WebAssembly rows** are the cheapest of the recent additions except for one cell each.
   Task 07 is quadratic in AssemblyScript and in the hand-written row, because the append copies
   the whole string: measured **484.6 s** and **623.8 s** a run, which puts them between
   VBScript's 576 s and Racket's 1121 s, and one pass of either cell is about an hour. Everything
@@ -645,6 +675,26 @@ Every task runs six times, in 102 toolchains.
   cells are in the normal range. Every one of the six pays the runtime's module load and compile
   on every run, measured at **44 ms** for a no-op module against 30 ms for a native executable
   and 31 ms for `wasmtime-min`.
+- **The three interpreted WebAssembly rows are the slow ones in that group**, because a
+  language runtime starts inside wasmtime on every cell and the module is large. **Ruby** measured
+  11.6-54.8 s on the 100-million-iteration tasks (01 11.6 s, 02 19.7 s, 06 54.8 s, 09 18.9 s, 11 18.6 s),
+  11-19 s on the matrix and file tasks, and **117-161 s** on task 07 — the honest quadratic append,
+  and the row's slow cell. **Lua** is much quicker: 2.5-8.4 s on the loops, 0.4-4.6 s on the rest,
+  and 21.9 s on task 07. **CPython** measured 29-36 s on the four 100-million-iteration tasks
+  (01 36.6 s, 02 35.7 s, 03 28.9 s, 08 27.0 s), 0.4-10.6 s elsewhere, 15.2 s on task 07 and
+  **74.1 s** on task 13, which is its slow cell. `RUN.md` records the measurements.
+- **The four newest rows** are cheap except where the task is quadratic. **Cython** costs what
+  CPython costs to start — measured, its floor is the same as `python print(1)` on this host,
+  90-200 ms — and its loops are **not uniformly faster**, because pure-mode Cython on untyped
+  Python objects still does Python arithmetic. Measured against CPython on the same host:
+  task 01 6.1-6.3 s against 8.2-8.3 s, task 02 5.8-6.5 s against 7.5-7.6 s and task 03
+  4.5-5.2 s against 5.8-6.8 s — about **1.25-1.35x** — task 04, a builtin `sum`, identical at
+  0.2-0.3 s, and task 13 *slower* at 17.6-20.0 s against 14.1-17.2 s. Its slow cell is task 07
+  at 26 s, the honest quadratic append. **GraalVM JIT** and **Loom**
+  are the `openjdk` row's costs: every short cell is 0.2-0.5 s, and task 07 is the slow one at
+  **94-110 s** for GraalVM and 81-82 s for HotSpot on this host. **TinyGo** is a native
+  compiler, so everything is milliseconds except its task 07, which is **314 s** — the same
+  quadratic append, and its slow cell.
 - **Nothing is cut off, so a pass has no upper bound.** The compiled rows are all under a
   second per run, but one of the slow cells above can outweigh the entire rest of the matrix,
   and it runs six times. Budget from the slowest cells, not from the average.
@@ -707,7 +757,11 @@ discovering halfway through a run.
 | terra | untested | untested | yes, the official `terra-Windows-x86_64-*.7z`; no admin and no MSVC, but the interpreter **requires a non-nil `VCINSTALLDIR`** or it aborts before running any file, and `INCLUDE` must point at a C sysroot for the one task that includes `windows.h`. Verified on Windows x64 only |
 | dyalog | untested | untested | yes, the 20.0 Unicode Windows distribution administratively extracted. Runs unregistered with nothing on stdout. Verified on Windows x64 only; the download page's other platforms get `.deb`/`.rpm` and a macOS `.pkg`, none of which were exercised here |
 | nelua | untested | untested | yes, the git repository plus a C compiler and its own bundled Lua interpreter. No admin. Verified on Windows x64 only |
-| c/c++/rust/go/assemblyscript/webassembly (`wasmtime 46.0.3`) | yes, all six | yes, all six | yes, all six. The runtime is a portable release zip; the only Windows-specific piece is the wasi-sdk tarball for the C and C++ rows, which ships `x86_64-windows` and `x86_64-linux` builds of the same thing. Task 11 is the version-sensitive cell on every platform: `wasi-threads` was deleted in wasmtime 47, so **46.0.3 or older is required** and the row cannot be run on a current runtime. Verified on Windows x64 only |
+| go (tinygo) | yes | yes | yes, the official `tinygo0.42.0.windows-amd64.zip` (the release also ships Linux and macOS builds of the same layout). Verified on Windows x64 only, but nothing in it is Windows-specific: it needs no MSVC and emits a standalone executable. Its task 15 flush-and-close deviation is a Windows-target property — TinyGo implements `os.File.Sync` on linux, darwin and wasip1 and stubs it on Windows |
+| python (cython) | yes | yes | yes, and the build flags are **not** portable: the row's `-DMS_WIN64` and `-municode` are MinGW-on-Windows requirements, and on Linux or macOS the same two steps are plain `cython --embed` plus a `gcc` that links the interpreter. Verified on Windows x64 only |
+| java (graalvm jit) | yes | yes | yes, the same GraalVM tarball on all three |
+| java (loom) | yes | yes | yes, any JDK 21 or newer on any platform; nothing Windows-specific |
+| c/c++/rust/go/assemblyscript/webassembly/ruby/lua/python (`wasmtime 46.0.3`) | yes, all nine | yes, all nine | yes, all nine. The runtime is a portable release zip; the only Windows-specific piece is the wasi-sdk tarball for the C and C++ rows, which ships `x86_64-windows` and `x86_64-linux` builds of the same thing. Task 11 is the version-sensitive cell on every platform: `wasi-threads` was deleted in wasmtime 47, so **46.0.3 or older is required** and the row cannot be run on a current runtime. Verified on Windows x64 only |
 
 **Windows reaches every row**; it is the only host that does. Linux loses `actionscript`
 (no captive runtime), `dolphin smalltalk` (Windows-only VM), `vbscript` and `jscript`
@@ -718,7 +772,7 @@ loses Tcl's task 11 unless the distribution bundles the `Thread` package. macOS 
 PowerShell 5.1 row (use `pwsh` there), the Windows-only scripting rows (`vbscript`, `jscript`
 and `autohotkey`), and the two rows whose toolchain ships Windows-only
 binaries: `oberon-07` (build the compiler with `make lin64` instead) and `component pascal`,
-which is .NET-only by construction and has no non-Windows release. The eighteen newest rows were
+which is .NET-only by construction and has no non-Windows release. The twenty-two newest rows were
 all verified on Windows x64; where a material file did not exercise Linux or macOS, the table
 says `untested` rather than guessing. Whichever host you pick,
 run the whole matrix on it, because numbers are only comparable within a run.

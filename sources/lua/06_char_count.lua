@@ -1,5 +1,6 @@
 -- task 06 char_count — expected output: 10000000
 -- build: none (interpreted)    run: lua 06_char_count.lua (PUC Lua 5.4)    also runs on LuaJIT: luajit 06_char_count.lua
+-- build (wasm): lua.wasm is the wasm32-wasip1 build of this same interpreter (see BUILD.md); run: wasmtime -W exceptions=y --dir . lua.wasm <task>.lua
 -- The 100 MB text is built once with string.rep, then scanned one character at a time.
 
 local text = string.rep("abcdefghij", 10000000)

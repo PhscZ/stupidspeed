@@ -1,5 +1,6 @@
 # task 05 alloc_churn — expected output: 1274991808
 # build: none (interpreted)    run: ruby 05_alloc_churn.rb (cruby) | ruby --yjit 05_alloc_churn.rb (cruby+yjit) | jruby 05_alloc_churn.rb (jruby, needs Java 25)
+# build (wasm): ruby.wasm is the wasip1 build from ruby/ruby.wasm (see BUILD.md); run: wasmtime --dir . ruby.wasm <task>.rb
 # The stock Windows CRuby build has no YJIT: `ruby --yjit` warns "Ruby was built without YJIT support".
 # Each slot holds the last buffer stored there, so the previous buffer becomes garbage (256 live buffers at most).
 

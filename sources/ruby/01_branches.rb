@@ -1,5 +1,6 @@
 # task 01 branches — expected output: 33333334 13333333 7619048 45714285
 # build: none (interpreted)    run: ruby 01_branches.rb (cruby) | ruby --yjit 01_branches.rb (cruby+yjit) | jruby 01_branches.rb (jruby, needs Java 25)
+# build (wasm): ruby.wasm is the wasip1 build from ruby/ruby.wasm (see BUILD.md); run: wasmtime --dir . ruby.wasm <task>.rb
 # The stock Windows CRuby build has no YJIT: `ruby --yjit` warns "Ruby was built without YJIT support".
 
 a = 0

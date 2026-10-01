@@ -1,5 +1,6 @@
 -- task 05 alloc_churn — expected output: 1274991808
 -- build: none (interpreted)    run: lua 05_alloc_churn.lua (PUC Lua 5.4)    also runs on LuaJIT: luajit 05_alloc_churn.lua
+-- build (wasm): lua.wasm is the wasm32-wasip1 build of this same interpreter (see BUILD.md); run: wasmtime -W exceptions=y --dir . lua.wasm <task>.lua
 -- Lua strings are immutable, so each iteration builds a fresh 64-byte string; the slots
 -- table keeps it reachable and drops the buffer it replaces.
 

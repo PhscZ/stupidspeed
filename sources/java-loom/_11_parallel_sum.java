@@ -1,9 +1,8 @@
 // task 11 parallel_sum — expected output: 7500000075000000
-// build: javac _11_parallel_sum.java    run: java _11_parallel_sum
-// build (graalvm native-image): native-image -O2 _11_parallel_sum    run: ./_11_parallel_sum
-// run (graalvm jit): the same javac class file under GraalVM's java, which enables the Graal JIT by default
-// run (loom): the same javac class file on a JDK 21+; task 11's loom variant is sources/java-loom/_11_parallel_sum.java
-// Four real OS threads (java.lang.Thread) over fixed ranges; the partial sums are exact in long.
+// build: javac -d . _11_parallel_sum.java    run: java -cp . _11_parallel_sum
+// The Loom variant of the java row's task 11: the same four fixed quarters, but the workers are
+// virtual threads (Thread.ofVirtual) instead of platform threads. Everything else in the file is
+// the openjdk row's task 11 unchanged.
 
 public class _11_parallel_sum {
     private static final long SPAN = 25000000L;
@@ -36,7 +35,7 @@ public class _11_parallel_sum {
         Thread[] threads = new Thread[4];
         for (int t = 0; t < 4; t++) {
             final int id = t;
-            threads[t] = new Thread(() -> results[id] = work(id));
+            threads[t] = Thread.ofVirtual().name("worker-" + t).unstarted(() -> results[id] = work(id));
         }
         for (Thread th : threads) {
             th.start();

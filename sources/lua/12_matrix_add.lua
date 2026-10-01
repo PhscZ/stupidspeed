@@ -1,5 +1,6 @@
 -- task 12 matrix_add — expected output: 999000000
 -- build: none (interpreted)    run: lua 12_matrix_add.lua (PUC Lua 5.4)    also runs on LuaJIT: luajit 12_matrix_add.lua
+-- build (wasm): lua.wasm is the wasm32-wasip1 build of this same interpreter (see BUILD.md); run: wasmtime -W exceptions=y --dir . lua.wasm <task>.lua
 -- Flat tables with index i*n+j+1 instead of nested tables.
 
 local n = 1000

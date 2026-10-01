@@ -1,5 +1,6 @@
 // task 06 char_count — expected output: 10000000
 // build: go build -o prog 06_char_count.go    run: ./prog
+// build (tinygo): tinygo build -o prog.exe 06_char_count.go    run: ./prog.exe
 // note: plain "go build" only; do not set GOGC=off or any other tuning flags
 package main
 

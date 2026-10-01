@@ -1,6 +1,8 @@
 // task 05 alloc_churn — expected output: 1274991808
 // build: javac _05_alloc_churn.java    run: java _05_alloc_churn
 // build (graalvm native-image): native-image -O2 _05_alloc_churn    run: ./_05_alloc_churn
+// run (graalvm jit): the same javac class file under GraalVM's java, which enables the Graal JIT by default
+// run (loom): the same javac class file on a JDK 21+; task 11's loom variant is sources/java-loom/_11_parallel_sum.java
 // The 256 slots keep each buffer reachable; the array it replaces becomes garbage for the GC.
 
 public class _05_alloc_churn {

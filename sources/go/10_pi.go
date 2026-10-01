@@ -1,5 +1,6 @@
 // task 10 pi — expected output: 4470
 // build: go build -o prog 10_pi.go    run: ./prog
+// build (tinygo): tinygo build -o prog.exe 10_pi.go    run: ./prog.exe
 // note: plain "go build" only; do not set GOGC=off or any other tuning flags
 package main
 

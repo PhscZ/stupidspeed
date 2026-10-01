@@ -1,5 +1,6 @@
 # task 03 func_sum — expected output: 100000000
 # build: none (interpreted)    run: ruby 03_func_sum.rb (cruby) | ruby --yjit 03_func_sum.rb (cruby+yjit) | jruby 03_func_sum.rb (jruby, needs Java 25)
+# build (wasm): ruby.wasm is the wasip1 build from ruby/ruby.wasm (see BUILD.md); run: wasmtime --dir . ruby.wasm <task>.rb
 # The stock Windows CRuby build has no YJIT: `ruby --yjit` warns "Ruby was built without YJIT support".
 # CRuby's interpreter never inlines add_one; the YJIT/JRuby JITs may inline this call site once it is hot.
 

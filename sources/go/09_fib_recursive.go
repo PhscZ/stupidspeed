@@ -1,5 +1,6 @@
 // task 09 fib_recursive — expected output: 102334155
 // build: go build -o prog 09_fib_recursive.go    run: ./prog
+// build (tinygo): tinygo build -o prog.exe 09_fib_recursive.go    run: ./prog.exe
 // note: plain "go build" only; do not set GOGC=off or any other tuning flags
 package main
 

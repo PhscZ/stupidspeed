@@ -1,6 +1,8 @@
 // task 10 pi — expected output: 4470
 // build: javac _10_pi.java    run: java _10_pi
 // build (graalvm native-image): native-image -O2 _10_pi    run: ./_10_pi
+// run (graalvm jit): the same javac class file under GraalVM's java, which enables the Graal JIT by default
+// run (loom): the same javac class file on a JDK 21+; task 11's loom variant is sources/java-loom/_11_parallel_sum.java
 // Gibbons' unbounded spigot on java.math.BigInteger; the leading 3 counts as one of the
 // 1000 digits, and only the digit sum is printed.
 

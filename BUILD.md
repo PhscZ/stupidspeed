@@ -7,7 +7,8 @@ Convention below: `<task>` is the task's own name, so the source for task 01 in 
 `sources/c/01_branches.c`, and the output is `prog`. Add the thread flag where a language
 needs one, because task 11 uses four threads.
 
-Fourteen things do not follow the flat `<task>.<ext>` layout, and each says why:
+Fifteen things do not follow the flat `<task>.<ext>` layout, and each says why. The three
+per-toolchain source folders are a separate case and are described after the list:
 
 - **C#, F# and VB.NET** keep a folder per task (`01_branches/01_branches.csproj`) because the
   .NET SDK does not support several projects in one directory: `dotnet build` with no project
@@ -98,11 +99,25 @@ not `_`. In Component Pascal and Oberon-07 the compiler enforces the tie — the
 conventional.
 
 A toolchain whose source genuinely differs from its language's main toolchain gets a folder of
-its own rather than a suffixed file beside the shared one. There is one such case today:
-`sources/kotlin-native/`, which holds the three Kotlin/Native files (tasks 11, 14 and 15) that
-cannot use `java.lang.Thread` or `java.io`. The other twelve tasks are one source shared by
-both Kotlin rows and stay in `sources/kotlin/`, so those twelve are built from `kotlin/` for
-either row and only the three are built from `kotlin-native/`.
+its own rather than a suffixed file beside the shared one. There are three such cases today:
+
+- `sources/kotlin-native/`, which holds the three Kotlin/Native files (tasks 11, 14 and 15) that
+  cannot use `java.lang.Thread` or `java.io`. The other twelve tasks are one source shared by
+  both Kotlin rows and stay in `sources/kotlin/`, so those twelve are built from `kotlin/` for
+  either row and only the three are built from `kotlin-native/`.
+- `sources/java-loom/`, which holds **one** file, `_11_parallel_sum.java`. The `loom` row builds
+  the other fourteen tasks from `sources/java/` unchanged, and its task 11 differs only in
+  `Thread.ofVirtual()` replacing `new Thread(...)`.
+- `sources/tinygo/`, which also holds **one** file, `15_file_write.go`. TinyGo's Windows target
+  implements no fsync, so its task 15 flushes by closing where the `gc` row calls `f.Sync()`; the
+  other fourteen tasks are `sources/go/` unchanged.
+
+Three rows reuse an existing source set in **full**, with no folder of their own: `graalvm jit`
+and `cython` are `sources/java/` and `sources/python/` exactly as `openjdk` and `cpython` build
+them, and `graalvm native-image` is `sources/java/` again. That is the arrangement Scala Native
+has with `sources/scala/` and the four compiled WebAssembly rows have with their native
+counterparts, and it is the opposite of `kotlin-native/`, `java-loom/` and `tinygo/`, which exist
+only because one or three of their files cannot be shared.
 
 The version column is the **minimum** that works, not the newest release. Anything
 reasonably recent works; it is what the task actually needs, not what happens to be current.
@@ -116,7 +131,8 @@ builds on Windows too, including `flang` and `luajit`. The one row that is *not*
 `assembly`: it is a freestanding ELF64 binary built with `nasm -f elf64` and `ld`, so it is
 Linux x86-64 only. See `RUN.md` for the full platform breakdown.
 
-Disk: **31 GB measured** for all 96 toolchains, installed and run on one Windows x64 host.
+Disk: **31 GB measured** for all 96 toolchains, installed and run on one Windows x64 host, and
+about **34 GB for the 109** rows the tables below now list.
 The heavy terms are LLVM (4.0 GB), Swift (3.2 GB), the AIR SDK (1.6 GB), GNAT with its MSYS2
 runtime (1.8 GB, which also supplies `flang`), MSVC (1.2 GB once reassembled from a 2.5 GB
 layout), Julia (1.1 GB), Perl (1.0 GB), the .NET SDK (0.7 GB) and GraalVM (0.7 GB); most other
@@ -148,6 +164,17 @@ payload is three files, plus the tarball's stub and a 187 KB import library) and
 6 MB**, which is the git repository and its 502 KB self-built interpreter. Terra needs no MSVC
 and no Windows SDK, and Nelua's interpreter is 502 KB because it is the repository's own
 `src/onelua.c` build, not a separate Lua install.
+The four newest rows add about **1.3 GB**, and one term is all of it: **TinyGo at 1.3 GB**,
+unpacked from a 178 MB zip, because the compiler ships a whole LLVM 22.1 tree inside it.
+**Cython** is a 15 MB `pip install`. **GraalVM JIT** and **Loom** add nothing at all — the first
+is the same GraalVM JDK the `graalpy` and `graalvm native-image` rows already install (measured
+here: 771 MB extracted), and the second is the JDK the `openjdk` row already has. The Go SDK
+(264 MB, measured) is needed by `tinygo` as well as by the `gc` row, so it is counted once. That
+puts the current total at about **34 GB for all 109 toolchains**.
+The three interpreted WebAssembly rows add about **0.14 GB** on top of the six that already
+existed: the single-file `ruby.wasm` is 99 MB, the Lua build reuses the `wasi-sdk` tree the C
+row already installs and adds only a 716 KB `lua.wasm`, and the CPython WASI build is a 28 MB
+`python.wasm` with an 11 MB stdlib tree beside it.
 Budget another 2-3 GB of scratch space while reassembling MSVC and Swift, since both go
 through a multi-gigabyte download that is deleted afterwards. Package caches do not count and
 can be far larger than the toolchains themselves.
@@ -162,10 +189,12 @@ is the practical way to get a working `flang` on Windows.
 ### Compiled to native code — nothing needed at run time
 
 The output is a native executable in every row below, and for most of them that executable needs
-nothing but the operating system. Three rows are exceptions and say so in their own entry: Vala's
+nothing but the operating system. Four rows are exceptions and say so in their own entry: Vala's
 binary imports `libglib-2.0-0.dll` whenever the code touches GLib, COBOL's imports `libcob-4.dll`,
-and Standard ML's needs `PolyLib.dll` beside it — in that last case the exported `.obj` is a whole
-heap image and the DLL is the runtime that loads it, so the pair has to travel together.
+Cython's imports `python3xx.dll` because CPython on Windows ships no static library to link
+against, and Standard ML's needs `PolyLib.dll` beside it — in that last case the exported `.obj`
+is a whole heap image and the DLL is the runtime that loads it, so the pair has to travel
+together.
 
 | Language | Toolchain | Minimum | Install | Build |
 |---|---|---|---|---|
@@ -179,6 +208,7 @@ heap image and the DLL is the runtime that loads it, so the pair has to travel t
 | Rust | rustc | 1.70 (1.63 for `std::array::from_fn`) | rustup.rs | `rustc -O -o prog <task>.rs` |
 | Zig | zig | 0.16 | ziglang.org/download | `zig build-exe -O ReleaseFast <task>.zig -femit-bin=prog` |
 | Go | gc | 1.20 | go.dev/dl | `go build -o prog <task>.go` |
+| Go | tinygo | 0.42 | tinygo.org, `tinygo0.42.0.windows-amd64.zip` (178 MB) extracted into `tools/tinygo/` — no installer, no admin | `tinygo build -o prog.exe <task>.go`, run from `sources/go/` for fourteen tasks and from `sources/tinygo/` for task 15. TinyGo bundles its own LLVM 22.1 and emits a standalone executable, but it still **shells out to `go`** for `go list` and `go env`, so the Go SDK must be on `PATH` or every build dies with `could not find 'go' command`. The default target is the host (`windows/amd64` here); there is no `windows` target name in `tinygo targets` to pass explicitly. Task 15 comes from `sources/tinygo/` because TinyGo's Windows target implements no fsync. |
 | D | dmd | 2.100 | dlang.org/install.sh | `dmd -O -release -of=prog _<task>.d` |
 | D | ldc2 | 1.30 | dlang.org/install.sh | `ldc2 -O3 -release -of=prog _<task>.d` |
 | Swift | swiftc | 5.8 | swift.org/install | `swiftc -O -o prog <task>.swift`. Windows needs `-sdk <swift>/Platforms/6.4.0/Windows.platform/Developer/SDKs/Windows.sdk`, and MSVC on PATH for the link step. |
@@ -193,6 +223,7 @@ heap image and the DLL is the runtime that loads it, so the pair has to travel t
 | C# | nativeaot | .NET 8 | dotnet.microsoft.com | `dotnet publish -c Release -p:PublishAot=true`. Emits a native executable. |
 | Dart | aot | 3.3 | dart.dev | `dart compile exe -o prog <task>.dart`. Emits a native executable. |
 | Python | nuitka | 4.0 | nuitka.net | `nuitka --standalone <task>.py`. Compiles to C and then to a binary. |
+| Python | cython | 3.3 (3.3.0 measured) | pypi.org/project/Cython | Two steps: `cython --embed -3 --module-name _<task> -o _<task>.c <task>.py`, then `gcc -O2 -DMS_WIN64 -municode -I <python>/include -o prog.exe _<task>.c -L <python>/libs -lpython3xx`. `--embed` makes Cython emit a `main` that starts the interpreter and runs the module, so the source file is used **unchanged** — the same fifteen files as the `cpython` row. Three flags are load-bearing on Windows. `--module-name` is required because every file's name starts with a digit, which is not a legal Python module name (`'01_branches' is not a valid module name`). `-DMS_WIN64` is required because CPython's hand-maintained `pyconfig.h` only defines `MS_WIN64` inside an `#ifdef _MSC_VER` block, so under MinGW `SIZEOF_VOID_P` is 4 and Cython's own `sizeof(void*)` assertion fails to compile. `-municode` is required because `--embed` generates a `wmain`, not a `main`. Cython **3.3 or newer** is the floor, because tasks 02 and 11 use `match` and PEP-634 support only landed there. |
 | Assembly | nasm | 2.15 | nasm.us | `nasm -f elf64 <task>.asm && ld -o prog <task>.o`. Nothing extra for task 11: there is no libc, so it issues `clone` and `futex` itself. |
 | Crystal | crystal | 1.21 | crystal-lang.org | `crystal build --release -o prog <task>.cr`. Needs the MSVC environment: the compiler shells out to `cl.exe`, which drives `link.exe`. Integer literals default to `Int32`, so task 02 must be written with the `Int64` form or it raises `OverflowError`. |
 | Objective-C | clang | 22 | MSYS2 `ucrt64` | `clang -fobjc-runtime=gnustep-2.2 -O2 -o prog <task>.m -lobjc -lgnustep-base`. The runtime flag is required; without it the link fails on `objc_autoreleasePoolPush` and `__objc_load`. `gcc-objc` 16.2.0 is an alternative front end, but the clang path is the one measured. |
@@ -216,17 +247,23 @@ heap image and the DLL is the runtime that loads it, so the pair has to travel t
 
 ### Compiled to WebAssembly — the runtime is the VM, and the module is the program
 
-The output is a `.wasm` module, so a WebAssembly runtime starts on every measured run. Six rows
+The output is a `.wasm` module, so a WebAssembly runtime starts on every measured run. Nine rows
 share one runtime, **wasmtime**, pinned to **46.0.3** for the reason in the `wasi-threads` note
 below; the install is the release zip extracted under `tools/wasmtime46/`, no installer and no
-admin. Four of the six reuse an existing row's sources unchanged — `sources/c/`, `sources/cpp/`,
-`sources/rust/` and `sources/go/` — the same arrangement `sources/scala/` has with the `jvm` row,
-because those four source sets were already written for a POSIX target and their thread paths
-(`pthread_create`, `std::thread`, `std::thread`, goroutines) have a WebAssembly counterpart. Only
-`AssemblyScript` and the hand-written `WebAssembly` row have a source directory of their own.
+admin. Six of the nine reuse an existing row's sources unchanged — `sources/c/`, `sources/cpp/`,
+`sources/rust/`, `sources/go/`, `sources/python/` and `sources/ruby/` — the same arrangement
+`sources/scala/` has with the `jvm` row, because those source sets were already written for a
+POSIX target. Only `AssemblyScript`, the hand-written `WebAssembly` row, `Lua` and the three rows
+whose task 11 needs a different mechanism have a source directory of their own.
 
 The C and C++ rows need no source change at all: `sources/c/11_parallel_sum.c` already selects its
 pthread branch under `#else` of `#if defined(_WIN32)`, and wasm32 is not `_WIN32`.
+
+Three of the nine cannot use the concurrency facility their native row uses, and each says so in
+its own source and entry: **Ruby** and **Lua** have no threads at all on wasip1 (CRuby is built
+`THREAD_MODEL=none`, and Lanes has no wasm build), so their four workers are Fibers and
+coroutines; **Go** has no thread support in its `wasip1` port, so its goroutines are multiplexed
+onto one thread. All three are correct-answer-no-speedup cells.
 
 | Language | Toolchain | Minimum | Install | Build |
 |---|---|---|---|---|
@@ -236,12 +273,17 @@ pthread branch under `#else` of `#if defined(_WIN32)`, and wasm32 is not `_WIN32
 | Go | wasip1 (gc) | 1.26 | none — the installed toolchain has the target | `GOOS=wasip1 GOARCH=wasm go build -o prog.wasm <task>.go`. |
 | AssemblyScript | wasip1 (asc) | 0.28 | `npm install assemblyscript` into `tools/assemblyscript/` | `asc <task>.ts -O2 --outFile prog.wasm --runtime incremental --use abort=<task>/abortImpl`. **`asc` must be run with the row's directory as the working directory**, because the `--use abort=…` specifier is resolved relative to the source file. Task 11 adds `--enable threads --importMemory --sharedMemory --maximumMemory 1024`. |
 | WebAssembly | hand-written WAT | none | none — the runtime is the whole toolchain | **No build step.** `wasmtime run <task>.wat` parses the text on every run; measured, that costs 51 ms against 52 ms for the equivalent binary module, i.e. nothing. |
+| Python | wasip1 (cpython) | 3.12.2 | the `Python-3.12.2.tgz` source release (26 MB), cross-compiled once with the `wasi-sdk` tree the C row already installs — no new download | **Not a prebuilt artifact**, because neither released WASI asset is usable as it stands. The plain build has an owned, growable memory but `threading.Thread` raises `RuntimeError: can't start new thread`; the `-threads` build supports threads but declares its memory as an **import** with `min = max = 160` pages — a hard 10 MB cap — so tasks 04, 06, 12 and 13 die with `MemoryError`. The row therefore builds from source and lifts the cap where it lives, in `configure.ac`'s WASI pthread branch (`configure.ac:2327-2340` in 3.12.2): `-Wl,--max-memory=10485760` becomes `-Wl,--max-memory=1073741824`, and the old target triple `wasm32-wasi-threads` becomes `wasm32-wasip1-threads` because wasi-sdk 34's sysroot has no `wasm32-wasi-threads` tree (`ph.c:1:10: fatal error: 'pthread.h' file not found`). Then: `env WASI_SDK_PATH=<wasi-sdk> sh Tools/wasm/wasi-env sh configure -C --host=wasm32-unknown-wasi --build=x86_64-pc-mingw64 --enable-wasm-pthreads --with-build-python=<python.exe> --prefix=/ CONFIG_SITE=Tools/wasm/config.site-wasm32-wasi`, then `mingw32-make -j12 python.wasm`, then copy `Lib/` to `lib/python3.12/` beside the module plus `_sysconfigdata__wasi_wasm32-wasi.py` from `build/lib.wasi-wasm32-3.12/`. **`--prefix=/` is what makes `--dir .` alone sufficient** — the official recipe leaves `/usr/local` and relies on a `--mapdir /::<srcdir>` mapping plus `PYTHONPATH`. Run line: `wasmtime -S threads=y -W threads=y -W shared-memory=y --dir . python.wasm <task>.py`. The resulting module is 28,012,164 bytes and declares `env.memory flags=3 shared min=160 max=16384`. A binary patch that raises the released asset's declared maximum is **not** a substitute: it yields a module wasmtime rejects with `invalid leading byte (0x80) for external kind`, because the import section's length prefix and its first descriptor overlap. |
+| Ruby | wasip1 (ruby.wasm) | 2.10.1 (`ruby.wasm`), CRuby 4.1.0 | github.com/ruby/ruby.wasm releases — the single-file `ruby.wasm` (99 MB) from the `2.10.1` tag, no installer and no admin. The `ruby-*-wasm32-unknown-wasip1-{full,minimal}.tar.gz` assets are the same build with the stdlib tree beside it, and the `-emscripten-` ones are a different target that the wasmtime CLI cannot run. | **No build step.** `wasmtime --dir . ruby.wasm <task>.rb`. The module embeds CRuby 4.1.0 and its stdlib, so nothing else is needed. Every cell needs `--dir .` because the script itself is read through a preopen. Task 11 cannot use `Thread`: CRuby's WASI build is configured `THREAD_MODEL=none`, so `Thread.new` raises `initialize() function is unimplemented on this machine`, and `Ractor.new` is stubbed the same way. The row therefore uses **Fibers**, the language's own cooperative concurrency, and `sources/ruby-wasm/11_parallel_sum.rb` says so. |
+| Lua | wasip1 (puc-lua) | 5.4.8 | the `lua-5.4.8.tar.gz` source release (374 KB), cross-compiled once with the `wasi-sdk` tree the C row already installs — no new download | Compile the 33 core sources with `clang --target=wasm32-wasip1 -O2 -DNDEBUG -D_WASI_EMULATED_SIGNAL -DL_tmpnam=32 -I. -c <file>.c` and link them with `clang++ --target=wasm32-wasip1 -O2 -fwasm-exceptions -mllvm -wasm-use-legacy-eh=false -L<wasi-sdk>/share/wasi-sysroot/lib/wasm32-wasip1/eh -lc++abi -lunwind -lwasi-emulated-signal -lwasi-emulated-process-clocks -o lua.wasm *.o wasi_shims.c`. Four things carry the target, and none of them changes a Lua source line. `-D_WASI_EMULATED_SIGNAL`/`-lwasi-emulated-signal` because `lstate.h` uses `sig_atomic_t`; `-lwasi-emulated-process-clocks` because `loslib.c` and `ltablib.c` call `clock()`; `-DL_tmpnam=32` because wasi-libc does not define `L_tmpnam`; and the C++ exception route because wasi-libc turns `<setjmp.h>` into a hard `#error` unless `-mllvm -wasm-enable-sjlj` is set, and that path emits *legacy* `try` instructions that both wasmtime 46 and 49 refuse with `legacy_exceptions feature required`. `ldo.c` already prefers `throw`/`catch` over `setjmp` under `__cplusplus`, so compiling the sources as C++ is Lua's own supported configuration and the only one the runtime can execute. `tools/lua-wasm/wasi_shims.c` supplies `tmpfile`, `tmpnam` and `system`, which wasi-libc omits and no task calls. Run line: `wasmtime -W exceptions=y --dir . lua.wasm <task>.lua`. Task 11 cannot use the Lanes extension the native Lua rows use — Lanes is a pthreads C extension with no wasm build — so the row uses **coroutines**, the language's own cooperative concurrency, and `sources/lua-wasm/11_parallel_sum.lua` says so. |
 
-Run lines, all six rows: `wasmtime run prog.wasm`. Task 11 adds
-`-S threads=y -W threads=y -W shared-memory=y`. Tasks 14 and 15 add `--dir=.` **from a directory
-holding `data.bin`**. Go is the exception on the file tasks: it opens its preopens by the WASI
-name and expects it to be `/`, so its two cells need `--dir=<host dir>::/` and print
-`Bad file number` with the plain `--dir=.` every other row uses.
+Run lines, all nine rows: `wasmtime run prog.wasm`. Task 11 adds
+`-S threads=y -W threads=y -W shared-memory=y` for the six compiled rows. Tasks 14 and 15 add
+`--dir=.` **from a directory holding `data.bin`**, and the three interpreted rows need
+`--dir=.` on **every** cell, because the script itself is read through the preopen. Go is the
+exception on the file tasks: it opens its preopens by the WASI name and expects it to be `/`,
+so its two cells need `--dir=<host dir>::/` and print `Bad file number` with the plain
+`--dir=.` every other row uses.
 
 **`wasi-threads` was deleted in wasmtime 47.** The accepted RFC
 (`rfcs/accepted/wasmtime-remove-wasi-threads.md`) removes the `wasmtime-wasi-threads` crate in
@@ -264,7 +306,9 @@ has to start on every measured run. That startup is part of the number.
 
 | Language | Toolchain | Minimum | Install | Build |
 |---|---|---|---|---|
-| Java | openjdk | 17 | jdk.java.net or Adoptium | `javac _<task>.java` |
+| Java | openjdk | 17 | jdk.java.net or Adoptium | `javac _<task>.java`, then `java -cp . _<task>` |
+| Java | graalvm jit | GraalVM 21 (25.0.4 measured) | graalvm.org, the same JDK tarball the `graalvm native-image` row installs | **No separate build step**: `javac _<task>.java` produces the same class files, and the row is the run line `<graalvm>/bin/java -cp . _<task>`. The whole difference from the `openjdk` row is which JIT compiles the bytecode: GraalVM's JDK has `EnableJVMCI`, `EnableJVMCIProduct` and `UseJVMCICompiler` all `true` by default, so the Graal compiler replaces HotSpot's C2 without any flag. Verified with `java -XX:+PrintFlagsFinal -version`. |
+| Java | loom | 21 (25 measured) | jdk.java.net or Adoptium — no GraalVM needed | `javac -d . _<task>.java`, then `java -cp . _<task>`, exactly as the `openjdk` row. The fourteen non-concurrent tasks build `sources/java/` unchanged; **task 11 builds `sources/java-loom/_11_parallel_sum.java`**, which is the `openjdk` task 11 with `Thread.ofVirtual()` in place of `new Thread(...)` and nothing else changed. Virtual threads are final since 21, so no preview flag is involved. |
 | Kotlin | jvm | 1.9 | kotlinlang.org | `kotlinc <task>.kt -include-runtime -d prog.jar` |
 | C# | coreclr | .NET 8 | dotnet.microsoft.com | `dotnet build -c Release` |
 | C# | mono | 6.12 | mono-project.com | `mcs -optimize+ <task>.cs` |
@@ -824,6 +868,8 @@ and the slowest thing on this page to set up.
 | kotlin/native | an LLVM toolchain and a C toolchain. On Windows, a JDK **17** via `JAVA_HOME`: the launcher parses `java -version` with `delims=-.` and breaks on JDK 24, which prints `24` with no dot, leaving a stray quote in `if %_java_major_version% geq 24`. The result is a batch syntax error rather than a clear message. |
 | swiftc | the Swift toolchain ships its own LLVM, needs `libcurl` and `libxml2`. On Windows it needs the MSVC toolchain to link, and `-sdk` pointing at the bundled Windows SDK. The Windows distribution is a WiX burn bundle, so a plain `--layout` copy is not enough: a `get_swift.py` (not committed, see the `tools/` note below) decompiles it with WiX's `dark.exe`, reads the burn manifest to recover the real package names (the extracted files are `a0`, `a1`, ...), stages each MSI next to its `.cab`, and administrative-extracts them. |
 | nuitka | in principle a C compiler, but in practice nothing on Python 3.13: Nuitka downloads its own zig-based backend and ignores a system MinGW. `--mingw64` is rejected on 3.13 and later. |
+| cython | a C compiler, CPython's development files (`include/` and `libs/`), and the interpreter's `python3xx.dll` beside the built executable — CPython on Windows ships no static library. MinGW needs the three flags in the build line above, and one of them is a genuine trap: CPython's `pyconfig.h` defines `MS_WIN64` **inside `#ifdef _MSC_VER`**, so under MinGW `SIZEOF_VOID_P` stays 4 while `sizeof(void*)` is 8, and Cython's own consistency check fails to compile with `enumerator value for '__pyx_check_sizeof_voidp' is not an integer constant`. |
+| tinygo | the Go SDK on `PATH`. TinyGo bundles its own LLVM and its own standard library, but it still calls `go list` and `go env` for module resolution, so without `go` every build stops with `could not find 'go' command: executable file not found in %PATH%`. |
 | gdscript | a Godot build, run with `--headless` |
 | lua, for task 11 only | the Lanes C extension: `luarocks install lanes`. Needs a C compiler. Stock Lua has no threads. No `luarocks` ships with the Windows binaries, so Lanes has to be built by hand. |
 | clang, clang++ (Windows) | the LLVM Windows tarball ships no C headers. Either add a MinGW sysroot (`--target=x86_64-w64-windows-gnu -isystem <mingw>/include`) or install the MSVC SDK. |
@@ -923,6 +969,16 @@ Worth knowing before starting, because these will eat a day each:
   text mode translates the `LF` a second time). Every task in that row ends its output with
   `Out.Char(0AX)` instead, which goes through the same text-mode translation once and produces
   a normal `CR LF`; a harness that compares raw bytes against `\n` needs to know that.
+- **gccgo has no Windows build and cannot be given one.** The GCC 16.1.0 tree this repository
+  uses is configured `--enable-languages=c,c++,fortran,lto,objc,obj-c++` and answers
+  `gcc -x go` with `language go not recognized`; it ships no `libgo`. Neither MSYS2 nor Cygwin
+  packages a `gcc-go`, and WinLibs, the standalone Windows GCC, builds C, C++, Objective-C,
+  Fortran and D only. Building it is not an option either: `libgo/configure.ac` assigns a
+  `GOOS` only for darwin, freebsd, irix6, linux, netbsd, openbsd, dragonfly, rtems, solaris2,
+  aix and gnu, so a mingw host dies at `could not determine GOOS from ${host}` before anything
+  compiles, and the runtime has no Windows implementation to link against — `libgo/runtime` has
+  no Windows file at all. `README.md` carries the full evidence under "Languages that are not
+  here, and why". Go is represented by the `gc` and `tinygo` rows instead.
 
 ## Reference implementations
 

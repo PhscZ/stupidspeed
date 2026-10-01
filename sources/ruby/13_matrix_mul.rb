@@ -1,5 +1,6 @@
 # task 13 matrix_mul — expected output: 599995000
 # build: none (interpreted)    run: ruby 13_matrix_mul.rb (cruby) | ruby --yjit 13_matrix_mul.rb (cruby+yjit) | jruby 13_matrix_mul.rb (jruby, needs Java 25)
+# build (wasm): ruby.wasm is the wasip1 build from ruby/ruby.wasm (see BUILD.md); run: wasmtime --dir . ruby.wasm <task>.rb
 # The stock Windows CRuby build has no YJIT: `ruby --yjit` warns "Ruby was built without YJIT support".
 
 n = 500

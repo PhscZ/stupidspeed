@@ -1,5 +1,9 @@
 # task 11 parallel_sum — expected output: 7500000075000000
 # build: none (interpreted)    run: ruby 11_parallel_sum.rb (cruby) | ruby --yjit 11_parallel_sum.rb (cruby+yjit) | jruby 11_parallel_sum.rb (jruby, needs Java 25)
+# build (wasm): ruby.wasm is the wasip1 build from ruby/ruby.wasm (see BUILD.md); run: wasmtime --dir . ruby.wasm <task>.rb
+# note (wasm): CRuby's WASI build is configured THREAD_MODEL=none, so Thread.new raises
+# "initialize() function is unimplemented on this machine"; the wasm row builds
+# sources/ruby-wasm/11_parallel_sum.rb instead, whose four workers are Fibers.
 # The stock Windows CRuby build has no YJIT: `ruby --yjit` warns "Ruby was built without YJIT support".
 # CRuby's GVL serializes the four threads, so this prints the right answer without running any faster;
 # JRuby's threads are real JVM threads and do run in parallel.

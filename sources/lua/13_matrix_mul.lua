@@ -1,5 +1,6 @@
 -- task 13 matrix_mul — expected output: 599995000
 -- build: none (interpreted)    run: lua 13_matrix_mul.lua (PUC Lua 5.4)    also runs on LuaJIT: luajit 13_matrix_mul.lua
+-- build (wasm): lua.wasm is the wasm32-wasip1 build of this same interpreter (see BUILD.md); run: wasmtime -W exceptions=y --dir . lua.wasm <task>.lua
 -- Plain i, j, k triple loop in that order, flat tables with index i*n+j+1.
 
 local n = 500

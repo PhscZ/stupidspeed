@@ -16,7 +16,7 @@ disposable. See the end of `BUILD.md` for what is in each.
 ## Results
 
 One row per toolchain, one column per task. The column headings are the task numbers, and
-the task names are the section headings under [Tasks](#tasks). All 102 toolchains, empty and
+the task names are the section headings under [Tasks](#tasks). All 109 toolchains, empty and
 ready to fill in.
 
 A cell holds the median of the 5 timed runs, in milliseconds. `WRONG` is an output that did
@@ -36,6 +36,7 @@ kept alongside the median in the raw results, not in this table.
 | Rust | rustc |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Zig | zig |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Go | gc |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Go | tinygo |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | D | dmd |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | D | ldc2 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Swift | swiftc |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -44,6 +45,8 @@ kept alongside the median in the raw results, not in this table.
 | Ada | gnat |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Pascal | fpc |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Java | openjdk |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Java | graalvm jit |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Java | loom |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Java | graalvm native-image |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Kotlin | jvm |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Kotlin | native |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -61,6 +64,7 @@ kept alongside the median in the raw results, not in this table.
 | Python | cpython |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Python | pypy |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Python | nuitka |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Python | cython |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Python | graalpy |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Ruby | cruby + yjit |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Ruby | jruby |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -128,6 +132,9 @@ kept alongside the median in the raw results, not in this table.
 | Go | gc (wasip1) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | AssemblyScript | asc (wasip1) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | WebAssembly | hand-written WAT |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Python | wasip1 (cpython) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Ruby | wasip1 (ruby.wasm) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Lua | wasip1 (puc-lua) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 
 No cell is `SKIPPED` by design. Seven rows need more than the stock install for task 11, and
 each says so in `BUILD.md`: Assembly has no libc, so it issues `clone` and `futex` itself; Tcl
@@ -138,14 +145,17 @@ clause; Oberon-07 has no thread module in its library, so it declares `CreateThr
 `WaitForSingleObject` as foreign procedures; Ring needs the distribution's own Threads
 extension, which the light release does not ship; and Terra needs a C sysroot on `INCLUDE` for
 the one task that includes `windows.h`, and a non-nil `VCINSTALLDIR` before the interpreter
-will start at all. Nine more rows have a version floor rather
+will start at all. Eleven more rows have a version floor rather
 than an extra install: Racket's parallel threads need 8.18 or later, OCaml's `Domain` needs
 5.x, since the 4.14 build has no `Domain` module at all, J's `T.` threads need 9.4, Janet's
-`ev/thread` needs 1.17.1, and the five WebAssembly rows need **wasmtime 46.0.3 or older**,
-because the `wasi-threads` API their task 11 uses was deleted in 47 and the flag that enables it
-became an unconditional error, so those five cells cannot be run on a current runtime. Eight
-rows pass task 11 but are correct-answer-no-speedup
-cells, because their concurrency is cooperative or serialised: CPython and CRuby, Dolphin
+`ev/thread` needs 1.17.1, Cython needs 3.3 for the `match` statements in tasks 02 and 11,
+Loom's `Thread.ofVirtual()` needs JDK 21, and the six WebAssembly rows that use `wasi-threads`
+— the five compiled ones plus Python — need **wasmtime 46.0.3 or older**, because that API was
+deleted in 47 and the flag that enables it became an unconditional error, so those six cells
+cannot be run on a current runtime. The Lua and Ruby wasm rows need no such floor. Thirteen rows pass task 11 but are correct-answer-no-speedup
+cells, because their concurrency is cooperative or serialised: CPython and CRuby — and
+**Cython**, whose task 11 is CPython's `threading.Thread` source compiled, with the same GIL
+and the same serialisation — Dolphin
 Smalltalk, whose `Process` objects are green, Simula, whose four `PROCESS` objects are
 scheduled by its own cooperative process simulation, Algol 68, whose four pthreads are real
 but whose implementation copies a stack on every switch, VHDL, whose four `process`
@@ -153,7 +163,17 @@ blocks are scheduled by GHDL on one OS thread, Dyalog APL, whose `&` spawn reall
 create four threads but which serialises them inside one execution engine — measured at 0.99
 CPU per wall second, and slower than the same work run serially — and Go's wasm row, whose
 goroutines are multiplexed onto the single wasm thread because Go's `wasip1` port has no thread
-support. The rest of the task 11 picture is in `RUN.md`.
+support. Go's `tinygo` row is in the group for the same reason from the other direction: TinyGo's
+`tasks` scheduler is cooperative and runs every goroutine on the one OS thread, so the four
+quarters are correct and serial — a probe of the identical loop measured 0.89x. **Ruby's and
+Lua's wasm rows join them for the same reason**: CRuby's wasip1 build is configured
+`THREAD_MODEL=none`, so `Thread.new` raises `initialize() function is unimplemented on this
+machine`, and the Lanes extension the native Lua rows use is a pthreads binding with no wasm
+build, so those two rows' four workers are Fibers and coroutines. **The Python wasm row is the
+thirteenth and the only one that really does create four OS threads**: CPython's `-threads`
+WASI build supports `threading.Thread` and wasmtime's `wasi-threads` starts them, but the GIL
+serialises the work exactly as it does in the native row. The rest of the task 11 picture is
+in `RUN.md`.
 
 Two rows are unusual for reasons the table cannot show. **ActionScript** prints a fixed
 2354-byte ASCII-art banner to stdout before the program's first line — the AIR runtime's own
@@ -608,17 +628,18 @@ in 0.107 s, which is faster than 331 million real calls should be, and the cause
 language — a plain C program with the same function and flags measures 0.115-0.119 s on the same
 host, so the C row and this one are doing the same thing.
 
-**The six WebAssembly rows** are one target and six front ends, and they are the only rows in the
+**The nine WebAssembly rows** are one target and nine front ends, and they are the only rows in the
 matrix whose program is not what the machine executes: a `.wasm` module is instantiated and
 compiled by a runtime before the first instruction runs, so every cell here measures
 **wasmtime's** compilation and execution of the module rather than the machine's execution of the
 source. That is the disclosure the SystemVerilog row carries for Icarus and the GDScript row for
-Godot, and it applies to all six equally. Four of them reuse an existing source set unchanged —
-`sources/c/`, `sources/cpp/`, `sources/rust/` and `sources/go/` — which is the arrangement
-`sources/scala/` already has with the `jvm` row, because those four were written for a POSIX
-target and their thread paths have a WebAssembly counterpart. The C row needs no source change at
-all: `11_parallel_sum.c` already picks its pthread branch under `#else` of `#if defined(_WIN32)`,
-and wasm32 is not `_WIN32`.
+Godot, and it applies to all nine equally. Six of them reuse an existing source set unchanged —
+`sources/c/`, `sources/cpp/`, `sources/rust/`, `sources/go/`, `sources/python/` and
+`sources/ruby/` — which is the arrangement
+`sources/scala/` already has with the `jvm` row, because those source sets were written for a
+POSIX target and their thread paths have a WebAssembly counterpart. The C row needs no source
+change at all: `11_parallel_sum.c` already picks its pthread branch under `#else` of
+`#if defined(_WIN32)`, and wasm32 is not `_WIN32`.
 
 **Task 11 pins the runtime, and it is the only cell in the matrix with that property.**
 `wasi-threads` — the API by which a module asks the host to create a thread — was deleted in
@@ -677,6 +698,136 @@ prints `0` instead of `7500000075000000`, with no diagnostic. The C and C++ rows
 the linker flags `-Wl,--import-memory -Wl,--export-memory`; the hand-written row spells it out.
 It was found by measurement, not by reading a spec, and it is the reason this row's task 11 was
 verified by its output rather than by the absence of an error.
+
+**Lua, Ruby and CPython join the group as three more rows on the same runtime**, and each is
+its own front end rather than a reuse of a compiled one. **Lua** is PUC Lua 5.4.8 cross-compiled
+once with the `wasi-sdk` tree the C row already installs, so it adds no download at all: the
+result is a 716 KB `lua.wasm`, and the whole build is 33 `clang --target=wasm32-wasip1` calls
+plus one link. Four things carry the target, and none of them changes a Lua source line. The
+signal and clock emulation libraries, because `lstate.h` uses `sig_atomic_t` and `loslib.c` calls
+`clock()`; `-DL_tmpnam=32`, because wasi-libc does not define `L_tmpnam`; and the exception route,
+which is the one real obstacle. Lua's error handling is `setjmp`/`longjmp`, and wasi-libc turns
+`<setjmp.h>` into a hard `#error` unless the module is built with `-mllvm -wasm-enable-sjlj` —
+but that path emits *legacy* `try` instructions, which wasmtime 46 and 49 both reject with
+`legacy_exceptions feature required for try instruction`. The way through is Lua's own other
+supported configuration: `ldo.c` defines `LUAI_THROW`/`LUAI_TRY` as C++ `throw`/`catch` whenever
+it is compiled as C++, so the sources are compiled with `clang++ -fwasm-exceptions
+-mllvm -wasm-use-legacy-eh=false` against the sysroot's `eh/libc++abi.a`, which emits the *new*
+exception-handling proposal and runs. That is a build flag, not a patch. Every cell needs
+`-W exceptions=y`, because wasmtime's exception feature is off by default, and every cell needs
+`--dir .` because the script itself is read through the preopen.
+
+**CPython** is the official WASI build — a 30 MB `python.wasm` with its `lib/python3.x` tree
+beside it, run as `wasmtime --dir . python.wasm <task>.py` — but **not the released `-threads`
+asset**, and the reason is worth recording because it is the one place in this group where a
+published artifact was unusable. That asset is the only released one that supports
+`threading.Thread`, and it declares its memory as an **import**:
+
+    (import "env" "memory" (memory 3 160 160))
+
+with flags 3 = has-max | shared and min = max = **160 pages, i.e. a hard 10 MB cap**. Task 04
+allocates an 8 MB array, task 06 builds a 100 MB string and task 12 holds three 1 MB arrays, so
+four cells died with `MemoryError` while every other cell passed. The non-threaded 3.14 build does
+have an owned, growable memory and runs thirteen of the fifteen cells unchanged, but
+`threading.Thread` raises `RuntimeError: can't start new thread` there, so it cannot be the row
+either. The cap is a compile-time constant of the build rather than a runtime setting, so the row
+builds CPython 3.12.2 from source and lifts it where it lives: `configure.ac`'s WASI pthread
+branch sets `-Wl,--max-memory=10485760`, and changing that to `1073741824` — plus retargeting
+`wasm32-wasi-threads` to `wasm32-wasip1-threads`, because wasi-sdk 34's sysroot has no
+`wasm32-wasi-threads` tree — produces a module that declares `min=160, max=16384`. All fifteen
+cells then pass, the four previously fatal ones included. A binary patch that raises the released
+asset's declared maximum is **not** used: it yields a module wasmtime rejects with
+`invalid leading byte (0x80) for external kind`, because the import section's length prefix and
+its first descriptor overlap in a way a byte-level rewrite cannot fix. The build is the honest
+route and it works.
+
+**Ruby** is the single-file `ruby.wasm` from the `2.10.1` release, 99 MB carrying CRuby 4.1.0 and
+its stdlib, so there is no build step and no other install; it runs on wasmtime 46 and 49 alike
+with no feature flags. **CPython** is the official WASI build, a 30 MB `python.wasm` with its
+`lib/python3.x` tree beside it, run as `wasmtime --dir . python.wasm <task>.py`. Neither can use
+its native row's task-11 mechanism, and both say so in their own source rather than quietly
+substituting one: CRuby's WASI build is configured `THREAD_MODEL=none`, so `Thread.new` raises
+`initialize() function is unimplemented on this machine` and `Ractor.new` is stubbed the same way,
+which makes the Ruby row's four workers **Fibers**; and the Lanes extension the native Lua rows
+use is a pthreads binding with no wasm build, which makes the Lua row's four workers
+**coroutines**. Both are the language's own cooperative concurrency, both interleave four fixed
+quarters and print the right total, and both are correct-answer-no-speedup cells — the same
+disposition Simula's `PROCESS` objects and Go's `wasip1` goroutines already carry. The native
+rows keep Thread and Lanes.
+
+**GraalVM JIT** is a third Java row and the bytecode counterpart of the `graalvm native-image`
+row: the same `javac` output, run under GraalVM's own `java`. Nothing is installed for it that
+the `native-image` row does not already need, and no flag is passed, because GraalVM's JDK ships
+`EnableJVMCI`, `EnableJVMCIProduct` and `UseJVMCICompiler` all `true` — verified with
+`java -XX:+PrintFlagsFinal -version`, and the JDK carries `jdk.graal.compiler.jmod` — so the Graal
+compiler replaces HotSpot's C2 without any flag. The whole difference from the `openjdk` row is
+which compiler turns the bytecode into machine code, which is the question the pair exists to ask.
+**On this host the answer is that it does not help**, and it is recorded rather than hidden:
+against the same class files on OpenJDK 25, with three runs each, GraalVM 25 is slower on eight of
+the eleven short tasks (04 291 ms against 263 ms, 05 403 ms against 362 ms, 12 283 ms against
+243 ms, 13 349 ms against 308 ms) and faster on three (06 334 ms against 365 ms, 08 361 ms
+against 401 ms, 09 497 ms against 545 ms), and its task 07 is 94-110 s against 81-82 s. The row
+is still worth a column — "GraalVM is not automatically faster on ordinary JVM bytecode" is the
+result — but read column 07 and the short cells with that in mind.
+
+**Loom** is a fourth Java row and the second use of the shared-source arrangement, after Kotlin's
+and Scala Native's. Fourteen of its fifteen cells are `sources/java/` unchanged; task 11 is
+`sources/java-loom/_11_parallel_sum.java`, which is the `openjdk` task 11 with `Thread.ofVirtual()`
+in place of `new Thread(...)` and nothing else altered. The question is whether a virtual thread
+counts as a thread for this task, and the answer is yes: an in-process probe of the identical
+loop measured **2.92x** for four virtual threads against **2.92x** for four platform threads on
+the same 20-core host, so the row is a plain pass rather than a correct-answer-no-speedup cell.
+Virtual threads are final since JDK 21, so no preview flag is involved. Its task 07 is the
+`openjdk` row's cell unchanged, so the two rows' column 07 is the same number by construction.
+This is also the one row in the matrix that is the **same toolchain** as another row rather than a
+different implementation — the launcher is the same `java`, and only task 11's source differs —
+so its fourteen other cells are expected to reproduce the `openjdk` row's, and at the row level
+its task 11 does not beat `openjdk`'s: 322-376 ms against 297-368 ms over three runs each, i.e.
+the same number within noise. That is the answer for a CPU-bound workload, and it is the reason
+the row is worth having.
+
+**Cython** is the Python row that compiles instead of interpreting, and it reuses all fifteen
+`sources/python/` files unchanged: `cython --embed` emits a C file whose `main` starts CPython and
+runs the module, so the timed loops are compiled C — but C compiled from untyped Python, which
+still performs every operation on Python objects. Two things are worth recording. The
+first is the version floor: tasks 02 and 11 use `match`, and Cython only learned PEP-634 in
+**3.3.0**, so older releases refuse the file. The second is that the row is **not** standalone —
+CPython on Windows ships no static library, so the executable imports `python3xx.dll` and the
+matching interpreter has to be beside it or on `PATH`. That is the same shape as Vala's
+`libglib-2.0-0.dll` and Standard ML's `PolyLib.dll`, and it is why the row sits in the native
+table with that disclosure rather than claiming to need nothing. Three flags carry the Windows
+build, and one of them is a real trap: `--module-name` is mandatory because every file name
+starts with a digit and `'01_branches' is not a valid module name`; `-DMS_WIN64` is mandatory
+because CPython's hand-maintained `pyconfig.h` defines `MS_WIN64` **inside `#ifdef _MSC_VER`**,
+so under MinGW `SIZEOF_VOID_P` stays 4 while `sizeof(void*)` is 8 and Cython's own consistency
+check refuses to compile; and `-municode` is mandatory because `--embed` generates a `wmain`
+rather than a `main`. What it buys is smaller than the name suggests, and that is recorded
+rather than hidden: compiling pure-mode Python leaves every arithmetic operation a Python object
+operation, so the loops measured only about **1.25-1.35x** faster than CPython's on tasks 01-03
+(6.1-6.3 s against 8.2-8.3 s, 5.8-6.5 s against 7.5-7.6 s, 4.5-5.2 s against 5.8-6.8 s), the
+same on task 04, and **slower** on task 13 (17.6-20.0 s against 14.1-17.2 s). A row that wanted
+Cython's real speed would have to add type annotations and `cdef`s to the sources, which would
+make them a different program from every other Python row's.
+
+**TinyGo** is the second Go row, and it is a different compiler rather than a different flag:
+it bundles LLVM 22.1 and its own runtime, so the output is a standalone executable with no
+`libgo`-style runtime beside it, and it does not need the Go toolchain to build — except that it
+still shells out to `go list` and `go env`, so the Go SDK has to be on `PATH` or every build
+stops with `could not find 'go' command`. Fourteen of the fifteen cells build `sources/go/`
+unchanged; task 15 comes from `sources/tinygo/`, because TinyGo's Windows target implements no
+fsync — `os.File.Sync` returns `operation not implemented` and the row's own `panic(err)` fires
+— so that file flushes by closing, the same deviation the J, SWI-Prolog, Octave, R, Chez, Eiffel,
+Haxe, Poly/ML, AutoHotkey and Dyalog rows already record. Task 03 needs no second file and no
+extra flag: TinyGo honours Go's own `//go:noinline`, and the disassembly proves it — the shipped
+executable contains `call 4168f2 <main.addOne>` **inside** the loop, while the same file with the
+directive deleted contains no call to it at all, so the helper was inlined away. Task 11 is a
+correct-answer-no-speedup cell: TinyGo's default `tasks` scheduler is cooperative, so the four
+goroutines run one after another on a single OS thread, and neither of the parallel schedulers
+can be substituted, because `-scheduler=cores` and `-scheduler=threads` do not build for
+Windows/amd64 at all — the first stops on `undefined: calleeSavedRegs`, the second on
+`undefined: threadID`, and both are missing a Windows implementation in `internal/task`. An
+in-process probe of the identical loop measured **0.89x** on four goroutines against the serial
+form.
 
 ## Rules
 
@@ -1067,13 +1218,13 @@ nothing else.
 | C++ | g++, clang++, msvc |
 | Rust | rustc |
 | Zig | zig |
-| Go | gc |
+| Go | gc, tinygo |
 | D | dmd, ldc2 |
 | Swift | swiftc |
 | Fortran | gfortran, flang |
 | Ada | gnat |
 | Pascal | fpc |
-| Java | openjdk, graalvm native-image |
+| Java | openjdk, graalvm jit, loom, graalvm native-image |
 | Kotlin | jvm, native |
 | C# | coreclr, nativeaot, mono |
 | F# | dotnet |
@@ -1081,7 +1232,7 @@ nothing else.
 | Scala | jvm, native |
 | JavaScript | node, bun, deno |
 | PHP | zend, zend + jit |
-| Python | cpython, pypy, nuitka, graalpy |
+| Python | cpython, pypy, nuitka, cython, graalpy |
 | Ruby | cruby + yjit, jruby |
 | Lua | puc-lua, luajit |
 | Perl | perl |
@@ -1143,6 +1294,9 @@ nothing else.
 | Go | wasip1 (gc) |
 | AssemblyScript | wasip1 (asc) |
 | WebAssembly | hand-written WAT |
+| Python | wasip1 (cpython) |
+| Ruby | wasip1 (ruby.wasm) |
+| Lua | wasip1 (puc-lua) |
 
 Missing a toolchain means the cell says `SKIPPED`. It never counts as zero. The same goes
 for a language that cannot do a task at all, such as a language with no threads trying
@@ -1191,6 +1345,31 @@ of magnitude too slow, not for being impossible.
 | Occam | KRoC 1.4.0's `preconfigure` matches only `i[3456]86-*-cygwin*`. This host reports `x86_64-unknown-cygwin`, which it rejects outright. It needs 32-bit Cygwin, which is discontinued upstream. |
 | Verilog | Not excluded for a missing toolchain — Icarus Verilog runs on Windows and is what the SystemVerilog row uses. Verilog itself cannot do task 09: its functions are *static*, so a recursive function shares one frame between calls and silently returns the wrong answer. Measured with Icarus, `fib(10)` gives **-80** in plain Verilog and **55** in SystemVerilog, which is what `automatic` was added for. A wrong answer is `WRONG` and its timing is discarded, so the row could never be complete. |
 | Austral | `austral.exe` only exists up to v0.1.1; the latest release, v0.2.0, ships a Linux binary only. The 0.1.1 compiler runs, but its own README example fails to compile with `No such module` — the `.aum` modules need matching `.aui` interfaces, and v0.1.1's stdlib is incomplete. It would need the interfaces written from scratch. |
+| gccgo | **Not excluded for a missing install script — there is no Windows port of the Go front end's runtime at all.** Three facts settle it. The MinGW-w64 GCC 16.1.0 this repository already uses reports `--enable-languages=c,c++,fortran,lto,objc,obj-c++` and answers `gcc -x go` with `gcc.exe: error: language go not recognized`; its tree contains no `libgo`. No Windows distribution ships one: MSYS2's `mingw-w64-x86_64-gcc` is described as "GNU Compiler Collection (C,C++,OpenMP)" and MSYS2 supplies Go through the **gc** toolchain instead (`mingw-w64-*-go`), while Cygwin's package list carries `gcc-core`, `gcc-g++`, `gcc-fortran`, `gcc-gdc`, `gcc-objc` and `gcc-ada` and no `gcc-go`; WinLibs, the standalone Windows GCC build, describes itself as a C and C++ compiler and lists Objective-C, Fortran and D as the extras. And it cannot be built from source: GCC's `libgo/configure.ac` maps only darwin, freebsd, irix6, linux, netbsd, openbsd, dragonfly, rtems, solaris2, aix and gnu hosts to a `GOOS`, so a mingw host leaves `GOOS=unknown` and `configure` stops with `could not determine GOOS from ${host}`; `ALLGOOS` does name `windows`, but no `case` arm ever sets it. The runtime agrees — the gccgo C runtime `libgo/runtime` contains **no** Windows file at all (its environment layer is `env_posix.c`), and the merged tree has no `libcall_windows.go`, no `syscall_windows.go` and no `os_windows.go`, only `os_windows_arm.go`, `os_windows_arm64.go`, `tls_windows_amd64.go` and `netpoll_windows.go`. gccgo is a Linux/BSD/macOS compiler; the Go language is represented here by the `gc` and `tinygo` rows. |
+
+
+**No path from the language to a module this benchmark's runtime can execute.**
+
+Every row below has a compiler that works, on this host, today. What none of them has is
+a way to turn the benchmark's tasks into a `.wasm` module that the **wasmtime CLI** — the
+runtime the nine WebAssembly rows use — will instantiate and run. In each case the blocker
+is the runtime's import requirements, not a missing download.
+
+| Language | Blocker |
+|---|---|
+| Dart (wasm) | **The output cannot be run by a non-browser WebAssembly runtime, and Dart's own documentation says so.** dart.dev/web/wasm, restriction 2: "The compiled Wasm output currently targets JavaScript environments (such as browsers), and thus currently doesn't support execution in standard Wasm run-times like wasmtime and wasmer. For details, see issue #53884". `dart compile wasm` emits a `.wasm` **plus a `.mjs` JavaScript init file**, and even the experimental `--standalone` mode — whose help text reads "Compile to a WebAssembly module without JavaScript interop. Dart-specific host imports are necessary to load these modules" — needs a `dart.*` import namespace that no WASI runtime defines (`dart.scheduleOnce`, `dart.currentTime`, `dart.stringFromCharCodeArray`, `dart.weakRefCreate`, `dart.stackTraceGetCurrent`, `dart.f64ToString`, `dart.expandoCreate`, `dart.finalizerCreate`, … in `sdk/lib/_internal/wasm/standalone/embedder.dart`). Two of the fifteen tasks would be unreachable even then: `dart:io` is a throwing stub on every wasm target (`sdk/lib/_internal/wasm/common/io_patch.dart` patches `File._open`, `File._exists`, `File._openStdio` and `Directory._createTemp` to `throw UnsupportedError`), so tasks 14 and 15 cannot read or write a file at all; and `dart:isolate` is stubbed the same way, so task 11 has no worker mechanism. Flutter is the same story from the other end — `flutter build web --wasm` produces a browser app that needs `index.html` and a JS bootstrap. |
+| Java (j2cl wasm) | **J2CL/J2Wasm's output is a WasmGC module whose imports only a JavaScript host can satisfy, and its emulated JRE has neither threads nor file I/O.** `build_defs/internal_do_not_use/j2wasm_application.bzl` generates a loader that does `WebAssembly.instantiateStreaming(response, getImports(), {"builtins": ["js-string", "js-prototypes"], "importedStringConstants": ""})`, and `JsImportsGenerator.java` is documented as "Generates a JavaScript imports mapping for the Wasm module" — so the module has unresolved imports that wasmtime cannot define, and the runtime's `WasmFeatures` list has no JS-string builtins to offer. The documented workflow is a browser dev server (`bazel run …:jsapp_dev_server`, then "Navigate to 'http://localhost:6006/jsapp_dev.html' in your browser"). There is no WASI or non-browser runtime support anywhere in the project — a GitHub issue search for `wasmtime OR WASI OR wasmer` in `google/j2cl` returns **0** results — and the backend's entry points are exported Java methods rather than a `_start`. Even if the module instantiated, `jre/java/java/lang/Thread.java` does not exist (only `ThreadLocal`, a single-value stub), so task 11 is unreachable, and the emulated JRE has no `java.io.File` or `java.nio.file` for tasks 14 and 15. The build is Bazel-only and Windows is explicitly unsupported. |
+| C# (blazor wasm) | **Blazor's WebAssembly output is a browser bundle, not a command module, and the one .NET WASI path is an unsupported experiment that no longer exists.** `dotnet publish` for Blazor emits `index.html`, `main.js` (`await dotnet.run()`), `_framework/dotnet.js`, `dotnet.native.js` ("posix emulation layer provided by the Emscripten project"), `dotnet.runtime.js` and `dotnet.native.wasm`, and the runtime is loaded and started *from JavaScript*; the browser link flags are `-s MODULARIZE=1 -s EXPORT_NAME=createDotnetRuntime`, i.e. a factory meant to be instantiated by JS glue, with no `_start`. Emscripten only produces a self-running module under `STANDALONE_WASM`, and .NET does not build with it. The separate, non-Blazor `wasi-experimental` workload (RID `wasi-wasm`) did run `wasmtime run --dir . dotnet.wasm <app>`, but it is documented as "Prototype WASI support … not intended for production use, nor is it currently supported"; .NET 9 errors with `The 'wasi-experimental' workload is not supported in .NET 9` (dotnet/runtime#114236, open), .NET 10 Preview 6 fails at link on `wasi:http/types@0.2.0` (dotnet/runtime#117848, open, milestone "Future"), and the console and wasi-console templates were deleted from `dotnet/runtime` main in June 2026 (PR #129232). It was single-threaded in any case, so task 11 could not have used it. |
+| PHP (wasm) | **Upstream PHP has no WASI target, and the one WASI port that exists has no concurrency facility at all, so task 11 is unreachable.** A grep for the words wasi, wasm and emscripten over `php-src/configure.ac` returns zero matches: there is no `--with-wasi`, no Emscripten host case and no CI job producing a `.wasm`. The only wasmtime-runnable PHP is VMware WasmLabs' `php-cgi-8.2.6.wasm` (18 patches, never merged upstream; the repository is archived with a community fork), and its WASI build deliberately removes every concurrency route: patch 0002 is titled "feat: Incapacitate fibers when compiling for WASI" and makes `zend_fiber_init_context` return false under `__wasi__`, the build is not `--enable-zts` so there are no threads and no `parallel`/`pthreads` PECL, and it passes `-DHAVE_FORK=0` while stubbing `shell_exec`, `popen` and `proc_open` to `RETURN_FALSE`. Tasks 01-10 and 12-15 do work on that build (`wasmtime --mapdir=./::./ -- php-cgi -q script.php`), which is what makes the exclusion worth recording: the row fails on task 11 alone. The other PHP-on-wasm projects (`seanmorris/php-wasm`, `WebReflection/php-wasm`, WordPress Playground) are Emscripten/browser builds with a JS host and are not runnable by the wasmtime CLI. |
+
+**Reachable, but only by leaving the standard library.**
+
+The one row below does produce a module the wasmtime CLI runs, and its blocker is the
+benchmark's own rule rather than the toolchain's.
+
+| Language | Blocker |
+|---|---|
+| Kotlin (wasm) | **The `wasmWasi` standard library has no file API and no thread primitive, so three of the fifteen tasks can only be expressed by leaving the standard library.** The target itself works, and this was measured rather than assumed: `gradle compileProductionExecutableKotlinWasmWasi` produces a 321,830-byte `kotlin-wasm-wasi.wasm` that runs under wasmtime 46.0.3 with `-W function-references,gc,exceptions` and under 49.0.1 with no flags at all, and `println` works. What it cannot do is the rest. `kotlin.io`'s file API is JVM-only, and the module's import list is exactly `wasi_snapshot_preview1.{fd_write, random_get, poll_oneoff, clock_time_get, proc_exit}` — no `path_open`, no `fd_read` — so tasks 14 and 15 need hand-written `@WasmImport` wrappers over the WASI syscalls, which is a different program from every other row's. There is also no `Thread`, no `Worker` and no experimental wasm-threads annotation anywhere in Kotlin/Wasm, so four concurrent workers need the third-party `kotlinx-coroutines-core` artifact (the built module carries `kotlinx.coroutines.*` and `kotlinx.atomicfu.*` symbols) and are cooperative anyway; the other Kotlin rows use only `kotlin-stdlib`. And there is no `BigInteger` on wasm, so task 10 would be hand-rolled limbs. The benchmark's rule is "standard library only", with one exception for task 11's threading extension; a row that needs a third-party coroutines library *and* a hand-written POSIX shim for its file tasks is measuring something other than the language. The build needs a JDK, Gradle, the Kotlin Multiplatform plugin, Binaryen and Node, none of which any other row installs — 165 MB measured here — and the template's own Gradle 8.14 wrapper fails on JDK 25 with `IllegalArgumentException: 25.0.2` before it compiles anything; Gradle 9.8 works. |
 
 **Toolchain runs, but the language cannot be measured fairly.**
 
@@ -1257,11 +1436,11 @@ mind.
   anything else — VBScript takes about 1.4 minutes at 1000 digits, and `a68g`, whose
   interpreter is around 900x slower than C on limb arithmetic, about 7.5 minutes. The
   slowest cell that is not task 10 is **Janet task 07 at 2266 s** and **Racket task 07 at
-  1121 s**, where appending to an immutable string copies about 5x10^11 bytes in total. Four
-  rows of the newest batch put their slow cell in the same place and for the same reason —
-  Standard ML at 95-96 s, Nelua at 68-89 s and Terra at 176-454 s all copy the whole string per
-  append, and Dyalog APL is the exception that proves the rule, at 375 ms, because `,←` grows
-  in place. `RUN.md` records the measurements,
+  1121 s**, where appending to an immutable string copies about 5x10^11 bytes in total. Five
+  rows of the newest batches put their slow cell in the same place and for the same reason —
+  Standard ML at 95-96 s, Nelua at 68-89 s, Terra at 176-454 s and **TinyGo at 314 s** all copy
+  the whole string per append, and Dyalog APL is the exception that proves the rule, at 375 ms,
+  because `,←` grows in place. `RUN.md` records the measurements,
   and for `a68g` the two options for it.
 - Wrong output means `WRONG` and the timing is thrown away.
 - Everything pinned to one core, except task 11 which gets four.

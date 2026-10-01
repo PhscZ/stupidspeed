@@ -1,5 +1,6 @@
 -- task 01 branches — expected output: 33333334 13333333 7619048 45714285
 -- build: none (interpreted)    run: lua 01_branches.lua (PUC Lua 5.4)    also runs on LuaJIT: luajit 01_branches.lua
+-- build (wasm): lua.wasm is the wasm32-wasip1 build of this same interpreter (see BUILD.md); run: wasmtime -W exceptions=y --dir . lua.wasm <task>.lua
 
 local a, b, c, d = 0, 0, 0, 0
 

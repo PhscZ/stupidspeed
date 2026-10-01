@@ -1,5 +1,8 @@
 -- task 11 parallel_sum — expected output: 7500000075000000
 -- build: none (interpreted)    run: lua 11_parallel_sum.lua (PUC Lua 5.4)    also runs on LuaJIT: luajit 11_parallel_sum.lua
+-- build (wasm): lua.wasm is the wasm32-wasip1 build of this same interpreter (see BUILD.md); run: wasmtime -W exceptions=y --dir . lua.wasm <task>.lua
+-- note (wasm): the wasm row cannot use Lanes — it is a pthreads C extension with no wasm build —
+-- so it builds sources/lua-wasm/11_parallel_sum.lua instead, whose four workers are coroutines.
 -- Stock Lua has no threads, only cooperative coroutines, so this task needs the Lanes C
 -- extension: luarocks install lanes (which itself needs a C compiler). Lane results are
 -- read back through the lane handle, which joins the lane.

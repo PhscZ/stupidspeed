@@ -1,5 +1,6 @@
 -- task 14 file_read — expected output: 2389704704
 -- build: none (interpreted)    run: lua 14_file_read.lua (PUC Lua 5.4)    also runs on LuaJIT: luajit 14_file_read.lua
+-- build (wasm): lua.wasm is the wasm32-wasip1 build of this same interpreter (see BUILD.md); run: wasmtime -W exceptions=y --dir . lua.wasm <task>.lua
 -- data.bin (50 MiB: the bytes 0..255 repeating) must sit in the working directory.
 -- Read in 1 MiB chunks, then scan every byte.
 

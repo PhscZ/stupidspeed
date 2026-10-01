@@ -1,5 +1,6 @@
 // task 03 func_sum — expected output: 100000000
 // build: go build -o prog 03_func_sum.go    run: ./prog
+// build (tinygo): tinygo build -o prog.exe 03_func_sum.go    run: ./prog.exe
 // note: plain "go build" only; do not set GOGC=off or any other tuning flags
 package main
 

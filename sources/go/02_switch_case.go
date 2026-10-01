@@ -1,5 +1,6 @@
 // task 02 switch_case — expected output: 7500000075000000
 // build: go build -o prog 02_switch_case.go    run: ./prog
+// build (tinygo): tinygo build -o prog.exe 02_switch_case.go    run: ./prog.exe
 // note: plain "go build" only; do not set GOGC=off or any other tuning flags
 package main
 

@@ -1,5 +1,6 @@
 // task 05 alloc_churn — expected output: 1274991808
 // build: go build -o prog 05_alloc_churn.go    run: ./prog
+// build (tinygo): tinygo build -o prog.exe 05_alloc_churn.go    run: ./prog.exe
 // note: plain "go build" only; do not set GOGC=off or any other tuning flags
 package main
 

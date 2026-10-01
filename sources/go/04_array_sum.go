@@ -1,5 +1,6 @@
 // task 04 array_sum — expected output: 499999500000
 // build: go build -o prog 04_array_sum.go    run: ./prog
+// build (tinygo): tinygo build -o prog.exe 04_array_sum.go    run: ./prog.exe
 // note: plain "go build" only; do not set GOGC=off or any other tuning flags
 package main
 

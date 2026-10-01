@@ -1,5 +1,6 @@
 -- task 02 switch_case — expected output: 7500000075000000
 -- build: none (interpreted)    run: lua 02_switch_case.lua (PUC Lua 5.4)    also runs on LuaJIT: luajit 02_switch_case.lua
+-- build (wasm): lua.wasm is the wasm32-wasip1 build of this same interpreter (see BUILD.md); run: wasmtime -W exceptions=y --dir . lua.wasm <task>.lua
 -- Lua has no switch statement, so the four cases are an if/elseif chain on i % 4, the
 -- closest thing to a switch the language has (a dispatch table of closures would add a
 -- function call per iteration and measure task 03 instead).

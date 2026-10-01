@@ -1,5 +1,6 @@
 // task 01 branches — expected output: 33333334 13333333 7619048 45714285
 // build: go build -o prog 01_branches.go    run: ./prog
+// build (tinygo): tinygo build -o prog.exe 01_branches.go    run: ./prog.exe
 // note: plain "go build" only; do not set GOGC=off or any other tuning flags
 package main
 

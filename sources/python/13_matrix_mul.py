@@ -1,5 +1,7 @@
 # task 13 matrix_mul — expected output: 599995000
 # build: python 13_matrix_mul.py | pypy 13_matrix_mul.py | graalpy 13_matrix_mul.py | nuitka --standalone 13_matrix_mul.py    run: python 13_matrix_mul.py
+# build (cython): cython --embed -3 --module-name _13_matrix_mul -o _13_matrix_mul.c 13_matrix_mul.py, then gcc -O2 -DMS_WIN64 -municode -I <python>/include -o prog _13_matrix_mul.c -L <python>/libs -lpython3xx
+# build (wasm): python.wasm is the wasm32-wasip1-threads build of CPython (see BUILD.md); run: wasmtime -S threads=y -W threads=y -W shared-memory=y --dir . python.wasm <task>.py
 
 n = 500
 size = n * n
