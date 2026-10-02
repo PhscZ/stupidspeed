@@ -1,0 +1,20 @@
+-- task 05 alloc_churn — expected output: 1274991808
+-- build: none (interpreted)    run: C:\stupidspeed\tools\luau\luau.exe 05_alloc_churn.luau
+-- note: also runs unchanged on Lute, the Luau team's runtime: C:\stupidspeed\tools\lute\lute.exe run 05_alloc_churn.luau
+-- Luau's buffer library is the language's byte buffer: buffer.create(64) allocates one,
+-- buffer.writeu8/readu8 are its byte accessors. Ten million of them are created and dropped; the
+-- line storing into slots is what keeps one in every 256 alive, so the collector has real work and
+-- the allocation is not dead code. slots is indexed (i % 256) + 1 because Luau tables start at 1,
+-- so all 256 slots stay in the array part and the store does not become a hash insert.
+
+local slots = table.create(256, 0)
+local total = 0
+
+for i = 0, 9999999 do
+    local buf = buffer.create(64)
+    buffer.writeu8(buf, 0, i % 256)
+    total = total + buffer.readu8(buf, 0)
+    slots[(i % 256) + 1] = buf
+end
+
+print(total)

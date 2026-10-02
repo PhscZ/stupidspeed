@@ -16,7 +16,7 @@ disposable. See the end of `BUILD.md` for what is in each.
 ## Results
 
 One row per toolchain, one column per task. The column headings are the task numbers, and
-the task names are the section headings under [Tasks](#tasks). All 109 toolchains, empty and
+the task names are the section headings under [Tasks](#tasks). All 124 toolchains, empty and
 ready to fill in.
 
 A cell holds the median of the 5 timed runs, in milliseconds. `WRONG` is an output that did
@@ -135,6 +135,21 @@ kept alongside the median in the raw results, not in this table.
 | Python | wasip1 (cpython) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Ruby | wasip1 (ruby.wasm) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Lua | wasip1 (puc-lua) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Zig | wasm32-wasip1 (zig) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| TinyGo | wasip1 (tinygo) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| D | gdc |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Common Lisp | ecl |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Pony | ponyc |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Boo | booc |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Pharo | Pharo 13 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Arc | Anarki on Racket |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Lean 4 | lean |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Factor | factor |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Gleam | gleam |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Luau | luau |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Luau | lute |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| IronPython | ipy |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| SQLite | sqlite3 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 
 No cell is `SKIPPED` by design. Seven rows need more than the stock install for task 11, and
 each says so in `BUILD.md`: Assembly has no libc, so it issues `clone` and `futex` itself; Tcl
@@ -628,12 +643,12 @@ in 0.107 s, which is faster than 331 million real calls should be, and the cause
 language — a plain C program with the same function and flags measures 0.115-0.119 s on the same
 host, so the C row and this one are doing the same thing.
 
-**The nine WebAssembly rows** are one target and nine front ends, and they are the only rows in the
+**The eleven WebAssembly rows** are one target and eleven front ends, and they are the only rows in the
 matrix whose program is not what the machine executes: a `.wasm` module is instantiated and
 compiled by a runtime before the first instruction runs, so every cell here measures
 **wasmtime's** compilation and execution of the module rather than the machine's execution of the
 source. That is the disclosure the SystemVerilog row carries for Icarus and the GDScript row for
-Godot, and it applies to all nine equally. Six of them reuse an existing source set unchanged —
+Godot, and it applies to all eleven equally. Six of them reuse an existing source set unchanged —
 `sources/c/`, `sources/cpp/`, `sources/rust/`, `sources/go/`, `sources/python/` and
 `sources/ruby/` — which is the arrangement
 `sources/scala/` already has with the `jvm` row, because those source sets were written for a
@@ -649,7 +664,7 @@ misleading. The rows therefore pin **wasmtime 46.0.3**, the last release that im
 and task 11 cannot be run on a current runtime at all. When it does run, the four quarters are
 real OS threads on real cores: the hand-written row measured **2.66x** on four workers, 0.142 s
 against task 02's 0.379 s over the same 100000000 iterations. C, C++, Rust and AssemblyScript
-reach the same API through their own runtimes, so five of the six pass as genuinely parallel.
+reach the same API through their own runtimes, so six of the seven pass as genuinely parallel.
 
 **Go is the sixth, and it is a correct-answer-no-speedup cell.** Go's `wasip1` port has no thread
 support, so goroutines are multiplexed onto the single wasm thread; the four quarters are correct
@@ -1058,9 +1073,9 @@ differs is where the integers come from, and both routes are legitimate.
   subtract, multiply by a small integer, and a quotient that comes out of repeated subtraction,
   because the spigot only ever asks for one decimal digit at a time. Same loop, same digits,
   and far more work per step. At 1000 digits that is about 0.6 s in C, and it runs to minutes
-  in the interpreted rows that take this route — VBScript takes about 1.4 minutes and `a68g`
-  about 7.5. `RUN.md` has the measurements. Among the rows that hand-roll them are Beef,
-  Haxe, Eiffel, Octave, Janet, Ring, JScript, AutoHotkey and VHDL.
+  in the interpreted rows that take this route — VBScript takes about 1.4 minutes, SQLite about
+  4, and `a68g` about 7.5. `RUN.md` has the measurements. Among the rows that hand-roll them are
+  Beef, Haxe, Eiffel, Octave, Janet, Ring, JScript, AutoHotkey, Pony and VHDL.
 
 A language with no bignum library is therefore **not** disqualified by this task, and no row
 here is missing because of it. `a68g`'s own arbitrary-precision `LONG LONG INT` mode was
@@ -1219,7 +1234,7 @@ nothing else.
 | Rust | rustc |
 | Zig | zig |
 | Go | gc, tinygo |
-| D | dmd, ldc2 |
+| D | dmd, ldc2, gdc |
 | Swift | swiftc |
 | Fortran | gfortran, flang |
 | Ada | gnat |
@@ -1264,7 +1279,7 @@ nothing else.
 | ActionScript | AIR |
 | Clojure | clojure.main |
 | Racket | racket (CS) |
-| Common Lisp | sbcl |
+| Common Lisp | sbcl, ecl |
 | OCaml | ocamlopt |
 | VBScript | cscript |
 | Raku | rakudo (MoarVM) |
@@ -1297,6 +1312,18 @@ nothing else.
 | Python | wasip1 (cpython) |
 | Ruby | wasip1 (ruby.wasm) |
 | Lua | wasip1 (puc-lua) |
+| Zig | wasm32-wasip1 (zig) |
+| TinyGo | wasip1 (tinygo) |
+| Pony | ponyc |
+| Boo | booc (.NET) |
+| Pharo | Pharo 13 |
+| Arc | Anarki on Racket |
+| Lean 4 | lean, leanc |
+| Factor | factor |
+| Gleam | gleam (BEAM) |
+| Luau | luau, lute |
+| IronPython | ipy (.NET) |
+| SQLite | sqlite3 |
 
 Missing a toolchain means the cell says `SKIPPED`. It never counts as zero. The same goes
 for a language that cannot do a task at all, such as a language with no threads trying
@@ -1352,7 +1379,7 @@ of magnitude too slow, not for being impossible.
 
 Every row below has a compiler that works, on this host, today. What none of them has is
 a way to turn the benchmark's tasks into a `.wasm` module that the **wasmtime CLI** — the
-runtime the nine WebAssembly rows use — will instantiate and run. In each case the blocker
+runtime the eleven WebAssembly rows use — will instantiate and run. In each case the blocker
 is the runtime's import requirements, not a missing download.
 
 | Language | Blocker |
@@ -1414,7 +1441,13 @@ translation. AWK, Squirrel, Oberon-2 and BCPL have no such route.
 | Language | What was found |
 |---|---|
 | Unicon | Ships a 64-bit Windows installer and has large integers and built-in concurrency, so it is a plausible row. The thread model needs checking first. |
-| Factor | Has a Windows x86-64 build and native bignums, but its threads are co-operative rather than OS threads, so task 11 would be a correct-answer-no-speedup cell like CPython's. |
+
+Factor was in this table until it became a row, and the measurement that used to justify
+leaving it out is why it belongs there. Its threads are co-operative rather than OS threads,
+so its task 11 is a correct-answer-no-speedup cell — but that is a category, not a
+disqualification. CPython, CRuby, Simula, VHDL, SystemVerilog, JScript, Pharo and Factor all
+occupy it, and the rule has always been that a language needs *some* concurrency facility,
+not that the facility has to be parallel.
 
 One measurement worth keeping. **Task 07 takes 514 s in Java** and 336 s in Groovy. Task 07
 appends to an immutable string a million times, so it is quadratic by design, and on the JVM
