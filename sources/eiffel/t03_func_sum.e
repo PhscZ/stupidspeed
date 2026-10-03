@@ -2,8 +2,8 @@
 -- build: ec -batch -finalize -c_compile -config stupidspeed.ecf -target t03_func_sum
 -- run: EIFGENs/t03_func_sum/F_code/prog.exe
 -- note: Eiffel has no no-inline attribute, so the helper lives in its own class in its
---       own file, add_one.e, exactly like the Fortran, Tcl, Vala, Oberon-07 and
---       SystemVerilog rows: the compiler emits one C file per class, and EiffelStudio's
+--       own file, add_one.e, exactly like the Fortran, Tcl, Vala and Oberon-07 rows:
+--       the compiler emits one C file per class, and EiffelStudio's
 --       MinGW backend does not use link-time optimisation, so the call cannot be folded.
 --       Inlining in EiffelStudio is an opt-in advanced option and is left off.
 -- note: the helper file cannot be called 03_func_sum_add_one.e the way the other rows

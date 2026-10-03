@@ -1,4 +1,4 @@
-(* task 07 string_append — expected output: 1000000 *)
+(* task 07 string_append — expected output: 250000 *)
 (* build: ocamlopt -unsafe -o prog.exe _07_string_append.ml *)
 (* run: prog.exe *)
 (* note: the row is built from the MSYS2 UCRT64 package mingw-w64-ucrt-x86_64-ocaml
@@ -15,12 +15,12 @@
 (* note: filenames carry the row's _ prefix. OCaml derives a module name from the file
          name and a module name has to be a valid identifier, so 01_branches.ml draws
          'Warning 24: bad source file name'; _01_branches.ml compiles clean. *)
-(* Plain string concatenation a million times. OCaml strings are immutable, so ^ allocates a
+(* Plain string concatenation 250000 times. OCaml strings are immutable, so ^ allocates a
    fresh string and copies both sides on every step, which is the same quadratic copy the C row's
    realloc plus strcat does. Deliberately no Buffer, which would make this linear. *)
 let () =
   let text = ref "" in
-  for _ = 1 to 1000000 do
+  for _ = 1 to 250000 do
     text := !text ^ "x"
   done;
   Printf.printf "%d\n" (String.length !text)

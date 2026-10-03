@@ -1,4 +1,4 @@
-;; task 07 string_append — expected output: 1000000
+;; task 07 string_append — expected output: 250000
 ;; build: sbcl --non-interactive --no-userinit --no-sysinit --load 07_string_append.lisp \
 ;;            --eval "(sb-ext:save-lisp-and-die \"prog.exe\" :executable t :toplevel (function main) :application-type :console)"
 ;; run: prog.exe
@@ -16,13 +16,13 @@
 ;;       timed paths because they cons and hide the loop body from type inference.
 (declaim (optimize (speed 3) (safety 0) (debug 0)))
 
-;; Plain string concatenation a million times. Common Lisp strings are mutable, but concatenate
+;; Plain string concatenation 250000 times. Common Lisp strings are mutable, but concatenate
 ;; allocates a fresh string and copies both arguments on every call, which is the same quadratic
 ;; copy the C row's realloc plus strcat does. Deliberately no adjustable vector and no fill
 ;; pointer, either of which would make this linear.
 (defun main ()
   (let ((text ""))
-    (dotimes (i 1000000)
+    (dotimes (i 250000)
       (declare (fixnum i))
       (setf text (concatenate 'string text "x")))
     (format t "~a~%" (length text))))

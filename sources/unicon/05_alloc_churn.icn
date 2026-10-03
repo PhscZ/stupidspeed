@@ -1,0 +1,16 @@
+# task 05 alloc_churn — expected output: 1274991808
+# build: unicon -s 05_alloc_churn.icn    run: 05_alloc_churn.exe
+# Ten million short-lived 64-element lists. `slots` keeps the buffer reachable, so the one
+# it replaces becomes garbage, which is what puts pressure on Unicon's collector.
+
+procedure main()
+    total := 0
+    slots := list(256)
+    every i := 0 to 9999999 do {
+        buf := list(64)
+        buf[1] := i % 256
+        total +:= buf[1]
+        slots[(i % 256) + 1] := buf
+    }
+    write(total)
+end

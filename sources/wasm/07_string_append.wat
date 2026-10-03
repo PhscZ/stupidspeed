@@ -1,4 +1,4 @@
-;; task 07 string_append — expected output: 1000000
+;; task 07 string_append — expected output: 250000
 ;; build: none (wasmtime parses the .wat source directly)
 ;; run: wasmtime.exe run 07_string_append.wat
 ;; note: this module is written by hand in WebAssembly text with no compiler in
@@ -8,7 +8,7 @@
 ;;       each append reads the whole string that is already there. The buffer
 ;;       itself is preallocated because WebAssembly has no realloc; the C row's
 ;;       realloc on a steadily growing block is not where its cost is either.
-;; note: the text starts at byte 65536 and reaches one million and one bytes,
+;; note: the text starts at byte 65536 and reaches 250001 bytes,
 ;;       which is why the module asks for 64 pages.
 
 (module
@@ -60,13 +60,13 @@
     (i32.store (i32.const 68) (i32.sub (global.get $out) (i32.const 4096)))
     (drop (call $fd_write (i32.const 1) (i32.const 64) (i32.const 1) (i32.const 72))))
 
-  ;; ---- the task: text = text + "x", a million times ------------------------
+  ;; ---- the task: text = text + "x", 250000 times ------------------------
   (func (export "_start")
     (local $i i64) (local $p i32) (local $len i64)
     (i32.store8 (i32.const 65536) (i32.const 0))        ;; the empty string
     (block $done
       (loop $loop
-        (br_if $done (i64.ge_s (local.get $i) (i64.const 1000000)))
+        (br_if $done (i64.ge_s (local.get $i) (i64.const 250000)))
         ;; strcat walks the whole string to its terminator
         (local.set $p (i32.const 65536))
         (block $found

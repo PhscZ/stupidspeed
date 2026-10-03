@@ -1,0 +1,15 @@
+# task 04 array_sum — expected output: 499999500000
+# build: unicon -s 04_array_sum.icn    run: 04_array_sum.exe
+# Unicon's built-in array-like type is `list`, 1-indexed. It is filled and then read back
+# one element at a time, as the task asks.
+
+procedure main()
+    n := 1000000
+    arr := list(n)
+    every i := 0 to n - 1 do
+        arr[i + 1] := i
+    total := 0
+    every i := 0 to n - 1 do
+        total +:= arr[i + 1]
+    write(total)
+end

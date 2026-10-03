@@ -1,0 +1,14 @@
+# task 03 func_sum — expected output: 100000000
+# build: unicon -s 03_func_sum.icn 03_func_sum_add_one.icn    run: 03_func_sum.exe
+# add_one lives in its own file, 03_func_sum_add_one.icn, which is passed as a second source
+# file on the command line. Unicon has no no-inline attribute and none is needed: the
+# compiler emits icode for a virtual machine, and a procedure call is a real VM call that no
+# optimisation can fold away. The file split is the row's cross-file convention, the same
+# shape the Tcl, Vala and Scheme rows use.
+
+procedure main()
+    value := 0
+    every i := 1 to 100000000 do
+        value := add_one(value)
+    write(value)
+end

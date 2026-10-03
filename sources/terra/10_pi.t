@@ -5,8 +5,8 @@
 --       "Can't find windows SDK version 8.1 or 10!" and exit 1 before it opens this file
 --       unless it finds a Visual Studio developer console or the Windows Kits registry key.
 --       See temp/terra-doc.md §3. This file needs no INCLUDE: it includes no C header.
--- note: DEVIATION, shared with the C, VBScript, OCaml, Octave, Janet, Ring, JScript,
---       AutoHotkey and VHDL rows: there is no arbitrary-precision integer here. Lua
+-- note: DEVIATION, shared with the C, VBScript, OCaml, Octave, Janet, Ring, JScript
+--       and AutoHotkey rows: there is no arbitrary-precision integer here. Lua
 --       5.1/LuaJIT's math library is entirely double-based — `2^53 + 1 == 2^53` is true —
 --       Terra's widest integer is 64 bits, and `require("bignum")`, `require("bigint")` and
 --       `require("math.big")` all fail. So the spigot's state is hand-written sign-magnitude

@@ -1,4 +1,4 @@
-// task 07 string_append — expected output: 1000000
+// task 07 string_append — expected output: 250000
 // build: c3c compile -O2 --wincrt=dynamic --win-sdk <sdk> -L <vc-lib> -L <ucrt-lib> -L <um-lib> -o prog 07_string_append.c3    run: prog.exe
 // note: <sdk> is the MSVC tree's "Windows Kits\10", <vc-lib> its
 //       VC\Tools\MSVC\<version>\lib\x64, and <ucrt-lib> and <um-lib> the SDK's
@@ -10,7 +10,7 @@
 // note: a C3 `String` is a char[] slice and has no `+` operator, so `text = text + "x"`
 //       is spelled String.concat(mem, "x"): it allocates a fresh string and copies the
 //       whole of the old one, which is the same quadratic copy the C row's strcat does.
-//       The replaced buffer is freed, or the run would leak half a terabyte.
+//       The replaced buffer is freed, or the run would leak tens of gigabytes.
 
 module c3_07_string_append;
 import std::io;
@@ -20,7 +20,7 @@ fn void main()
 {
 	String text = "";
 
-	for (long i = 0; i < 1000000; i++)
+	for (long i = 0; i < 250000; i++)
 	{
 		String next = text.concat(mem, "x");
 		if (text.len > 0)

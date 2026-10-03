@@ -1,0 +1,12 @@
+# task 06 char_count — expected output: 10000000
+# build: unicon -s 06_char_count.icn    run: 06_char_count.exe
+# `repl` builds the whole text in one call, so the build is not the benchmark. `!text`
+# generates the characters one at a time, and the scan counts only "h".
+
+procedure main()
+    text := repl("abcdefghij", 10000000)
+    count := 0
+    every c := !text do
+        if c == "h" then count +:= 1
+    write(count)
+end

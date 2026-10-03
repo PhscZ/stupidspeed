@@ -1,4 +1,4 @@
--- task 07 string_append — expected output: 1000000
+-- task 07 string_append — expected output: 250000
 -- build: ec -batch -finalize -c_compile -config stupidspeed.ecf -target t07_string_append
 -- run: EIFGENs/t07_string_append/F_code/prog.exe
 -- note: DEVIATION, and an honest one. Eiffel's STRING_8 is a growable buffer, not an
@@ -29,7 +29,7 @@ feature -- Benchmark
 			from
 				i := 0
 			until
-				i >= 1000000
+				i >= 250000
 			loop
 				text.append_character ('x')
 				i := i + 1

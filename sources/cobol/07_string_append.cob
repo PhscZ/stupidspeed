@@ -1,4 +1,4 @@
-      *> task 07 string_append -- expected output: 1000000
+      *> task 07 string_append -- expected output: 250000
       *> build: cobc -x -O2 -o prog 07_string_append.cob    run: ./prog
       *> COBOL strings are fixed length and have no growable form, so the growing
       *> string lives in an ALLOCATE that is rebound to the freshly copied value
@@ -13,13 +13,13 @@
        01 LEN      PIC 9(9) COMP-5.
        01 NEWPTR   USAGE POINTER.
        01 OLDPTR   USAGE POINTER.
-       01 NEWTEXT  PIC X(1000000) BASED.
-       01 OLDTEXT  PIC X(1000000) BASED.
+       01 NEWTEXT  PIC X(250000) BASED.
+       01 OLDTEXT  PIC X(250000) BASED.
        01 OLEN     PIC 9(9) COMP-5.
        01 OOUT     PIC 9(7).
        PROCEDURE DIVISION.
            MOVE 0 TO LEN.
-           PERFORM VARYING I FROM 1 BY 1 UNTIL I > 1000000
+           PERFORM VARYING I FROM 1 BY 1 UNTIL I > 250000
                ALLOCATE I CHARACTERS RETURNING NEWPTR
                SET ADDRESS OF NEWTEXT TO NEWPTR
                IF LEN > 0

@@ -1,4 +1,4 @@
-# task 07 string_append — expected output: 1000000
+# task 07 string_append — expected output: 250000
 # build: Rscript 07_string_append.R    run: Rscript 07_string_append.R
 #
 # paste0() allocates a fresh string holding both arguments, so this is the
@@ -7,7 +7,7 @@
 string_append <- function() {
   text <- ""
   i <- 0
-  while (i < 1000000) {
+  while (i < 250000) {
     text <- paste0(text, "x")
     i <- i + 1
   }

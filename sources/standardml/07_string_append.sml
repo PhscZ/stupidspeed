@@ -1,4 +1,4 @@
-(* task 07 string_append — expected output: 1000000 *)
+(* task 07 string_append — expected output: 250000 *)
 (* build: tools/polyml/PolyML.exe -q --error-exit --script build/07_string_append.ML
             (writes 07_string_append.obj into this directory)
         gcc -Wl,-u,WinMain -mconsole -o 07_string_append.exe 07_string_append.obj \
@@ -12,21 +12,17 @@
 (* note: SML strings are immutable and there is no growable string in the
         Basis, so `^` allocates a fresh string of `size a + size b` and
         copies both operands into it. Every append therefore copies the
-        whole accumulator, and a million appends move about 5x10^11 bytes. *)
-(* note: it is quadratic, and measured as such: 100k 0.819 s, 200k 3.437 s
-        (4.20x), 400k 15.548 s (4.52x), 800k 74.874 s (4.82x), 1000000 95.44
-        s. Doubling the count multiplies the time by 4.2-4.8, which is the
-        intended result — the same quadratic cell the JVM, Racket and Octave
-        rows have, and the reason README leaves this count at a million. *)
+        whole accumulator, and 250000 appends move about 3.1x10^10 bytes. *)
+(* note: it is quadratic — the same quadratic cell the JVM, Racket and Octave
+        rows have, and the reason README sets this count at 250000. *)
 (* note: a String.concat or byte-buffer route would be a different
         algorithm, so it is not used. *)
 (* note: `String.size` is what is printed, so the loop cannot be deleted. *)
-(* note: this is the slowest cell in the row by two orders of magnitude:
-        95-96 s against sub-second for everything else. *)
+(* note: this is the slowest cell in the row. *)
 fun main () =
   let
     fun app (k, s) = if k = 0 then s else app (k - 1, s ^ "x")
-    val text = app (1000000, "")
+    val text = app (250000, "")
   in
     print (Int.toString (String.size text) ^ "\n")
   end

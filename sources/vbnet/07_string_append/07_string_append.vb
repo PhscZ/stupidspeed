@@ -1,4 +1,4 @@
-' task 07 string_append — expected output: 1000000
+' task 07 string_append — expected output: 250000
 ' build: dotnet build -c Release 07_string_append.vbproj    run: dotnet bin/Release/net8.0/07_string_append.dll
 ' String concatenation with & copies the whole string every time, as intended.
 
@@ -8,7 +8,7 @@ Module Program
     Sub Main()
         Dim text As String = ""
 
-        For i As Long = 1 To 1000000
+        For i As Long = 1 To 250000
             text = text & "x"
         Next
 

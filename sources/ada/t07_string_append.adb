@@ -1,4 +1,4 @@
--- task 07 string_append — expected output: 1000000
+-- task 07 string_append — expected output: 250000
 -- build: gnatmake -O3 t07_string_append.adb    run: ./t07_string_append
 -- Ada's String is fixed length, so the growing string lives in an access
 -- object that is rebound to the freshly concatenated value each iteration;
@@ -17,7 +17,7 @@ procedure T07_String_Append is
    Text : Str_Access := new String (1 .. 0);
    Old  : Str_Access;
 begin
-   for I in 1 .. 1_000_000 loop
+   for I in 1 .. 250_000 loop
       Old  := Text;
       Text := new String'(Text.all & 'x');
       Free (Old);

@@ -1,0 +1,17 @@
+# task 15 file_write — expected output: 52428800
+# build: unicon -s 15_file_write.icn    run: 15_file_write.exe
+# Written in UNTRANSLATED mode, "wu", for the reason task 14 reads in "u": a translated
+# stream would rewrite line endings and corrupt the bytes. Unicon has no fsync, so the
+# flush is `close`, the deviation the Tcl, D, Julia and other rows already record.
+
+procedure main()
+    unit := ""
+    every c := 0 to 255 do
+        unit ||:= char(c)
+    chunk := repl(unit, 4096)
+    f := open("out.bin", "wu") | stop("cannot open out.bin")
+    every i := 1 to 50 do
+        writes(f, chunk)
+    close(f)
+    write(50 * *chunk)
+end

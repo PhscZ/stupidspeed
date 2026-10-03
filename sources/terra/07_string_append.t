@@ -1,4 +1,4 @@
--- task 07 string_append — expected output: 1000000
+-- task 07 string_append — expected output: 250000
 -- build: none — terra.exe JIT-compiles in-process, so there is no build step
 -- run: VCINSTALLDIR=C:/fake/vc terra.exe 07_string_append.t     (from sources/terra/)
 -- note: VCINSTALLDIR is mandatory and is the switch, not a path — terralib aborts with
@@ -14,14 +14,10 @@
 -- note: the loop is in Lua, not in a terra function, on purpose: putting it in native code
 --       would mean hand-writing a growable buffer, which is a different program from the one
 --       every other row writes.
--- note: measured on this host, best of 3 at each count: 12.73 us/append at 100000, 23.46 at
---       200000, 75.07 at 400000 — a clean quadratic, and slightly worse than n^2 past a few
---       hundred megabytes because the copy starts paying page faults. The full million was
---       run: 454.45 s, 465.66 GiB copied. temp/terra-doc.md §9.
 -- note: `#text` is the printed value, so the loop cannot be deleted.
 
 local text = ""
-for i = 1, 1000000 do
+for i = 1, 250000 do
     text = text .. "x"
 end
 

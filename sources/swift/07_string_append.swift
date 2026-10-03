@@ -1,9 +1,9 @@
-// task 07 string_append — expected output: 1000000
+// task 07 string_append — expected output: 250000
 // build: swiftc -O -o prog 07_string_append.swift    run: ./prog
 
 // Plain Swift string concatenation: `text + "x"` builds a new String value.
 var text = ""
-for _ in 0..<1_000_000 {
+for _ in 0..<250_000 {
     text = text + "x"
 }
 

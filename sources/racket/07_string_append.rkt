@@ -1,4 +1,4 @@
-;; task 07 string_append — expected output: 1000000
+;; task 07 string_append — expected output: 250000
 ;; build: none (Racket.exe compiles the module on every run; the VM start is part of
 ;;        the measured time)
 ;; run: Racket.exe 07_string_append.rkt
@@ -12,11 +12,11 @@
 ;;       slow way to write it here and the accumulator is the fast way.
 #lang racket/base
 
-;; Plain string concatenation a million times. Racket strings are immutable, so every append
+;; Plain string concatenation 250000 times. Racket strings are immutable, so every append
 ;; allocates a new string and copies the old one, which is the same quadratic copy the C row's
 ;; realloc plus strcat does. Deliberately no port and no string builder.
 (define text
-  (for/fold ([text ""]) ([i (in-range 1000000)])
+  (for/fold ([text ""]) ([i (in-range 250000)])
     (string-append text "x")))
 
 (displayln (string-length text))

@@ -1,4 +1,4 @@
-(* task 07 string_append — expected output: 1000000 *)
+(* task 07 string_append — expected output: 250000 *)
 (* build: Compiler.exe _07_string_append.ob07 win64con -out prog.exe    run: prog.exe *)
 (* note: representation: Oberon's string type is ARRAY OF CHAR, a fixed length array with a *)
 (*       0X terminator, and the language has no string concatenation operator and no way to *)
@@ -17,7 +17,7 @@ MODULE _07_string_append;
 IMPORT Out;
 
 CONST
-  N = 1000000;
+  N = 250000;
 
 VAR
   textA, textB: ARRAY N + 1 OF CHAR;

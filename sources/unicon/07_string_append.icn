@@ -1,0 +1,11 @@
+# task 07 string_append — expected output: 250000
+# build: unicon -s 07_string_append.icn    run: 07_string_append.exe
+# Unicon strings are immutable and `||` concatenates, so every append allocates a fresh
+# string and copies the accumulator: the loop is quadratic, which is what the task measures.
+
+procedure main()
+    text := ""
+    every i := 1 to 250000 do
+        text := text || "x"
+    write(*text)
+end

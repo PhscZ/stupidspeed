@@ -13,7 +13,7 @@
 ⍝       APL-level flush to the OS rather than a durability barrier. So this row
 ⍝       joins the flush-and-close list the Tcl, D, Julia, Nim, Dart, Pascal, COBOL,
 ⍝       Dolphin, Haxe, Eiffel, Seed7, Scheme, SWI-Prolog, Octave, J, Janet, Ring,
-⍝       JScript, AutoHotkey, ActionScript and VHDL rows are on. The string
+⍝       JScript, AutoHotkey and ActionScript rows are on. The string
 ⍝       FlushFileBuffers does occur in dyalog200_64_unicode.dll and ⎕NA could call
 ⍝       kernel32|FlushFileBuffers directly, but that is a DLL call the task did not
 ⍝       ask for, so the deviation is recorded rather than taken.

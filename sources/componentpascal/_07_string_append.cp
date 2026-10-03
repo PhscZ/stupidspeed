@@ -1,11 +1,11 @@
-(* task 07 string_append — expected output: 1000000 *)
+(* task 07 string_append — expected output: 250000 *)
 (* build: gpcp /list- _07_string_append.cp    run: _07_string_append.exe *)
 (* note: Component Pascal's string type is ARRAY OF CHAR with a 0X terminator, exactly
    like Oberon-2's and Modula-2's. Two fixed buffers are used here: every append copies
    the complete current text, including its terminator, into the alternate buffer,
    overwrites that copied terminator with x, writes the new terminator, and swaps buffers.
    This preserves the repeated whole-prefix copying measured by the task without requiring
-   an impossible million-character native immutable-string value. *)
+   an impossible 250000-character native immutable-string value. *)
 (* note: the final length is found by scanning the active buffer for the 0X terminator. *)
 (* note: build and run from the directory holding the source, with CROOT set to the
    gpcp-NET tree, CPSYM=.;%CROOT%\symfiles;%CROOT%\symfiles\NetSystem, %CROOT%\bin on
@@ -18,7 +18,7 @@
 MODULE _07_string_append;
  IMPORT CPmain, Console;
 
- CONST N = 1000000;
+ CONST N = 250000;
 
 VAR textA : ARRAY N + 1 OF CHAR;
     textB : ARRAY N + 1 OF CHAR;

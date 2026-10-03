@@ -1,4 +1,4 @@
-// task 07 string_append — expected output: 1000000
+// task 07 string_append — expected output: 250000
 // build: asc 07_string_append.ts -O2 --outFile prog.wasm --runtime incremental --use abort=07_string_append/abortImpl
 // run: wasmtime run prog.wasm
 // note: written by hand in AssemblyScript with no compiler in the toolchain; the module is a
@@ -47,7 +47,7 @@ export function abortImpl(m: usize, f: usize, l: u32, c: u32): void {}
 export function _start(): void {
   let text = "";
 
-  for (let i = 0; i < 1000000; i++) {
+  for (let i = 0; i < 250000; i++) {
     text = text + "x";
   }
 

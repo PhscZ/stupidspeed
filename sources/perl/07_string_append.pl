@@ -1,4 +1,4 @@
-# task 07 string_append — expected output: 1000000
+# task 07 string_append — expected output: 250000
 # build: perl 07_string_append.pl    run: perl 07_string_append.pl
 # note: plain string concatenation on a Perl string, which may copy the whole string on every
 #       append; no growable-buffer substitute.
@@ -6,7 +6,7 @@ use strict;
 use warnings;
 
 my $text = '';
-for (my $i = 0; $i < 1000000; $i++) {
+for (my $i = 0; $i < 250000; $i++) {
     $text .= "x";
 }
 

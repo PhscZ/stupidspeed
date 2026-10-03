@@ -3,7 +3,7 @@
 ;;        the compile are part of the measured time)
 ;; run: scheme --optimize-level 3 --script 03_func_sum.ss
 ;; note: add-one lives in its own file, 03_func_sum_add_one.ss, the same two-file shape the
-;;       Fortran, Tcl, Vala, SystemVerilog and Racket rows use for this task. Chez has no
+;;       Fortran, Tcl, Vala and Racket rows use for this task. Chez has no
 ;;       no-inline declaration, and none is needed here: `load` reads and compiles one file
 ;;       at a time, so add-one is a global holding a compiled procedure and the caller emits
 ;;       a global call rather than an inlined copy. (Chez's `compile-program`, which would

@@ -1,4 +1,4 @@
-// task 07 string_append — expected output: 1000000
+// task 07 string_append — expected output: 250000
 // build: amxmlc -swf-version=51 -output prog.swf __07_string_append.as  then  adt -package -storetype pkcs12 -keystore test.p12 -storepass pass -target cmdline out app.xml prog.swf
 // run: out\prog.exe
 // note: AIR 51.4.1 via amxmlc (the real Adobe/HARMAN compiler), packaged with adt
@@ -10,7 +10,7 @@
 //       NativeApplication.exit(0) because an AIR app otherwise stays alive.
 // note: AS3 String is immutable, so text + "x" allocates a new string and copies the
 //       old one, which is the same quadratic copy the C row's realloc plus strcat does.
-//       Left at a million for that reason.
+//       Left at 250000 for that reason.
 package
 {
     import flash.display.Sprite;
@@ -22,7 +22,7 @@ package
         public function _07_string_append()
         {
             var text:String = "";
-            for (var i:int = 0; i < 1000000; i++)
+            for (var i:int = 0; i < 250000; i++)
             {
                 text = text + "x";
             }

@@ -1,27 +1,40 @@
 ; task 05 alloc_churn — expected output: 1274991808
-; build: nasm -f elf64 05_alloc_churn.asm && ld -o prog 05_alloc_churn.o    run: ./prog
-; Linux x86-64 only: freestanding ELF64, nasm + ld, no libc.
-; Every iteration is a real mmap of 64 bytes plus the munmap of the buffer it
-; replaces, so this one is syscall bound by construction.
+; build: nasm -f win64 05_alloc_churn.asm -o 05_alloc_churn.obj
+;        set LIB=C:\stupidspeed\tools\msvc\VC\Tools\MSVC\14.44.35207\lib\x64;C:\stupidspeed\tools\msvc\Windows Kits\10\Lib\10.0.26100.0\ucrt\x64;C:\stupidspeed\tools\msvc\Windows Kits\10\Lib\10.0.26100.0\um\x64
+;        "C:/stupidspeed/tools/msvc/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/link.exe" /nologo /subsystem:console /entry:main /out:prog.exe 05_alloc_churn.obj kernel32.lib
+; run: prog.exe    (from this directory)
+; Windows x64 only: PE32+ console executable, nasm -f win64 + MSVC link.exe, kernel32.dll only.
+; Every iteration is a real VirtualAlloc of 64 bytes plus the VirtualFree of the
+; buffer it replaces, so this one is kernel call bound by construction. Both are
+; kernel32 exports; nothing but kernel32 is imported.
 
 default rel
-global _start
+global main
+
+extern GetStdHandle
+extern WriteFile
+extern ExitProcess
+extern VirtualAlloc
+extern VirtualFree
 
 section .text
-_start:
+main:
+    and rsp, -16
+    sub rsp, 48
+    mov ecx, -11                ; STD_OUTPUT_HANDLE
+    call GetStdHandle
+    mov [stdout], rax
+
     lea rbx, [slots]            ; 256 buffer slots
     xor r12, r12                ; i
     xor r13, r13                ; total
 
 .loop:
-    mov eax, 9                  ; mmap
-    xor edi, edi                ; addr = NULL
-    mov esi, 64                 ; length = 64 bytes
-    mov edx, 3                  ; PROT_READ | PROT_WRITE
-    mov r10d, 0x22              ; MAP_PRIVATE | MAP_ANONYMOUS
-    mov r8, -1                  ; fd = -1
-    xor r9d, r9d                ; offset = 0
-    syscall
+    xor ecx, ecx                ; lpAddress = NULL
+    mov edx, 64                 ; dwSize = 64 bytes
+    mov r8d, 0x3000             ; MEM_COMMIT | MEM_RESERVE
+    mov r9d, 4                  ; PAGE_READWRITE
+    call VirtualAlloc
     mov r15, rax                ; fresh 64 byte buffer
 
     mov rcx, r12
@@ -34,10 +47,10 @@ _start:
     mov r14, [rbx+rcx*8]        ; the buffer this slot replaces
     test r14, r14
     jz .store
-    mov rdi, r14                ; munmap(old, 64)
-    mov esi, 64
-    mov eax, 11
-    syscall
+    mov rcx, r14                ; VirtualFree(old, 0, MEM_RELEASE)
+    xor edx, edx
+    mov r8d, 0x8000
+    call VirtualFree
 
 .store:
     mov rcx, r12
@@ -53,45 +66,51 @@ _start:
     mov rdi, 10
     call putc
 
-    mov eax, 60                 ; exit
-    xor edi, edi
-    syscall
+    xor ecx, ecx                ; exit
+    call ExitProcess
 
 ; ---------------------------------------------------------------------------
 ; print the unsigned 64-bit value in rdi as decimal
 print_u64:
-    lea rsi, [numbuf+31]
+    sub rsp, 40
+    lea rsi, [numbuf+32]
     mov rax, rdi
-    mov rcx, 10
+    mov r10, 10
 .digit:
     xor rdx, rdx
-    div rcx
+    div r10
     add dl, '0'
     dec rsi
     mov [rsi], dl
     test rax, rax
     jnz .digit
-    lea rdx, [numbuf+32]
-    sub rdx, rsi
-    mov eax, 1                  ; write
-    mov edi, 1                  ; stdout
-    syscall
+    mov rcx, [stdout]
+    mov rdx, rsi
+    lea r8, [numbuf+32]
+    sub r8, rsi
+    lea r9, [written]
+    mov qword [rsp+32], 0
+    call WriteFile
+    add rsp, 40
     ret
 
 ; ---------------------------------------------------------------------------
 ; write the single byte in dil
 putc:
+    sub rsp, 40
     mov [charbuf], dil
-    mov eax, 1
-    mov edi, 1
-    lea rsi, [charbuf]
-    mov edx, 1
-    syscall
+    mov rcx, [stdout]
+    lea rdx, [charbuf]
+    mov r8d, 1
+    lea r9, [written]
+    mov qword [rsp+32], 0
+    call WriteFile
+    add rsp, 40
     ret
 
 section .bss
-slots:  resq 256
+slots:   resq 256
 numbuf:  resb 32
 charbuf: resb 1
-
-section .note.GNU-stack noalloc noexec nowrite progbits
+written: resd 1
+stdout:  resq 1

@@ -1,4 +1,4 @@
-// task 07 string_append — expected output: 1000000
+// task 07 string_append — expected output: 250000
 // build: patscc -DATS_MEMALLOC_LIBC -O2 -o prog 07_string_append.dats    run: ./prog
 // note: patscc is a driver: it turns the .dats into C with patsopt and then runs a C compiler,
 //       so $PATSHOME/bin has to be on PATH.
@@ -20,7 +20,7 @@ implement main0 () = let
   var i: int = 0
   val () = $extfcall (void, "strcpy", text, "")
 in
-  while (i < 1000000) (
+  while (i < 250000) (
     len := len + 1;
     text := $extfcall (ptr, "realloc", text, i2sz (len + 2));
     $extfcall (void, "strcat", text, "x");

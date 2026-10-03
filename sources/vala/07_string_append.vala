@@ -1,4 +1,4 @@
-// task 07 string_append — expected output: 1000000
+// task 07 string_append — expected output: 250000
 // build: valac -X -O2 -o prog 07_string_append.vala    run: ./prog
 // note: build from the MSYS2 UCRT64 shell (tools/msys2.cmd, MSYSTEM=UCRT64). valac translates
 //       the Vala to C and drives gcc, and -X -O2 is what hands -O2 to that gcc; without it
@@ -10,13 +10,12 @@
 // note: a Vala `string` is a C `char *`, immutable, and `text + "x"` is g_strconcat: it walks
 //       the old string, allocates a fresh one and copies both parts, so the loop is quadratic
 //       on purpose, exactly like the C reference. `.length` is the byte length.
-// note: this is the slow one of the row — a million quadratic appends take about fifteen
-//       minutes, the same order as the Java and Groovy rows' task 07.
+// note: this is the slow one of the row.
 
 int main () {
     string text = "";
 
-    for (int64 i = 0; i < 1000000; i++) {
+    for (int64 i = 0; i < 250000; i++) {
         text = text + "x";
     }
 

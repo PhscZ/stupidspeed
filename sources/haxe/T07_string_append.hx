@@ -1,4 +1,4 @@
-// task 07 string_append — expected output: 1000000
+// task 07 string_append — expected output: 250000
 // build: haxe -cp sources/haxe -main T07_string_append -cpp temp/haxe/07_string_append -D mingw -D MINGW_ROOT=<mingw root> -D no_shared_libs
 // run: temp/haxe/07_string_append/T07_string_append.exe
 // note: `text += "x"` is the honest quadratic route: a Haxe String is immutable, so every
@@ -13,7 +13,7 @@ class T07_string_append {
     static function main() {
         var text = "";
 
-        for (i in 0...1000000) {
+        for (i in 0...250000) {
             text += "x";
         }
 

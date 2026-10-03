@@ -6,7 +6,7 @@
 #       (its complete pragma list is $ library, $ message, $ info, $ trace, $ decls and
 #       $ names), include is textual, and s7c generates a single C translation unit per
 #       program, so the helper cannot be kept in a separate object file the way the
-#       Fortran, Modula-2, Vala, Tcl and SystemVerilog rows do it. The C function s7c
+#       Fortran, Modula-2, Vala and Tcl rows do it. The C function s7c
 #       emits is 'static' and has one call site, so gcc -O2 inlines it and the
 #       100000000 calls collapse into the loop: the cell measures the loop, not the calls.
 #       There is no way to promise a real call, so the row does not claim one.

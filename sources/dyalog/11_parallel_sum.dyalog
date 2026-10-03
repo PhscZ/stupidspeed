@@ -14,8 +14,8 @@
 ⍝       4.12 — exactly serial. The interpreter switches between threads at
 ⍝       statement boundaries inside one execution engine, so APL code in a defined
 ⍝       function is serialised; a background :While 1 probe starved the master for
-⍝       its whole timeout. That puts the cell in the CPython / CRuby / Simula /
-⍝       SystemVerilog / VHDL class, and it is *not* the J row's position — J's
+⍝       its whole timeout. That puts the cell in the CPython / CRuby / Simula
+⍝       class, and it is *not* the J row's position — J's
 ⍝       T./t. threads measure 1.7x, Dyalog's & gives none, and the threaded form
 ⍝       is in fact slower than the identical serial work (86.2 s against 73.8 s)
 ⍝       because the spawn and ⎕TSYNC bookkeeping is pure overhead here.

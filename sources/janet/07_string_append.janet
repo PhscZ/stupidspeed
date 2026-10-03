@@ -1,4 +1,4 @@
-# task 07 string_append — expected output: 1000000
+# task 07 string_append — expected output: 250000
 # build: none — `janet` compiles the script to bytecode and runs it on every invocation
 # run: janet 07_string_append.janet
 # note: Janet strings are immutable and `(string acc "x")` allocates a fresh buffer, copies
@@ -11,7 +11,7 @@
 # note: this is the slowest cell in the row; see RUN.md for the measured cost.
 (var text "")
 
-(for i 0 1000000
+(for i 0 250000
   (set text (string text "x")))
 
 (print (length text))

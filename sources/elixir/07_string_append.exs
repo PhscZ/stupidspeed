@@ -1,4 +1,4 @@
-# task 07 string_append — expected output: 1000000
+# task 07 string_append — expected output: 250000
 # build: none (elixir compiles the script on every run)
 # run: elixir 07_string_append.exs
 # note: like Erlang, Elixir has no mutable variables and no loop syntax, so there is no
@@ -11,14 +11,14 @@
 # note: mutable state, where a task genuinely needs it, uses the language's own escape
 #       hatches -- the process dictionary (Process.put/get) and the :atomics module,
 #       which is a real fixed-size mutable array of 64-bit integers.
-# Plain binary append a million times. NOTE: BEAM's writable-binary optimisation turns the
+# Plain binary append 250000 times. NOTE: BEAM's writable-binary optimisation turns the
 # natural <<acc::binary, "x">> into an amortised O(1) in-place extend, so this runs LINEAR here
 # rather than the quadratic copy task 07 is designed to measure. That is the runtime's real
 # behaviour for this operation and is recorded rather than worked around; forcing a copy would
 # mean writing the row artificially.
 defmodule T07 do
   def run do
-    acc = append(1_000_000, <<>>)
+    acc = append(250_000, <<>>)
     IO.puts(byte_size(acc))
   end
 

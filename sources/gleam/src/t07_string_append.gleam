@@ -1,4 +1,4 @@
-// task 07 string_append — expected output: 1000000
+// task 07 string_append — expected output: 250000
 // build: gleam build    run: gleam run --module t07_string_append
 // note: run from sources/gleam/, the project root.
 // note: Gleam module names may not begin with a digit, so the file is t07_string_append.gleam
@@ -18,7 +18,7 @@ import gleam/io
 import gleam/string
 
 pub fn main() {
-  io.println(int.to_string(string.length(append(1000000, ""))))
+  io.println(int.to_string(string.length(append(250000, ""))))
 }
 
 fn append(n: Int, acc: String) -> String {
