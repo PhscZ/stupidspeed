@@ -16,7 +16,7 @@ the second is disposable. See the end of `BUILD.md` for what is in each.
 ## Results
 
 One row per toolchain, one column per task. The column headings are the task numbers, and
-the task names are the section headings under [Tasks](#tasks). All 125 toolchains, empty and
+the task names are the section headings under [Tasks](#tasks). All 131 toolchains, empty and
 ready to fill in.
 
 A cell holds the median of the 5 timed runs, in milliseconds. `WRONG` is an output that did
@@ -60,6 +60,7 @@ kept alongside the median in the raw results, not in this table.
 | JavaScript | node |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | JavaScript | bun |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | JavaScript | deno |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| JavaScript | spidermonkey |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | PHP | zend |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | PHP | zend + jit |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Python | cpython |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -112,6 +113,7 @@ kept alongside the median in the raw results, not in this table.
 | Scala | native |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Beef | BeefBuild |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Haxe | hxcpp |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Haxe | hashlink |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Eiffel | eiffelstudio |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Seed7 | s7c |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Scheme | chez |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -151,6 +153,10 @@ kept alongside the median in the raw results, not in this table.
 | IronPython | ipy |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | SQLite | sqlite3 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Unicon | unicon |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Haskell | ghc |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Forth | gforth |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Lobster | lobster |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Mercury | mmc |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 
 No cell is `SKIPPED` by design. Eight rows need more than the stock install for task 11, and
 each says so in `BUILD.md`: the two Assembly rows have no libc, so they issue `CreateThread` and
@@ -644,6 +650,101 @@ first `0x1A` — `data.bin` has one at offset 26 — so the default mode reads 2
 wrong answer; that is the same trap the Standard ML row documents, and in `"u"` the cell is
 byte-exact. Task 15 has no fsync, so it flushes by closing, the deviation the Tcl, D, Julia and
 other rows already record.
+
+**Haskell** is the row that is written most against its own grain, and it is worth being
+precise about what that means. Haskell is lazy, pure and functional; every cell here is
+imperative. Mutable state is an `IORef` written with the strict `modifyIORef'`, loops are
+explicit strict tail recursions or `forM_` over a range, arrays are `IOUArray`s, text is
+`ByteString`, and there is no `foldl`, no laziness in any timed path and no list-based text
+anywhere. That is not a trick to make the numbers look better: it is the only form in which
+the language can express these tasks at all, and it changes the results in one specific way.
+**Task 11 needs it.** A pure non-allocating loop gives GHC's scheduler nothing to preempt on,
+so it stays pinned to a single capability however many `+RTS -N` is given — measured, that
+shape shows **1.0x** with `-N4` and `-N8` alike, and `-fno-omit-yields` does not rescue it.
+The `IORef` version allocates about 1 GB/s, the allocation is the yield point, and the same
+four workers then measure **3.00x** (1.991 s serial against 0.663 s), with the RTS reporting
+3.81x CPU per wall second and 205 parallel GCs. So the imperative style is load-bearing here,
+not cosmetic. Two other cells need a word. Task 03 is `{-# NOINLINE #-}` on `addOne`, and that
+matters more in Haskell than elsewhere: GHC inlines and then constant-folds, so a helper whose
+argument never varies lets it collapse the whole loop, and the accumulator is therefore
+threaded through as the argument — which is what the task's own line says. Measured, 100
+million calls cost 0.410 s against 0.108 s with the body written out, so the call is real.
+Task 07 appends to a `ByteString` rather than a `String`: a Haskell `String` is a linked list
+of characters, and 250000 quadratic appends to one did not finish in thirty minutes, where
+`ByteString` performs the same whole-accumulator copy at memcpy speed in about five seconds.
+The copy is genuinely quadratic either way, which is what the task measures. `Integer` is
+arbitrary precision, so task 10 is a built-in-bignum cell like Python's. The toolchain is the
+official GHC bindist, extracted rather than installed, and it bundles its own MinGW, so no
+MSVC is needed.
+
+**Forth** is the stack-based row, and gforth is the interpreter. Every cell keeps its
+accumulator on the data stack and its loop state in variables, because that is what the language
+has; there is no local-variable syntax to reach for. Three cells are worth recording. Task 10
+is the hand-rolled route — gforth cells are 64 bits and it has no bignum library, so the spigot
+runs on sign-magnitude base-1e9 limbs, about 300 lines of stack code, and the arithmetic
+argument that makes 64 bits enough is the same one the C row records. Task 11 has no threads:
+`cilk.fs` needs `unix/pthread.fs` and that is Unix-only, so the four workers are four child
+processes started with `start /b`, each computing its quarter and writing its partial to a temp
+file that the parent polls for and sums. Measured, four workers take about the same wall time
+as one (~10 s against ~8.8 s) where running them in sequence would be about 35 s, so they
+genuinely overlap. Task 05 is manually managed like the C row: gforth has no collector, so the
+buffer a slot replaces is an explicit `free`. One build detail that cost real time and is worth
+recording: gforth's `exit` does not unwind a `DO`/`LOOP` frame in this build, so a word that
+returns early from inside a loop must use `unloop exit` or the interpreter dies with no output
+at all.
+
+**Lobster** is the newest row and the only one that compiles to bytecode and runs in one step.
+Its `int` is a 64-bit scalar with no arbitrary precision, so task 10 is hand-rolled base-1e9
+limbs like the C row's, and the whole spigot is a `Big` class with the four operations it needs.
+Task 03 needs a word: Lobster has no no-inline annotation and inlines ordinary calls
+aggressively, so `add_one` is passed as a `fn` value through a parameter with an explicit
+function type, which the language reference says forces an indirect call — verified, 100M
+direct increments run in 0.46 s against 1.51 s for the indirect-call version. Task 07 is a
+documented deviation: Lobster's `+=` appends in place when the string is uniquely referenced,
+so the loop is linear rather than the quadratic copy the task exists to measure — the same
+disposition the Raku, Erlang, Elixir and AutoHotkey rows carry. Task 05 allocates a class of
+eight 64-bit fields per iteration rather than a raw `malloc`, and reference counting releases
+the buffer a slot replaces.
+
+**Mercury** is the only pure-logic row in the matrix, and the only one that had to be built from
+source: no Windows binary is published, so it was compiled with the MSYS2 UCRT64 gcc the `valac`
+row already installs. Three things shape the row. Its module names cannot start with a digit,
+so the files are `01_branches.m` and the modules are `m01_branches`, with `Mercury.modules`
+holding the mapping; the compiler names the executable after the module, not the file. It ships
+arbitrary-precision integers in the standard library, so task 10 holds the spigot state in
+`integer` values rather than hand-rolled limbs — a built-in-bignum cell like Python's. And task
+11 needs a different **grade**: Mercury's default `hlc.gc.pregen` has no parallelism at all, so
+that one cell is compiled `hlc.par.gc`, which is Mercury's own parallel grade, and the four
+workers are `thread.spawn` with `thread.mvar` for the join. The toolchain's default grade is
+`hlc.gc.pregen` rather than the usual `hlc.gc`, which is worth knowing because every build fails
+with "the Mercury standard library cannot be found in grade hlc.gc" until it is passed
+explicitly.
+
+**Haxe on HashLink** is a second Haxe row, and the pair exists to separate the language from its
+backend. The `hxcpp` row compiles Haxe through C++ to a native binary; this one compiles the same
+language to bytecode for the **HashLink** VM, so the difference between the two columns is the
+backend rather than the source. The same fifteen algorithms are written twice, and three things
+change. **`Int` is 32 bits on this target** — a plain `Int` accumulator overflows silently, so
+every value that can exceed 2^31 is a `Float`, which is exact below 2^53, or a `haxe.Int64`.
+**There is no thread API at all**: `sys.thread` does not resolve under HashLink, and the bundled
+`hl.uv` bindings expose no thread creation, so task 11's four workers are four child `hl`
+processes, each writing its partial to a file that the parent waits on and sums — the same shape
+the VBScript, COBOL, Octave and gforth rows use. And task 10 hand-rolls base-1e9 limbs in
+`haxe.Int64`, where the `hxcpp` row could also have used a native type. Task 07 is the row's slow
+cell: appending to an immutable `String` is honestly quadratic and takes about 70 s.
+
+**SpiderMonkey** is a fourth JavaScript row and the first that is not a Node-family runtime: it is
+the **shell** Mozilla builds for its own engine, so `require` and `worker_threads` do not exist and
+the row is written against the shell's globals instead. That makes it the only JS row whose program
+cannot be run under Node or Deno, and it is worth having for the same reason the other
+second-implementation rows are: it isolates the engine from the runtime around it. Two globals
+carry it. `print()` is the output call. And task 11 uses `evalInWorker`, which runs its argument on
+a **separate OS thread**, with a `SharedArrayBuffer` for the partials and `Atomics` for the join —
+measured at **2.67x on four workers**, against 2.43x for Unicon and 3.00x for Haskell. One trap
+worth recording: the main thread must register the buffer with `setSharedArrayBuffer()` before any
+worker is spawned, or the worker's `getSharedArrayBuffer()` throws `RangeError: invalid or
+out-of-range index`. BigInt is native, so task 10 is a built-in-bignum cell. `os.file` has no
+chunked read and no append, so tasks 14 and 15 move the whole 50 MiB in one call each.
 
 **The eleven WebAssembly rows** are one target and eleven front ends, and they are the only rows in the
 matrix whose program is not what the machine executes: a `.wasm` module is instantiated and
@@ -1248,7 +1349,7 @@ nothing else.
 | F# | dotnet |
 | VB.NET | dotnet |
 | Scala | jvm, native |
-| JavaScript | node, bun, deno |
+| JavaScript | node, bun, deno, spidermonkey |
 | PHP | zend, zend + jit |
 | Python | cpython, pypy, nuitka, cython, graalpy |
 | Ruby | cruby + yjit, jruby |
@@ -1289,7 +1390,7 @@ nothing else.
 | Erlang | OTP (escript) |
 | Elixir | elixir (BEAM) |
 | Beef | BeefBuild |
-| Haxe | hxcpp |
+| Haxe | hxcpp, hashlink |
 | Eiffel | eiffelstudio |
 | Seed7 | s7c |
 | Scheme | chez |
@@ -1326,6 +1427,10 @@ nothing else.
 | IronPython | ipy (.NET) |
 | SQLite | sqlite3 |
 | Unicon | unicon |
+| Haskell | ghc |
+| Forth | gforth |
+| Lobster | lobster |
+| Mercury | mmc |
 
 Missing a toolchain means the cell says `SKIPPED`. It never counts as zero. The same goes
 for a language that cannot do a task at all, such as a language with no threads trying
@@ -1397,6 +1502,27 @@ its hand-rolled limbs are two orders of magnitude too slow to run.
 | Object Pascal | The `pascal` row is Object Pascal — `fpc` in `{$mode objfpc}`. |
 | Turbo Pascal mode | `fpc -Mtp` is the same compiler as the `pascal` row. |
 | SML/NJ | A second Standard ML implementation; only a 32-bit Windows build and green threads. |
+
+**Cannot be driven from the harness.**
+
+A row has to be reproducible by a script on a machine that is not the one it was written on:
+run one command, read one line of stdout, exit. Four languages are left out because they
+cannot be driven that way — not because the language is too slow, and not because a task is
+impossible, but because the run itself cannot be automated or cannot be published.
+
+That is a different kind of exclusion from the two above, so it is worth saying why it counts
+at all. A benchmark's whole value is that someone else can reproduce a number. If a row needs
+a human to click through an activation dialog, or if its licence forbids publishing the
+result, then the number it produces is not evidence — it is an anecdote about one machine on
+one afternoon. The measurement is the deliverable, and a row that cannot ship its measurement
+has nothing to contribute however fast the language is.
+
+| Language | Blocker |
+|---|---|
+| Squeak / Cuis | **Headless batch invocation does not work on Windows.** Both ship first-class Windows x64 bundles and would otherwise pass every task, but driving the image without a GUI is an open VM defect (`OpenSmalltalk/opensmalltalk-vm` issues #639 and #655): the documented `--headless` path does not start a script and exit on Windows. The same class of problem is why the Dolphin and Pharo rows needed their own launch recipes. |
+| Delphi | **The free edition cannot be installed or scripted without a human.** Community Edition is distributed only through the GetIt web installer, which needs an Embarcadero account, online registration and activation, and administrator rights — the repo's rule is a portable extraction. It is also licence-limited to under $5k annual revenue on a one-year term. The language itself is Object Pascal, so even with a working install it would be the `pascal` row again. |
+| Wolfram Engine | **The free licence forbids producing output for organisational use and forbids publishing the engine.** The Free Wolfram Engine for Developers terms allow "development but not production" and explicitly prohibit "running the Free Engine expressly to produce output for commercial or organizational use" and "distributing, publishing… any portion of the Free Engine", with an audit clause requiring records of use. A published benchmark is output for organisational use, so the free engine is not a lawful route to these numbers, and the paid engine is not redistributable, so a reader cannot reproduce the run. The language has native bignums and `ParallelMap`, so it would otherwise be a strong row. |
+| MATLAB | **Licence and replication.** Use is granted "solely for Internal Operations", and activation binds a licence to a specific physical Computer and Licensed User, with data sent to MathWorks at activation; clause 3.2.2 restricts a Designated Computer licence to one non-virtual machine. Clause 5.8 restricts using MathWorks' names in material distributed to third parties to "the form provided by MathWorks", and 5.6 forbids publishing any portion of the Programs. So the numbers could not be republished and a reader could not re-run them without their own activation. |
 
 **Measured, but not added.**
 
