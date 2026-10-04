@@ -7,6 +7,10 @@
 //       the same shape the Lua and V rows use. Only the internal __switch__ goto primitive
 //       survives in this compiler, and it is not a language construct.
 
+import System.Diagnostics
+
+sw = Stopwatch.StartNew()
+
 acc as long = 0
 
 i as long = 0
@@ -22,5 +26,7 @@ while i < 100000000:
         acc += 3 * i
     i += 1
 
+sw.Stop()
+System.Console.Error.WriteLine("TIME_MS=" + sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture))
 print(acc)
 

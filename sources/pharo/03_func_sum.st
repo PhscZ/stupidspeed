@@ -7,12 +7,15 @@
  and there is nothing for the JIT to inline away. This is the same position Java and
  Scala are in."
 
-| out addOne value |
+| out err addOne value t0 |
 out := Stdio stdout.
+err := Stdio stderr.
+t0 := Time microsecondClockValue.
 
 addOne := [:n | n + 1].
 value := 0.
 
 0 to: 99999999 do: [:i | value := addOne value: value].
 
+err nextPutAll: 'TIME_MS=', ((Time microsecondClockValue - t0) / 1000.0) printString, String lf; flush.
 out nextPutAll: value printString; lf; flush.

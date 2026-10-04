@@ -17,6 +17,8 @@ class T14_file_read {
     static inline var CHUNK = 1048576;   // 1 MiB
 
     static function main() {
+        // timing: haxe.Timer.stamp() is QueryPerformanceCounter on cpp (sub-microsecond); Sys.time() there is wall-clock ms.
+        var t0 = haxe.Timer.stamp();
         var f = sys.io.File.read("data.bin", true);
         var buf = haxe.io.Bytes.alloc(CHUNK);
 
@@ -36,6 +38,8 @@ class T14_file_read {
         f.close();
 
         var modulus = haxe.Int64.make(1, 0);   // 4294967296
+        var t1 = haxe.Timer.stamp();
+        Sys.stderr().writeString("TIME_MS=" + ((t1 - t0) * 1000.0) + "\n");
         Sys.println(total % modulus);
     }
 }

@@ -2,6 +2,7 @@
 // task 09 fib_recursive — expected output: 102334155
 // build: none (interpreted)    run: php 09_fib_recursive.php (zend) | php -d opcache.enable_cli=1 -d opcache.jit_buffer_size=64M 09_fib_recursive.php (zend + jit)
 
+$__t0 = hrtime(true);
 function fib(int $n): int
 {
     if ($n < 2) {
@@ -10,4 +11,7 @@ function fib(int $n): int
     return fib($n - 1) + fib($n - 2);
 }
 
-echo fib(40), "\n";
+$__result = fib(40);
+$__t1 = hrtime(true);
+fwrite(STDERR, sprintf("TIME_MS=%.3f\n", ($__t1 - $__t0) / 1e6));
+echo $__result, "\n";

@@ -6,7 +6,10 @@
 
 module main
 
+import time
+
 fn main() {
+	t0 := time.now()
 	text := 'abcdefghij'.repeat(10000000)
 
 	mut count := i64(0)
@@ -20,5 +23,6 @@ fn main() {
 		}
 	}
 
+	eprintln('TIME_MS=${f64(time.since(t0).microseconds()) / 1000.0:.3f}')
 	println(count)
 }

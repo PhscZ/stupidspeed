@@ -19,6 +19,7 @@
 //       higher-order functions in any timed path.
 
 import gleam/erlang/atom
+import gleam/float
 import gleam/int
 import gleam/io
 
@@ -39,12 +40,18 @@ fn file_read(fd: Fd, size: Int) -> Res(BitArray)
 @external(erlang, "file", "close")
 fn file_close(fd: Fd) -> atom.Atom
 
+@external(erlang, "erlang", "monotonic_time")
+fn monotonic_time(unit: atom.Atom) -> Int
+
 pub fn main() {
+  let t0 = monotonic_time(atom.create("microsecond"))
   let modes = [atom.create("read"), atom.create("raw"), atom.create("binary")]
   case file_open("data.bin", modes) {
     Ok(fd) -> {
       let total = chunks(fd, 0)
       let _ = file_close(fd)
+      let ms = int.to_float(monotonic_time(atom.create("microsecond")) - t0) /. 1000.0
+      io.println_error("TIME_MS=" <> float.to_string(ms))
       io.println(int.to_string(total % 4294967296))
     }
     Error(_) -> panic as "cannot open data.bin"

@@ -9,10 +9,12 @@
 module main
 
 import math.big
+import time
 
 const digits = 1000
 
 fn main() {
+	t0 := time.now()
 	mut q := big.integer_from_int(1)
 	mut r := big.integer_from_int(0)
 	mut t := big.integer_from_int(1)
@@ -47,5 +49,6 @@ fn main() {
 		}
 	}
 
+	eprintln('TIME_MS=${f64(time.since(t0).microseconds()) / 1000.0:.3f}')
 	println(total)
 }

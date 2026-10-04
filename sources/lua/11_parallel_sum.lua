@@ -7,6 +7,7 @@
 -- extension: luarocks install lanes (which itself needs a C compiler). Lane results are
 -- read back through the lane handle, which joins the lane.
 
+local __t0 = os.clock()
 local lanes = require("lanes")
 lanes = lanes.configure() or lanes
 
@@ -43,4 +44,6 @@ end
 
 -- string.format("%d", ...) so both runtimes print the full 16-digit total: LuaJIT's default
 -- conversion is "%.14g" and would print 7.5e+15 for a value this large.
+local __t1 = os.clock()
+io.stderr:write(string.format("TIME_MS=%.3f\n", (__t1 - __t0) * 1000.0))
 print(string.format("%d", total))

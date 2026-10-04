@@ -25,6 +25,23 @@
 --       the spec's expected 2389704704. Doing it in int64 would also be exact; a double is
 --       simpler and the spec's own answer is a mod-2^32 reduction.
 -- note: measured on this host: 0.0559 s for the 50 MiB pass, i.e. about 1.1 ns per byte.
+-- timing: GetSystemTimePreciseAsFileTime is Windows' 100-nanosecond clock, imported
+--         with terralib.externfunction; TIME_MS goes to time.txt, the contract's
+--         fallback, because Terra's stdio has no stderr handle. stdout is unchanged.
+local C = terralib.includec("stdio.h")
+local GetSystemTimePreciseAsFileTime = terralib.externfunction("GetSystemTimePreciseAsFileTime", &int64 -> {})
+terra ssNow() : int64
+    var ft : int64
+    GetSystemTimePreciseAsFileTime(&ft)
+    return ft / 10000LL
+end
+terra ssReport(t0 : int64) : int64
+    var f = C.fopen("time.txt", "w")
+    C.fprintf(f, "TIME_MS=%lld\n", ssNow() - t0)
+    C.fclose(f)
+    return 0
+end
+local ssT0 = ssNow()
 
 local f = assert(io.open("data.bin", "rb"))
 
@@ -46,4 +63,6 @@ while true do
 end
 f:close()
 
-print(string.format("%d", total % 4294967296))
+local ssV = total % 4294967296
+ssReport(ssT0)
+print(string.format("%d", ssV))

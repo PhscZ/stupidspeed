@@ -10,9 +10,14 @@
 ; note: every C element is 2i, so the total is 2000 * (0 + ... + 999) = 999000000,
 ;       inside the 32-bit range and exact in the 64-bit integer type.
 ; note: the fill, the add and the sum together take about two seconds on this machine.
+; timing: A_TickCount is the interpreter's own millisecond clock (GetTickCount, so about
+;       15 ms resolution); TIME_MS is written to stderr with FileAppend(..., "**") and
+;       stdout is unchanged.
 #Requires AutoHotkey v2.0
 #SingleInstance Off
 #NoTrayIcon
+
+t0 := A_TickCount
 
 n := 1000
 
@@ -44,4 +49,5 @@ total := 0
 Loop 1000000
     total += C[A_Index]
 
+FileAppend("TIME_MS=" (A_TickCount - t0) "`n", "**")
 FileAppend(total "`n", "*")

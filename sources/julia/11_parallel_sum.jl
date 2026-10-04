@@ -3,6 +3,8 @@
 # deviation: Julia has no switch/match statement, so worker t uses the same if/elseif
 # chain as task 02. Each thread owns one range and writes its own slot of `results`.
 
+using Printf
+
 function partial(t::Int64)::Int64
     acc = Int64(0)
     lo = t * 25000000
@@ -23,10 +25,12 @@ function partial(t::Int64)::Int64
 end
 
 function main()
+    t0 = time_ns()
     results = Vector{Int64}(undef, 4)
     Threads.@threads for t in 0:3
         results[t + 1] = partial(Int64(t))
     end
+    @printf(stderr, "TIME_MS=%.3f\n", (time_ns() - t0) / 1e6)
     println(sum(results))
 end
 

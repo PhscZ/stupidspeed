@@ -7,6 +7,7 @@
 -- and corrected by comparison). Every intermediate stays well below 2^53.
 -- The digits themselves are never printed, only their sum.
 
+local __t0 = os.clock()
 local BASE = 1000000000
 
 -- A bignum is a table whose limbs live at 1..n, little endian, each in [0, BASE),
@@ -242,4 +243,6 @@ while emitted < 1000 do
     end
 end
 
+local __t1 = os.clock()
+io.stderr:write(string.format("TIME_MS=%.3f\n", (__t1 - __t0) * 1000.0))
 print(digitsum)

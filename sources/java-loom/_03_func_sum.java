@@ -12,10 +12,12 @@ public class _03_func_sum {
     }
 
     public static void main(String[] args) {
+        long __t0 = System.nanoTime();
         long value = 0;
         for (long i = 0; i < 100000000L; i++) {
             value = addOne(value);
         }
+        System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6);
         System.out.println(value);
     }
 }

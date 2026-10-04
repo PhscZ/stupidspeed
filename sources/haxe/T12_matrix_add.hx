@@ -8,6 +8,8 @@
 
 class T12_matrix_add {
     static function main() {
+        // timing: haxe.Timer.stamp() is QueryPerformanceCounter on cpp (sub-microsecond); Sys.time() there is wall-clock ms.
+        var t0 = haxe.Timer.stamp();
         var n = 1000;
         var elems = n * n;
 
@@ -33,6 +35,8 @@ class T12_matrix_add {
             total += c[k];
         }
 
+        var t1 = haxe.Timer.stamp();
+        Sys.stderr().writeString("TIME_MS=" + ((t1 - t0) * 1000.0) + "\n");
         Sys.println(total);
     }
 }

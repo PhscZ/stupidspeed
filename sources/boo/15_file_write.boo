@@ -6,6 +6,9 @@
 //       the task asks for. The 1 MiB buffer is written fifty times, one write per pass.
 
 import System.IO
+import System.Diagnostics
+
+sw = Stopwatch.StartNew()
 
 buffer = array[of byte](1048576)
 
@@ -26,5 +29,7 @@ while p < 50:
 fs.Flush(true)
 fs.Close()
 
+sw.Stop()
+System.Console.Error.WriteLine("TIME_MS=" + sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture))
 print(written)
 

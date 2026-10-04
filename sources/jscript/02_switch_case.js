@@ -12,6 +12,13 @@
 // note: 100000000 iterations measure 27 s to 143 s on this shared host, about 0.27 us to
 //       1.4 us an iteration (fastest 27.2 s, slowest 143.3 s). The spread is the machine's
 //       load, not the code.
+
+// timing: new Date().getTime() is the WSH clock in milliseconds (the system timer, so about
+//         15 ms resolution); TIME_MS goes to stderr with WScript.StdErr and stdout is unchanged.
+var ssT0 = new Date().getTime();
+function ssReport() {
+    WScript.StdErr.Write("TIME_MS=" + (new Date().getTime() - ssT0) + "\r\n");
+}
 var acc = 0, i;
 
 for (i = 0; i < 100000000; i++) {
@@ -31,4 +38,5 @@ for (i = 0; i < 100000000; i++) {
     }
 }
 
+ssReport();
 WScript.Echo(String(acc));

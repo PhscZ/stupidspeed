@@ -14,11 +14,14 @@ class Program
 
     static void Main()
     {
+        System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
         long value = 0;
         for (int i = 0; i < 100000000; i++)
         {
             value = AddOne(value);
         }
+        sw.Stop();
+        Console.Error.WriteLine("TIME_MS=" + sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture));
         Console.WriteLine(value);
     }
 }

@@ -314,10 +314,13 @@ end module bignum
 
 program main
   use bignum
+  use iso_fortran_env, only: error_unit
   implicit none
   type(bnum) :: q, r, t, t1, t2, t3, t4, t5, t6, t7
   integer(kind=8) :: k, l, n, nn, dg, total
+  integer(kind=8) :: ss_t0, ss_t1, ss_rate
 
+  call system_clock(ss_t0, ss_rate)
   call binit(q)
   call binit(r)
   call binit(t)
@@ -380,5 +383,7 @@ program main
     end if
   end do
 
+  call system_clock(ss_t1)
+  write(error_unit,'(a,i0)') 'TIME_MS=', (ss_t1 - ss_t0) * 1000_8 / ss_rate
   write(*,'(i0)') total
 end program main

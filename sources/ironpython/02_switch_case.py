@@ -3,6 +3,13 @@
 # note: IronPython 3.4 predates Python's match statement, so the four-way decision is an if/elif chain;
 #       the .NET compiler behind it has no jump table to compare against task 01.
 
+import clr
+from System.Diagnostics import Stopwatch
+from System.Globalization import CultureInfo
+import sys
+
+_sw = Stopwatch.StartNew()
+
 acc = 0
 
 for i in range(100000000):
@@ -16,4 +23,6 @@ for i in range(100000000):
     else:
         acc += 3 * i
 
+_sw.Stop()
+sys.stderr.write("TIME_MS=" + _sw.Elapsed.TotalMilliseconds.ToString("F3", CultureInfo.InvariantCulture) + "\n")
 print(acc)

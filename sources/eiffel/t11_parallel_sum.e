@@ -13,6 +13,13 @@
 --       INTEGER_64 attribute for its quarter, one for its partial. The root creates the
 --       four objects, launches them, joins them, and sums the four partials afterwards,
 --       exactly as the C row sums four Job structs.
+-- timing: TIME.make_now plus the hour/minute/second/millisecond fields is Eiffel's own
+--         clock, read in ss_report and reported as whole milliseconds; io.error is
+--         STD_FILES' standard error stream, so TIME_MS goes to stderr and stdout is
+--         unchanged. The counter is read on the root object around the four launches and
+--         the four joins. Instrumented by inspection: EiffelStudio is not installed on
+--         this machine, so this row's timing is unverified.
+
 class
 	T11_PARALLEL_SUM
 
@@ -21,6 +28,33 @@ create
 
 feature -- Benchmark
 
+	ss_t0: TIME
+
+	ss_now_ms (t: TIME): INTEGER_64
+		do
+			Result := (((t.hour * 60) + t.minute) * 60 + t.second) * 1000 + t.millisecond
+		end
+
+	ss_start
+		do
+			create ss_t0.make_now
+		end
+
+	ss_report
+		local
+			t: TIME
+			ms: INTEGER_64
+		do
+			create t.make_now
+			ms := ss_now_ms (t) - ss_now_ms (ss_t0)
+			if ms < 0 then
+				ms := ms + 86400000
+			end
+			io.error.put_string ("TIME_MS=")
+			io.error.put_integer_64 (ms)
+			io.error.put_new_line
+		end
+
 	make
 		local
 			workers: ARRAY [WORKER]
@@ -28,6 +62,7 @@ feature -- Benchmark
 			total: INTEGER_64
 			t: INTEGER
 		do
+			ss_start
 			create workers.make (1, 4)
 
 			from
@@ -59,6 +94,7 @@ feature -- Benchmark
 				t := t + 1
 			end
 
+			ss_report
 			io.put_integer_64 (total)
 			io.put_new_line
 		end

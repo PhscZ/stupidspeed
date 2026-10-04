@@ -10,6 +10,7 @@
 # in the timed path, which is not the loop the task asks for.)
 
 read_file <- function() {
+  t0 <- proc.time()[["elapsed"]]
   con <- file("data.bin", "rb")
   total <- 0
   repeat {
@@ -25,6 +26,7 @@ read_file <- function() {
     if (n < 1048576) break
   }
   close(con)
+  cat(sprintf("TIME_MS=%.3f\n", (proc.time()[["elapsed"]] - t0) * 1000), file = stderr())
   cat(sprintf("%.0f\n", total %% 4294967296))
 }
 

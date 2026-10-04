@@ -4,6 +4,7 @@
 //       Float64 partials plus four Int32 done-flags. The partials sum to 7.5e15, below 2^53, so
 //       doubles hold them exactly.
 
+var __t0 = performance.now();
 var N = 4;
 var CHUNK = 25000000;
 var FLOATS = 8 * N;                              /* N Float64 partials */
@@ -45,4 +46,5 @@ var total = 0;
 for (var t = 0; t < N; t++) {
   total += partials[t];
 }
+printErr("TIME_MS=" + (performance.now() - __t0));
 print(total);

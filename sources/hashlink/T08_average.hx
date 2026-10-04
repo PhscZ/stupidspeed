@@ -9,6 +9,8 @@
 
 class T08_average {
     static function main() {
+        // timing: Sys.time() is seconds as a Float on HashLink, so x1000 gives ms (1 ms effective).
+        var t0 = Sys.time();
         var total = 0.0;
 
         for (i in 0...100000000) {
@@ -16,6 +18,8 @@ class T08_average {
             total += reading;
         }
 
+        var t1 = Sys.time();
+        Sys.stderr().writeString("TIME_MS=" + ((t1 - t0) * 1000.0) + "\n");
         Sys.println(total / 100000000.0);
     }
 }

@@ -33,8 +33,14 @@ where
             n := (s.q * (7 * s.k + 2) + s.r * s.l) / (s.t * s.l), l := s.l + 2 }
           emitted sum
 
+@[noinline] def forceIO {α : Type} (x : Unit → α) : IO α := IO.lazyPure x
+
 def main : IO Unit := do
-  let (sum, emitted) := spigot 1000
+  let t0 ← IO.monoNanosNow
+  let (sum, emitted) ← forceIO (fun _ => spigot 1000)
   if emitted != 1000 then
     throw (IO.userError s!"spigot stopped after {emitted} digits")
+  let t1 ← IO.monoNanosNow
+  let ms : Float := (t1 - t0).toFloat / 1000000.0
+  IO.eprintln s!"TIME_MS={ms}"
   IO.println sum

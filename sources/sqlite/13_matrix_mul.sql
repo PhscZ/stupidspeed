@@ -8,6 +8,12 @@
 --       rows and C is another 250000 rows.
 -- note: the aggregate is over the join, so C is built first and then summed, matching the
 --       task's two steps; the group-by is what makes the inner sum a scalar sum.
+-- timing: the clock is SQLite's own julianday('now') in milliseconds. The timer starts at
+--       the entry of the script's own body and stops immediately before the final output
+--       statement, so the answer is materialised into a one-row table first and the timed
+--       region still contains all of the work.
+CREATE TABLE __t0(t INTEGER);
+INSERT INTO __t0 VALUES (cast(julianday('now')*86400000 as integer));
 CREATE TABLE A(i INTEGER, j INTEGER, v INTEGER, PRIMARY KEY(i, j));
 CREATE TABLE B(i INTEGER, j INTEGER, v INTEGER, PRIMARY KEY(i, j));
 CREATE TABLE C(i INTEGER, j INTEGER, v INTEGER, PRIMARY KEY(i, j));
@@ -27,4 +33,10 @@ SELECT a.i, b.j, sum(a.v * b.v)
 FROM A a JOIN B b ON b.i = a.j
 GROUP BY a.i, b.j;
 
-SELECT sum(v) FROM C;
+CREATE TABLE __res AS SELECT sum(v) AS v FROM C;
+
+.output stderr
+SELECT printf('TIME_MS=%d', cast(julianday('now')*86400000 as integer) - (SELECT t FROM __t0));
+.output stdout
+
+SELECT * FROM __res;

@@ -1,6 +1,8 @@
 // task 02 switch_case — expected output: 7500000075000000
 // build: dotnet build -c Release 02_switch_case.fsproj    run: dotnet run -c Release (or bin/Release/net8.0/02_switch_case.dll)
 
+let sw = System.Diagnostics.Stopwatch.StartNew()
+
 let mutable acc = 0L
 
 let mutable i = 0L
@@ -12,4 +14,6 @@ while i < 100000000L do
     | _ -> acc <- acc + 3L * i
     i <- i + 1L
 
+sw.Stop()
+System.Console.Error.WriteLine("TIME_MS=" + (sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture)))
 printfn "%d" acc

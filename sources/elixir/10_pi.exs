@@ -17,24 +17,29 @@
 
 # Gibbons' unbounded spigot over Elixir's built-in exact integers.
 defmodule T10 do
-  def run, do: loop(1, 0, 1, 1, 3, 3, 0, 0)
-
-  defp loop(_q, _r, _t, _k, _l, _n, produced, sum) when produced >= 1000 do
-    IO.puts(sum)
+  def run do
+    t0 = System.monotonic_time(:microsecond)
+    loop(1, 0, 1, 1, 3, 3, 0, 0, t0)
   end
 
-  defp loop(q, r, t, k, l, n, produced, sum) do
+  defp loop(_q, _r, _t, _k, _l, _n, produced, sum, t0) when produced >= 1000 do
+    result = sum
+    IO.puts(:stderr, "TIME_MS=#{(System.monotonic_time(:microsecond) - t0) / 1000}")
+    IO.puts(result)
+  end
+
+  defp loop(q, r, t, k, l, n, produced, sum, t0) do
     u = 4 * q + r
     v = (n + 1) * t
 
     if u < v do
       # n is settled: emit it and advance
       next = div(10 * (3 * q + r), t) - 10 * n
-      loop(10 * q, 10 * (r - n * t), t, k, l, next, produced + 1, sum + n)
+      loop(10 * q, 10 * (r - n * t), t, k, l, next, produced + 1, sum + n, t0)
     else
       # not settled: widen the state by one more term
       next = div(q * (7 * k + 2) + r * l, t * l)
-      loop(q * k, (2 * q + r) * l, t * l, k + 1, l + 2, next, produced, sum)
+      loop(q * k, (2 * q + r) * l, t * l, k + 1, l + 2, next, produced, sum, t0)
     end
   end
 end

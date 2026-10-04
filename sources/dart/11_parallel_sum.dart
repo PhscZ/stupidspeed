@@ -2,6 +2,7 @@
 // build: dart compile exe -o prog 11_parallel_sum.dart (aot; jit has no build step)    run: ./prog (aot) | dart 11_parallel_sum.dart (jit)
 // Isolate.run spawns a real worker thread; isolates have separate heaps and communicate by message passing.
 
+import 'dart:io';
 import 'dart:isolate';
 
 int work(int t) {
@@ -28,6 +29,7 @@ int work(int t) {
 }
 
 Future<void> main() async {
+  final Stopwatch sw = Stopwatch()..start();
   final List<Future<int>> futures = <Future<int>>[];
   for (int t = 0; t < 4; t++) {
     futures.add(Isolate.run(() => work(t)));
@@ -37,5 +39,6 @@ Future<void> main() async {
   for (final int part in parts) {
     total += part;
   }
+  stderr.writeln('TIME_MS=${(sw.elapsedMicroseconds / 1000).toStringAsFixed(3)}');
   print(total);
 }

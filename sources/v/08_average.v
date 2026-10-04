@@ -5,7 +5,10 @@
 
 module main
 
+import time
+
 fn main() {
+	t0 := time.now()
 	mut total := 0.0
 
 	for i := 0; i < 100000000; i++ {
@@ -13,5 +16,6 @@ fn main() {
 		total += reading
 	}
 
+	eprintln('TIME_MS=${f64(time.since(t0).microseconds()) / 1000.0:.3f}')
 	println(total / f64(100000000))
 }

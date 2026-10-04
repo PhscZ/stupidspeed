@@ -10,6 +10,9 @@
 @external("wasi_snapshot_preview1", "fd_write")
 declare function fd_write(fd: i32, iovs: usize, iovsLen: i32, nwritten: usize): i32;
 
+@external("wasi_snapshot_preview1", "clock_time_get")
+declare function clock_time_get(id: i32, precision: i64, time: usize): i32;
+
 @external("wasi", "thread-spawn")
 declare function thread_spawn(arg: i32): i32;
 
@@ -17,6 +20,33 @@ const out = memory.data(64);
 const outIov = memory.data(8);
 const outNw = memory.data(4);
 let outPos: usize = 0;
+
+const ssTimeBuf = memory.data(8);
+let ss_t0: u64 = 0;
+let ss_t1: u64 = 0;
+
+function ssNow(): u64 {
+  clock_time_get(1, 1000, ssTimeBuf);
+  return load<u64>(ssTimeBuf);
+}
+function ssStart(): void { ss_t0 = ssNow(); }
+function ssStop(): void { ss_t1 = ssNow(); }
+function ssReport(): void {
+  const ns: u64 = ss_t1 - ss_t0;
+  const ms: u64 = ns / 1000000;
+  const frac: u64 = (ns % 1000000) / 1000;
+  emit(84); emit(73); emit(77); emit(69); emit(95); emit(77); emit(83); emit(61);
+  emitU64(ms);
+  emit(46);
+  emit(48 + <i32>((frac / 100) % 10));
+  emit(48 + <i32>((frac / 10) % 10));
+  emit(48 + <i32>(frac % 10));
+  emit(10);
+  store<u32>(outIov, out);
+  store<u32>(outIov + 4, <u32>outPos);
+  fd_write(2, outIov, 1, outNw);
+  outPos = 0;
+}
 
 /* shared between the four workers and the parent */
 const results = memory.data(64);    /* four i64 partials */
@@ -78,6 +108,7 @@ export function wasi_thread_start(tid: i32, arg: i32): void {
 }
 
 export function _start(): void {
+  ssStart();
   store<i32>(doneCount, 0);
 
   for (let t = 0; t < THREADS; t++) {
@@ -94,5 +125,7 @@ export function _start(): void {
   }
 
   emitI64(total); emit(10);
+  ssStop();
   flushOut();
+  ssReport();
 }

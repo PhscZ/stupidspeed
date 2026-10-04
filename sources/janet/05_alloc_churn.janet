@@ -10,6 +10,12 @@
 #       same thing the C row's free(slots[slot]) does by hand. Without the store the whole
 #       loop would be dead code.
 # note: the total, 1274991808, stays inside 2^53, so it is exact.
+
+# timing: os/clock is Janet's monotonic clock, in seconds as a double; TIME_MS goes to
+#         stderr with eprintf and stdout is unchanged.
+(def ss-t0 (os/clock))
+(defn ss-report [] (eprintf "TIME_MS=%.3f\n" (* 1000 (- (os/clock) ss-t0))))
+
 (def slots (array/new-filled 256 nil))
 
 (var total 0)
@@ -20,4 +26,5 @@
   (+= total (in buf 0))
   (put slots (% i 256) buf))
 
+(ss-report)
 (print total)

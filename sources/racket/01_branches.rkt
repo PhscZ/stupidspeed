@@ -12,6 +12,14 @@
 ;;       slow way to write it here and the accumulator is the fast way.
 #lang racket/base
 
+;; Self-timing: current-inexact-milliseconds is Racket's monotonic wall-clock reading, in
+;; milliseconds as an inexact real. The start is the first form the module body runs and the
+;; stop is taken immediately before the answer is printed, so the bracketed region is the
+;; task's own work and nothing else. eprintf writes to (current-error-port), so stdout is
+;; unchanged.
+(define timer-start (current-inexact-milliseconds))
+(define (elapsed-ms) (- (current-inexact-milliseconds) timer-start))
+
 ;; Four counters over a hundred million iterations, the same nested test as every other row.
 ;; for/fold carries all four as accumulators; no mutation anywhere in the loop.
 (define-values (a b c d)
@@ -21,4 +29,5 @@
           [(zero? (modulo i 7)) (values a b (add1 c) d)]
           [else (values a b c (add1 d))])))
 
+(eprintf "TIME_MS=~a\n" (elapsed-ms))
 (printf "~a ~a ~a ~a\n" a b c d)

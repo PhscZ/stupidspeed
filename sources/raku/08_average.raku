@@ -10,8 +10,11 @@
 # A hundred million readings, each a multiple of 1/256, accumulated in a native double. The
 # total is far below 2^53, so the sum is exact and the digits do not depend on the order of
 # addition.
+my $__t0 = now;
 my num $total = 0e0;
 loop (my int $i = 0; $i < 100000000; $i++) {
     $total += ($i % 256) / 256e0;
 }
+my $__t1 = now;
+$*ERR.say('TIME_MS=' ~ (($__t1 - $__t0) * 1000).Num.fmt('%.3f'));
 say $total / 100000000e0;

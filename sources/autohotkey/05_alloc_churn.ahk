@@ -14,9 +14,14 @@
 ;       arithmetic from start to finish.
 ; note: the full run takes about 9 s on this machine, so a Buffer(64) allocation plus the
 ;       NumPut/NumGet pair costs a little under a microsecond.
+; timing: A_TickCount is the interpreter's own millisecond clock (GetTickCount, so about
+;       15 ms resolution); TIME_MS is written to stderr with FileAppend(..., "**") and
+;       stdout is unchanged.
 #Requires AutoHotkey v2.0
 #SingleInstance Off
 #NoTrayIcon
+
+t0 := A_TickCount
 
 slots := []
 slots.Length := 256
@@ -31,4 +36,5 @@ Loop 10000000 {
     slots[Mod(i, 256) + 1] := buf
 }
 
+FileAppend("TIME_MS=" (A_TickCount - t0) "`n", "**")
 FileAppend(total "`n", "*")

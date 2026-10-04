@@ -11,10 +11,16 @@
 ⍝       deliberately not used, the same choice the J row records.
 ⍝ note: the 'a' and 'e' branches are present with empty bodies, as the spec writes
 ⍝       them; the count only rises on 'h'.
+⍝ timing: 3⊃⎕AI is Dyalog's elapsed-time counter in milliseconds. APL exposes no
+⍝         stream handle for stderr, so the contract's fallback applies: TIME_MS is
+⍝         written to time.txt in the working directory with ⎕NPUT, and stdout is
+⍝         unchanged. Instrumented by inspection: Dyalog is not installed on this
+⍝         machine, so this row's timing is unverified.
 ⎕IO←0
 ⎕PP←17
 
-∇ r←char_count;text;n;count;i;ch
+∇ r←char_count;text;n;count;i;ch;ssT0;ssMS
+  ssT0←3⊃⎕AI
   text←100000000⍴'abcdefghij'
   n←⍴text
   count←0
@@ -30,6 +36,8 @@
     :EndIf
     i+←1
   :EndWhile
+  ssMS←(3⊃⎕AI)-ssT0
+  ('TIME_MS=',⍕ssMS)⎕NPUT 'time.txt'
   r←⍕count
 ∇
 

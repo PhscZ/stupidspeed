@@ -31,6 +31,23 @@
 --       actually accepted, not what was intended.
 -- note: measured on this host: 0.0933 s for the 50 MiB write plus the commit, and the file is
 --       byte-exact. §8.
+-- timing: GetSystemTimePreciseAsFileTime is Windows' 100-nanosecond clock, imported
+--         with terralib.externfunction; TIME_MS goes to time.txt, the contract's
+--         fallback, because Terra's stdio has no stderr handle. stdout is unchanged.
+local C = terralib.includec("stdio.h")
+local GetSystemTimePreciseAsFileTime = terralib.externfunction("GetSystemTimePreciseAsFileTime", &int64 -> {})
+terra ssNow() : int64
+    var ft : int64
+    GetSystemTimePreciseAsFileTime(&ft)
+    return ft / 10000LL
+end
+terra ssReport(t0 : int64) : int64
+    var f = C.fopen("time.txt", "w")
+    C.fprintf(f, "TIME_MS=%lld\n", ssNow() - t0)
+    C.fclose(f)
+    return 0
+end
+local ssT0 = ssNow()
 
 local F = terralib.includecstring[[
 int _open(const char *path, int flags, int mode);
@@ -64,4 +81,6 @@ end
 
 local buf = terralib.new(uint8[CHUNK])
 
-print(string.format("%d", write_file(buf)))
+local ssV = write_file(buf)
+ssReport(ssT0)
+print(string.format("%d", ssV))

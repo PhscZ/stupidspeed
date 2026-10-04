@@ -10,6 +10,7 @@
 # instead of 1274991808. Every byte in this row goes through double() for that
 # reason.
 
+__t0 = tic;
 total = 0;
 slots = cell(1, 256);
 for i = 0:9999999
@@ -18,4 +19,5 @@ for i = 0:9999999
   total = total + double(buf(1));
   slots{mod(i, 256) + 1} = buf;
 end
+fprintf(stderr, "TIME_MS=%.3f\n", toc(__t0) * 1000);
 printf("%.0f\n", total);

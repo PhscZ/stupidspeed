@@ -5,6 +5,7 @@ Imports System
 
 Module Program
     Sub Main()
+        Dim sw As System.Diagnostics.Stopwatch = System.Diagnostics.Stopwatch.StartNew()
         Const n As Integer = 500
         Dim a(n * n - 1) As Long
         Dim b(n * n - 1) As Long
@@ -34,6 +35,8 @@ Module Program
             Next
         Next
 
+        sw.Stop()
+        Console.Error.WriteLine("TIME_MS=" & sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture))
         Console.WriteLine(total)
     End Sub
 End Module

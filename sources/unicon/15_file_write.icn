@@ -3,8 +3,11 @@
 # Written in UNTRANSLATED mode, "wu", for the reason task 14 reads in "u": a translated
 # stream would rewrite line endings and corrupt the bytes. Unicon has no fsync, so the
 # flush is `close`, the deviation the Tcl, D, Julia and other rows already record.
+# timing: &time is Unicon's wall clock in milliseconds since midnight, and &errout is
+#         the standard error stream, so TIME_MS goes to stderr and stdout is unchanged.
 
 procedure main()
+    ssT0 := &time
     unit := ""
     every c := 0 to 255 do
         unit ||:= char(c)
@@ -13,5 +16,6 @@ procedure main()
     every i := 1 to 50 do
         writes(f, chunk)
     close(f)
+    write(&errout, "TIME_MS=", &time - ssT0)
     write(50 * *chunk)
 end

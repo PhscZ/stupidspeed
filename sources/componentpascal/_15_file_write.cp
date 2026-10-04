@@ -12,14 +12,17 @@
    and /list- only suppresses the .lst listing file. *)
 (* note: Console.WriteInt takes a 32 bit INTEGER only, so the LONGINT count is printed
    by the local WriteLong. *)
+(* timing: Env.Environment.get_TickCount() is .NET's millisecond clock, and the Error module
+   writes to stderr, so TIME_MS is reported there and stdout is unchanged. *)
 
 MODULE _15_file_write;
- IMPORT CPmain, Console, GPBinFiles;
+ IMPORT CPmain, Console, Error, Env := mscorlib_System, GPBinFiles;
 
  CONST CHUNK = 1048576;   (* 1 MiB *)
        REPEATS = 50;
 
  VAR f : GPBinFiles.FILE;
+     ss_t0, ss_t1 : LONGINT;
      buf : POINTER TO ARRAY OF UBYTE;
      written : LONGINT;
      i : INTEGER;
@@ -45,7 +48,29 @@ MODULE _15_file_write;
    Console.WriteString(s)
  END WriteLong;
 
+ PROCEDURE WMs(x : LONGINT);
+   VAR s : ARRAY 24 OF CHAR;
+       n, k : INTEGER;
+       t : CHAR;
+ BEGIN
+   IF x = 0 THEN Error.Write("0"); RETURN END;
+   n := 0;
+   WHILE x > 0 DO
+     s[n] := CHR(SHORT(x MOD 10) + ORD("0"));
+     x := x DIV 10;
+     INC(n)
+   END;
+   s[n] := 0X;
+   k := 0; DEC(n);
+   WHILE k < n DO
+     t := s[k]; s[k] := s[n]; s[n] := t;
+     INC(k); DEC(n)
+   END;
+   Error.WriteString(s)
+ END WMs;
+
 BEGIN
+  ss_t0 := Env.Environment.get_TickCount();
   NEW(buf, CHUNK);
   FOR i := 0 TO CHUNK - 1 DO
     buf[i] := USHORT(i MOD 256)
@@ -60,6 +85,9 @@ BEGIN
       written := written + CHUNK
     END;
     GPBinFiles.CloseFile(f);
+
+    ss_t1 := Env.Environment.get_TickCount();
+    Error.WriteString("TIME_MS="); WMs(ss_t1 - ss_t0); Error.WriteLn();
 
     WriteLong(written); Console.WriteLn
   END

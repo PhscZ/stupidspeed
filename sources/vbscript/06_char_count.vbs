@@ -11,8 +11,16 @@
 '       expanding the block ten times in a single Replace call. Replace over a
 '       ten-million-character source is quadratic in this engine (11 s for a ten-million
 '       character result), so the source is kept ten characters long.
+
+' timing: Timer() is VBScript's seconds-since-midnight clock with centisecond resolution, so
+'         TIME_MS has 16 ms granularity; it goes to stderr and stdout is unchanged.
+Dim ssT0
+Sub ssReport()
+    WScript.StdErr.WriteLine "TIME_MS=" & CLng(Round((Timer() - ssT0) * 1000))
+End Sub
 Dim block, text, i, n, count
 
+ssT0 = Timer()
 block = "abcdefghij"
 For i = 1 To 20
     block = block & block
@@ -28,4 +36,5 @@ For i = 1 To n
     End If
 Next
 
+ssReport
 WScript.Echo count

@@ -6,6 +6,7 @@
 
 public class _02_switch_case {
     public static void main(String[] args) {
+        long __t0 = System.nanoTime();
         long acc = 0;
         for (long i = 0; i < 100000000L; i++) {
             switch ((int) (i % 4)) {
@@ -23,6 +24,7 @@ public class _02_switch_case {
                     break;
             }
         }
+        System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6);
         System.out.println(acc);
     }
 }

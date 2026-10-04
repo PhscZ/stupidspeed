@@ -14,6 +14,12 @@
 #       module is close, flush, lines, open, read, seek, tell, temp, write, and there is no
 #       file/sync. The buffer is therefore flushed, not fsynced, unlike the C row's
 #       fflush + _commit. The printed byte count is unaffected.
+
+# timing: os/clock is Janet's monotonic clock, in seconds as a double; TIME_MS goes to
+#         stderr with eprintf and stdout is unchanged.
+(def ss-t0 (os/clock))
+(defn ss-report [] (eprintf "TIME_MS=%.3f\n" (* 1000 (- (os/clock) ss-t0))))
+
 (def CHUNK 1048576)
 (def REPEATS 50)
 
@@ -31,4 +37,5 @@
 (def written (file/tell f))
 (file/close f)
 
+(ss-report)
 (print written)

@@ -15,8 +15,10 @@
 # no-inline marker is needed or available.
 # note: value stays below 2^53, so the double holds it exactly.
 
+__t0 = tic;
 value = 0;
 for i = 0:99999999
   value = add_one(value);
 end
+fprintf(stderr, "TIME_MS=%.3f\n", toc(__t0) * 1000);
 printf("%.0f\n", value);

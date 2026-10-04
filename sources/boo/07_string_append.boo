@@ -6,6 +6,10 @@
 //       and the loop is quadratic. That is the point of the task; a StringBuilder would hide it.
 // note: this is the row's slow cell.
 
+import System.Diagnostics
+
+sw = Stopwatch.StartNew()
+
 text = ""
 
 i as int = 0
@@ -13,5 +17,7 @@ while i < 250000:
     text = text + "x"
     i += 1
 
+sw.Stop()
+System.Console.Error.WriteLine("TIME_MS=" + sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture))
 print(text.Length)
 

@@ -1,8 +1,11 @@
 # task 13 matrix_mul — expected output: 599995000
 # build: unicon -s 13_matrix_mul.icn    run: 13_matrix_mul.exe
 # The plain triple loop, flat 500x500 matrices, no reordering and no blocking.
+# timing: &time is Unicon's wall clock in milliseconds since midnight, and &errout is
+#         the standard error stream, so TIME_MS goes to stderr and stdout is unchanged.
 
 procedure main()
+    ssT0 := &time
     n := 500
     size := n * n
     a := list(size); b := list(size); c := list(size)
@@ -20,5 +23,6 @@ procedure main()
         }
     total := 0
     every total +:= !c
+    write(&errout, "TIME_MS=", &time - ssT0)
     write(total)
 end

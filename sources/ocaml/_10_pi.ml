@@ -25,6 +25,12 @@
          which fits a signed 64-bit integer (max 9.2e18), so the products and carries are exact.
          The package zarith would give real bignums but is not in MSYS2's UCRT64 repository, so
          the limbs are hand-rolled, exactly as the GDScript and ActionScript rows do. *)
+(* timing: Unix.gettimeofday is the clock this build of the Unix module exposes (there is
+   no clock_gettime binding here, so the monotonic clock is not reachable from OCaml);
+   TIME_MS goes to stderr through Printf.eprintf and stdout is unchanged. *)
+let ss_t0 = ref 0.0
+let ss_now () = Unix.gettimeofday () *. 1000.0
+let ss_report () = Printf.eprintf "TIME_MS=%.3f\n" (ss_now () -. !ss_t0)
 
 let base = 1_000_000_000L
 let limbs = 20000
@@ -142,6 +148,7 @@ let quot a b work =
   end
 
 let () =
+  ss_t0 := ss_now ();
   let q = make_big () and r = make_big () and t = make_big () in
   let u = make_big () and v = make_big () and w = make_big () in
 
@@ -192,4 +199,5 @@ let () =
     end
   done;
 
+  ss_report ();
   Printf.printf "%Ld\n" !sum

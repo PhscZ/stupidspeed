@@ -6,6 +6,7 @@ class Program
 {
     static void Main()
     {
+        System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
         // Build the 100 MB text once, by repeating the whole 10-character block 10000000 times.
         string block = "abcdefghij";
         System.Text.StringBuilder builder = new System.Text.StringBuilder(100000000);
@@ -24,6 +25,8 @@ class Program
                 count++;
             }
         }
+        sw.Stop();
+        Console.Error.WriteLine("TIME_MS=" + sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture));
         Console.WriteLine(count);
     }
 }

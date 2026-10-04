@@ -12,6 +12,7 @@
 % note: -O is required, see 01_branches.pl.
 
 main :-
+    get_time(T0),
     numlist(0, 255, Codes),
     string_codes(Block, Codes),
     copies(4096, Block, L),
@@ -21,6 +22,9 @@ main :-
     write_loop(50, S, Buf, Len, 0, Written),
     flush_output(S),
     close(S),
+    get_time(T1),
+    Ms is (T1 - T0) * 1000,
+    format(standard_error, "TIME_MS=~3f~n", [Ms]),
     format("~w~n", [Written]).
 
 copies(0, _, []) :-

@@ -12,7 +12,10 @@
 
 ;; A million-element primitive long array, filled and then summed in two separate passes, the
 ;; same shape as the C row. The total 499999500000 is past 2^31, so the sum is a long.
+(def ^:private __t0 (volatile! 0))
+
 (defn -main []
+  (vreset! __t0 (System/nanoTime))
   (let [n (long 1000000)
         arr (long-array n)]
     (dotimes [i n]
@@ -20,6 +23,7 @@
     (loop [i (long 0) total (long 0)]
       (if (< i n)
         (recur (inc i) (unchecked-add total (aget arr i)))
-        (println total)))))
+        (do (.println System/err (str "TIME_MS=" (/ (- (System/nanoTime) (long @__t0)) 1000000.0)))
+            (println total))))))
 
 (-main)

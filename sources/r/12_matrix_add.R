@@ -5,6 +5,7 @@
 # the same layout as the i * n + j the other languages use.
 
 matrix_add <- function() {
+  t0 <- proc.time()[["elapsed"]]
   n <- 1000
   A <- numeric(n * n)
   B <- numeric(n * n)
@@ -36,6 +37,7 @@ matrix_add <- function() {
     total <- total + C[k + 1]
     k <- k + 1
   }
+  cat(sprintf("TIME_MS=%.3f\n", (proc.time()[["elapsed"]] - t0) * 1000), file = stderr())
   cat(sprintf("%.0f\n", total))
 }
 

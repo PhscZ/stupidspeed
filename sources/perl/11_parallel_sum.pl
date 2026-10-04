@@ -6,6 +6,8 @@ use strict;
 use warnings;
 use threads;
 
+use Time::HiRes ();
+my $__t0 = Time::HiRes::time();
 sub work {
     my ($t) = @_;
 
@@ -34,4 +36,6 @@ my @threads = map { threads->create(\&work, $_) } 0 .. 3;
 my $total = 0;
 $total += $_->join() for @threads;
 
+my $__t1 = Time::HiRes::time();
+printf STDERR "TIME_MS=%.3f\n", ($__t1 - $__t0) * 1000.0;
 print $total, "\n";

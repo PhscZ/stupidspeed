@@ -7,6 +7,7 @@ class Program
 {
     static void Main()
     {
+        System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
         const int ChunkSize = 1048576;
         byte[] buffer = new byte[ChunkSize];
         long total = 0;
@@ -21,6 +22,8 @@ class Program
                 }
             }
         }
+        sw.Stop();
+        Console.Error.WriteLine("TIME_MS=" + sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture));
         Console.WriteLine(total % 4294967296L);
     }
 }

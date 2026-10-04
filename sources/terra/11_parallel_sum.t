@@ -31,6 +31,23 @@
 --       five. The 4 in `C.HANDLE[4]` and the 4 in the loop bound are the same 4.
 -- note: `|` is not an operator in Terra; `or` is the bitwise one inside terra code. The
 --       _open() flag expressions in 15_file_write.t rely on that.
+-- timing: GetSystemTimePreciseAsFileTime is Windows' 100-nanosecond clock, imported
+--         with terralib.externfunction; TIME_MS goes to time.txt, the contract's
+--         fallback, because Terra's stdio has no stderr handle. stdout is unchanged.
+local C = terralib.includec("stdio.h")
+local GetSystemTimePreciseAsFileTime = terralib.externfunction("GetSystemTimePreciseAsFileTime", &int64 -> {})
+terra ssNow() : int64
+    var ft : int64
+    GetSystemTimePreciseAsFileTime(&ft)
+    return ft / 10000LL
+end
+terra ssReport(t0 : int64) : int64
+    var f = C.fopen("time.txt", "w")
+    C.fprintf(f, "TIME_MS=%lld\n", ssNow() - t0)
+    C.fclose(f)
+    return 0
+end
+local ssT0 = ssNow()
 
 struct Work { t : int64; result : int64; tid : uint32 }
 
@@ -82,4 +99,6 @@ end
 local idx = terralib.new(int64[4], {0LL, 1LL, 2LL, 3LL})
 local ws = terralib.new(Work[4])
 
-print(string.format("%d", parallel_sum(idx, ws)))
+local ssV = parallel_sum(idx, ws)
+ssReport(ssT0)
+print(string.format("%d", ssV))

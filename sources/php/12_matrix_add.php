@@ -4,6 +4,7 @@
 // SplFixedArray packs a million elements into 16 bytes each; a plain PHP array would cost
 // several times that. Flat indexing with i * n + j, as the spec allows.
 
+$__t0 = hrtime(true);
 $n = 1000;
 $size = $n * $n;
 
@@ -28,4 +29,6 @@ for ($idx = 0; $idx < $size; $idx++) {
     $total += $c[$idx];
 }
 
+$__t1 = hrtime(true);
+fwrite(STDERR, sprintf("TIME_MS=%.3f\n", ($__t1 - $__t0) / 1e6));
 echo $total, "\n";

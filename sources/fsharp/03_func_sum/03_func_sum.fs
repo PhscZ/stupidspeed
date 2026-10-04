@@ -7,10 +7,14 @@ open System.Runtime.CompilerServices
 [<MethodImpl(MethodImplOptions.NoInlining)>]
 let addOne (n: int64) : int64 = n + 1L
 
+let sw = System.Diagnostics.Stopwatch.StartNew()
+
 let mutable value = 0L
 let mutable i = 0
 while i < 100000000 do
     value <- addOne value
     i <- i + 1
 
+sw.Stop()
+System.Console.Error.WriteLine("TIME_MS=" + (sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture)))
 printfn "%d" value

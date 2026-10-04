@@ -6,6 +6,7 @@
 # closes the connection; the byte count is printed after both.
 
 write_file <- function() {
+  t0 <- proc.time()[["elapsed"]]
   buf <- as.raw(rep(0:255, 4096))
   con <- file("out.bin", "wb")
   written <- 0
@@ -17,6 +18,7 @@ write_file <- function() {
   }
   flush(con)
   close(con)
+  cat(sprintf("TIME_MS=%.3f\n", (proc.time()[["elapsed"]] - t0) * 1000), file = stderr())
   cat(sprintf("%.0f\n", written))
 }
 

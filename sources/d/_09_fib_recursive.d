@@ -5,6 +5,16 @@
 module _09_fib_recursive;
 
 import std.stdio;
+import core.time : MonoTime;
+
+// timing: MonoTime.currTime is core.time's monotonic clock; TIME_MS goes to stderr and stdout
+// is unchanged.
+MonoTime ss_t0;
+
+void ssReport()
+{
+    stderr.writefln("TIME_MS=%.3f", (MonoTime.currTime - ss_t0).total!"usecs" / 1000.0);
+}
 
 long fib(long n)
 {
@@ -15,5 +25,8 @@ long fib(long n)
 
 void main()
 {
-    writeln(fib(40));
+    ss_t0 = MonoTime.currTime;
+    long ss_r = fib(40);
+    ssReport();
+    writeln(ss_r);
 }

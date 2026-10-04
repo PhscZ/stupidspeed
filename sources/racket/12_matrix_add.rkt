@@ -13,6 +13,14 @@
 #lang racket/base
 (require racket/fixnum)   ; fxvector, make-fxvector, fxvector-ref/set!
 
+;; Self-timing: current-inexact-milliseconds is Racket's monotonic wall-clock reading, in
+;; milliseconds as an inexact real. The start is the first form the module body runs and the
+;; stop is taken immediately before the answer is printed, so the bracketed region is the
+;; task's own work and nothing else. eprintf writes to (current-error-port), so stdout is
+;; unchanged.
+(define timer-start (current-inexact-milliseconds))
+(define (elapsed-ms) (- (current-inexact-milliseconds) timer-start))
+
 ;; Three flat 1000x1000 fxvectors, row-major, filled and added with plain index arithmetic.
 ;; The total fits a fixnum.
 (define n 1000)
@@ -36,4 +44,5 @@
   (for/fold ([total 0]) ([k (in-range elems)])
     (+ total (fxvector-ref c k))))
 
+(eprintf "TIME_MS=~a\n" (elapsed-ms))
 (displayln total)

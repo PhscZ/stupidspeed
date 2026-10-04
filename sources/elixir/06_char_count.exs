@@ -16,8 +16,11 @@
 # is O(1).
 defmodule T06 do
   def run do
+    t0 = System.monotonic_time(:microsecond)
     text = :binary.copy("abcdefghij", 10_000_000)
-    IO.puts(scan(text, 0, 100_000_000, 0))
+    count = scan(text, 0, 100_000_000, 0)
+    IO.puts(:stderr, "TIME_MS=#{(System.monotonic_time(:microsecond) - t0) / 1000}")
+    IO.puts(count)
   end
 
   defp scan(_text, i, n, count) when i >= n, do: count

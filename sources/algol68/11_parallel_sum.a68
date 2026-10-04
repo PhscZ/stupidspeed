@@ -14,6 +14,14 @@
 # note: clause buys nothing here. #
 # note: each unit owns a fixed range, so the order in which they finish cannot change #
 # note: the answer. #
+# timing: clock is a68g's processor-time clock, in seconds, as a REAL. The parallel #
+# note: clause here is correct-answer-no-speedup (see above), and it runs on real #
+# note: pthreads, so this clock reports the CPU time of the whole process rather than #
+# note: the wall clock the other rows bracket. It is the only clock a68g exposes; the #
+# note: row is read with that in mind. TIME_MS is written to stand error as a whole #
+# note: number of milliseconds, and stdout is unchanged. #
+
+REAL tim0 = clock;
 
 PROC work = (INT t) LONG INT: BEGIN
   LONG INT acc := 0;
@@ -32,4 +40,6 @@ END;
 
 PAR (res[1] := work(0), res[2] := work(1), res[3] := work(2), res[4] := work(3));
 
+INT tms = ENTIER(1000.0 * (clock - tim0) + 0.5);
+putf(stand error, ($g$, "TIME_MS=" + whole(tms, 0), $l$));
 print((whole(res[1] + res[2] + res[3] + res[4], 0), newline))

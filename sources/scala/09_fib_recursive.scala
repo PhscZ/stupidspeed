@@ -14,6 +14,8 @@ object Main {
     if (n < 2L) n else fib(n - 1L) + fib(n - 2L)
 
   def main(args: Array[String]): Unit = {
+    val __t0 = System.nanoTime()
+    System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
     println(fib(40L))
   }
 }

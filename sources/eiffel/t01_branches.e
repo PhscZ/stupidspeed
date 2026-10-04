@@ -5,6 +5,12 @@
 --       is an identifier and cannot start with a digit, and by convention the file is
 --       named after the class it holds (the Ada row's t01_branches.adb does the same).
 -- note: INTEGER is 32 bits, so the four counters are INTEGER_64 like the C row's int64_t.
+-- timing: TIME.make_now plus the hour/minute/second/millisecond fields is Eiffel's own
+--         clock, read in ss_report and reported as whole milliseconds; io.error is
+--         STD_FILES' standard error stream, so TIME_MS goes to stderr and stdout is
+--         unchanged. Instrumented by inspection: EiffelStudio is not installed on this
+--         machine, so this row's timing is unverified.
+
 class
 	T01_BRANCHES
 
@@ -13,11 +19,39 @@ create
 
 feature -- Benchmark
 
+	ss_t0: TIME
+
+	ss_now_ms (t: TIME): INTEGER_64
+		do
+			Result := (((t.hour * 60) + t.minute) * 60 + t.second) * 1000 + t.millisecond
+		end
+
+	ss_start
+		do
+			create ss_t0.make_now
+		end
+
+	ss_report
+		local
+			t: TIME
+			ms: INTEGER_64
+		do
+			create t.make_now
+			ms := ss_now_ms (t) - ss_now_ms (ss_t0)
+			if ms < 0 then
+				ms := ms + 86400000
+			end
+			io.error.put_string ("TIME_MS=")
+			io.error.put_integer_64 (ms)
+			io.error.put_new_line
+		end
+
 	make
 		local
 			a, b, c, d: INTEGER_64
 			i: INTEGER_64
 		do
+			ss_start
 			from
 				i := 0
 			until
@@ -35,6 +69,7 @@ feature -- Benchmark
 				i := i + 1
 			end
 
+			ss_report
 			io.put_integer_64 (a)
 			io.put_character (' ')
 			io.put_integer_64 (b)

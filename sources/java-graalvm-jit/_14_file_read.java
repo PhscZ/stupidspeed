@@ -10,6 +10,7 @@ import java.io.IOException;
 
 public class _14_file_read {
     public static void main(String[] args) throws IOException {
+        long __t0 = System.nanoTime();
         byte[] buf = new byte[1024 * 1024];
         long total = 0;
         try (FileInputStream in = new FileInputStream("data.bin")) {
@@ -20,6 +21,7 @@ public class _14_file_read {
                 }
             }
         }
+        System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6);
         System.out.println(total % 4294967296L);
     }
 }

@@ -31,6 +31,7 @@ public class _11_parallel_sum {
     }
 
     public static void main(String[] args) throws InterruptedException {
+        long __t0 = System.nanoTime();
         long[] results = new long[4];
         Thread[] threads = new Thread[4];
         for (int t = 0; t < 4; t++) {
@@ -47,6 +48,7 @@ public class _11_parallel_sum {
         for (int t = 0; t < 4; t++) {
             total += results[t];
         }
+        System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6);
         System.out.println(total);
     }
 }

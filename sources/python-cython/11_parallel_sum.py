@@ -7,6 +7,8 @@
 # wasmtime's wasi-threads creates them — but the GIL serialises them exactly as it does natively,
 # so the answer is right and the speedup is not real.
 
+import time as _time, sys as _sys
+_t0 = _time.perf_counter()
 import threading
 
 partials = [0, 0, 0, 0]
@@ -33,4 +35,6 @@ for th in threads:
 for th in threads:
     th.join()
 
+_t1 = _time.perf_counter()
+_sys.stderr.write("TIME_MS=%.3f\n" % ((_t1 - _t0) * 1000.0))
 print(sum(partials))

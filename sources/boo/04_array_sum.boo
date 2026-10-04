@@ -6,6 +6,10 @@
 //       newarr/stelem/ldelem sequence; array(long, n) would instead call
 //       Boo.Lang.Builtins.array(Type, int) and Array.CreateInstance at run time.
 
+import System.Diagnostics
+
+sw = Stopwatch.StartNew()
+
 arr = array[of long](1000000)
 
 i as int = 0
@@ -19,5 +23,7 @@ while i < 1000000:
     total += arr[i]
     i += 1
 
+sw.Stop()
+System.Console.Error.WriteLine("TIME_MS=" + sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture))
 print(total)
 

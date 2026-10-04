@@ -12,6 +12,7 @@
 #       `await` is the join. Each worker owns a fixed quarter, so the answer cannot depend on
 #       which finishes first.
 
+my $__t0 = now;
 sub work(int $t --> Int) {
     my Int $acc = 0;
     my int $start = $t * 25000000;
@@ -36,4 +37,6 @@ my Int $total = 0;
 for @promises -> $p {
     $total += await $p;
 }
+my $__t1 = now;
+$*ERR.say('TIME_MS=' ~ (($__t1 - $__t0) * 1000).Num.fmt('%.3f'));
 say $total;

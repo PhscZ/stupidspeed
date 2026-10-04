@@ -10,6 +10,13 @@
 // note: the running total is a double from the start; 999000000 is below 2^53 and
 //       String() prints it as plain digits.
 // note: the whole task measures 1.8 s to 5.3 s on this shared host.
+
+// timing: new Date().getTime() is the WSH clock in milliseconds (the system timer, so about
+//         15 ms resolution); TIME_MS goes to stderr with WScript.StdErr and stdout is unchanged.
+var ssT0 = new Date().getTime();
+function ssReport() {
+    WScript.StdErr.Write("TIME_MS=" + (new Date().getTime() - ssT0) + "\r\n");
+}
 var n = 1000, N = 1000000, A, B, C, i, j, k, total = 0;
 
 A = new Array(N);
@@ -39,4 +46,5 @@ for (k = 0; k < N; k++) {
     total += C[k];
 }
 
+ssReport();
 WScript.Echo(String(total));

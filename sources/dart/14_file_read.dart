@@ -5,6 +5,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 void main() {
+  final Stopwatch sw = Stopwatch()..start();
   const int chunk = 1048576; // 1 MiB
   final RandomAccessFile file = File('data.bin').openSync();
   final Uint8List buf = Uint8List(chunk);
@@ -21,5 +22,6 @@ void main() {
   }
   file.closeSync();
 
+  stderr.writeln('TIME_MS=${(sw.elapsedMicroseconds / 1000).toStringAsFixed(3)}');
   print(total & 0xFFFFFFFF);
 }

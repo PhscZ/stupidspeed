@@ -1,6 +1,7 @@
 // task 12 matrix_add — expected output: 999000000
 // build: none (interpreted)    run: C:\stupidspeed\tools\spidermonkey\js.exe 12_matrix_add.js
 
+var __t0 = performance.now();
 var n = 1000;
 var size = n * n;
 
@@ -23,4 +24,5 @@ var sum = 0;
 for (var idx2 = 0; idx2 < size; idx2++) {
   sum += C[idx2];
 }
+printErr("TIME_MS=" + (performance.now() - __t0));
 print(sum);

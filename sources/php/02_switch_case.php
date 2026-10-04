@@ -2,6 +2,7 @@
 // task 02 switch_case — expected output: 7500000075000000
 // build: none (interpreted)    run: php 02_switch_case.php (zend) | php -d opcache.enable_cli=1 -d opcache.jit_buffer_size=64M 02_switch_case.php (zend + jit)
 
+$__t0 = hrtime(true);
 $acc = 0;
 
 for ($i = 0; $i < 100000000; $i++) {
@@ -21,4 +22,6 @@ for ($i = 0; $i < 100000000; $i++) {
     }
 }
 
+$__t1 = hrtime(true);
+fwrite(STDERR, sprintf("TIME_MS=%.3f\n", ($__t1 - $__t0) / 1e6));
 echo $acc, "\n";

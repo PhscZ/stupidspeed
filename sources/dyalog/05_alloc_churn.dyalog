@@ -10,10 +10,16 @@
 ⍝       slots instead of one, and the old buffer would not be dropped. The slot the
 ⍝       new buffer replaces is what becomes garbage, which is the point of the task.
 ⍝ note: total is 1274991808, below 2^53, so the double accumulator is exact.
+⍝ timing: 3⊃⎕AI is Dyalog's elapsed-time counter in milliseconds. APL exposes no
+⍝         stream handle for stderr, so the contract's fallback applies: TIME_MS is
+⍝         written to time.txt in the working directory with ⎕NPUT, and stdout is
+⍝         unchanged. Instrumented by inspection: Dyalog is not installed on this
+⍝         machine, so this row's timing is unverified.
 ⎕IO←0
 ⎕PP←17
 
-∇ r←alloc_churn;slots;total;i;buf
+∇ r←alloc_churn;slots;total;i;buf;ssT0;ssMS
+  ssT0←3⊃⎕AI
   slots←256⍴⊂⍬
   total←0
   i←0
@@ -24,6 +30,8 @@
     slots[256|i]←⊂buf
     i+←1
   :EndWhile
+  ssMS←(3⊃⎕AI)-ssT0
+  ('TIME_MS=',⍕ssMS)⎕NPUT 'time.txt'
   r←⍕total
 ∇
 

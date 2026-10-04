@@ -5,11 +5,17 @@
 %       carries the accumulator. -O is required, see 01_branches.pl.
 
 main :-
+    get_time(T0),
+    nb_setval(time_t0, T0),
     loop(0, 0).
 
 loop(I, Acc) :-
     (   I >= 100000000
-    ->  format("~w~n", [Acc])
+    ->  nb_getval(time_t0, T0),
+        get_time(T1),
+        Ms is (T1 - T0) * 1000,
+        format(standard_error, "TIME_MS=~3f~n", [Ms]),
+        format("~w~n", [Acc])
     ;   R is I mod 4,
         (   R =:= 0
         ->  Acc1 is Acc + 1

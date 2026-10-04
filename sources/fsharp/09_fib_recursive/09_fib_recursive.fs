@@ -5,4 +5,8 @@ let rec fib (n: int64) : int64 =
     if n < 2L then n
     else fib (n - 1L) + fib (n - 2L)
 
-printfn "%d" (fib 40L)
+let sw = System.Diagnostics.Stopwatch.StartNew()
+let result = fib 40L
+sw.Stop()
+System.Console.Error.WriteLine("TIME_MS=" + (sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture)))
+printfn "%d" result

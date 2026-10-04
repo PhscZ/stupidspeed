@@ -4,6 +4,8 @@
 # build (cython): cython --embed -3 --module-name _03_func_sum -o _03_func_sum.c 03_func_sum.py, then gcc -O2 -DMS_WIN64 -municode -I <python>/include -o prog _03_func_sum.c -L <python>/libs -lpython3xx
 # build (wasm): python.wasm is the wasm32-wasip1-threads build of CPython (see BUILD.md); run: wasmtime -S threads=y -W threads=y -W shared-memory=y --dir . python.wasm <task>.py
 
+import time as _time, sys as _sys
+_t0 = _time.perf_counter()
 def add_one(n):
     return n + 1
 
@@ -12,4 +14,6 @@ value = 0
 for _ in range(100000000):
     value = add_one(value)
 
+_t1 = _time.perf_counter()
+_sys.stderr.write("TIME_MS=%.3f\n" % ((_t1 - _t0) * 1000.0))
 print(value)

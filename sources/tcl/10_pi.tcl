@@ -6,6 +6,7 @@
 # The update order matters: the produce branch computes the next n from the q and r
 # as they were on entry, before q and r move.
 
+set __t0 [clock microseconds]
 set q 1
 set r 0
 set t 1
@@ -36,4 +37,6 @@ while {$emitted < 1000} {
     }
 }
 
+set __t1 [clock microseconds]
+puts stderr [format "TIME_MS=%.3f" [expr {($__t1 - $__t0) / 1000.0}]]
 puts $total

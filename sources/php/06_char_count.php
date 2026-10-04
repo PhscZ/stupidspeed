@@ -3,6 +3,7 @@
 // build: none (interpreted)    run: php 06_char_count.php (zend) | php -d opcache.enable_cli=1 -d opcache.jit_buffer_size=64M 06_char_count.php (zend + jit)
 // The 100 MB text is built once with str_repeat; the scan is an index loop over its bytes.
 
+$__t0 = hrtime(true);
 $text = str_repeat('abcdefghij', 10000000);
 
 $count = 0;
@@ -19,4 +20,6 @@ for ($i = 0; $i < $len; $i++) {
     }
 }
 
+$__t1 = hrtime(true);
+fwrite(STDERR, sprintf("TIME_MS=%.3f\n", ($__t1 - $__t0) / 1e6));
 echo $count, "\n";

@@ -16,6 +16,7 @@ public class _10_pi {
     private static final BigInteger TEN = BigInteger.TEN;
 
     public static void main(String[] args) {
+        long __t0 = System.nanoTime();
         BigInteger q = BigInteger.ONE;
         BigInteger r = BigInteger.ZERO;
         BigInteger t = BigInteger.ONE;
@@ -47,6 +48,7 @@ public class _10_pi {
                 l = l.add(TWO);
             }
         }
+        System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6);
         System.out.println(digitSum);
     }
 }

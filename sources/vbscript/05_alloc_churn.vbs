@@ -8,8 +8,16 @@
 '       the same thing the C row's free(slots[slot]) does by hand. Without the store
 '       the whole loop would be dead code in a language that optimizes.
 ' note: the total, 1274991808, stays inside Long range, so this is Long arithmetic.
+
+' timing: Timer() is VBScript's seconds-since-midnight clock with centisecond resolution, so
+'         TIME_MS has 16 ms granularity; it goes to stderr and stdout is unchanged.
+Dim ssT0
+Sub ssReport()
+    WScript.StdErr.WriteLine "TIME_MS=" & CLng(Round((Timer() - ssT0) * 1000))
+End Sub
 Dim slots(255), total, i, buf, slot
 
+ssT0 = Timer()
 total = 0
 
 For i = 0 To 9999999
@@ -19,4 +27,5 @@ For i = 0 To 9999999
     slots(slot) = buf
 Next
 
+ssReport
 WScript.Echo total

@@ -10,7 +10,15 @@
 // note: `new int64[n]` is a plain g_malloc'd block of 64-bit elements, so the two loops walk
 //       contiguous memory exactly like the C reference. The sum needs more than 32 bits.
 
+// timing: GLib.get_real_time() is GLib's monotonic clock in microseconds; TIME_MS goes
+//         to stderr and stdout is unchanged.
+static int64 ss_t0;
+static void ss_report () {
+    stderr.printf ("TIME_MS=%.3f\n", (GLib.get_real_time () - ss_t0) / 1000.0);
+}
+
 int main () {
+    ss_t0 = GLib.get_real_time ();
     int64 n = 1000000;
     int64[] array = new int64[n];
 
@@ -23,6 +31,7 @@ int main () {
         total += array[i];
     }
 
+    ss_report ();
     stdout.printf ("%lld\n", total);
     return 0;
 }

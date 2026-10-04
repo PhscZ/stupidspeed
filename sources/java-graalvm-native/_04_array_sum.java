@@ -6,6 +6,7 @@
 
 public class _04_array_sum {
     public static void main(String[] args) {
+        long __t0 = System.nanoTime();
         final int n = 1000000;
         long[] array = new long[n];
         for (int i = 0; i < n; i++) {
@@ -15,6 +16,7 @@ public class _04_array_sum {
         for (int i = 0; i < n; i++) {
             total += array[i];
         }
+        System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6);
         System.out.println(total);
     }
 }

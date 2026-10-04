@@ -15,6 +15,7 @@
 # column of b. Reordering would be faster, which is the point.
 defmodule T13 do
   def run do
+    t0 = System.monotonic_time(:microsecond)
     n = 500
     e = n * n
     a = :atomics.new(e, signed: true)
@@ -22,7 +23,9 @@ defmodule T13 do
     c = :atomics.new(e, signed: true)
     fill(a, b, 0, n)
     mul(a, b, c, 0, n)
-    IO.puts(sum(c, 0, e))
+    total = sum(c, 0, e)
+    IO.puts(:stderr, "TIME_MS=#{(System.monotonic_time(:microsecond) - t0) / 1000}")
+    IO.puts(total)
   end
 
   defp fill(_a, _b, i, n) when i >= n, do: :ok

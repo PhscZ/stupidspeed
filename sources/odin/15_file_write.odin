@@ -6,15 +6,17 @@ package main
 
 import "core:fmt"
 import "core:os"
+import "core:time"
 
 main :: proc() {
+	t0 := time.now()
 	buf := make([]u8, 1 << 20)
 	defer delete(buf)
 	for i in 0 ..< len(buf) {
 		buf[i] = u8(i % 256)
 	}
 
-	f, err := os.open("out.bin", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0o666)
+	f, err := os.open("out.bin", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, os.perm_number(0o666))
 	if err != nil {
 		os.exit(1)
 	}
@@ -30,5 +32,6 @@ main :: proc() {
 
 	os.flush(f)
 	os.close(f)
+	fmt.eprintfln("TIME_MS=%.3f", time.duration_milliseconds(time.since(t0)))
 	fmt.println(written)
 }

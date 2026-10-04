@@ -4,6 +4,7 @@
 # A double row vector of a million elements. Octave indexes from 1, so the
 # 0-based i of the other rows is the index i + 1 here.
 
+__t0 = tic;
 n = 1000000;
 array = zeros(1, n);
 for i = 0:n-1
@@ -13,4 +14,5 @@ total = 0;
 for i = 0:n-1
   total = total + array(i + 1);
 end
+fprintf(stderr, "TIME_MS=%.3f\n", toc(__t0) * 1000);
 printf("%.0f\n", total);

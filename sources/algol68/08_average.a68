@@ -4,6 +4,12 @@
 # note: the sum is exact and the printed digits do not depend on the order of #
 # note: addition. printf with $g(-11, 9)$ prints the leading zero that the fixed #
 # note: operator drops. #
+# timing: clock is a68g's processor-time clock, in seconds, as a REAL; for this #
+# note: single-threaded interpreter that is the program's own work, which is what the #
+# note: contract brackets. TIME_MS is written to stand error as a whole number of #
+# note: milliseconds, and stdout is unchanged. #
+
+REAL tim0 = clock;
 
 REAL total := 0.0;
 
@@ -12,5 +18,7 @@ FOR i FROM 0 TO 99999999 DO
   total +:= reading
 OD;
 
+INT tms = ENTIER(1000.0 * (clock - tim0) + 0.5);
+putf(stand error, ($g$, "TIME_MS=" + whole(tms, 0), $l$));
 printf(($g(-11, 9)$, total / 100000000.0));
 print(newline)

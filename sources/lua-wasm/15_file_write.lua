@@ -4,6 +4,7 @@
 -- Buffer is the 1 MiB pattern 0,1,2,...,255 repeated 4096 times, written 50 times.
 -- Lua's standard library has no fsync; the file is flushed and closed instead.
 
+local __t0 = os.clock()
 local part = {}
 for i = 0, 255 do
     part[i + 1] = string.char(i)
@@ -20,4 +21,6 @@ end
 
 f:flush()
 f:close()
+local __t1 = os.clock()
+io.stderr:write(string.format("TIME_MS=%.3f\n", (__t1 - __t0) * 1000.0))
 print(written)

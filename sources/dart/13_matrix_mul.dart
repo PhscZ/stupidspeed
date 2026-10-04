@@ -1,9 +1,11 @@
 // task 13 matrix_mul — expected output: 599995000
 // build: dart compile exe -o prog 13_matrix_mul.dart (aot; jit has no build step)    run: ./prog (aot) | dart 13_matrix_mul.dart (jit)
 
+import 'dart:io';
 import 'dart:typed_data';
 
 void main() {
+  final Stopwatch sw = Stopwatch()..start();
   const int n = 500;
   final Int32List a = Int32List(n * n);
   final Int32List b = Int32List(n * n);
@@ -34,5 +36,6 @@ void main() {
   for (int i = 0; i < n * n; i++) {
     total += c[i];
   }
+  stderr.writeln('TIME_MS=${(sw.elapsedMicroseconds / 1000).toStringAsFixed(3)}');
   print(total);
 }

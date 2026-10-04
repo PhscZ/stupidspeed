@@ -1,9 +1,14 @@
 "task 13 matrix_mul — expected output: 599995000
  build: none (image is prebuilt)    run: Dolphin8 DPRO.img8 -u -f 13_matrix_mul.st -q
  Plain triple loop, no tricks: the innermost loop walks B down a column, which is the
- cache-hostile order the task asks for."
+ cache-hostile order the task asks for.
+ timing: Time millisecondClockValue is Dolphin's millisecond clock. Dolphin's console has no
+ stderr stream, so the contract's fallback applies and TIME_MS goes to time.txt in the working
+ directory. Instrumented by inspection: Dolphin is not installed on this machine, so this
+ row's timing is unverified."
 
-| out n a b c total |
+| ssT0 out n a b c total |
+ssT0 := Time millisecondClockValue.
 out := SessionManager current stdout.
 n := 500.
 a := Array new: n.
@@ -37,6 +42,11 @@ total := 0.
 	| rc |
 	rc := c at: i.
 	1 to: n do: [:j | total := total + (rc at: j)]].
+
+(FileWriteStream write: 'time.txt' type: #binary)
+	nextPutAll: 'TIME_MS=', (Time millisecondClockValue - ssT0) printString;
+	cr;
+	close.
 
 out nextPutAll: total printString; cr; flush.
 SessionManager current quit: 0!

@@ -12,11 +12,19 @@
 //       the most procedural register the language has; it cannot honestly be called
 //       imperative, and the row does not claim to be.
 
+import gleam/erlang/atom
+import gleam/float
 import gleam/int
 import gleam/io
 
+@external(erlang, "erlang", "monotonic_time")
+fn monotonic_time(unit: atom.Atom) -> Int
+
 pub fn main() {
+  let t0 = monotonic_time(atom.create("microsecond"))
   let #(a, b, c, d) = loop(0, 0, 0, 0, 0)
+  let ms = int.to_float(monotonic_time(atom.create("microsecond")) - t0) /. 1000.0
+  io.println_error("TIME_MS=" <> float.to_string(ms))
   io.println(
     int.to_string(a)
     <> " "

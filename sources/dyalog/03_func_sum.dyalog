@@ -8,18 +8,26 @@
 ⍝       shows the call is real. 100 000 000 calls therefore cost about 58 s.
 ⍝ note: the run line must be executed from sources/dyalog/, because 2 ⎕FIX resolves
 ⍝       the name against the working directory.
+⍝ timing: 3⊃⎕AI is Dyalog's elapsed-time counter in milliseconds. APL exposes no
+⍝         stream handle for stderr, so the contract's fallback applies: TIME_MS is
+⍝         written to time.txt in the working directory with ⎕NPUT, and stdout is
+⍝         unchanged. Instrumented by inspection: Dyalog is not installed on this
+⍝         machine, so this row's timing is unverified.
 ⎕IO←0
 ⎕PP←17
 
 2 ⎕FIX 'AddOne.dyalog'
 
-∇ r←func_sum;value;i
+∇ r←func_sum;value;i;ssT0;ssMS
+  ssT0←3⊃⎕AI
   value←0
   i←0
   :While i<100000000
     value←add_one value
     i+←1
   :EndWhile
+  ssMS←(3⊃⎕AI)-ssT0
+  ('TIME_MS=',⍕ssMS)⎕NPUT 'time.txt'
   r←⍕value
 ∇
 

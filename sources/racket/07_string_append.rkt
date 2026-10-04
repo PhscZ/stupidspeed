@@ -12,6 +12,14 @@
 ;;       slow way to write it here and the accumulator is the fast way.
 #lang racket/base
 
+;; Self-timing: current-inexact-milliseconds is Racket's monotonic wall-clock reading, in
+;; milliseconds as an inexact real. The start is the first form the module body runs and the
+;; stop is taken immediately before the answer is printed, so the bracketed region is the
+;; task's own work and nothing else. eprintf writes to (current-error-port), so stdout is
+;; unchanged.
+(define timer-start (current-inexact-milliseconds))
+(define (elapsed-ms) (- (current-inexact-milliseconds) timer-start))
+
 ;; Plain string concatenation 250000 times. Racket strings are immutable, so every append
 ;; allocates a new string and copies the old one, which is the same quadratic copy the C row's
 ;; realloc plus strcat does. Deliberately no port and no string builder.
@@ -19,4 +27,5 @@
   (for/fold ([text ""]) ([i (in-range 250000)])
     (string-append text "x")))
 
+(eprintf "TIME_MS=~a\n" (elapsed-ms))
 (displayln (string-length text))

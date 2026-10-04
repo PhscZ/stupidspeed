@@ -13,7 +13,12 @@
 #       which is a real fixed-size mutable array of 64-bit integers.
 # Naive fib(40): about 331 million calls, so this measures the call path itself.
 defmodule T09 do
-  def run, do: IO.puts(fib(40))
+  def run do
+    t0 = System.monotonic_time(:microsecond)
+    answer = fib(40)
+    IO.puts(:stderr, "TIME_MS=#{(System.monotonic_time(:microsecond) - t0) / 1000}")
+    IO.puts(answer)
+  end
 
   defp fib(n) when n < 2, do: n
   defp fib(n), do: fib(n - 1) + fib(n - 2)

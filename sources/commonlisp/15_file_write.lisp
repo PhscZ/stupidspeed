@@ -20,7 +20,18 @@
 
 (declaim (optimize (speed 3) (safety 0) (debug 0)))
 
+;; Self-timing: get-internal-real-time is the monotonic tick counter and
+;; internal-time-units-per-second converts ticks to seconds. *timer-start* is set as the
+;; first thing main does and read once, immediately before the answer is printed, so the
+;; timed region is the task's own work and nothing else. The line goes to *error-output*,
+;; so stdout is unchanged.
+(defvar *timer-start* 0)
+
+(defun elapsed-ms ()
+  (* 1000.0d0 (/ (- (get-internal-real-time) *timer-start*) internal-time-units-per-second)))
+
 (defun main ()
+  (setf *timer-start* (get-internal-real-time))
   (let ((len 1048576)
         (buf (make-array 1048576 :element-type '(unsigned-byte 8))))
     (dotimes (i len)
@@ -32,4 +43,5 @@
         (declare (fixnum i))
         (write-sequence buf out))
       (force-output out))
+    (format *error-output* "TIME_MS=~,3f~%" (elapsed-ms))
     (format t "~a~%" (* 50 len))))

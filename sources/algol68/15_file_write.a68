@@ -9,6 +9,12 @@
 # note: the file is opened on the back channel, which is the one that allows binary #
 # note: putting; the out channel is text only and answers channel does not allow binary #
 # note: putting. close() flushes the file, and this interpreter exposes no fsync. #
+# timing: clock is a68g's processor-time clock, in seconds, as a REAL; for this #
+# note: single-threaded interpreter that is the program's own work, which is what the #
+# note: contract brackets. TIME_MS is written to stand error as a whole number of #
+# note: milliseconds, and stdout is unchanged. #
+
+REAL tim0 = clock;
 
 INT words = 262144;
 
@@ -39,4 +45,6 @@ OD;
 
 close (f);
 
+INT tms = ENTIER(1000.0 * (clock - tim0) + 0.5);
+putf(stand error, ($g$, "TIME_MS=" + whole(tms, 0), $l$));
 print((whole(written, 0), newline))

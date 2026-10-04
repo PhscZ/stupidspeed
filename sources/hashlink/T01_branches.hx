@@ -12,6 +12,7 @@
 
 class T01_branches {
     static function main() {
+        var t0 = Sys.time();
         var a = 0;
         var b = 0;
         var c = 0;
@@ -29,6 +30,8 @@ class T01_branches {
             }
         }
 
+        var t1 = Sys.time();
+        Sys.stderr().writeString("TIME_MS=" + ((t1 - t0) * 1000.0) + "\n");
         Sys.println('$a $b $c $d');
     }
 }

@@ -15,6 +15,10 @@ class Program
 
     static void Main()
     {
-        Console.WriteLine(Fib(40));
+        System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
+        long result = Fib(40);
+        sw.Stop();
+        Console.Error.WriteLine("TIME_MS=" + sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture));
+        Console.WriteLine(result);
     }
 }

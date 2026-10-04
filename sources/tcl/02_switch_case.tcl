@@ -2,6 +2,7 @@
 # build: none (interpreted)    run: tclsh 02_switch_case.tcl
 # Tcl's `switch` with a -exact pattern list, over the same i % 4 predicate.
 
+set __t0 [clock microseconds]
 set acc 0
 
 for {set i 0} {$i < 100000000} {incr i} {
@@ -13,4 +14,6 @@ for {set i 0} {$i < 100000000} {incr i} {
     }
 }
 
+set __t1 [clock microseconds]
+puts stderr [format "TIME_MS=%.3f" [expr {($__t1 - $__t0) / 1000.0}]]
 puts $acc

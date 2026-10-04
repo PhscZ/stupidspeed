@@ -5,6 +5,7 @@
 extends SceneTree
 
 func _initialize() -> void:
+	var t0 := Time.get_ticks_msec()
 	var acc := 0
 	for i in 100000000:
 		match i % 4:
@@ -16,5 +17,6 @@ func _initialize() -> void:
 				acc += 2 * i
 			3:
 				acc += 3 * i
+	printerr("TIME_MS=%d" % (Time.get_ticks_msec() - t0))
 	print(acc)
 	quit()

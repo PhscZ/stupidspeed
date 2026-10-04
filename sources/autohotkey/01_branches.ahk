@@ -9,9 +9,14 @@
 ;       with other benchmark runs, and a second pass on it measured 172 s for the same loop,
 ;       so read the cell as "under a minute on a quiet machine" rather than as a precise
 ;       figure.
+; timing: A_TickCount is the interpreter's own millisecond clock (GetTickCount, so about
+;       15 ms resolution); TIME_MS is written to stderr with FileAppend(..., "**") and
+;       stdout is unchanged.
 #Requires AutoHotkey v2.0
 #SingleInstance Off
 #NoTrayIcon
+
+t0 := A_TickCount
 
 a := 0
 b := 0
@@ -30,4 +35,5 @@ Loop 100000000 {
         d += 1
 }
 
+FileAppend("TIME_MS=" (A_TickCount - t0) "`n", "**")
 FileAppend(a " " b " " c " " d "`n", "*")

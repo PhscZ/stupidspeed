@@ -12,9 +12,11 @@
    and /list- only suppresses the .lst listing file. *)
 (* note: Console.WriteInt takes a 32 bit INTEGER only, so the LONGINT total is printed
    by the local WriteLong. *)
+(* timing: Env.Environment.get_TickCount() is .NET's millisecond clock, and the Error module
+   writes to stderr, so TIME_MS is reported there and stdout is unchanged. *)
 
 MODULE _05_alloc_churn;
- IMPORT CPmain, Console;
+ IMPORT CPmain, Console, Error, Env := mscorlib_System;
 
  CONST BUF_SIZE = 64;
        SLOTS = 256;
@@ -22,6 +24,7 @@ MODULE _05_alloc_churn;
  TYPE Buffer = POINTER TO ARRAY OF UBYTE;
 
  VAR slots : POINTER TO ARRAY OF Buffer;
+     ss_t0, ss_t1 : LONGINT;
      buf : Buffer;
      total : LONGINT;
      i : LONGINT;
@@ -47,7 +50,29 @@ MODULE _05_alloc_churn;
    Console.WriteString(s)
  END WriteLong;
 
+ PROCEDURE WMs(x : LONGINT);
+   VAR s : ARRAY 24 OF CHAR;
+       n, k : INTEGER;
+       t : CHAR;
+ BEGIN
+   IF x = 0 THEN Error.Write("0"); RETURN END;
+   n := 0;
+   WHILE x > 0 DO
+     s[n] := CHR(SHORT(x MOD 10) + ORD("0"));
+     x := x DIV 10;
+     INC(n)
+   END;
+   s[n] := 0X;
+   k := 0; DEC(n);
+   WHILE k < n DO
+     t := s[k]; s[k] := s[n]; s[n] := t;
+     INC(k); DEC(n)
+   END;
+   Error.WriteString(s)
+ END WMs;
+
 BEGIN
+  ss_t0 := Env.Environment.get_TickCount();
   NEW(slots, SLOTS);
   total := 0;
 
@@ -57,6 +82,9 @@ BEGIN
     total := total + buf[0];
     slots[SHORT(i MOD 256)] := buf
   END;
+
+  ss_t1 := Env.Environment.get_TickCount();
+  Error.WriteString("TIME_MS="); WMs(ss_t1 - ss_t0); Error.WriteLn();
 
   WriteLong(total); Console.WriteLn
 END _05_alloc_churn.

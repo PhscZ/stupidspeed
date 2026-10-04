@@ -21,6 +21,12 @@
    note: OCaml 5.4.1 is required -- the 4.14 toolchain that the old 'OCaml for Windows' installer
          provides has no Domain module at all, and its Thread is serialised by the runtime lock,
          so task 11 could only be a correct-answer-no-speedup cell there. *)
+(* timing: Unix.gettimeofday is the clock this build of the Unix module exposes (there is
+   no clock_gettime binding here, so the monotonic clock is not reachable from OCaml);
+   TIME_MS goes to stderr through Printf.eprintf and stdout is unchanged. *)
+let ss_t0 = ref 0.0
+let ss_now () = Unix.gettimeofday () *. 1000.0
+let ss_report () = Printf.eprintf "TIME_MS=%.3f\n" (ss_now () -. !ss_t0)
 
 let span = 25000000
 
@@ -36,7 +42,9 @@ let work t =
   !acc
 
 let () =
+  ss_t0 := ss_now ();
   let domains = Array.init 4 (fun t -> Domain.spawn (fun () -> work t)) in
   let total = ref 0 in
   Array.iter (fun d -> total := !total + Domain.join d) domains;
+  ss_report ();
   Printf.printf "%d\n" !total

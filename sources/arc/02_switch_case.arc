@@ -13,6 +13,13 @@
 ;       Arc's global setter; the loop is Arc's `loop`/`recur` rather than `for`, for the reason
 ;       task 01 records.
 
+; Self-timing: t0 is read as the first thing the program's body does, and the elapsed
+; milliseconds are written to stderr with Arc's own `ero` (which prints through (stderr))
+; immediately before the answer goes to stdout with `prn`. The clock is the Racket host's
+; current-inexact-milliseconds, reached through Arc's ($ ...) escape, so the bracketed region
+; is this script's own work and stdout is unchanged.
+(= t0 ($ (current-inexact-milliseconds)))
+
 ; The same four-way decision as task 01 with i mod 4 as the selector.
 (with (acc 0)
   (loop (i 0)
@@ -23,4 +30,5 @@
                       2 (* 2 i)
                       3 (* 3 i))))
       (recur (+ i 1))))
+  (ero "TIME_MS=" (- ($ (current-inexact-milliseconds)) t0))
   (prn acc))

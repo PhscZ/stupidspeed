@@ -7,9 +7,11 @@
 extends SceneTree
 
 func _initialize() -> void:
+	var t0 := Time.get_ticks_msec()
 	var total := 0.0
 	for i in 100000000:
 		var reading := float(i % 256) / 256.0
 		total += reading
+	printerr("TIME_MS=%d" % (Time.get_ticks_msec() - t0))
 	print(total / 100000000.0)
 	quit()

@@ -16,11 +16,13 @@
 
 defmodule T15 do
   def run do
+    t0 = System.monotonic_time(:microsecond)
     buf = :binary.copy(<<0, 1, 2, 3, 4, 5, 6, 7, 8, 9>>, 1) |> cycle()
     {:ok, f} = File.open("out.bin", [:write, :binary, :raw])
     write(f, buf, 50)
     :ok = :file.datasync(f)
     File.close(f)
+    IO.puts(:stderr, "TIME_MS=#{(System.monotonic_time(:microsecond) - t0) / 1000}")
     IO.puts(50 * 1_048_576)
   end
 

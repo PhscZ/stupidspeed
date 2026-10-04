@@ -4,6 +4,7 @@
 # is a real cross-file procedure call. Tcl has no no-inline marker; a proc call is a
 # hash-table lookup and a new call frame every time, which is the overhead measured.
 
+set __t0 [clock microseconds]
 source [file join [file dirname [info script]] 03_func_sum_add_one.tcl]
 
 set value 0
@@ -12,4 +13,6 @@ for {set i 0} {$i < 100000000} {incr i} {
     set value [add_one $value]
 }
 
+set __t1 [clock microseconds]
+puts stderr [format "TIME_MS=%.3f" [expr {($__t1 - $__t0) / 1000.0}]]
 puts $value

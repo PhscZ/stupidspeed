@@ -5,9 +5,20 @@
 module _14_file_read;
 
 import std.stdio;
+import core.time : MonoTime;
+
+// timing: MonoTime.currTime is core.time's monotonic clock; TIME_MS goes to stderr and stdout
+// is unchanged.
+MonoTime ss_t0;
+
+void ssReport()
+{
+    stderr.writefln("TIME_MS=%.3f", (MonoTime.currTime - ss_t0).total!"usecs" / 1000.0);
+}
 
 void main()
 {
+    ss_t0 = MonoTime.currTime;
     auto file = File("data.bin", "rb");
     ubyte[] buf = new ubyte[1024 * 1024];
 
@@ -21,5 +32,6 @@ void main()
             total += b;
     }
 
+    ssReport();
     writeln(total % 4294967296UL);
 }

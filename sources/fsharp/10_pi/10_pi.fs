@@ -5,6 +5,8 @@ open System.Numerics
 
 // Gibbons' unbounded spigot, on BigInteger. Emits the leading 3 first,
 // then one decimal digit of pi at a time. Only the digit sum is printed.
+let sw = System.Diagnostics.Stopwatch.StartNew()
+
 let zero = BigInteger.Zero
 let one = BigInteger.One
 let two = BigInteger(2)
@@ -45,4 +47,6 @@ while emitted < 1000 do
         n <- nNext
         l <- l + two
 
+sw.Stop()
+System.Console.Error.WriteLine("TIME_MS=" + (sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture)))
 printfn "%d" sum

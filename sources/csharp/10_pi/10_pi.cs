@@ -20,6 +20,7 @@ class Program
 
     static void Main()
     {
+        System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
         BigInteger q = 1, r = 0, t = 1, k = 1, n = 3, l = 3;
         long sum = 0;
         int emitted = 0;
@@ -46,6 +47,8 @@ class Program
                 r = nextR;
             }
         }
+        sw.Stop();
+        Console.Error.WriteLine("TIME_MS=" + sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture));
         Console.WriteLine(sum);
     }
 }

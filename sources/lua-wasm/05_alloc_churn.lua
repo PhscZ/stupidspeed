@@ -4,6 +4,7 @@
 -- Lua strings are immutable, so each iteration builds a fresh 64-byte string; the slots
 -- table keeps it reachable and drops the buffer it replaces.
 
+local __t0 = os.clock()
 local slots = {}
 local total = 0
 
@@ -13,4 +14,6 @@ for i = 0, 9999999 do
     slots[(i % 256) + 1] = buf
 end
 
+local __t1 = os.clock()
+io.stderr:write(string.format("TIME_MS=%.3f\n", (__t1 - __t0) * 1000.0))
 print(total)

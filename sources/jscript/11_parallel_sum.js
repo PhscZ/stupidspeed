@@ -21,6 +21,13 @@
 //       in-process A/B of the same 5-million-iteration switch loop measured 0.28 s inside
 //       a function against 0.78 s at top level, so the four-process figure is not a clean
 //       4x over task 02.
+
+// timing: new Date().getTime() is the WSH clock in milliseconds (the system timer, so about
+//         15 ms resolution); TIME_MS goes to stderr with WScript.StdErr and stdout is unchanged.
+var ssT0 = new Date().getTime();
+function ssReport() {
+    WScript.StdErr.Write("TIME_MS=" + (new Date().getTime() - ssT0) + "\r\n");
+}
 var shell, kids, t, total, cmd;
 
 if (WScript.Arguments.length === 1) {
@@ -42,6 +49,7 @@ for (t = 0; t < 4; t++) {
     total += parseFloat(kids[t].StdOut.ReadAll());
 }
 
+ssReport();
 WScript.Echo(String(total));
 
 function workRange(t) {

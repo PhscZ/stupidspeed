@@ -12,6 +12,12 @@
 --       quadratic. The file is not valid UTF-8, so it could not be TEXT anyway.
 -- note: the byte total is 204800 * 32640 = 6684672000, which is below 2^63, and the
 --       printed value is that total mod 4294967296.
+-- timing: the clock is SQLite's own julianday('now') in milliseconds. The timer starts at
+--       the entry of the script's own body and stops immediately before the final output
+--       statement, so the answer is materialised into a one-row table first and the timed
+--       region still contains all of the work.
+CREATE TABLE __t0(t INTEGER);
+INSERT INTO __t0 VALUES (cast(julianday('now')*86400000 as integer));
 CREATE TABLE f(d BLOB);
 INSERT INTO f VALUES (readfile('data.bin'));
 CREATE TABLE lk(b BLOB);
@@ -24,10 +30,17 @@ INSERT INTO lk VALUES (unhex('000102030405060708090A0B0C0D0E0F101112131415161718
                           || 'C0C1C2C3C4C5C6C7C8C9CACBCCCDCECFD0D1D2D3D4D5D6D7D8D9DADBDCDDDEDF'
                           || 'E0E1E2E3E4E5E6E7E8E9EAEBECEDEEEFF0F1F2F3F4F5F6F7F8F9FAFBFCFDFEFF'));
 
+CREATE TABLE __res AS
 WITH RECURSIVE c(i) AS (
     SELECT 1
     UNION ALL
     SELECT i + 1 FROM c WHERE i < 52428800
 )
-SELECT sum(instr((SELECT b FROM lk), substr((SELECT d FROM f), i, 1)) - 1) % 4294967296
+SELECT sum(instr((SELECT b FROM lk), substr((SELECT d FROM f), i, 1)) - 1) % 4294967296 AS v
 FROM c;
+
+.output stderr
+SELECT printf('TIME_MS=%d', cast(julianday('now')*86400000 as integer) - (SELECT t FROM __t0));
+.output stdout
+
+SELECT * FROM __res;

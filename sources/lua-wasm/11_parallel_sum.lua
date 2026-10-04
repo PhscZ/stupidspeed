@@ -7,6 +7,7 @@
 -- quarter, and the total is right, but nothing runs in parallel — the same disposition the
 -- Simula row carries for its cooperative PROCESS objects. The native Lua rows keep Lanes.
 
+local __t0 = os.clock()
 local function work(t)
     local acc = 0
     local first = t * 25000000
@@ -48,4 +49,6 @@ while finished < 4 do
 end
 
 -- string.format("%d", ...) so the full 16-digit total prints: the default conversion is "%.14g".
+local __t1 = os.clock()
+io.stderr:write(string.format("TIME_MS=%.3f\n", (__t1 - __t0) * 1000.0))
 print(string.format("%d", total))

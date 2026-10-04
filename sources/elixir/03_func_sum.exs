@@ -19,11 +19,18 @@ defmodule AddOne do
 end
 
 defmodule T03 do
-  def run, do: loop(0, 0)
+  def run do
+    t0 = System.monotonic_time(:microsecond)
+    loop(0, 0, t0)
+  end
 
-  defp loop(i, value) when i >= 100_000_000, do: IO.puts(value)
+  defp loop(i, value, t0) when i >= 100_000_000 do
+    result = value
+    IO.puts(:stderr, "TIME_MS=#{(System.monotonic_time(:microsecond) - t0) / 1000}")
+    IO.puts(result)
+  end
 
-  defp loop(i, value), do: loop(i + 1, AddOne.add_one(value))
+  defp loop(i, value, t0), do: loop(i + 1, AddOne.add_one(value), t0)
 end
 
 T03.run()

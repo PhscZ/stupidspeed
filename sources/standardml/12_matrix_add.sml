@@ -16,6 +16,7 @@
 (* note: measured: 0.096 s, the second-fastest cell in the row. *)
 fun main () =
   let
+    val __t0 = Time.now ()
     val n = 1000
     val a = Array.array (n * n, 0)
     val b = Array.array (n * n, 0)
@@ -37,8 +38,10 @@ fun main () =
       if i >= n * n then ()
       else (Array.update (c, i, Array.sub (a, i) + Array.sub (b, i)); add (i + 1))
     fun sum (i, acc) = if i >= n * n then acc else sum (i + 1, acc + Array.sub (c, i))
+    val () = build 0
+    val () = add 0
+    val result = sum (0, 0)
+    val () = TextIO.output (TextIO.stdErr, "TIME_MS=" ^ Real.fmt (StringCvt.FIX (SOME 3)) (Time.toReal (Time.- (Time.now (), __t0)) * 1000.0) ^ "\n")
   in
-    build 0;
-    add 0;
-    print (Int.toString (sum (0, 0)) ^ "\n")
+    print (Int.toString result ^ "\n")
   end

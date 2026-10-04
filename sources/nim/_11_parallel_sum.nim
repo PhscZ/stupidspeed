@@ -8,7 +8,9 @@
 # array; the main thread joins all four and sums the partials.
 
 import std/typedthreads
+import std/monotimes, std/strutils, std/times
 
+let t0 = getMonoTime()
 type
   Work = tuple[lo, hi: int64, res: ptr int64]
 
@@ -36,4 +38,5 @@ joinThreads(threads)
 var total: int64 = 0
 for v in partials:
   total += v
+stderr.writeLine("TIME_MS=" & formatFloat(float((getMonoTime() - t0).inMicroseconds) / 1000.0, ffDecimal, 3))
 echo total

@@ -10,5 +10,8 @@ func fib(n: int) -> int:
 	return fib(n - 1) + fib(n - 2)
 
 func _initialize() -> void:
-	print(fib(40))
+	var t0 := Time.get_ticks_msec()
+	var result := fib(40)
+	printerr("TIME_MS=%d" % (Time.get_ticks_msec() - t0))
+	print(result)
 	quit()

@@ -18,12 +18,14 @@
 %%       BEAM's fsync on the descriptor, and closed.
 
 main(_) ->
+    T0 = erlang:monotonic_time(microsecond),
     Cycle = list_to_binary(lists:seq(0, 255)),
     Buf = binary:copy(Cycle, 4096),
     {ok, F} = file:open("out.bin", [write, raw, binary]),
     write(F, Buf, 50),
     ok = file:datasync(F),
     file:close(F),
+    io:format(standard_error, "TIME_MS=~p~n", [(erlang:monotonic_time(microsecond) - T0) / 1000]),
     io:format("~w~n", [50 * 1048576]).
 
 write(_F, _Buf, 0) -> ok;

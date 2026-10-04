@@ -1,7 +1,10 @@
 # task 12 matrix_add — expected output: 999000000
 # build: julia 12_matrix_add.jl    run: julia 12_matrix_add.jl
 
+using Printf
+
 function main()
+    t0 = time_ns()
     n = 1000
     a = Vector{Int64}(undef, n * n)
     b = Vector{Int64}(undef, n * n)
@@ -23,6 +26,7 @@ function main()
     for idx in 1:(n * n)
         total += c[idx]
     end
+    @printf(stderr, "TIME_MS=%.3f\n", (time_ns() - t0) / 1e6)
     println(total)
 end
 

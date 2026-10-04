@@ -13,6 +13,7 @@
 # instead wait for worker t to finish before starting worker t+1, so nothing would overlap.
 # The four ranges are fixed, so the total does not depend on the order they finish in.
 
+set __t0 [clock microseconds]
 package require Thread
 
 set main [thread::id]
@@ -65,4 +66,6 @@ for {set t 0} {$t < 4} {incr t} {
     thread::release [lindex $threads $t]
 }
 
+set __t1 [clock microseconds]
+puts stderr [format "TIME_MS=%.3f" [expr {($__t1 - $__t0) / 1000.0}]]
 puts $total

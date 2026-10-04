@@ -12,7 +12,15 @@
 //       GLib.FileUtils.fsync is g_fsync, which on Windows is _commit, so no libc call has to
 //       be declared by hand. The stream is closed by Vala when it goes out of scope.
 
+// timing: GLib.get_real_time() is GLib's monotonic clock in microseconds; TIME_MS goes
+//         to stderr and stdout is unchanged.
+static int64 ss_t0;
+static void ss_report () {
+    stderr.printf ("TIME_MS=%.3f\n", (GLib.get_real_time () - ss_t0) / 1000.0);
+}
+
 int main () {
+    ss_t0 = GLib.get_real_time ();
     int64 chunk = 1048576;
 
     uint8[] buf = new uint8[chunk];
@@ -34,6 +42,7 @@ int main () {
     fs.flush ();
     GLib.FileUtils.fsync (fs.fileno ());
 
+    ss_report ();
     stdout.printf ("%lld\n", written);
     return 0;
 }

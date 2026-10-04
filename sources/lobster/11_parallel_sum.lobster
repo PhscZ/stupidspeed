@@ -7,6 +7,10 @@
 // 02's work go out as requests and come back as responses, and the main thread sums
 // the four partial sums.
 
+// timing: seconds_elapsed() is the VM's monotonic clock (QueryPerformanceCounter on Windows).
+// Lobster has no stderr, so the contract's fallback applies: TIME_MS is written to time.txt.
+let t_start = seconds_elapsed()
+
 class ps_request:
     attribute serializable
     t:int
@@ -39,6 +43,7 @@ if not is_worker_thread():
         if resp: total += resp.acc
     stop_worker_threads()
 
+    write_file("time.txt", "TIME_MS=" + string((seconds_elapsed() - t_start) * 1000.0) + "\n")
     print total
 else:
     while workers_alive():

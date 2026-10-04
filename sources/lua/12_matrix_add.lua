@@ -3,6 +3,7 @@
 -- build (wasm): lua.wasm is the wasm32-wasip1 build of this same interpreter (see BUILD.md); run: wasmtime -W exceptions=y --dir . lua.wasm <task>.lua
 -- Flat tables with index i*n+j+1 instead of nested tables.
 
+local __t0 = os.clock()
 local n = 1000
 local size = n * n
 local A, B, C = {}, {}, {}
@@ -24,4 +25,6 @@ for p = 1, size do
     total = total + C[p]
 end
 
+local __t1 = os.clock()
+io.stderr:write(string.format("TIME_MS=%.3f\n", (__t1 - __t0) * 1000.0))
 print(total)

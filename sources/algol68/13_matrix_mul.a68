@@ -2,6 +2,12 @@
 # build: none (interpreter)    run: a68g 13_matrix_mul.a68 #
 # note: plain i, j, k triple loop, in that order, with no tricks: reordering it would #
 # note: be faster, which is the point. n is 500, so 125 million multiply-adds. #
+# timing: clock is a68g's processor-time clock, in seconds, as a REAL; for this #
+# note: single-threaded interpreter that is the program's own work, which is what the #
+# note: contract brackets. TIME_MS is written to stand error as a whole number of #
+# note: milliseconds, and stdout is unchanged. #
+
+REAL tim0 = clock;
 
 INT n = 500;
 
@@ -32,4 +38,6 @@ FOR i FROM 0 TO n - 1 DO
   OD
 OD;
 
+INT tms = ENTIER(1000.0 * (clock - tim0) + 0.5);
+putf(stand error, ($g$, "TIME_MS=" + whole(tms, 0), $l$));
 print((whole(total, 0), newline))

@@ -8,8 +8,16 @@
 '       so it is left alone.
 ' note: each element of C is a sum of 500 terms each at most 6 * 4 = 24, so it fits in a
 '       Long; the grand total, 599995000, does too.
+
+' timing: Timer() is VBScript's seconds-since-midnight clock with centisecond resolution, so
+'         TIME_MS has 16 ms granularity; it goes to stderr and stdout is unchanged.
+Dim ssT0
+Sub ssReport()
+    WScript.StdErr.WriteLine "TIME_MS=" & CLng(Round((Timer() - ssT0) * 1000))
+End Sub
 Dim n, A(249999), B(249999), C(249999), i, j, k, sum, total
 
+ssT0 = Timer()
 n = 500
 
 For i = 0 To n - 1
@@ -34,4 +42,5 @@ For k = 0 To 249999
     total = total + C(k)
 Next
 
+ssReport
 WScript.Echo total

@@ -3,10 +3,14 @@
 # build (wasm): ruby.wasm is the wasip1 build from ruby/ruby.wasm (see BUILD.md); run: wasmtime --dir . ruby.wasm <task>.rb
 # The stock Windows CRuby build has no YJIT: `ruby --yjit` warns "Ruby was built without YJIT support".
 
+_t0 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 def fib(n)
   return n if n < 2
 
   fib(n - 1) + fib(n - 2)
 end
 
-puts fib(40)
+__result = fib(40)
+_t1 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+$stderr.write("TIME_MS=%.3f\n" % ((_t1 - _t0) * 1000.0))
+puts __result

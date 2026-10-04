@@ -13,6 +13,17 @@
 --       `string.format('%g', ...)` would round it to 0.498047, so plain `print` is used.
 --       Measured with the same value: print/tostring/%.9f/%.17g all give 0.498046875.
 -- note: measured on this host, built with -r: 0.0467 s for the 1e8-iteration loop.
+require 'io'
+require 'os'
+require 'string'
+-- timing: os.now is Nelua's monotonic clock in seconds (nanosecond resolution on
+--         Windows, via QueryPerformanceCounter); TIME_MS goes to stderr through
+--         io.stderr and stdout is unchanged.
+local ssT0 = os.now()
+local function ss_report()
+  io.stderr:write(string.format('TIME_MS=%.3f\n', (os.now() - ssT0) * 1000))
+end
+
 local total: number = 0.0
 
 for i = 0, 99999999 do
@@ -20,4 +31,5 @@ for i = 0, 99999999 do
   total = total + reading
 end
 
+ss_report()
 print(total / 100000000)

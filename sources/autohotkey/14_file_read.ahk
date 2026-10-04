@@ -15,9 +15,14 @@
 ;       and Mod(total, 4294967296) is the same remainder the C row takes with %.
 ; note: the full run takes about 15 s on this machine, about 0.28 us per byte; the read is
 ;       chunked, so nearly all of that is the per-byte NumGet loop.
+; timing: A_TickCount is the interpreter's own millisecond clock (GetTickCount, so about
+;       15 ms resolution); TIME_MS is written to stderr with FileAppend(..., "**") and
+;       stdout is unchanged.
 #Requires AutoHotkey v2.0
 #SingleInstance Off
 #NoTrayIcon
+
+t0 := A_TickCount
 
 CHUNK := 1048576
 
@@ -35,4 +40,5 @@ while ((got := f.RawRead(buf)) > 0) {
 
 f.Close()
 
+FileAppend("TIME_MS=" (A_TickCount - t0) "`n", "**")
 FileAppend(Mod(total, 4294967296) "`n", "*")

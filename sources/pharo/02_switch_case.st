@@ -6,8 +6,10 @@
  to a boxed LargePositiveInteger: 3 * 99999999 is 3e8 and the running total is 7.5e15,
  both under 2^60."
 
-| out acc |
+| out err acc t0 |
 out := Stdio stdout.
+err := Stdio stderr.
+t0 := Time microsecondClockValue.
 acc := 0.
 
 0 to: 99999999 do: [:i |
@@ -18,4 +20,5 @@ acc := 0.
 	r = 2 ifTrue: [acc := acc + (2 * i)].
 	r = 3 ifTrue: [acc := acc + (3 * i)]].
 
+err nextPutAll: 'TIME_MS=', ((Time microsecondClockValue - t0) / 1000.0) printString, String lf; flush.
 out nextPutAll: acc printString; lf; flush.

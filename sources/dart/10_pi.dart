@@ -3,6 +3,8 @@
 // Gibbons' unbounded spigot on hand-written base-10^9 limbs: dart:core has no big integers.
 // Every intermediate stays below 2^53, so the arithmetic is exact if compiled to JavaScript too.
 
+import 'dart:io';
+
 const int _base = 1000000000;
 
 /// Signed arbitrary-precision integer: little-endian base-10^9 magnitude limbs.
@@ -160,6 +162,7 @@ class Big {
 }
 
 void main() {
+  final Stopwatch sw = Stopwatch()..start();
   Big q = Big.fromInt(1);
   Big r = Big.fromInt(0);
   Big t = Big.fromInt(1);
@@ -193,5 +196,6 @@ void main() {
       l += 2;
     }
   }
+  stderr.writeln('TIME_MS=${(sw.elapsedMicroseconds / 1000).toStringAsFixed(3)}');
   print(digitSum);
 }

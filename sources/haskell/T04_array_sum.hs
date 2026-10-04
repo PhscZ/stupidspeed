@@ -11,9 +11,13 @@ module Main where
 
 import Data.Array.IO
 import Data.IORef
+import Data.Time.Clock.POSIX (getPOSIXTime)
+import System.IO (stderr)
+import Text.Printf (hPrintf)
 
 main :: IO ()
 main = do
+  t0 <- getPOSIXTime
   arr <- newArray (0, 999999) (0 :: Int) :: IO (IOUArray Int Int)
   let fill !i | i > 999999 = return ()
               | otherwise = writeArray arr i i >> fill (i + 1)
@@ -25,4 +29,8 @@ main = do
                       modifyIORef' tot (+ toInteger x)
                       readBack (i + 1)
   readBack 0
-  print =<< readIORef tot
+  v <- readIORef tot
+  t1 <- getPOSIXTime
+  let !ms = (realToFrac (t1 - t0) :: Double) * 1000
+  hPrintf stderr "TIME_MS=%.3f\n" ms
+  print v

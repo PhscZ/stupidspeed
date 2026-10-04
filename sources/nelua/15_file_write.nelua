@@ -23,12 +23,23 @@
 --       against the source buffer: 0 mismatching chunks of 1 MiB, 52428800 bytes each.
 -- note: the printed value is the number of bytes fwrite reported, accumulated across the
 --       fifty writes, printed after the flush, the fsync and the close.
+require 'io'
+require 'os'
+require 'string'
 local function fopen(pathname: cstring, mode: cstring): pointer <cimport, nodecl, cinclude '<stdio.h>'> end
 local function fwrite(ptr: pointer, size: usize, n: usize, fp: pointer): usize <cimport, nodecl, cinclude '<stdio.h>'> end
 local function fflush(fp: pointer): cint <cimport, nodecl, cinclude '<stdio.h>'> end
 local function fclose(fp: pointer): cint <cimport, nodecl, cinclude '<stdio.h>'> end
 local function _fileno(fp: pointer): cint <cimport, nodecl, cinclude '<stdio.h>'> end
 local function _commit(fd: cint): cint <cimport, nodecl, cinclude '<io.h>'> end
+
+-- timing: os.now is Nelua's monotonic clock in seconds (nanosecond resolution on
+--         Windows, via QueryPerformanceCounter); TIME_MS goes to stderr through
+--         io.stderr and stdout is unchanged.
+local ssT0 = os.now()
+local function ss_report()
+  io.stderr:write(string.format('TIME_MS=%.3f\n', (os.now() - ssT0) * 1000))
+end
 
 local CHUNK: usize = 1048576
 local REPEATS: integer = 50
@@ -52,4 +63,5 @@ fflush(fp)
 _commit(_fileno(fp))
 fclose(fp)
 
+ss_report()
 print((@integer)(written))

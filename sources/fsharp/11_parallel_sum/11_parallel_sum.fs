@@ -16,6 +16,8 @@ let work (t: int64) : int64 =
         i <- i + 1L
     acc
 
+let sw = System.Diagnostics.Stopwatch.StartNew()
+
 let results : int64[] = Array.zeroCreate 4
 
 let threads : Thread[] =
@@ -33,4 +35,6 @@ let mutable total = 0L
 for r in results do
     total <- total + r
 
+sw.Stop()
+System.Console.Error.WriteLine("TIME_MS=" + (sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture)))
 printfn "%d" total

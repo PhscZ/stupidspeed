@@ -17,6 +17,14 @@
 
 #lang racket/base
 
+;; Self-timing: current-inexact-milliseconds is Racket's monotonic wall-clock reading, in
+;; milliseconds as an inexact real. The start is the first form the module body runs and the
+;; stop is taken immediately before the answer is printed, so the bracketed region is the
+;; task's own work and nothing else. eprintf writes to (current-error-port), so stdout is
+;; unchanged.
+(define timer-start (current-inexact-milliseconds))
+(define (elapsed-ms) (- (current-inexact-milliseconds) timer-start))
+
 ;; Gibbons' unbounded spigot over Racket's built-in exact integers. A named let carries the
 ;; whole state; n stays small because it is always a single digit, while q, r and t grow to
 ;; roughly 16000 limbs. Only the sum of the digits is printed.
@@ -38,4 +46,5 @@
                 (loop (* q k) r2 (* t l) (add1 k) (+ l 2) next-n produced sum))))
         sum)))
 
+(eprintf "TIME_MS=~a\n" (elapsed-ms))
 (displayln sum)

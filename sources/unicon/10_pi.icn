@@ -3,9 +3,15 @@
 # Unicon has arbitrary-precision integers in the language itself — `2^100` and a 39-digit
 # product are both exact — so this is a built-in-bignum cell, not a hand-rolled-limb one.
 # The algorithm is Gibbons' unbounded spigot, the same loop every other row runs.
+# timing: &time is Unicon's wall clock in milliseconds since midnight, and &errout is
+#         the standard error stream, so TIME_MS goes to stderr and stdout is unchanged.
 
 procedure main()
-    write(pisum(1000))
+    ssT0 := &time
+    ssR := pisum(1000)
+    write(&errout, "TIME_MS=", &time - ssT0)
+    write(ssR)
+
 end
 
 procedure pisum(n)

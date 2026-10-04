@@ -8,6 +8,7 @@
 # same deviation sources/r/15_file_write.R records. The file is opened "wb"
 # because the host is Windows.
 
+__t0 = tic;
 buf = repmat(uint8(0:255), 1, 4096);
 fid = fopen('out.bin', 'wb');
 written = 0;
@@ -17,4 +18,5 @@ for i = 1:50
 end
 fflush(fid);
 fclose(fid);
+fprintf(stderr, "TIME_MS=%.3f\n", toc(__t0) * 1000);
 printf("%.0f\n", written);

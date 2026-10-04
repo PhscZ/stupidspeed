@@ -4,7 +4,18 @@
 //       release zip ships no wasm-opt, and every wasm target runs it.
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+	"time"
+)
+
+// timing: time.Now is Go's monotonic clock; TIME_MS goes to stderr and stdout is unchanged.
+var ssT0 time.Time
+
+func ssReport() {
+	fmt.Fprintf(os.Stderr, "TIME_MS=%.3f\n", float64(time.Since(ssT0).Nanoseconds())/1e6)
+}
 
 func fib(n int) int {
 	if n < 2 {
@@ -14,5 +25,10 @@ func fib(n int) int {
 }
 
 func main() {
-	fmt.Println(fib(40))
+	ssT0 = time.Now()
+	// fib(40) is evaluated into a variable first: computing it inside the Println
+	// argument list would place all 331 million calls after the timer stops.
+	ssR := fib(40)
+	ssReport()
+	fmt.Println(ssR)
 }

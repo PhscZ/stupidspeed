@@ -13,9 +13,11 @@
 module c3_04_array_sum;
 import std::io;
 import std::core::mem;
+import std::time::clock;
 
 fn void main()
 {
+	Clock t0 = clock::now();
 	const long N = 1000000;
 	long[] array = mem::new_array(long, (sz)N);
 
@@ -30,6 +32,8 @@ fn void main()
 		total += array[i];
 	}
 
+	NanoDuration elapsed = clock::now() - t0;
+	io::eprintfn("TIME_MS=%.3f", (double)elapsed / 1_000_000.0);
 	io::printfn("%d", total);
 	mem::free(array.ptr);
 }

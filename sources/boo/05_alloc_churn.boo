@@ -6,6 +6,10 @@
 //       System.Byte[][], while `byte[]` is not accepted in a type reference at all
 //       ("Unbalanced expression, closing paren not found").
 
+import System.Diagnostics
+
+sw = Stopwatch.StartNew()
+
 total as long = 0
 slots = array[of (byte)](256)
 
@@ -18,5 +22,7 @@ while i < 10000000:
     slots[i % 256] = buf
     i += 1
 
+sw.Stop()
+System.Console.Error.WriteLine("TIME_MS=" + sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture))
 print(total)
 

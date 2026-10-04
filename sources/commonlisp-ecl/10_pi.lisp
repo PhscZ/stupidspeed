@@ -23,7 +23,18 @@
 
 ;; Gibbons' unbounded spigot. The state is (q, r, tt, k, n, l) and the two rules below are
 ;; exactly the ones from the paper; only the sum of the digits is printed.
+;; Self-timing: get-internal-real-time is the monotonic tick counter and
+;; internal-time-units-per-second converts ticks to seconds. *timer-start* is set as the
+;; first thing main does and read once, immediately before the answer is printed, so the
+;; timed region is the task's own work and nothing else. The line goes to *error-output*,
+;; so stdout is unchanged.
+(defvar *timer-start* 0)
+
+(defun elapsed-ms ()
+  (* 1000.0d0 (/ (- (get-internal-real-time) *timer-start*) internal-time-units-per-second)))
+
 (defun main ()
+  (setf *timer-start* (get-internal-real-time))
   (let ((q 1) (r 0) (tt 1) (k 1) (l 3) (n 3) (produced 0) (sum 0))
     (declare (fixnum k l n produced sum))
     (loop while (< produced 1000) do
@@ -47,6 +58,7 @@
               (incf k)
               (incf l 2)
               (setf n next)))))
+    (format *error-output* "TIME_MS=~,3f~%" (elapsed-ms))
     (format t "~a~%" sum)))
 
 (main)

@@ -16,7 +16,7 @@ the second is disposable. See the end of `BUILD.md` for what is in each.
 ## Results
 
 One row per toolchain, one column per task. The column headings are the task numbers, and
-the task names are the section headings under [Tasks](#tasks). All 131 toolchains, empty and
+the task names are the section headings under [Tasks](#tasks). All 142 toolchains, empty and
 ready to fill in.
 
 A cell holds the median of the 5 timed runs, in milliseconds. `WRONG` is an output that did
@@ -60,6 +60,7 @@ kept alongside the median in the raw results, not in this table.
 | JavaScript | node |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | JavaScript | bun |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | JavaScript | deno |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| JavaScript | quickjs |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | JavaScript | spidermonkey |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | PHP | zend |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | PHP | zend + jit |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -68,13 +69,16 @@ kept alongside the median in the raw results, not in this table.
 | Python | nuitka |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Python | cython |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Python | graalpy |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Python | jython |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Ruby | cruby + yjit |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Ruby | jruby |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Lua | puc-lua |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Lua | luajit |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Perl | perl |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | R | gnu-r |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| R | gnu-r (no JIT) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Julia | julia |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Julia | julia (interpreted) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Nim | nim |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Odin | odin |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Dart | jit |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -90,25 +94,29 @@ kept alongside the median in the raw results, not in this table.
 | Modula-3 | cm3 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | COBOL | gnucobol |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | BASIC | freebasic |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| BASIC | qb64 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Assembly | x86-64 nasm |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Assembly | x86-64 masm |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Assembly | x86-64 fasm |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Dolphin Smalltalk | Dolphin 8 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Groovy | groovy |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Tcl | tclsh |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | C3 | c3c |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Vala | valac |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| Simula | cim |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Algol 68 | a68g |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Component Pascal | gpcp |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Oberon-07 | akron |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | ActionScript | AIR |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Clojure | clojure.main |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Clojure | babashka |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Racket | racket (CS) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Common Lisp | sbcl |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | OCaml | ocamlopt |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| OCaml | ocamlc (bytecode) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | VBScript | cscript |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Raku | rakudo (MoarVM) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Erlang | OTP (escript) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Erlang | erlc (compiled) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Elixir | elixir (BEAM) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Scala | native |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Beef | BeefBuild |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -152,9 +160,12 @@ kept alongside the median in the raw results, not in this table.
 | Luau | lute |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | IronPython | ipy |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | SQLite | sqlite3 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| DuckDB | duckdb |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Unicon | unicon |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Haskell | ghc |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Haskell | runghc |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Forth | gforth |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Euphoria | eui |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Lobster | lobster |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Mercury | mmc |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 
@@ -180,8 +191,7 @@ cannot be run on a current runtime. The Lua and Ruby wasm rows need no such floo
 cells, because their concurrency is cooperative or serialised: CPython and CRuby — and
 **Cython**, whose task 11 is CPython's `threading.Thread` source compiled, with the same GIL
 and the same serialisation — Dolphin
-Smalltalk, whose `Process` objects are green, Simula, whose four `PROCESS` objects are
-scheduled by its own cooperative process simulation, Algol 68, whose four pthreads are real
+Smalltalk, whose `Process` objects are green, Algol 68, whose four pthreads are real
 but whose implementation copies a stack on every switch, Dyalog APL, whose `&` spawn really does
 create four threads but which serialises them inside one execution engine — measured at 0.99
 CPU per wall second, and slower than the same work run serially — and Go's wasm row, whose
@@ -475,21 +485,22 @@ encoding, since any plain UTF-8 or UTF-16 encoding writes a byte order mark. Tas
 hand-rolled base-1e9 limbs, and the slow cells are the two recursive ones: about 4.2 minutes for
 task 09 and 1.2 minutes for task 10.
 
-**Assembly** is two rows, and they are the same program twice: `nasm` and `masm` are the same
-fifteen tasks in two assembler syntaxes, one built with `nasm -f win64` and one with `ml64.exe`,
-both linked by `link.exe` into a freestanding PE console executable. Neither has a C runtime, so
-there is no `printf` and no `malloc`: output is `WriteFile` on the handle `GetStdHandle` returns,
-through a hand-rolled decimal printer, and the only DLL in either row's import table is
-`kernel32.dll`. That shapes four cells. Task 04's million-element array is one `VirtualAlloc`
-block, task 05 allocates a fresh 64-byte block per iteration and frees the one the slot
-replaces — the C row's `malloc`/`free` churn written out — and task 10 is the C row's
-hand-rolled base-1e9 spigot. Task 15 cannot fsync, because the row imports only a minimal
-`kernel32` set and has no C runtime, so there is no flush call to make: the flush is the
-`CloseHandle`. Task 11 is
-four `CreateThread` workers on their own stacks, joined with `WaitForSingleObject` — real kernel
-threads with no libc to create them, the same hand-rolled route the Oberon-07 row takes. Both
-rows are Windows x64 only, which is what the assembly language costs here: there is no
-assembler-independent source, because the syntax is the toolchain.
+**Assembly** is three rows, and they are the same program three times: `nasm`, `masm` and `fasm`
+are the same fifteen tasks in three assembler syntaxes — `nasm -f win64`, `ml64.exe` and flat
+assembler — all producing a freestanding PE console executable with no C runtime. There is no
+`printf` and no `malloc`: output is `WriteFile` on the handle `GetStdHandle` returns, through a
+hand-rolled decimal printer, and the only DLL in any row's import table is `kernel32.dll`. That
+shapes four cells. Task 04's million-element array is one `VirtualAlloc` block, task 05 allocates
+a fresh 64-byte block per iteration and frees the one the slot replaces — the C row's
+`malloc`/`free` churn written out — and task 10 is the C row's hand-rolled base-1e9 spigot. Task
+15 cannot fsync, because the rows import only a minimal `kernel32` set and have no C runtime, so
+there is no flush call to make: the flush is the `CloseHandle`. Task 11 is four `CreateThread`
+workers on their own stacks, joined with `WaitForSingleObject` — real kernel threads with no libc
+to create them, the same hand-rolled route the Oberon-07 row takes. All three rows are Windows
+x64 only, which is what the assembly language costs here: there is no assembler-independent
+source, because the syntax is the toolchain. The three differ only in the assembler, and the
+`fasm` row exists to show that the syntax is the toolchain: its build is one command with no
+linker step at all, because flat assembler emits the PE directly.
 
 **OpenJ9** is the Java row's second VM and the same fifteen files. IBM Semeru Open Edition ships
 Eclipse OpenJ9 in a portable zip that brings its own `javac`, so the row is self-contained: the
@@ -585,7 +596,7 @@ row is exact throughout. Task 11 is the language's own `&` spawn with `⎕TSYNC`
 it is a **correct-answer-no-speedup** cell, measured rather than assumed: four spawned workers
 consume **0.99 cores** (124.05 s CPU in 125.24 s wall), four 5 M-iteration workers take 4.12x
 the time of one, and the threaded form is *slower* than the identical serial work because the
-spawn and `⎕TSYNC` bookkeeping is pure overhead. That puts Dyalog in the CPython/CRuby/Simula
+spawn and `⎕TSYNC` bookkeeping is pure overhead. That puts Dyalog in the CPython/CRuby
 class and is not the J row's position, where `T.`/`t.` measure 1.7x. Task 07 is a recorded
 deviation in the Raku/Erlang/Elixir/Eiffel/Seed7/J class — `text,←'x'` appends in place, and the
 loop is linear, where a quadratic copy would quadruple per doubling — and task 15 flushes
@@ -871,7 +882,7 @@ which makes the Ruby row's four workers **Fibers**; and the Lanes extension the 
 use is a pthreads binding with no wasm build, which makes the Lua row's four workers
 **coroutines**. Both are the language's own cooperative concurrency, both interleave four fixed
 quarters and print the right total, and both are correct-answer-no-speedup cells — the same
-disposition Simula's `PROCESS` objects and Go's `wasip1` goroutines already carry. The native
+disposition Go's `wasip1` goroutines already carry. The native
 rows keep Thread and Lanes.
 
 **GraalVM JIT** is a third Java row and the bytecode counterpart of the `graalvm native-image`
@@ -949,6 +960,95 @@ Windows/amd64 at all — the first stops on `undefined: calleeSavedRegs`, the se
 `undefined: threadID`, and both are missing a Windows implementation in `internal/task`. An
 in-process probe of the identical loop measured **0.89x** on four goroutines against the serial
 form.
+
+**Euphoria** is a new-language row whose three deviations are all the toolchain's rather than the
+program's. It has **no reachable standard error** — `printf(2, …)` and `puts(2, …)` both write
+nothing when stderr is redirected — so the contract's `time.txt` fallback carries the timing line,
+the same exception Dyalog, Ring and Modula-2 record. It has **no high-resolution clock in its
+standard library**: `time()` is whole seconds and the `datetime` fields are second-resolution, so
+the timer is an FFI call to `QueryPerformanceCounter` through `std/dll.e`. And **`std/task.e`
+segfaults** on `task_create` in this build (signal 11), so task 11 is four child processes started
+with `cmd /c start "" /b` rather than cooperative tasks — real parallelism across four cores,
+measured 2.2 s against 5.3 s for the same work in task 02. The language itself is quick: task 01 is
+4.3 s and task 09 is 43 s. `integer` is 64-bit and exact, so tasks 02 and 04 are exact; there are
+no bignums in `std`, so task 10 hand-rolls base-1e9 limbs.
+
+**DuckDB** is the second SQL row, and the one whose type system looks like it solves task 10 and
+does not. DuckDB 1.5.6 **does have an arbitrary-precision `VARINT`**, but `*`, `/`, `//` and `%` on
+it all return DOUBLE — only `+` and `-` are exact — so the spigot is hand-rolled base-1e9 limbs
+anyway, ported from the SQLite row. Two CLI traps shape every file: `-init /dev/null` fails on this
+Windows build (`IO Error: Failed to open file /dev/null`), and the CLI CRLF-translates everything it
+writes **including the `.output stderr` target** unless `.binary on` is in force, which the
+`.output` switch resets. Recursive CTEs allow only one recursive reference, so task 09's two-way
+recursion is a cross join against a two-row table. Task 11 is four child processes with
+rename-as-join, the SQLite row's shape, because `PRAGMA threads=N` parallelises only DuckDB's own
+operators and never user computation.
+
+**QuickJS** is a fifth JavaScript row and the smallest: one 1.7 MB binary, no installer. **`--std`
+is load-bearing** — without it `std` and `os` are not defined and `import * as std from 'std'`
+fails with `could not load module filename 'std'`; with it they are plain globals, which is also
+what gives the row a stderr channel. QuickJS-ng has **BigInt**, so task 10 runs the JavaScript
+row's spigot verbatim rather than hand-rolling limbs, at 254 ms. It is a bytecode interpreter with
+no JIT, and `os.Worker` starts real OS threads, so task 11 is genuinely parallel at 11.6 s against
+28.5 s for the same range in task 02. One failure mode is worth recording because it is silent:
+QuickJS is reference-counted, so a Worker held only by a block-scoped `const` is collected the
+instant the block ends and never replies — exit code 0, no output, no diagnostic — which is why the
+handle array is declared at module scope.
+
+**babashka** is a second Clojure row and not a JVM row: it is a GraalVM native image, so start-up
+is milliseconds and there is no Java interop beyond babashka's reflection allow-list. Two things
+follow. **Plain `+` and `*` throw on `long` overflow** rather than promoting —
+`(* 1000000000000 1000000000)` raises `ArithmeticException` — so the row uses the promoting `+'`
+and `*'` wherever a value can exceed a long, and task 10 uses them for native BigInt arithmetic.
+And **it is single-threaded**: `future` serialises, so task 11 is four child processes through
+`babashka.process`, which babashka bundles. Task 15 flushes with `FileChannel.force(true)`, because
+`FileDescriptor.sync()` is rejected by that allow-list.
+
+**Jython** is the Python row that is not Python 3. **Jython 2.7 is Python 2** — `print` is a
+statement, there are no f-strings, `/` on integers is floor division and the lazy range is
+`xrange` — so its fifteen files are Python-2 rewrites of the CPython row's algorithms rather than
+copies, and each carries a `# -*- coding: utf-8 -*-` line for the non-ASCII em dash in the header.
+Python 2's `long` is arbitrary precision, so task 10 uses native bignums and runs the spigot
+unmodified at 0.6 s where the hand-rolled rows take minutes. `java.lang.Thread` gives real JVM
+threads and Jython has no GIL, so task 11 is genuinely parallel: 15.9 s against 88 s for task 02's
+identical range, a 5.5x pass.
+
+**QB64** is the second BASIC row, and it compiles through C++: `qb64pe -x` translates the source
+and shells out to a C++ compiler shipped inside the 814 MB release tree, which is why each build
+takes 6–12 s. Two details carry the row. **`$CONSOLE:ONLY` is required** for the kernel32 route to
+stderr to reach a redirected fd 2 — without that metacommand the executable is GUI-subsystem and
+`GetStdHandle(-12)` returns a console handle instead — and `PRINT` appends CRLF plus a leading space
+for positive numbers, so the answer goes out through `WriteFile` on handle -11 with a single LF,
+matching the assembly rows. The clock is `_UPTIME`, QB64-PE 4.7's high-resolution monotonic timer,
+not `TIMER`. `LONG` is 32-bit, so task 02's accumulators are `_INTEGER64`, and task 10 hand-rolls
+base-1e9 limbs.
+
+**flat assembler** is the third assembly row and the only one with no link step, because `fasm`
+emits the PE executable itself. It exists to show that the syntax *is* the toolchain: the same
+fifteen freestanding programs as `nasm` and `masm`, `kernel32.dll` the only import, output through
+`WriteFile` on a `GetStdHandle` handle, and nothing different but which assembler reads it. Two
+things are load-bearing. `format PE64 console` must come **before** the include, or the linker
+emits a GUI-subsystem binary that prints nothing; and the `win64ax.inc` variant's `invoke` macro
+fails here with `undefined symbol`, so the imports are called directly as `call [WriteFile]` with
+handles loaded by `mov ecx, -12`. The download is a trap worth recording: `fasm17335.zip` is the
+DOS build, whose `FASM.EXE` is a raw MZ image Windows refuses to run, and `fasmw17335.zip` is the
+Windows one — use its `FASM.EXE`, not the `FASMW.EXE` beside it, which is the GUI IDE and blocks
+waiting for a window.
+
+**Six rows hold a language fixed and move one stage of the pipeline**, and they are worth reading
+as pairs rather than alone: Erlang compiled with `erlc` against the same language under `escript`,
+which compiles on every run; Julia under `--compile=min -O0` against the default JIT; Haskell under
+`runghc` against `ghc -O2 -threaded`; R with `R_ENABLE_JIT=0` against R's byte-code compiler; and
+OCaml with `ocamlc` bytecode against `ocamlopt`. Three findings come out of the set. The cost of
+compiling on every run is large and measurable — Haskell's task 01 goes from under a second to
+**1005 s**, Julia's from about 20 ms to **438 s**, and R's from 82 s to 362 s, a 4.4x. Two of the
+interpreted halves **lose task 11's parallelism entirely**: `runghc`'s RTS is built non-threaded, so
+`+RTS -N4` is rejected with *the flag -N4 requires the program to be built with -threaded* and
+`forkIO` cannot reach a second capability, while Julia needs `-t4` or its four `Threads.@threads`
+workers share one thread — with `-t4` it is 151 s against a 497 s single-thread baseline. And the R
+row shows that the right lever is the **environment variable rather than the API**:
+`compiler::enableJIT(0)` does not propagate to task 11's PSOCK workers, which still report level 3,
+while `R_ENABLE_JIT=0` does.
 
 ## Rules
 
@@ -1251,10 +1351,6 @@ sometimes the wrong thing.
   processes with `WScript.Shell.Exec`, each given its worker index as an argument, and reads
   their stdout back. That is real parallelism across four cores, the same category as the R
   row's `PSOCK` workers.
-- **Simula** has no thread library either, but its own process simulation is part of the
-  language's standard application package, so four `PROCESS` objects scheduled by a
-  `SIMULATION` block are the faithful translation: they interleave, they never run at once, and
-  the cell lands in the same correct-answer-no-speedup class as CPython's.
 
 ### 12 matrix_add
 
@@ -1349,14 +1445,14 @@ nothing else.
 | F# | dotnet |
 | VB.NET | dotnet |
 | Scala | jvm, native |
-| JavaScript | node, bun, deno, spidermonkey |
+| JavaScript | node, bun, deno, spidermonkey, quickjs |
 | PHP | zend, zend + jit |
-| Python | cpython, pypy, nuitka, cython, graalpy |
+| Python | cpython, pypy, nuitka, cython, graalpy, jython |
 | Ruby | cruby + yjit, jruby |
 | Lua | puc-lua, luajit |
 | Perl | perl |
-| R | gnu-r |
-| Julia | julia |
+| R | gnu-r, gnu-r (no JIT) |
+| Julia | julia, julia (interpreted) |
 | Nim | nim |
 | Odin | odin |
 | Dart | jit, aot |
@@ -1369,25 +1465,24 @@ nothing else.
 | Modula-2 | adw |
 | Modula-3 | cm3 |
 | COBOL | gnucobol |
-| BASIC | freebasic |
-| Assembly | x86-64 nasm, x86-64 masm |
+| BASIC | freebasic, qb64 |
+| Assembly | x86-64 nasm, x86-64 masm, x86-64 fasm |
 | Dolphin Smalltalk | Dolphin 8 |
 | Groovy | groovy |
 | Tcl | tclsh |
 | C3 | c3c |
 | Vala | valac |
-| Simula | cim |
 | Algol 68 | a68g |
 | Component Pascal | gpcp |
 | Oberon-07 | akron |
 | ActionScript | AIR |
-| Clojure | clojure.main |
+| Clojure | clojure.main, babashka |
 | Racket | racket (CS) |
 | Common Lisp | sbcl, ecl |
-| OCaml | ocamlopt |
+| OCaml | ocamlopt, ocamlc (bytecode) |
 | VBScript | cscript |
 | Raku | rakudo (MoarVM) |
-| Erlang | OTP (escript) |
+| Erlang | OTP (escript), erlc (compiled) |
 | Elixir | elixir (BEAM) |
 | Beef | BeefBuild |
 | Haxe | hxcpp, hashlink |
@@ -1426,9 +1521,11 @@ nothing else.
 | Luau | luau, lute |
 | IronPython | ipy (.NET) |
 | SQLite | sqlite3 |
+| DuckDB | duckdb |
 | Unicon | unicon |
-| Haskell | ghc |
+| Haskell | ghc, runghc |
 | Forth | gforth |
+| Euphoria | eui |
 | Lobster | lobster |
 | Mercury | mmc |
 
@@ -1444,14 +1541,11 @@ facility at all can express four workers. Where a language's concurrency is coop
 than parallel, or needs an extension or a special build, the cell says so and `BUILD.md`
 records it next to the toolchain.
 
-Three task 11 cells need explaining even though all three are present. Algol 68 Genie has a
+Two task 11 cells need explaining even though both are present. Algol 68 Genie has a
 real parallel clause (`PAR`), and it creates four pthreads, but the implementation copies a
 whole stack on every unit switch and its own source calls the clause "included for educational
 purposes; this implementation is not the most efficient one", so the answer is right and the
-row is no faster than its task 02. Simula has no thread library, but it does not need one: its
-own process simulation is part of the language's standard application package, so task 11 is
-four `PROCESS` objects scheduled by a `SIMULATION` block, genuinely interleaved and genuinely
-cooperative, which makes it another correct-answer-no-speedup cell. Oberon-07 has no thread
+row is no faster than its task 02. Oberon-07 has no thread
 module in its library at all, so its task 11 is four `CreateThread` calls made through the
 compiler's own foreign-function declarations — the same hand-rolled route the Assembly rows
 take with `CreateThread`, and it is real parallelism that passes.
@@ -1494,6 +1588,7 @@ its hand-rolled limbs are two orders of magnitude too slow to run.
 | Oberon-2 | Fails task 11: no threading in the implementation used here. |
 | BCPL | Fails task 11: no concurrency of any kind. |
 | MLton | Fails task 11: no concurrency of any kind. |
+| Uiua | Too slow to be worth a row. It runs on Windows x64 and passes all fifteen tasks, but its scalar-loop floor is about **2.5 µs per iteration** — measured, with `⍥` the fastest of its loop primitives — so task 01 costs roughly **63 minutes a run** and the 100-million-iteration tasks cost 25-63 minutes each. The slowest cell the benchmark accepts is Raku's task 02 at about 10 minutes, so Uiua would add roughly 5 hours per pass and 30 hours to the six-run protocol. Its 0.19.1 release does ship `&ep`/`&epf` for stderr, so it is not a contract problem; it is a cost one. |
 
 **Duplicate of a row that already exists.**
 
@@ -1506,7 +1601,7 @@ its hand-rolled limbs are two orders of magnitude too slow to run.
 **Cannot be driven from the harness.**
 
 A row has to be reproducible by a script on a machine that is not the one it was written on:
-run one command, read one line of stdout, exit. Four languages are left out because they
+run one command, read one line of stdout, exit. Five languages are left out because they
 cannot be driven that way — not because the language is too slow, and not because a task is
 impossible, but because the run itself cannot be automated or cannot be published.
 
@@ -1523,6 +1618,7 @@ has nothing to contribute however fast the language is.
 | Delphi | **The free edition cannot be installed or scripted without a human.** Community Edition is distributed only through the GetIt web installer, which needs an Embarcadero account, online registration and activation, and administrator rights — the repo's rule is a portable extraction. It is also licence-limited to under $5k annual revenue on a one-year term. The language itself is Object Pascal, so even with a working install it would be the `pascal` row again. |
 | Wolfram Engine | **The free licence forbids producing output for organisational use and forbids publishing the engine.** The Free Wolfram Engine for Developers terms allow "development but not production" and explicitly prohibit "running the Free Engine expressly to produce output for commercial or organizational use" and "distributing, publishing… any portion of the Free Engine", with an audit clause requiring records of use. A published benchmark is output for organisational use, so the free engine is not a lawful route to these numbers, and the paid engine is not redistributable, so a reader cannot reproduce the run. The language has native bignums and `ParallelMap`, so it would otherwise be a strong row. |
 | MATLAB | **Licence and replication.** Use is granted "solely for Internal Operations", and activation binds a licence to a specific physical Computer and Licensed User, with data sent to MathWorks at activation; clause 3.2.2 restricts a Designated Computer licence to one non-virtual machine. Clause 5.8 restricts using MathWorks' names in material distributed to third parties to "the form provided by MathWorks", and 5.6 forbids publishing any portion of the Programs. So the numbers could not be republished and a reader could not re-run them without their own activation. |
+| Simula | **No wall-clock facility, so it cannot report its own elapsed time.** GNU Cim's shipped library provides no elapsed-time primitive at all — the only time-related code in its `lib/` is `simset.sim` and `simulation.sim`, which supply *simulated* time for process scheduling rather than real time. The row was built and ran all fifteen tasks, and it was removed when self-timing became the measurement contract: a row that cannot time itself cannot contribute a comparable number. The language is otherwise unremarkable here — its task 11 was a correct-answer-no-speedup cell, because its `PROCESS` objects are scheduled cooperatively by its own process simulation. |
 
 **Measured, but not added.**
 

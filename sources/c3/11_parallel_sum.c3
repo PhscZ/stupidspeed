@@ -15,6 +15,7 @@
 module c3_11_parallel_sum;
 import std::io;
 import std::thread;
+import std::time::clock;
 
 const long THREADS = 4;
 const long SPAN = 25000000;
@@ -53,6 +54,7 @@ fn int worker(void* arg)
 
 fn void main()
 {
+	Clock t0 = clock::now();
 	Job[THREADS] jobs;
 	Thread[THREADS] threads;
 
@@ -74,5 +76,7 @@ fn void main()
 		total += jobs[t].acc;
 	}
 
+	NanoDuration elapsed = clock::now() - t0;
+	io::eprintfn("TIME_MS=%.3f", (double)elapsed / 1_000_000.0);
 	io::printfn("%d", total);
 }

@@ -30,6 +30,12 @@
 # note: with -O2 against 23.3 s without. #
 # note: The 1000-digit output itself has not been observed from this file. RUN.md records #
 # note: the extrapolation and the options. #
+# timing: clock is a68g's processor-time clock, in seconds, as a REAL; for this #
+# note: single-threaded interpreter that is the program's own work, which is what the #
+# note: contract brackets. TIME_MS is written to stand error as a whole number of #
+# note: milliseconds, and stdout is unchanged. #
+
+REAL tim0 = clock;
 
 MODE BIG = STRUCT([0:39999] LONG INT limb, INT n, BOOL neg);
 
@@ -277,4 +283,6 @@ WHILE produced < 1000 DO
   FI
 OD;
 
+INT tms = ENTIER(1000.0 * (clock - tim0) + 0.5);
+putf(stand error, ($g$, "TIME_MS=" + whole(tms, 0), $l$));
 print((whole(total, 0), newline))

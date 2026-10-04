@@ -1,5 +1,9 @@
       *> task 13 matrix_mul -- expected output: 599995000
       *> build: cobc -x -O2 -o prog 13_matrix_mul.cob    run: ./prog
+      *> timing: ACCEPT ... FROM TIME is GnuCOBOL's own clock, hhmmsscc, so the
+      *>         resolution is 10 ms; TIME_MS is DISPLAYed UPON STDERR and stdout is
+      *>         unchanged. Instrumented by inspection: there is no GnuCOBOL toolchain
+      *>         on this machine, so this row's timing is unverified.
       *> Plain triple loop, no tricks: the innermost loop walks B down a column,
       *> which is the cache-hostile order the task asks for.
        IDENTIFICATION DIVISION.
@@ -21,7 +25,21 @@
        01 C-ARR.
            05 C-ROW OCCURS 500 TIMES.
                10 CV PIC 9(18) COMP-5 OCCURS 500 TIMES.
+       01 WS-T0.
+           05 T0-HH PIC 9(2).
+           05 T0-MM PIC 9(2).
+           05 T0-SS PIC 9(2).
+           05 T0-CC PIC 9(2).
+       01 WS-T1.
+           05 T1-HH PIC 9(2).
+           05 T1-MM PIC 9(2).
+           05 T1-SS PIC 9(2).
+           05 T1-CC PIC 9(2).
+       01 CS0      PIC 9(18) COMP-5.
+       01 CS1      PIC 9(18) COMP-5.
+       01 MS       PIC 9(18) COMP-5.
        PROCEDURE DIVISION.
+           ACCEPT WS-T0 FROM TIME.
            PERFORM VARYING I FROM 1 BY 1 UNTIL I > 500
                PERFORM VARYING J FROM 1 BY 1 UNTIL J > 500
                    COMPUTE AV(I, J) = FUNCTION MOD(I - 1 + J - 1, 7)
@@ -44,5 +62,13 @@
                END-PERFORM
            END-PERFORM.
            MOVE TOTAL TO OT.
+           ACCEPT WS-T1 FROM TIME.
+           COMPUTE CS0 = ((((T0-HH * 60) + T0-MM) * 60) + T0-SS) * 100 + T0-CC.
+           COMPUTE CS1 = ((((T1-HH * 60) + T1-MM) * 60) + T1-SS) * 100 + T1-CC.
+           IF CS1 < CS0
+               ADD 8640000 TO CS1
+           END-IF.
+           COMPUTE MS = (CS1 - CS0) * 10.
+           DISPLAY "TIME_MS=" MS UPON STDERR.
            DISPLAY OT.
            STOP RUN.

@@ -257,7 +257,17 @@ variable total
 variable produced
 variable next
 
+\ timing: utime is gforth's microsecond clock; TIME_MS is written to stderr with
+\         WRITE-FILE/WRITE-LINE and stdout is unchanged.
+2variable ss-t0
+
+: ss-report ( -- )
+  s" TIME_MS=" stderr write-file drop
+  utime ss-t0 2@ d- drop 1000 /
+  s>d <# #s #> stderr write-line drop ;
+
 : main
+  utime ss-t0 2!
   Q @ 1 bset
   R @ 0 bset
   T @ 1 bset
@@ -297,6 +307,7 @@ variable next
       next @ n !
     then
   repeat
+  ss-report
   total @ . cr
 ;
 

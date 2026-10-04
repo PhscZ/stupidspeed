@@ -18,8 +18,11 @@
 # mean writing the row artificially.
 defmodule T07 do
   def run do
+    t0 = System.monotonic_time(:microsecond)
     acc = append(250_000, <<>>)
-    IO.puts(byte_size(acc))
+    size = byte_size(acc)
+    IO.puts(:stderr, "TIME_MS=#{(System.monotonic_time(:microsecond) - t0) / 1000}")
+    IO.puts(size)
   end
 
   defp append(0, acc), do: acc

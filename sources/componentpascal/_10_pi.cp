@@ -19,9 +19,11 @@
    (sum 97) and the first 100 digits (sum 471) before the full run. *)
 (* note: Console.WriteInt takes a 32 bit INTEGER only, so the LONGINT digit sum is
    printed by the local WriteLong. *)
+(* timing: Env.Environment.get_TickCount() is .NET's millisecond clock, and the Error module
+   writes to stderr, so TIME_MS is reported there and stdout is unchanged. *)
 
 MODULE _10_pi;
- IMPORT CPmain, Console;
+ IMPORT CPmain, Console, Error, Env := mscorlib_System;
 
  CONST BASE = 1000000000;
        LIMBS = 40000;
@@ -35,6 +37,7 @@ MODULE _10_pi;
       BigPtr = POINTER TO Big;
 
  VAR q, r, t, u, v, w : BigPtr;
+     ss_t0, ss_t1 : LONGINT;
      k, l, n, next, sum : LONGINT;
      produced : INTEGER;
 
@@ -212,7 +215,29 @@ MODULE _10_pi;
    RETURN q
  END Quot;
 
+ PROCEDURE WMs(x : LONGINT);
+   VAR s : ARRAY 24 OF CHAR;
+       n, k : INTEGER;
+       t : CHAR;
+ BEGIN
+   IF x = 0 THEN Error.Write("0"); RETURN END;
+   n := 0;
+   WHILE x > 0 DO
+     s[n] := CHR(SHORT(x MOD 10) + ORD("0"));
+     x := x DIV 10;
+     INC(n)
+   END;
+   s[n] := 0X;
+   k := 0; DEC(n);
+   WHILE k < n DO
+     t := s[k]; s[k] := s[n]; s[n] := t;
+     INC(k); DEC(n)
+   END;
+   Error.WriteString(s)
+ END WMs;
+
 BEGIN
+  ss_t0 := Env.Environment.get_TickCount();
   NEW(q); NEW(r); NEW(t); NEW(u); NEW(v); NEW(w);
 
   Set(q^, 1);
@@ -263,6 +288,9 @@ BEGIN
       n := next
     END
   END;
+
+  ss_t1 := Env.Environment.get_TickCount();
+  Error.WriteString("TIME_MS="); WMs(ss_t1 - ss_t0); Error.WriteLn();
 
   WriteLong(sum); Console.WriteLn
 END _10_pi.

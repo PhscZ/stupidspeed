@@ -20,6 +20,23 @@
 -- note: the driver takes its bound as a parameter rather than a literal, because a literal
 --       lets LLVM constant-fold the loop bounds — the mistake recorded in temp/terra-doc.md
 --       §16.1, which understated a similar probe by 1.7x.
+-- timing: GetSystemTimePreciseAsFileTime is Windows' 100-nanosecond clock, imported
+--         with terralib.externfunction; TIME_MS goes to time.txt, the contract's
+--         fallback, because Terra's stdio has no stderr handle. stdout is unchanged.
+local C = terralib.includec("stdio.h")
+local GetSystemTimePreciseAsFileTime = terralib.externfunction("GetSystemTimePreciseAsFileTime", &int64 -> {})
+terra ssNow() : int64
+    var ft : int64
+    GetSystemTimePreciseAsFileTime(&ft)
+    return ft / 10000LL
+end
+terra ssReport(t0 : int64) : int64
+    var f = C.fopen("time.txt", "w")
+    C.fprintf(f, "TIME_MS=%lld\n", ssNow() - t0)
+    C.fclose(f)
+    return 0
+end
+local ssT0 = ssNow()
 
 local add_one = terralib.loadfile("03_func_sum_add_one.t")()
 add_one:setinlined(false)
@@ -32,4 +49,6 @@ terra func_sum(n : int64) : int64
     return value
 end
 
-print(string.format("%d", func_sum(100000000LL)))
+local ssV = func_sum(100000000LL)
+ssReport(ssT0)
+print(string.format("%d", ssV))

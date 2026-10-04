@@ -95,6 +95,7 @@ Do While produced < DIGITS
     End If
 Loop
 
+ssReport
 WScript.Echo DecStr(sum)
 
 Sub BSet(ByVal x, ByVal v)
@@ -109,6 +110,7 @@ Sub BSet(ByVal x, ByVal v)
     LG(x) = 0
 End Sub
 
+ssT0 = Timer()
 Sub BCopy(ByVal d, ByVal s)
     Dim i, c
     c = LN(s)
@@ -286,6 +288,13 @@ End Function
 ' Exact decimal digits for an integral number below 2^53. Splitting off 1e6 at a time
 ' keeps every intermediate below 2^53, so p * 1000000 is exact; the guard corrects the
 ' one-off error the division can make at that size.
+
+' timing: Timer() is VBScript's seconds-since-midnight clock with centisecond resolution, so
+'         TIME_MS has 16 ms granularity; it goes to stderr and stdout is unchanged.
+Dim ssT0
+Sub ssReport()
+    WScript.StdErr.WriteLine "TIME_MS=" & CLng(Round((Timer() - ssT0) * 1000))
+End Sub
 Function DecStr(v)
     Dim parts(), np, p, r, s, i
 

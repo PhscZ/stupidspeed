@@ -15,6 +15,7 @@
 # arithmetic. The total fits comfortably in a 64-bit integer.
 defmodule T12 do
   def run do
+    t0 = System.monotonic_time(:microsecond)
     n = 1000
     e = n * n
     a = :atomics.new(e, signed: true)
@@ -22,7 +23,9 @@ defmodule T12 do
     c = :atomics.new(e, signed: true)
     fill(a, b, 0, n)
     add(a, b, c, 0, e)
-    IO.puts(sum(c, 0, e))
+    total = sum(c, 0, e)
+    IO.puts(:stderr, "TIME_MS=#{(System.monotonic_time(:microsecond) - t0) / 1000}")
+    IO.puts(total)
   end
 
   defp fill(_a, _b, i, n) when i >= n, do: :ok

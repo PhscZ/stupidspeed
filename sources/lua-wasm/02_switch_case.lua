@@ -9,6 +9,7 @@
 -- integer and prints it in full, but LuaJIT has only doubles and its default conversion is
 -- "%.14g", which would print this 16-digit total as 7.5e+15. The value is exact in both.
 
+local __t0 = os.clock()
 local acc = 0
 for i = 0, 99999999 do
     local c = i % 4
@@ -23,4 +24,6 @@ for i = 0, 99999999 do
     end
 end
 
+local __t1 = os.clock()
+io.stderr:write(string.format("TIME_MS=%.3f\n", (__t1 - __t0) * 1000.0))
 print(string.format("%d", acc))

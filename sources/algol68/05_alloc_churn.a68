@@ -4,6 +4,12 @@
 # note: keeps it reachable and drops the buffer it replaces, which is what gives the #
 # note: collector something to do; a compiled row needs that line or -O2 deletes the #
 # note: allocation. #
+# timing: clock is a68g's processor-time clock, in seconds, as a REAL; for this #
+# note: single-threaded interpreter that is the program's own work, which is what the #
+# note: contract brackets. TIME_MS is written to stand error as a whole number of #
+# note: milliseconds, and stdout is unchanged. #
+
+REAL tim0 = clock;
 
 [1:256] REF [] CHAR slots;
 
@@ -20,4 +26,6 @@ FOR i FROM 0 TO 9999999 DO
   slots[(i MOD 256) + 1] := buf
 OD;
 
+INT tms = ENTIER(1000.0 * (clock - tim0) + 0.5);
+putf(stand error, ($g$, "TIME_MS=" + whole(tms, 0), $l$));
 print((whole(total, 0), newline))

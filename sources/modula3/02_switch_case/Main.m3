@@ -1,12 +1,31 @@
 (* task 02 switch_case — expected output: 7500000075000000 *)
+(* timing: Time.Now is Modula-3's clock, seconds since the epoch as a REAL, so the
+   elapsed time is exact to well under a millisecond; TIME_MS is written to time.txt
+   with the FileWr/Wr idiom task 15 uses, because Modula-3's IO has no stderr stream,
+   and stdout is unchanged. Instrumented by inspection: cm3 is not installed on this
+   machine, so this row's timing is unverified. *)
 (* build: cm3 -build -O    run: AMD64_NT\prog.exe *)
 
 MODULE Main;
-IMPORT IO, Fmt;
+IMPORT IO, Fmt, Time, FileWr, Wr;
 
-VAR a: INTEGER;
+VAR ssT0: Time.T;
+    a: INTEGER;
     i: INTEGER;
 
+
+PROCEDURE SsReport(ms: INTEGER) =
+  (* one TIME_MS line in time.txt: Modula-3's IO has no stderr stream, so the contract's
+     fallback applies; the file is written with the same FileWr/Wr idiom task 15 uses *)
+  VAR wr: Wr.T;
+  BEGIN
+    wr := FileWr.Open("time.txt");
+    Wr.PutString(wr, "TIME_MS=" & Fmt.Int(ms) & "\n");
+    Wr.Flush(wr);
+    Wr.Close(wr);
+  END SsReport;
+
+  ssT0 := Time.Now();
 BEGIN
   a := 0;
   FOR i := 0 TO 99999999 DO
@@ -17,5 +36,6 @@ BEGIN
     | 3 => a := a + 3 * i
     END
   END;
+  SsReport(ROUND((Time.Now() - ssT0) * 1000.0));
   IO.Put(Fmt.Int(a) & "\n");
 END Main.

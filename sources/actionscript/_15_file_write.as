@@ -25,6 +25,12 @@
 //       never reaches exit() it hangs instead -- which is exactly how the first version
 //       of this file behaved when it tried to write into the read-only bundle.
 
+// timing: getTimer() is the AVM2 clock, whole milliseconds since the VM started. AIR has
+//       no stderr, so the contract's fallback applies: TIME_MS goes to time.txt in
+//       File.applicationStorageDirectory -- the same writable directory this task already
+//       writes out.bin to. The write itself is deferred one event-loop turn (see the note
+//       below), so the timer starts at the constructor and stops just before the final
+//       output, which keeps the whole write inside the measured region.
 package
 {
     import flash.display.Sprite;
@@ -34,14 +40,19 @@ package
     import flash.system.System;
     import flash.desktop.NativeApplication;
     import flash.utils.ByteArray;
+    import flash.utils.getTimer;
     import flash.utils.setTimeout;
 
     public class _15_file_write extends Sprite
     {
         private static const CHUNK:int = 1048576;
 
+        private var __t0:int = 0;
+        private var __ms:int = 0;
+
         public function _15_file_write()
         {
+            __t0 = getTimer();
             // See task 14: a FileStream cannot be opened from the constructor, so the
             // work is deferred by one event-loop turn.
             setTimeout(writeFile, 0);
@@ -71,12 +82,28 @@ package
 
                 stream.close();
 
+                __ms = getTimer() - __t0;
                 System.output(written + "\n");
             }
             catch (err:Error)
             {
+                __ms = getTimer() - __t0;
                 System.output("error: " + err + "\n");
             }
+            setTimeout(__report, 0);
+        }
+
+        private function __report():void
+        {
+            try
+            {
+                var f:File = File.applicationStorageDirectory.resolvePath("time.txt");
+                var s:FileStream = new FileStream();
+                s.open(f, FileMode.WRITE);
+                s.writeUTFBytes("TIME_MS=" + __ms + "\n");
+                s.close();
+            }
+            catch (e:Error) { }
             NativeApplication.nativeApplication.exit(0);
         }
     }

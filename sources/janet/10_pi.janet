@@ -22,6 +22,12 @@
 # note: the reduced-scale digit sums, computed independently with mpmath, are 100 -> 471,
 #       200 -> 897, 400 -> 1753, 800 -> 3588, 1600 -> 7269; they are the evidence that the
 #       arithmetic is right at every scale.
+
+# timing: os/clock is Janet's monotonic clock, in seconds as a double; TIME_MS goes to
+#         stderr with eprintf and stdout is unchanged.
+(def ss-t0 (os/clock))
+(defn ss-report [] (eprintf "TIME_MS=%.3f\n" (* 1000 (- (os/clock) ss-t0))))
+
 (def BASE 1000000000)
 (def BASEF 1000000000.0)
 
@@ -240,4 +246,5 @@
       (+= l 2)
       (set n nextn))))
 
+(ss-report)
 (print sum)

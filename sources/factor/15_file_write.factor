@@ -9,10 +9,16 @@
 !       has effect ( seq -- ) and writes the whole sequence or throws, so the printed byte
 !       count is the buffer length times 50.
 
+! timing: nano-count is Factor's monotonic nanosecond clock; TIME_MS is written to stderr
+!         through error-stream, and stdout is unchanged.
 USING: accessors alien.c-types alien.syntax byte-arrays io io.encodings.binary io.files
-kernel locals math namespaces prettyprint sequences windows.errors windows.kernel32
-windows.types ;
+kernel locals math math.parser namespaces prettyprint sequences system windows.errors
+windows.kernel32 windows.types ;
 IN: scratchpad
+
+: ss-report ( t0 value -- value )
+    swap nano-count swap - 1000000 /i number>string
+    "TIME_MS=" swap append "\n" append error-stream get stream-write ;
 
 LIBRARY: kernel32
 FUNCTION: BOOL FlushFileBuffers ( HANDLE hFile )
@@ -27,4 +33,4 @@ FUNCTION: BOOL FlushFileBuffers ( HANDLE hFile )
     ] with-file-writer
     buf length 50 * ;
 
-file-write .
+nano-count file-write ss-report .

@@ -9,7 +9,14 @@
 # note: the cost of a flat index is one multiply and one add per element access, which the
 #       C row pays too. It is not free here: Ring evaluates it in the interpreter.
 # note: every value is a small whole number and the total 599995000 is exact in a double.
+# timing: clock() is Ring's processor-time clock, in ticks since program start, and
+#         clocksPerSecond() gives the ticks per second, so TIME_MS is whole milliseconds
+#         of CPU time; it is written to time.txt with fopen/fputs/fclose, the contract's
+#         fallback, because Ring's documented stream globals are stdin and stdout.
+#         Instrumented by inspection: Ring is not installed on this machine, so this
+#         row's timing is unverified.
 
+ssT0 = clock()
 n = 500
 m = n * n
 
@@ -41,4 +48,10 @@ for k = 1 to m
     total = total + c[k]
 next
 
+ssReport()
 ? total
+
+func ssReport
+    fp = fopen("time.txt", "w")
+    fputs(fp, "TIME_MS=" + string((clock() - ssT0) * 1000 / clocksPerSecond()) + nl)
+    fclose(fp)

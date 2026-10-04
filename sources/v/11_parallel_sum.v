@@ -6,6 +6,8 @@
 
 module main
 
+import time
+
 const span = i64(25000000)
 
 fn work(t i64) i64 {
@@ -26,6 +28,7 @@ fn work(t i64) i64 {
 }
 
 fn main() {
+	t0 := time.now()
 	mut handles := []thread i64{}
 	for t in 0 .. 4 {
 		handles << spawn work(i64(t))
@@ -38,5 +41,6 @@ fn main() {
 		total += acc
 	}
 
+	eprintln('TIME_MS=${f64(time.since(t0).microseconds()) / 1000.0:.3f}')
 	println(total)
 }

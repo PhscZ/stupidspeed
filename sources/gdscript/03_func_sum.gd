@@ -9,8 +9,10 @@ func add_one(n: int) -> int:
 	return n + 1
 
 func _initialize() -> void:
+	var t0 := Time.get_ticks_msec()
 	var value := 0
 	for _i in 100000000:
 		value = add_one(value)
+	printerr("TIME_MS=%d" % (Time.get_ticks_msec() - t0))
 	print(value)
 	quit()

@@ -13,12 +13,14 @@
 module c3_12_matrix_add;
 import std::io;
 import std::core::mem;
+import std::time::clock;
 
 const long N = 1000;
 const usz ELEMS = (usz)(N * N);
 
 fn void main()
 {
+	Clock t0 = clock::now();
 	long[] a = mem::new_array(long, ELEMS);
 	long[] b = mem::new_array(long, ELEMS);
 	long[] c = mem::new_array(long, ELEMS);
@@ -46,6 +48,8 @@ fn void main()
 		total += c[k];
 	}
 
+	NanoDuration elapsed = clock::now() - t0;
+	io::eprintfn("TIME_MS=%.3f", (double)elapsed / 1_000_000.0);
 	io::printfn("%d", total);
 	mem::free(a.ptr);
 	mem::free(b.ptr);

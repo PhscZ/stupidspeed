@@ -4,6 +4,8 @@
 # build (cython): cython --embed -3 --module-name _15_file_write -o _15_file_write.c 15_file_write.py, then gcc -O2 -DMS_WIN64 -municode -I <python>/include -o prog _15_file_write.c -L <python>/libs -lpython3xx
 # build (wasm): python.wasm is the wasm32-wasip1-threads build of CPython (see BUILD.md); run: wasmtime -S threads=y -W threads=y -W shared-memory=y --dir . python.wasm <task>.py
 
+import time as _time, sys as _sys
+_t0 = _time.perf_counter()
 import os
 
 buf = bytes(range(256)) * 4096
@@ -15,4 +17,6 @@ with open('out.bin', 'wb') as f:
     f.flush()
     os.fsync(f.fileno())
 
+_t1 = _time.perf_counter()
+_sys.stderr.write("TIME_MS=%.3f\n" % ((_t1 - _t0) * 1000.0))
 print(written)

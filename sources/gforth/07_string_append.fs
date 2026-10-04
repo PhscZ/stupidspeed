@@ -16,7 +16,17 @@
 variable len
 variable text
 
+\ timing: utime is gforth's microsecond clock; TIME_MS is written to stderr with
+\         WRITE-FILE/WRITE-LINE and stdout is unchanged.
+2variable ss-t0
+
+: ss-report ( -- )
+  s" TIME_MS=" stderr write-file drop
+  utime ss-t0 2@ d- drop 1000 /
+  s>d <# #s #> stderr write-line drop ;
+
 : main
+  utime ss-t0 2!
   0 len !
   \ start with a 1-byte buffer so the address is never 0
   1 allocate throw text !
@@ -27,6 +37,7 @@ variable text
     'x' text @ len @ + c!
     1 len +!
   repeat
+  ss-report
   len @ . cr
   text @ free throw
 ;

@@ -3,6 +3,7 @@
 package main
 
 import "core:fmt"
+import "core:time"
 
 fib :: proc(n: i64) -> i64 {
 	if n < 2 {
@@ -12,5 +13,8 @@ fib :: proc(n: i64) -> i64 {
 }
 
 main :: proc() {
-	fmt.println(fib(40))
+	t0 := time.now()
+	result := fib(40)
+	fmt.eprintfln("TIME_MS=%.3f", time.duration_milliseconds(time.since(t0)))
+	fmt.println(result)
 }

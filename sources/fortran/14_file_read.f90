@@ -6,13 +6,16 @@
 ! half of that range back into the unsigned byte value.
 
 program main
+  use iso_fortran_env, only: error_unit
   implicit none
   integer, parameter :: chunk = 1048576
   integer(kind=1), allocatable :: buf(:)
   integer(kind=1) :: one
   integer(kind=8) :: total, done, i
   integer :: u, ios
+  integer(kind=8) :: ss_t0, ss_t1, ss_rate
 
+  call system_clock(ss_t0, ss_rate)
   ! The buffer comes from the heap so the program does not depend on a
   ! generous stack limit.
   allocate(buf(chunk))
@@ -51,5 +54,7 @@ program main
   end if
   close(u)
 
+  call system_clock(ss_t1)
+  write(error_unit,'(a,i0)') 'TIME_MS=', (ss_t1 - ss_t0) * 1000_8 / ss_rate
   write(*,'(i0)') mod(total, 4294967296_8)
 end program main

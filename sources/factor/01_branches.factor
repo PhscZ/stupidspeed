@@ -5,8 +5,14 @@
 !       quotation handed to each-integer binds the counters and the index out of the
 !       stack and leaves the updated counters there for the next iteration.
 
-USING: arrays io kernel locals math math.parser sequences ;
+! timing: nano-count is Factor's monotonic nanosecond clock; TIME_MS is written to stderr
+!         through error-stream, and stdout is unchanged.
+USING: arrays io kernel locals math math.parser namespaces sequences system ;
 IN: scratchpad
+
+: ss-report ( t0 value -- value )
+    swap nano-count swap - 1000000 /i number>string
+    "TIME_MS=" swap append "\n" append error-stream get stream-write ;
 
 :: branches ( -- a b c d )
     0 0 0 0
@@ -26,4 +32,4 @@ IN: scratchpad
         ] if
     ] each-integer ;
 
-branches 4array [ number>string ] map " " join print
+nano-count branches 4array ss-report [ number>string ] map " " join print

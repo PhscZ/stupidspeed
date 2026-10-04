@@ -6,6 +6,16 @@ module _11_parallel_sum;
 
 import std.stdio;
 import core.thread;
+import core.time : MonoTime;
+
+// timing: MonoTime.currTime is core.time's monotonic clock; TIME_MS goes to stderr and stdout
+// is unchanged.
+MonoTime ss_t0;
+
+void ssReport()
+{
+    stderr.writefln("TIME_MS=%.3f", (MonoTime.currTime - ss_t0).total!"usecs" / 1000.0);
+}
 
 long work(long t)
 {
@@ -28,6 +38,8 @@ long work(long t)
                 break;
             case 3:
                 acc += 3 * i;
+                break;
+            default:
                 break;
         }
     }
@@ -54,6 +66,7 @@ class Worker : Thread
 
 void main()
 {
+    ss_t0 = MonoTime.currTime;
     Worker[4] workers;
 
     foreach (int t; 0 .. 4)
@@ -68,5 +81,6 @@ void main()
     foreach (ref w; workers)
         total += w.result;
 
+    ssReport();
     writeln(total);
 }

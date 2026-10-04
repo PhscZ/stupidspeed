@@ -31,7 +31,10 @@
                                 3 (unchecked-multiply 3 i))))
         acc))))
 
+(def ^:private __t0 (volatile! 0))
+
 (defn -main []
+  (vreset! __t0 (System/nanoTime))
   (let [results (long-array 4)
         threads (object-array 4)]
     (dotimes [t 4]
@@ -44,6 +47,7 @@
     (loop [t (long 0) total (long 0)]
       (if (< t (long 4))
         (recur (inc t) (unchecked-add total (aget results t)))
-        (println total)))))
+        (do (.println System/err (str "TIME_MS=" (/ (- (System/nanoTime) (long @__t0)) 1000000.0)))
+            (println total))))))
 
 (-main)

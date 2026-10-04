@@ -2,6 +2,8 @@
 // build: none    run: node 11_parallel_sum.js | bun 11_parallel_sum.js | deno run 11_parallel_sum.js
 // note: four worker_threads, one heap each; the partials are doubles and the total is under 2^53.
 
+const __t0 = performance.now();
+
 const { Worker, isMainThread, parentPort, workerData } = require('node:worker_threads');
 
 const CHUNK = 25000000;
@@ -42,6 +44,7 @@ if (isMainThread) {
       total += partial;
       done += 1;
       if (done === 4) {
+        console.error(`TIME_MS=${performance.now() - __t0}`);
         console.log(total);
       }
     });

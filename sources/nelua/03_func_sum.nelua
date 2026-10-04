@@ -34,7 +34,18 @@
 --       0x5f5e100-iteration loop. The spec allows "its own file, or mark it no-inline";
 --       Nelua needs the marker, so this row does both.
 -- note: the value stays below 2^63 and is printed as plain digits.
+require 'io'
+require 'os'
+require 'string'
 require '03_func_sum_add_one'
+
+-- timing: os.now is Nelua's monotonic clock in seconds (nanosecond resolution on
+--         Windows, via QueryPerformanceCounter); TIME_MS goes to stderr through
+--         io.stderr and stdout is unchanged.
+local ssT0 = os.now()
+local function ss_report()
+  io.stderr:write(string.format('TIME_MS=%.3f\n', (os.now() - ssT0) * 1000))
+end
 
 local N: integer = 100000000
 local value: integer = 0
@@ -43,4 +54,5 @@ for i = 1, N do
   value = add_one(value)
 end
 
+ss_report()
 print(value)

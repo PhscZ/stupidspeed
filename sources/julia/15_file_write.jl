@@ -2,7 +2,10 @@
 # build: julia 15_file_write.jl    run: julia 15_file_write.jl
 # deviation: Julia's standard library exposes no fsync, so the file is flushed and closed.
 
+using Printf
+
 function main()
+    t0 = time_ns()
     buf = Vector{UInt8}(undef, 1048576)
     for i in 1:1048576
         buf[i] = UInt8((i - 1) % 256)
@@ -15,6 +18,7 @@ function main()
         end
         flush(f)
     end
+    @printf(stderr, "TIME_MS=%.3f\n", (time_ns() - t0) / 1e6)
     println(written)
 end
 

@@ -12,10 +12,14 @@
 
 ;; Plain string concatenation 250000 times: str allocates a new string and copies the old
 ;; one on every append, so the work is quadratic. Deliberately no StringBuilder.
+(def ^:private __t0 (volatile! 0))
+
 (defn -main []
+  (vreset! __t0 (System/nanoTime))
   (loop [i (long 0) text ""]
     (if (< i (long 250000))
       (recur (inc i) (str text "x"))
-      (println (.length text)))))
+      (do (.println System/err (str "TIME_MS=" (/ (- (System/nanoTime) (long @__t0)) 1000000.0)))
+          (println (.length text))))))
 
 (-main)

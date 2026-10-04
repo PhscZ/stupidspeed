@@ -6,6 +6,9 @@
 // note: 1 MiB reads, and the per-byte sum is a plain loop over the buffer.
 
 import System.IO
+import System.Diagnostics
+
+sw = Stopwatch.StartNew()
 
 fs = FileStream("data.bin", FileMode.Open, FileAccess.Read)
 buffer = array[of byte](1048576)
@@ -22,5 +25,7 @@ while true:
         i += 1
 fs.Close()
 
+sw.Stop()
+System.Console.Error.WriteLine("TIME_MS=" + sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture))
 print(total % 4294967296)
 

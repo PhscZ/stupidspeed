@@ -3,6 +3,8 @@
 
 open System.IO
 
+let sw = System.Diagnostics.Stopwatch.StartNew()
+
 // data.bin is the bytes 0..255 repeating, 52428800 bytes, in the working directory.
 let chunk = 1024 * 1024
 let buffer : byte[] = Array.zeroCreate chunk
@@ -18,4 +20,6 @@ while read > 0 do
 
 stream.Dispose()
 
+sw.Stop()
+System.Console.Error.WriteLine("TIME_MS=" + (sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture)))
 printfn "%d" (total % 4294967296L)

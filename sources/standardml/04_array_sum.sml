@@ -16,11 +16,14 @@
         is filled and then walked. *)
 fun main () =
   let
+    val t0 = Time.now ()
     val n = 1000000
     val arr = Array.array (n, 0)
     fun fill i = if i >= n then () else (Array.update (arr, i, i); fill (i + 1))
     fun sum (i, acc) = if i >= n then acc else sum (i + 1, acc + Array.sub (arr, i))
+    val () = fill 0
+    val result = sum (0, 0)
+    val () = TextIO.output (TextIO.stdErr, "TIME_MS=" ^ Real.fmt (StringCvt.FIX (SOME 3)) (Time.toReal (Time.- (Time.now (), t0)) * 1000.0) ^ "\n")
   in
-    fill 0;
-    print (Int.toString (sum (0, 0)) ^ "\n")
+    print (Int.toString result ^ "\n")
   end

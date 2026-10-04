@@ -4,6 +4,7 @@
 // A PHP string is a mutable byte array, so each iteration allocates one 64-byte buffer;
 // the slot store keeps it reachable and drops the buffer it replaces.
 
+$__t0 = hrtime(true);
 $total = 0;
 $slots = array_fill(0, 256, '');
 
@@ -14,4 +15,6 @@ for ($i = 0; $i < 10000000; $i++) {
     $slots[$i & 255] = $buf;
 }
 
+$__t1 = hrtime(true);
+fwrite(STDERR, sprintf("TIME_MS=%.3f\n", ($__t1 - $__t0) / 1e6));
 echo $total, "\n";

@@ -2,6 +2,13 @@
 # build: none (interpreted)    run: tools/dotnet8/dotnet.exe tools/ironpython/net8.0/ipy.dll 13_matrix_mul.py
 # note: plain triple loop, 125 million multiply-adds, no tricks; the loop order is the obvious one.
 
+import clr
+from System.Diagnostics import Stopwatch
+from System.Globalization import CultureInfo
+import sys
+
+_sw = Stopwatch.StartNew()
+
 n = 500
 size = n * n
 
@@ -26,4 +33,6 @@ for i in range(n):
     for j in range(n):
         total += c[i * n + j]
 
+_sw.Stop()
+sys.stderr.write("TIME_MS=" + _sw.Elapsed.TotalMilliseconds.ToString("F3", CultureInfo.InvariantCulture) + "\n")
 print(total)

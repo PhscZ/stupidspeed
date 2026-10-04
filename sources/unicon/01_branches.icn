@@ -2,8 +2,11 @@
 # build: unicon -s 01_branches.icn    run: 01_branches.exe
 # Unicon 13.3. `every i := 0 to N do` is Unicon's counted iteration; the language has no
 # C-style for. The if/else chain is written as the spec asks, one test per iteration.
+# timing: &time is Unicon's wall clock in milliseconds since midnight, and &errout is
+#         the standard error stream, so TIME_MS goes to stderr and stdout is unchanged.
 
 procedure main()
+    ssT0 := &time
     a := 0; b := 0; c := 0; d := 0
     every i := 0 to 99999999 do {
         if i % 3 = 0 then a +:= 1
@@ -11,5 +14,6 @@ procedure main()
         else if i % 7 = 0 then c +:= 1
         else d +:= 1
     }
+    write(&errout, "TIME_MS=", &time - ssT0)
     write(a, " ", b, " ", c, " ", d)
 end

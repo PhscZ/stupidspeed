@@ -14,6 +14,13 @@
 // note: the full 100000000 calls measure 36 s to 147 s on this shared host, about 0.36 us
 //       to 1.5 us a call (fastest 35.7 s, slowest 146.6 s). The spread is the machine's
 //       load, not the code.
+
+// timing: new Date().getTime() is the WSH clock in milliseconds (the system timer, so about
+//         15 ms resolution); TIME_MS goes to stderr with WScript.StdErr and stdout is unchanged.
+var ssT0 = new Date().getTime();
+function ssReport() {
+    WScript.StdErr.Write("TIME_MS=" + (new Date().getTime() - ssT0) + "\r\n");
+}
 var fso, file, src, value, i;
 
 fso = new ActiveXObject("Scripting.FileSystemObject");
@@ -27,4 +34,5 @@ for (i = 1; i <= 100000000; i++) {
     value = add_one(value);
 }
 
+ssReport();
 WScript.Echo(String(value));

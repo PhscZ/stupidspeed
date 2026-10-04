@@ -4,9 +4,14 @@
  class, and the VM has LargeIntPrim), so this is the real Gibbons unbounded spigot
  with no hand-rolled limbs. Only the digit sum is printed.
  Note the update order: the produce branch computes the next n from the q and r as
- they were on entry, before q and r move."
+ they were on entry, before q and r move.
+ timing: Time millisecondClockValue is Dolphin's millisecond clock. Dolphin's console has no
+ stderr stream, so the contract's fallback applies and TIME_MS goes to time.txt in the working
+ directory. Instrumented by inspection: Dolphin is not installed on this machine, so this
+ row's timing is unverified."
 
-| out q r t k n l total emitted |
+| ssT0 out q r t k n l total emitted |
+ssT0 := Time millisecondClockValue.
 out := SessionManager current stdout.
 
 q := 1. r := 0. t := 1. k := 1. n := 3. l := 3.
@@ -33,6 +38,11 @@ total := 0. emitted := 0.
 			t := t2.
 			k := k + 1.
 			l := l + 2]].
+
+(FileWriteStream write: 'time.txt' type: #binary)
+	nextPutAll: 'TIME_MS=', (Time millisecondClockValue - ssT0) printString;
+	cr;
+	close.
 
 out nextPutAll: total printString; cr; flush.
 SessionManager current quit: 0!

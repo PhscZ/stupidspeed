@@ -13,6 +13,14 @@
 #lang racket/base
 (require racket/fixnum)   ; fxvector, make-fxvector, fxvector-ref/set!
 
+;; Self-timing: current-inexact-milliseconds is Racket's monotonic wall-clock reading, in
+;; milliseconds as an inexact real. The start is the first form the module body runs and the
+;; stop is taken immediately before the answer is printed, so the bracketed region is the
+;; task's own work and nothing else. eprintf writes to (current-error-port), so stdout is
+;; unchanged.
+(define timer-start (current-inexact-milliseconds))
+(define (elapsed-ms) (- (current-inexact-milliseconds) timer-start))
+
 ;; The plain i, j, k triple loop in that order on flat row-major vectors, so the k loop walks a
 ;; column of B. Reordering would be faster, which is the point.
 (define n 500)
@@ -39,4 +47,5 @@
   (for/fold ([total 0]) ([e (in-range elems)])
     (+ total (fxvector-ref c e))))
 
+(eprintf "TIME_MS=~a\n" (elapsed-ms))
 (displayln total)

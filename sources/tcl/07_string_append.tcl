@@ -3,9 +3,12 @@
 # Plain string concatenation. Tcl's string values are immutable, so every append
 # copies the whole thing and the task is quadratic by design.
 
+set __t0 [clock microseconds]
 set text ""
 for {set i 0} {$i < 250000} {incr i} {
     append text "x"
 }
 
+set __t1 [clock microseconds]
+puts stderr [format "TIME_MS=%.3f" [expr {($__t1 - $__t0) / 1000.0}]]
 puts [string length $text]

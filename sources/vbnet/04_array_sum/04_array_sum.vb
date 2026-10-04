@@ -5,6 +5,7 @@ Imports System
 
 Module Program
     Sub Main()
+        Dim sw As System.Diagnostics.Stopwatch = System.Diagnostics.Stopwatch.StartNew()
         Dim array(999999) As Long
 
         For i As Long = 0 To 999999
@@ -16,6 +17,8 @@ Module Program
             total += array(i)
         Next
 
+        sw.Stop()
+        Console.Error.WriteLine("TIME_MS=" & sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture))
         Console.WriteLine(total)
     End Sub
 End Module

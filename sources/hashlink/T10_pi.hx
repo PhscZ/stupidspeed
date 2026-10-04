@@ -197,6 +197,8 @@ class Big {
 
 class T10_pi {
     static function main() {
+        // timing: Sys.time() is seconds as a Float on HashLink, so x1000 gives ms (1 ms effective).
+        var t0 = Sys.time();
         var q = new Big();
         var r = new Big();
         var t = new Big();
@@ -256,6 +258,8 @@ class T10_pi {
             }
         }
 
+        var t1 = Sys.time();
+        Sys.stderr().writeString("TIME_MS=" + ((t1 - t0) * 1000.0) + "\n");
         Sys.println(sum);
     }
 }

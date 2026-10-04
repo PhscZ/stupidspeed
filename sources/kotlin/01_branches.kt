@@ -2,6 +2,7 @@
 // build: kotlinc 01_branches.kt -include-runtime -d prog.jar    run: java -jar prog.jar    [native build: kotlinc-native -opt -o prog 01_branches.kt    native run: ./prog]
 
 fun main() {
+    val __t0 = System.nanoTime()
     var a = 0L
     var b = 0L
     var c = 0L
@@ -17,5 +18,6 @@ fun main() {
             d++
         }
     }
+    System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
     println("$a $b $c $d")
 }

@@ -14,6 +14,9 @@ public class _09_fib_recursive {
     }
 
     public static void main(String[] args) {
-        System.out.println(fib(40));
+        long __t0 = System.nanoTime();
+        long result = fib(40);
+        System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6);
+        System.out.println(result);
     }
 }

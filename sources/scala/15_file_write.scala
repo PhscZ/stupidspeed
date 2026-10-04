@@ -14,6 +14,7 @@ import java.io.FileOutputStream
 
 object Main {
   def main(args: Array[String]): Unit = {
+    val __t0 = System.nanoTime()
     val buf = new Array[Byte](1024 * 1024)
     var i = 0
     while (i < buf.length) {
@@ -32,6 +33,7 @@ object Main {
       }
       out.flush()
       out.getFD.sync()
+      System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
       println(written)
     } finally {
       out.close()

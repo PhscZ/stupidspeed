@@ -20,11 +20,13 @@
 
 %% Gibbons' unbounded spigot over Erlang's built-in exact integers.
 main(_) ->
-    loop(1, 0, 1, 1, 3, 3, 0, 0).
+    T0 = erlang:monotonic_time(microsecond),
+    loop(1, 0, 1, 1, 3, 3, 0, 0, T0).
 
-loop(_Q, _R, _T, _K, _L, _N, Produced, Sum) when Produced >= 1000 ->
+loop(_Q, _R, _T, _K, _L, _N, Produced, Sum, T0) when Produced >= 1000 ->
+    io:format(standard_error, "TIME_MS=~p~n", [(erlang:monotonic_time(microsecond) - T0) / 1000]),
     io:format("~w~n", [Sum]);
-loop(Q, R, T, K, L, N, Produced, Sum) ->
+loop(Q, R, T, K, L, N, Produced, Sum, T0) ->
     U = 4 * Q + R,
     V = (N + 1) * T,
     case U < V of
@@ -32,10 +34,10 @@ loop(Q, R, T, K, L, N, Produced, Sum) ->
             %% n is settled: emit it and advance
             Next = (10 * (3 * Q + R)) div T - 10 * N,
             R2 = 10 * (R - N * T),
-            loop(10 * Q, R2, T, K, L, Next, Produced + 1, Sum + N);
+            loop(10 * Q, R2, T, K, L, Next, Produced + 1, Sum + N, T0);
         false ->
             %% not settled: widen the state by one more term
             Next = (Q * (7 * K + 2) + R * L) div (T * L),
             R2 = (2 * Q + R) * L,
-            loop(Q * K, R2, T * L, K + 1, L + 2, Next, Produced, Sum)
+            loop(Q * K, R2, T * L, K + 1, L + 2, Next, Produced, Sum, T0)
     end.

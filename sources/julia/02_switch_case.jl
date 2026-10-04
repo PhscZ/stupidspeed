@@ -3,7 +3,10 @@
 # deviation: Julia has no switch/match statement, so the four-way branch is the closest
 # idiomatic equivalent: an if/elseif chain on i % 4.
 
+using Printf
+
 function main()
+    t0 = time_ns()
     acc = Int64(0)
     for i in Int64(0):Int64(99999999)
         m = i % 4
@@ -17,6 +20,7 @@ function main()
             acc += 3 * i
         end
     end
+    @printf(stderr, "TIME_MS=%.3f\n", (time_ns() - t0) / 1e6)
     println(acc)
 end
 

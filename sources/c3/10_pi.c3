@@ -17,6 +17,7 @@
 module c3_10_pi;
 import std::io;
 import std::core::mem;
+import std::time::clock;
 
 const ulong BASE = 1000000000;
 
@@ -266,6 +267,7 @@ fn ulong big_quot(Big* a, Big* b, Big* work)
 
 fn void main()
 {
+	Clock t0 = clock::now();
 	Big q;
 	Big r;
 	Big t;
@@ -334,6 +336,8 @@ fn void main()
 		}
 	}
 
+	NanoDuration elapsed = clock::now() - t0;
+	io::eprintfn("TIME_MS=%.3f", (double)elapsed / 1_000_000.0);
 	io::printfn("%d", sum);
 
 	big_free(&q);

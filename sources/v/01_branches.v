@@ -6,7 +6,10 @@
 
 module main
 
+import time
+
 fn main() {
+	t0 := time.now()
 	mut a := i64(0)
 	mut b := i64(0)
 	mut c := i64(0)
@@ -24,5 +27,6 @@ fn main() {
 		}
 	}
 
+	eprintln('TIME_MS=${f64(time.since(t0).microseconds()) / 1000.0:.3f}')
 	println('${a} ${b} ${c} ${d}')
 }

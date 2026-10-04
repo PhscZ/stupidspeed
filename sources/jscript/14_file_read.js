@@ -15,6 +15,13 @@
 // note: measured on the 50 MiB fixture: 20 s to 108 s on this shared host, about 0.40 us to
 //       2.2 us per byte for the 50 million byte reads and adds (fastest 19.8 s, slowest
 //       108.0 s).
+
+// timing: new Date().getTime() is the WSH clock in milliseconds (the system timer, so about
+//         15 ms resolution); TIME_MS goes to stderr with WScript.StdErr and stdout is unchanged.
+var ssT0 = new Date().getTime();
+function ssReport() {
+    WScript.StdErr.Write("TIME_MS=" + (new Date().getTime() - ssT0) + "\r\n");
+}
 var st, chunk, arr, total = 0, i, n;
 
 st = new ActiveXObject("ADODB.Stream");
@@ -36,4 +43,5 @@ for (;;) {
 
 st.Close();
 
+ssReport();
 WScript.Echo(String(total % 4294967296));

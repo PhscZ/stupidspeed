@@ -7,11 +7,13 @@
 
 public class _08_average {
     public static void main(String[] args) {
+        long __t0 = System.nanoTime();
         double total = 0.0;
         for (long i = 0; i < 100000000L; i++) {
             double reading = (i % 256) / 256.0;
             total += reading;
         }
+        System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6);
         System.out.println(Double.toString(total / 100000000));
     }
 }

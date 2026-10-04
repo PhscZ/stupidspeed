@@ -4,6 +4,13 @@
 #       compiled to a .NET method and the call is a real dynamic dispatch each time, so the
 #       100000000 calls happen.
 
+import clr
+from System.Diagnostics import Stopwatch
+from System.Globalization import CultureInfo
+import sys
+
+_sw = Stopwatch.StartNew()
+
 def add_one(n):
     return n + 1
 
@@ -11,4 +18,6 @@ value = 0
 for _ in range(100000000):
     value = add_one(value)
 
+_sw.Stop()
+sys.stderr.write("TIME_MS=" + _sw.Elapsed.TotalMilliseconds.ToString("F3", CultureInfo.InvariantCulture) + "\n")
 print(value)

@@ -17,6 +17,7 @@
 # tree-walking interpreter should be. See temp/octave-doc.md and RUN.md.
 
 1;
+__t0 = tic;
 
 function r = fib(n)
   if n < 2
@@ -26,4 +27,5 @@ function r = fib(n)
   end
 end
 
+fprintf(stderr, "TIME_MS=%.3f\n", toc(__t0) * 1000);
 printf("%.0f\n", fib(40));

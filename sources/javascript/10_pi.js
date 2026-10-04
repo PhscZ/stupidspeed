@@ -2,6 +2,8 @@
 // build: none    run: node 10_pi.js | bun 10_pi.js | deno run 10_pi.js
 // note: Gibbons' unbounded spigot on native BigInt; only the digit sum is printed.
 
+const __t0 = performance.now();
+
 const DIGITS = 1000;
 
 // BigInt division truncates toward zero; the spigot's quotients are floor divisions.
@@ -45,4 +47,5 @@ while (emitted < DIGITS) {
     k = k + 1n;
   }
 }
+console.error(`TIME_MS=${performance.now() - __t0}`);
 console.log(sum);

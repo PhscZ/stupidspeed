@@ -9,9 +9,13 @@
 module Main where
 
 import Data.IORef
+import Data.Time.Clock.POSIX (getPOSIXTime)
+import System.IO (stderr)
+import Text.Printf (hPrintf)
 
 main :: IO ()
 main = do
+  t0 <- getPOSIXTime
   a <- newIORef (0 :: Int)
   b <- newIORef (0 :: Int)
   c <- newIORef (0 :: Int)
@@ -26,4 +30,8 @@ main = do
             go (i + 1)
   go 0
   [va, vb, vc, vd] <- mapM readIORef [a, b, c, d]
-  putStrLn (unwords (map show [va, vb, vc, vd]))
+  let !out = unwords (map show [va, vb, vc, vd])
+  t1 <- getPOSIXTime
+  let !ms = (realToFrac (t1 - t0) :: Double) * 1000
+  hPrintf stderr "TIME_MS=%.3f\n" ms
+  putStrLn out

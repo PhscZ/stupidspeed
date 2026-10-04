@@ -4,6 +4,7 @@
 // Reads data.bin (52428800 bytes: the bytes 0..255 repeating) from the working directory in
 // 1 MiB chunks, never one byte per syscall, and sums every byte.
 
+$__t0 = hrtime(true);
 $handle = fopen('data.bin', 'rb');
 
 $total = 0;
@@ -21,4 +22,6 @@ while (!feof($handle)) {
 
 fclose($handle);
 
+$__t1 = hrtime(true);
+fwrite(STDERR, sprintf("TIME_MS=%.3f\n", ($__t1 - $__t0) / 1e6));
 echo $total % 4294967296, "\n";

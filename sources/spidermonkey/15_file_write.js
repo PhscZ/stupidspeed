@@ -5,6 +5,7 @@
 //       os.file.writeTypedArrayToFile, truncates rather than appends, so the 50 one-megabyte passes
 //       are materialised in the buffer before the single write.
 
+var __t0 = performance.now();
 var CHUNK = 1048576;
 var REPEATS = 50;
 
@@ -19,4 +20,5 @@ for (var pass = 0; pass < REPEATS; pass++) {
 }
 
 os.file.writeTypedArrayToFile("out.bin", out);
+printErr("TIME_MS=" + (performance.now() - __t0));
 print(out.length);

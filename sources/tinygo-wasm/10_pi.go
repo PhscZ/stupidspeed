@@ -9,11 +9,21 @@ package main
 import (
 	"fmt"
 	"math/big"
+	"os"
+	"time"
 )
+
+// timing: time.Now is Go's monotonic clock; TIME_MS goes to stderr and stdout is unchanged.
+var ssT0 time.Time
+
+func ssReport() {
+	fmt.Fprintf(os.Stderr, "TIME_MS=%.3f\n", float64(time.Since(ssT0).Nanoseconds())/1e6)
+}
 
 // Gibbons' unbounded spigot, on math/big integers. The state is
 // (q, r, t, k, n, l) and the two rules below are exactly the ones from the paper.
 func main() {
+	ssT0 = time.Now()
 	q := big.NewInt(1)
 	r := big.NewInt(0)
 	t := big.NewInt(1)
@@ -67,5 +77,6 @@ func main() {
 			q, r, t, k, n, l = nq, nr, nt, nk, nn, nl
 		}
 	}
+	ssReport()
 	fmt.Println(sum)
 }

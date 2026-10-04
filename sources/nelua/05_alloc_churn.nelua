@@ -32,7 +32,18 @@
 --       Without the store the whole loop would be dead code.
 -- note: the total 1274991808 stays below 2^63, so it is exact.
 -- note: `require 'allocators.default'` is what brings `new` into scope.
+require 'io'
+require 'os'
+require 'string'
 require 'allocators.default'
+
+-- timing: os.now is Nelua's monotonic clock in seconds (nanosecond resolution on
+--         Windows, via QueryPerformanceCounter); TIME_MS goes to stderr through
+--         io.stderr and stdout is unchanged.
+local ssT0 = os.now()
+local function ss_report()
+  io.stderr:write(string.format('TIME_MS=%.3f\n', (os.now() - ssT0) * 1000))
+end
 
 local slots: [256]*[64]byte
 local total: integer = 0
@@ -44,4 +55,5 @@ for i = 0, 9999999 do
   slots[i % 256] = buf
 end
 
+ss_report()
 print(total)

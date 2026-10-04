@@ -22,9 +22,11 @@
 -define(SPAN, 25000000).
 
 main(_) ->
+    T0 = erlang:monotonic_time(microsecond),
     Self = self(),
     Pids = [spawn(fun() -> Self ! {self(), work(T)} end) || T <- [0, 1, 2, 3]],
     Total = collect(Pids, 0),
+    io:format(standard_error, "TIME_MS=~p~n", [(erlang:monotonic_time(microsecond) - T0) / 1000]),
     io:format("~w~n", [Total]).
 
 collect([], Acc) -> Acc;

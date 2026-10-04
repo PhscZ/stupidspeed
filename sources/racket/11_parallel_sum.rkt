@@ -23,6 +23,14 @@
 
 #lang racket/base
 
+;; Self-timing: current-inexact-milliseconds is Racket's monotonic wall-clock reading, in
+;; milliseconds as an inexact real. The start is the first form the module body runs and the
+;; stop is taken immediately before the answer is printed, so the bracketed region is the
+;; task's own work and nothing else. eprintf writes to (current-error-port), so stdout is
+;; unchanged.
+(define timer-start (current-inexact-milliseconds))
+(define (elapsed-ms) (- (current-inexact-milliseconds) timer-start))
+
 ;; worker t covers [t*25000000, (t+1)*25000000).
 (define (work t)
   (for/fold ([acc 0]) ([i (in-range (* t 25000000) (* (+ t 1) 25000000))])
@@ -43,4 +51,5 @@
     (for/fold ([total 0]) ([th (in-list threads)])
       (+ total (thread-wait th))))
 
+  (eprintf "TIME_MS=~a\n" (elapsed-ms))
   (displayln total))

@@ -18,7 +18,14 @@
 (* Ten million 64-byte buffers, each stored into one of 256 slots so the buffer it replaces
    becomes garbage -- the same reachability line the C and Java rows draw. The running total adds
    v, the value written, exactly as the Java row does. *)
+(* timing: Unix.gettimeofday is the clock this build of the Unix module exposes (there is
+   no clock_gettime binding here, so the monotonic clock is not reachable from OCaml);
+   TIME_MS goes to stderr through Printf.eprintf and stdout is unchanged. *)
+let ss_t0 = ref 0.0
+let ss_now () = Unix.gettimeofday () *. 1000.0
+let ss_report () = Printf.eprintf "TIME_MS=%.3f\n" (ss_now () -. !ss_t0)
 let () =
+  ss_t0 := ss_now ();
   let slots = Array.make 256 Bytes.empty in
   let total = ref 0 in
   for i = 0 to 10000000 - 1 do
@@ -28,4 +35,5 @@ let () =
     slots.(v) <- buf;
     total := !total + v
   done;
+  ss_report ();
   Printf.printf "%d\n" !total

@@ -4,8 +4,14 @@
 ! note: three million-element arrays, kept flat and indexed as i*n+j, so the three passes
 !       walk contiguous memory: build A, build B, C = A + B, then sum C.
 
-USING: arrays locals math prettyprint sequences ;
+! timing: nano-count is Factor's monotonic nanosecond clock; TIME_MS is written to stderr
+!         through error-stream, and stdout is unchanged.
+USING: arrays io kernel locals math math.parser namespaces prettyprint sequences system ;
 IN: scratchpad
+
+: ss-report ( t0 value -- value )
+    swap nano-count swap - 1000000 /i number>string
+    "TIME_MS=" swap append "\n" append error-stream get stream-write ;
 
 :: matrix-add ( -- sum )
     1000 :> n
@@ -26,4 +32,4 @@ IN: scratchpad
     ] each-integer
     0 n n * [| total idx | total idx c nth + ] each-integer ;
 
-matrix-add .
+nano-count matrix-add ss-report .

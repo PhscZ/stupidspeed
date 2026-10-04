@@ -11,6 +11,7 @@
 
 object Main {
   def main(args: Array[String]): Unit = {
+    val __t0 = System.nanoTime()
     var acc = 0L
     var i = 0L
     while (i < 100000000L) {
@@ -22,6 +23,7 @@ object Main {
       }
       i += 1L
     }
+    System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
     println(acc)
   }
 }

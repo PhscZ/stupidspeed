@@ -160,6 +160,7 @@ func _div_quot(a: Big, b: Big, hi: int) -> int:
 	return est
 
 func _initialize() -> void:
+	var t0 := Time.get_ticks_msec()
 	var q := Big.new(false, PackedInt64Array([1]))
 	var r := Big.new(false, PackedInt64Array([0]))
 	var t := Big.new(false, PackedInt64Array([1]))
@@ -188,5 +189,6 @@ func _initialize() -> void:
 			t = tl
 			k += 1
 			l += 2
+	printerr("TIME_MS=%d" % (Time.get_ticks_msec() - t0))
 	print(total)
 	quit()

@@ -9,6 +9,12 @@
 #       every partial sum is exact and the printed value is exact.
 # note: `print` formats an integral double below 2^53 with "%.0f", so the answer comes out
 #       as plain digits, with no scientific notation and no decimal point.
+
+# timing: os/clock is Janet's monotonic clock, in seconds as a double; TIME_MS goes to
+#         stderr with eprintf and stdout is unchanged.
+(def ss-t0 (os/clock))
+(defn ss-report [] (eprintf "TIME_MS=%.3f\n" (* 1000 (- (os/clock) ss-t0))))
+
 (var acc 0)
 
 (for i 0 100000000
@@ -18,4 +24,5 @@
     2 (+= acc (* 2 i))
     3 (+= acc (* 3 i))))
 
+(ss-report)
 (print acc)

@@ -7,6 +7,12 @@
 #       'h' is 104, 'a' is 97 and 'e' is 101. The C row counts only 'h' — 'a' and 'e' are
 #       never matched — so this does the same, with the same if-test shape.
 # note: the count, 10000000, is exact.
+
+# timing: os/clock is Janet's monotonic clock, in seconds as a double; TIME_MS goes to
+#         stderr with eprintf and stdout is unchanged.
+(def ss-t0 (os/clock))
+(defn ss-report [] (eprintf "TIME_MS=%.3f\n" (* 1000 (- (os/clock) ss-t0))))
+
 (def text (string/repeat "abcdefghij" 10000000))
 
 (var count 0)
@@ -16,4 +22,5 @@
   (if (= (in text i) 104)
     (++ count)))
 
+(ss-report)
 (print count)

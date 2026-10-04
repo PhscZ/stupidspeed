@@ -10,9 +10,13 @@ module Main where
 
 import Data.Array.IO
 import Data.IORef
+import Data.Time.Clock.POSIX (getPOSIXTime)
+import System.IO (stderr)
+import Text.Printf (hPrintf)
 
 main :: IO ()
 main = do
+  t0 <- getPOSIXTime
   total <- newIORef (0 :: Integer)
   slots <- newArray (0, 255) (0 :: Int) :: IO (IOUArray Int Int)
   let go !i
@@ -26,4 +30,8 @@ main = do
             writeArray slots (v) x
             go (i + 1)
   go 0
-  print =<< readIORef total
+  v <- readIORef total
+  t1 <- getPOSIXTime
+  let !ms = (realToFrac (t1 - t0) :: Double) * 1000
+  hPrintf stderr "TIME_MS=%.3f\n" ms
+  print v

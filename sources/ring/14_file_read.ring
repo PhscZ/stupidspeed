@@ -16,7 +16,14 @@
 #       are doubles, and 6684672000 is exact in a double, so the running total is exact and
 #       the remainder is taken with %, which is fmod — also exact here, because the total is
 #       a whole number far below 2^53.
+# timing: clock() is Ring's processor-time clock, in ticks since program start, and
+#         clocksPerSecond() gives the ticks per second, so TIME_MS is whole milliseconds
+#         of CPU time; it is written to time.txt with fopen/fputs/fclose, the contract's
+#         fallback, because Ring's documented stream globals are stdin and stdout.
+#         Instrumented by inspection: Ring is not installed on this machine, so this
+#         row's timing is unverified.
 
+ssT0 = clock()
 fp = fopen("data.bin", "rb")
 total = 0
 b = fgetc(fp)
@@ -30,4 +37,10 @@ end
 
 fclose(fp)
 
+ssReport()
 ? total % 4294967296
+
+func ssReport
+    fp = fopen("time.txt", "w")
+    fputs(fp, "TIME_MS=" + string((clock() - ssT0) * 1000 / clocksPerSecond()) + nl)
+    fclose(fp)

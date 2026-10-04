@@ -6,9 +6,20 @@ module _10_pi;
 
 import std.stdio;
 import std.bigint;
+import core.time : MonoTime;
+
+// timing: MonoTime.currTime is core.time's monotonic clock; TIME_MS goes to stderr and stdout
+// is unchanged.
+MonoTime ss_t0;
+
+void ssReport()
+{
+    stderr.writefln("TIME_MS=%.3f", (MonoTime.currTime - ss_t0).total!"usecs" / 1000.0);
+}
 
 void main()
 {
+    ss_t0 = MonoTime.currTime;
     // Gibbons' unbounded spigot: q, r, t, k, n, l
     BigInt q = 1, r = 0, t = 1, k = 1, n = 3, l = 3;
 
@@ -49,5 +60,6 @@ void main()
         }
     }
 
+    ssReport();
     writeln(sum);
 }

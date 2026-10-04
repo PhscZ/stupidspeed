@@ -8,10 +8,20 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"strings"
+	"time"
 )
 
+// timing: time.Now is Go's monotonic clock; TIME_MS goes to stderr and stdout is unchanged.
+var ssT0 time.Time
+
+func ssReport() {
+	fmt.Fprintf(os.Stderr, "TIME_MS=%.3f\n", float64(time.Since(ssT0).Nanoseconds())/1e6)
+}
+
 func main() {
+	ssT0 = time.Now()
 	text := strings.Repeat("abcdefghij", 10000000)
 
 	count := 0
@@ -20,5 +30,6 @@ func main() {
 			count++
 		}
 	}
+	ssReport()
 	fmt.Println(count)
 }

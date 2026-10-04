@@ -23,6 +23,13 @@
 //       came out 471, 897, 1753 and 3588 exactly as expected. The full 1000-digit run
 //       prints the expected 4470 and measures 36 s to 182 s on this shared host (fastest
 //       35.6 s, slowest 182.4 s).
+
+// timing: new Date().getTime() is the WSH clock in milliseconds (the system timer, so about
+//         15 ms resolution); TIME_MS goes to stderr with WScript.StdErr and stdout is unchanged.
+var ssT0 = new Date().getTime();
+function ssReport() {
+    WScript.StdErr.Write("TIME_MS=" + (new Date().getTime() - ssT0) + "\r\n");
+}
 var DIGITS = 1000, MAXLIMB = 40000, BASE = 1000000000.0;
 
 // indices into LB, LN and LG
@@ -91,6 +98,7 @@ while (produced < DIGITS) {
     }
 }
 
+ssReport();
 WScript.Echo(String(sum));
 
 function bset(x, v) {

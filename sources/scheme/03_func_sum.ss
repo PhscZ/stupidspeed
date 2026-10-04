@@ -20,10 +20,23 @@
 ;;       files (`scheme --optimize-level 3 --script 03_func_sum.ss`, not a path to the file
 ;;       from somewhere else). Running it by path from another directory stops with
 ;;       "failed for 03_func_sum_add_one.ss: no such file or directory".
+;; timing: (real-time) is Chez's monotonic clock in milliseconds since system start-up;
+;;         TIME_MS is written to time.txt, the contract's fallback, because Chez's
+;;         console-error-port is the console and this host sends the console to stdout
+;;         when it is redirected; stdout is unchanged.
+(define ss-t0 (real-time))
+(define (ss-report)
+  (let ([p (open-file-output-port "time.txt" (file-options no-fail)
+                                  (buffer-mode block))])
+    (put-bytevector p (string->utf8
+                       (string-append "TIME_MS="
+                                      (number->string (- (real-time) ss-t0))
+                                      "\n")))
+    (close-port p)))
 
 (load "03_func_sum_add_one.ss")
 
 (let loop ([i 0] [value 0])
   (if (fx= i 100000000)
-      (begin (display value) (newline))
+      (begin (ss-report) (display value) (newline))
       (loop (fx+ i 1) (add-one value))))

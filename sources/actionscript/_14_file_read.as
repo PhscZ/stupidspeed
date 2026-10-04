@@ -19,6 +19,14 @@
 // note: read in 1 MiB chunks; the running total is reduced mod 2^32 as it goes so it
 //       stays inside the 2^53 range where an AS3 Number is exact, then printed.
 
+// timing: getTimer() is the AVM2 clock, whole milliseconds since the VM started. AIR has
+//       no stderr, so the contract's fallback applies: TIME_MS goes to time.txt in
+//       File.applicationStorageDirectory -- %APPDATA%\stupidspeed.actionscript\Local Store\,
+//       the writable directory task 15 writes out.bin to, because the bundle directory is
+//       read-only. The read itself is deferred one event-loop turn (see the note below), so
+//       the timer starts at the constructor and stops just before the final output, which
+//       keeps the whole read inside the measured region; only the write of time.txt and the
+//       exit fall outside it.
 package
 {
     import flash.display.Sprite;
@@ -28,14 +36,19 @@ package
     import flash.system.System;
     import flash.desktop.NativeApplication;
     import flash.utils.ByteArray;
+    import flash.utils.getTimer;
     import flash.utils.setTimeout;
 
     public class _14_file_read extends Sprite
     {
         private static const CHUNK:int = 1048576;
 
+        private var __t0:int = 0;
+        private var __ms:int = 0;
+
         public function _14_file_read()
         {
+            __t0 = getTimer();
             // FileStream cannot be opened from the constructor: AIR has not set up the
             // filesystem or security context yet, and a synchronous open here fails the
             // process with exit code 1 and no output. Deferring by one event-loop turn
@@ -68,12 +81,28 @@ package
 
             stream.close();
 
+            __ms = getTimer() - __t0;
             System.output(total + "\n");
           }
           catch (err:Error)
           {
+            __ms = getTimer() - __t0;
             System.output("error: " + err + "\n");
           }
+          setTimeout(__report, 0);
+        }
+
+        private function __report():void
+        {
+          try
+          {
+            var f:File = File.applicationStorageDirectory.resolvePath("time.txt");
+            var s:FileStream = new FileStream();
+            s.open(f, FileMode.WRITE);
+            s.writeUTFBytes("TIME_MS=" + __ms + "\n");
+            s.close();
+          }
+          catch (e:Error) { }
           NativeApplication.nativeApplication.exit(0);
         }
     }

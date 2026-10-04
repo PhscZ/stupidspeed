@@ -4,8 +4,10 @@ package main
 
 import "core:fmt"
 import "core:strings"
+import "core:time"
 
 main :: proc() {
+	t0 := time.now()
 	REPEATS :: 10_000_000
 
 	// the whole 100 MB text is built in one bulk repeat call
@@ -25,5 +27,6 @@ main :: proc() {
 			continue
 		}
 	}
+	fmt.eprintfln("TIME_MS=%.3f", time.duration_milliseconds(time.since(t0)))
 	fmt.println(count)
 }

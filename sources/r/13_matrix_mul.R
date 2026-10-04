@@ -5,6 +5,7 @@
 # multiply. Flat numeric(n * n) vectors with the 1-based index i * n + j + 1.
 
 matrix_mul <- function() {
+  t0 <- proc.time()[["elapsed"]]
   n <- 500
   A <- numeric(n * n)
   B <- numeric(n * n)
@@ -41,6 +42,7 @@ matrix_mul <- function() {
     total <- total + C[k + 1]
     k <- k + 1
   }
+  cat(sprintf("TIME_MS=%.3f\n", (proc.time()[["elapsed"]] - t0) * 1000), file = stderr())
   cat(sprintf("%.0f\n", total))
 }
 

@@ -17,10 +17,13 @@
 
 defmodule T14 do
   def run do
+    t0 = System.monotonic_time(:microsecond)
     {:ok, f} = File.open("data.bin", [:read, :binary, :raw])
     total = chunks(f, 0)
     File.close(f)
-    IO.puts(rem(total, 4_294_967_296))
+    answer = rem(total, 4_294_967_296)
+    IO.puts(:stderr, "TIME_MS=#{(System.monotonic_time(:microsecond) - t0) / 1000}")
+    IO.puts(answer)
   end
 
   defp chunks(f, acc) do

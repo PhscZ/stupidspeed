@@ -13,6 +13,16 @@
 module _03_func_sum;
 
 import std.stdio;
+import core.time : MonoTime;
+
+// timing: MonoTime.currTime is core.time's monotonic clock; TIME_MS goes to stderr and stdout
+// is unchanged.
+MonoTime ss_t0;
+
+void ssReport()
+{
+    stderr.writefln("TIME_MS=%.3f", (MonoTime.currTime - ss_t0).total!"usecs" / 1000.0);
+}
 
 version (GNU)
 {
@@ -31,12 +41,14 @@ version (GNU)
 
     void main()
     {
+        ss_t0 = MonoTime.currTime;
         Adder add = new AddOne();
         long value = 0;
 
         foreach (int i; 0 .. 100_000_000)
             value = add.apply(value);
 
+        ssReport();
         writeln(value);
     }
 }
@@ -50,11 +62,13 @@ else
 
     void main()
     {
+        ss_t0 = MonoTime.currTime;
         long value = 0;
 
         foreach (int i; 0 .. 100_000_000)
             value = addOne(value);
 
+        ssReport();
         writeln(value);
     }
 }

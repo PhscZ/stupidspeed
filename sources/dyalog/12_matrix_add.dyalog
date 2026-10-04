@@ -9,10 +9,16 @@
 ⍝       The unparenthesised i×n+j would be i×(n+j).
 ⍝ note: the values are small integers and the total is 999000000, far below 2^53, so
 ⍝       the double arithmetic is exact throughout.
+⍝ timing: 3⊃⎕AI is Dyalog's elapsed-time counter in milliseconds. APL exposes no
+⍝         stream handle for stderr, so the contract's fallback applies: TIME_MS is
+⍝         written to time.txt in the working directory with ⎕NPUT, and stdout is
+⍝         unchanged. Instrumented by inspection: Dyalog is not installed on this
+⍝         machine, so this row's timing is unverified.
 ⎕IO←0
 ⎕PP←17
 
-∇ r←matrix_add;n;elems;A;B;C;i;j;total
+∇ r←matrix_add;n;elems;A;B;C;i;j;total;ssT0;ssMS
+  ssT0←3⊃⎕AI
   n←1000
   elems←n×n
   A←elems⍴0
@@ -39,6 +45,8 @@
     total+←C[i]
     i+←1
   :EndWhile
+  ssMS←(3⊃⎕AI)-ssT0
+  ('TIME_MS=',⍕ssMS)⎕NPUT 'time.txt'
   r←⍕total
 ∇
 

@@ -7,10 +7,12 @@
 
 public class _07_string_append {
     public static void main(String[] args) {
+        long __t0 = System.nanoTime();
         String text = "";
         for (int i = 0; i < 250000; i++) {
             text = text + "x";
         }
+        System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6);
         System.out.println(text.length());
     }
 }

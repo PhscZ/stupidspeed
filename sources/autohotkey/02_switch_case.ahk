@@ -9,9 +9,14 @@
 ;       scientific notation for integers, so no formatting helper is needed.
 ; note: the full 100000000-iteration run takes about 34 s on this machine; a pass on the same
 ;       shared host measured 180 s for it, so the number is load-dependent.
+; timing: A_TickCount is the interpreter's own millisecond clock (GetTickCount, so about
+;       15 ms resolution); TIME_MS is written to stderr with FileAppend(..., "**") and
+;       stdout is unchanged.
 #Requires AutoHotkey v2.0
 #SingleInstance Off
 #NoTrayIcon
+
+t0 := A_TickCount
 
 acc := 0
 
@@ -25,4 +30,5 @@ Loop 100000000 {
     }
 }
 
+FileAppend("TIME_MS=" (A_TickCount - t0) "`n", "**")
 FileAppend(acc "`n", "*")

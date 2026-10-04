@@ -6,6 +6,7 @@ class Program
 {
     static void Main()
     {
+        System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
         int n = 500;
         long[] a = new long[n * n];
         long[] b = new long[n * n];
@@ -39,6 +40,8 @@ class Program
         {
             total += c[idx];
         }
+        sw.Stop();
+        Console.Error.WriteLine("TIME_MS=" + sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture));
         Console.WriteLine(total);
     }
 }

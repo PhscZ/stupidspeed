@@ -4,6 +4,7 @@
 # The stock Windows CRuby build has no YJIT: `ruby --yjit` warns "Ruby was built without YJIT support".
 # Ruby's Integer is arbitrary precision, so the Gibbons spigot runs on native bignums.
 
+_t0 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 q = 1
 r = 0
 t = 1
@@ -23,4 +24,6 @@ while count < 1_000
   end
 end
 
+_t1 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+$stderr.write("TIME_MS=%.3f\n" % ((_t1 - _t0) * 1000.0))
 puts sum

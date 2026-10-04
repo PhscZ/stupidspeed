@@ -3,8 +3,10 @@
  Three 1000x1000 arrays of boxed SmallIntegers, 24 MB of slots together, too big to
  sit in cache. Rows are Arrays of Arrays, so each row is one contiguous object."
 
-| out n a b c total |
+| out err n a b c total t0 |
 out := Stdio stdout.
+err := Stdio stderr.
+t0 := Time microsecondClockValue.
 n := 1000.
 a := Array new: n.
 b := Array new: n.
@@ -34,4 +36,5 @@ total := 0.
 	rc := c at: i.
 	1 to: n do: [:j | total := total + (rc at: j)]].
 
+err nextPutAll: 'TIME_MS=', ((Time microsecondClockValue - t0) / 1000.0) printString, String lf; flush.
 out nextPutAll: total printString; lf; flush.

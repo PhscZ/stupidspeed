@@ -8,6 +8,12 @@
 --       ":memory:", so the whole database is in memory and the row count is a RAM figure,
 --       not a disk one.
 -- note: the sum is 499999500000, well inside SQLite's 64-bit INTEGER.
+-- timing: the clock is SQLite's own julianday('now') in milliseconds. The timer starts at
+--       the entry of the script's own body and stops immediately before the final output
+--       statement, so the answer is materialised into a one-row table first and the timed
+--       region still contains all of the work.
+CREATE TABLE __t0(t INTEGER);
+INSERT INTO __t0 VALUES (cast(julianday('now')*86400000 as integer));
 CREATE TABLE a(i INTEGER PRIMARY KEY, v INTEGER);
 
 INSERT INTO a(i, v)
@@ -18,4 +24,10 @@ WITH RECURSIVE c(x) AS (
 )
 SELECT x, x FROM c;
 
-SELECT sum(v) FROM a;
+CREATE TABLE __res AS SELECT sum(v) AS v FROM a;
+
+.output stderr
+SELECT printf('TIME_MS=%d', cast(julianday('now')*86400000 as integer) - (SELECT t FROM __t0));
+.output stdout
+
+SELECT * FROM __res;

@@ -6,8 +6,10 @@
  printed. Note the update order in the produce branch: the next n is computed from q
  and r as they were on entry, before q and r move. `//` is integer division."
 
-| out q r t k n l total emitted |
+| out err q r t k n l total emitted t0 |
 out := Stdio stdout.
+err := Stdio stderr.
+t0 := Time microsecondClockValue.
 
 q := 1. r := 0. t := 1. k := 1. n := 3. l := 3.
 total := 0. emitted := 0.
@@ -34,4 +36,5 @@ total := 0. emitted := 0.
 			k := k + 1.
 			l := l + 2]].
 
+err nextPutAll: 'TIME_MS=', ((Time microsecondClockValue - t0) / 1000.0) printString, String lf; flush.
 out nextPutAll: total printString; lf; flush.

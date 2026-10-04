@@ -14,18 +14,25 @@
 # 7500000075000000 is past 2^31 but far inside Elixir's arbitrary-precision integers, which
 # promote automatically, so no type declaration is needed.
 defmodule T02 do
-  def run, do: loop(0, 0)
+  def run do
+    t0 = System.monotonic_time(:microsecond)
+    loop(0, 0, t0)
+  end
 
-  defp loop(i, acc) when i >= 100_000_000, do: IO.puts(acc)
+  defp loop(i, acc, t0) when i >= 100_000_000 do
+    result = acc
+    IO.puts(:stderr, "TIME_MS=#{(System.monotonic_time(:microsecond) - t0) / 1000}")
+    IO.puts(result)
+  end
 
-  defp loop(i, acc) do
+  defp loop(i, acc, t0) do
     v = case rem(i, 4) do
           0 -> 1
           1 -> i
           2 -> 2 * i
           _ -> 3 * i
         end
-    loop(i + 1, acc + v)
+    loop(i + 1, acc + v, t0)
   end
 end
 

@@ -9,11 +9,17 @@
 %       main/0 and -t halt makes it the top level, so stdout is exactly one line.
 
 main :-
+    get_time(T0),
+    nb_setval(time_t0, T0),
     loop(0, 0, 0, 0, 0).
 
 loop(I, A, B, C, D) :-
     (   I >= 100000000
-    ->  format("~w ~w ~w ~w~n", [A, B, C, D])
+    ->  nb_getval(time_t0, T0),
+        get_time(T1),
+        Ms is (T1 - T0) * 1000,
+        format(standard_error, "TIME_MS=~3f~n", [Ms]),
+        format("~w ~w ~w ~w~n", [A, B, C, D])
     ;   M3 is I mod 3,
         (   M3 =:= 0
         ->  A1 is A + 1, B1 = B, C1 = C, D1 = D

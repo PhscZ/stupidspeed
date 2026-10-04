@@ -5,9 +5,20 @@
 module _08_average;
 
 import std.stdio;
+import core.time : MonoTime;
+
+// timing: MonoTime.currTime is core.time's monotonic clock; TIME_MS goes to stderr and stdout
+// is unchanged.
+MonoTime ss_t0;
+
+void ssReport()
+{
+    stderr.writefln("TIME_MS=%.3f", (MonoTime.currTime - ss_t0).total!"usecs" / 1000.0);
+}
 
 void main()
 {
+    ss_t0 = MonoTime.currTime;
     double total = 0.0;
 
     foreach (int i; 0 .. 100_000_000)
@@ -16,5 +27,6 @@ void main()
         total += reading;
     }
 
+    ssReport();
     writefln("%.9f", total / 100_000_000);
 }

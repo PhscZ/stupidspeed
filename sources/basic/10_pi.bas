@@ -5,6 +5,9 @@
 ' big integers with the four operations the spigot needs. Only the digit sum is printed.
 ' Expected 4470.
 
+' timing: Timer is FreeBASIC's own clock, seconds since midnight as a Double. TIME_MS goes to
+'         stderr through the Err device, and stdout is unchanged. Instrumented by inspection:
+'         there is no FreeBASIC toolchain on this machine, so this row's timing is unverified.
 const LIMB_BASE as longint = 1000000000
 const NDIGITS as integer = 1000
 const NLIMBS as integer = 17000      ' t reaches 145726 decimal digits -> 16192 limbs
@@ -157,6 +160,7 @@ function div_quot(byref a as Big, byref b as Big, byval hi as longint) as longin
 end function
 
 ' ---- main ----
+dim ss_t0 as double = timer
 q.n = 1 : q.d(0) = 1 : q.neg = 0
 r.n = 1 : r.d(0) = 0 : r.neg = 0
 t.n = 1 : t.d(0) = 1 : t.neg = 0
@@ -205,4 +209,8 @@ do while emitted < NDIGITS
     end if
 loop
 
+dim ss_ms as longint = clng((timer - ss_t0) * 1000)
+open err for output as #1
+print #1, "TIME_MS=" & ltrim(str(ss_ms))
+close #1
 print str(total)

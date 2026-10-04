@@ -1,6 +1,7 @@
 // task 13 matrix_mul — expected output: 599995000
 // build: none (interpreted)    run: C:\stupidspeed\tools\spidermonkey\js.exe 13_matrix_mul.js
 
+var __t0 = performance.now();
 var n = 500;
 var size = n * n;
 
@@ -30,4 +31,5 @@ var total = 0;
 for (var idx = 0; idx < size; idx++) {
   total += C[idx];
 }
+printErr("TIME_MS=" + (performance.now() - __t0));
 print(total);

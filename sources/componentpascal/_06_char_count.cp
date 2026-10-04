@@ -13,15 +13,18 @@
    /list- only suppresses the .lst listing file. *)
 (* note: Console.WriteInt takes a 32 bit INTEGER only, so the LONGINT count is printed
    by the local WriteLong. *)
+(* timing: Env.Environment.get_TickCount() is .NET's millisecond clock, and the Error module
+   writes to stderr, so TIME_MS is reported there and stdout is unchanged. *)
 
 MODULE _06_char_count;
- IMPORT CPmain, Console;
+ IMPORT CPmain, Console, Error, Env := mscorlib_System;
 
  CONST BLOCK_LEN = 10;
        REPEATS = 10000000;
        TEXT_LEN = 100000000;
 
  VAR text : POINTER TO ARRAY OF CHAR;
+     ss_t0, ss_t1 : LONGINT;
      block : ARRAY BLOCK_LEN OF CHAR;
      count : LONGINT;
      i, j, base : INTEGER;
@@ -47,7 +50,29 @@ MODULE _06_char_count;
    Console.WriteString(s)
  END WriteLong;
 
+ PROCEDURE WMs(x : LONGINT);
+   VAR s : ARRAY 24 OF CHAR;
+       n, k : INTEGER;
+       t : CHAR;
+ BEGIN
+   IF x = 0 THEN Error.Write("0"); RETURN END;
+   n := 0;
+   WHILE x > 0 DO
+     s[n] := CHR(SHORT(x MOD 10) + ORD("0"));
+     x := x DIV 10;
+     INC(n)
+   END;
+   s[n] := 0X;
+   k := 0; DEC(n);
+   WHILE k < n DO
+     t := s[k]; s[k] := s[n]; s[n] := t;
+     INC(k); DEC(n)
+   END;
+   Error.WriteString(s)
+ END WMs;
+
 BEGIN
+  ss_t0 := Env.Environment.get_TickCount();
   block[0] := "a"; block[1] := "b"; block[2] := "c"; block[3] := "d"; block[4] := "e";
   block[5] := "f"; block[6] := "g"; block[7] := "h"; block[8] := "i"; block[9] := "j";
 
@@ -72,6 +97,9 @@ BEGIN
       (* skip *)
     END
   END;
+
+  ss_t1 := Env.Environment.get_TickCount();
+  Error.WriteString("TIME_MS="); WMs(ss_t1 - ss_t0); Error.WriteLn();
 
   WriteLong(count); Console.WriteLn
 END _06_char_count.

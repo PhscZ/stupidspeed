@@ -4,6 +4,7 @@
 // The JVM has a garbage collector, so the replaced array becomes garbage.
 
 byte[][] slots = new byte[256][]
+long __t0 = System.nanoTime()
 long total = 0
 
 for (int i = 0; i < 10000000; i++) {
@@ -13,4 +14,5 @@ for (int i = 0; i < 10000000; i++) {
     slots[i % 256] = buf
 }
 
+System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
 println total

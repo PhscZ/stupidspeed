@@ -9,9 +9,13 @@
 module Main where
 
 import Data.IORef
+import Data.Time.Clock.POSIX (getPOSIXTime)
+import System.IO (stderr)
+import Text.Printf (hPrintf)
 
 main :: IO ()
 main = do
+  t0 <- getPOSIXTime
   acc <- newIORef (0 :: Integer)
   let go !i
         | i > 99999999 = return ()
@@ -24,4 +28,8 @@ main = do
             modifyIORef' acc (+ v)
             go (i + 1)
   go 0
-  print =<< readIORef acc
+  v <- readIORef acc
+  t1 <- getPOSIXTime
+  let !ms = (realToFrac (t1 - t0) :: Double) * 1000
+  hPrintf stderr "TIME_MS=%.3f\n" ms
+  print v

@@ -2,6 +2,12 @@
 # build: none (interpreter)    run: a68g 01_branches.a68 #
 # note: Algol 68 Genie is a compiler-interpreter, so there is no build step. Its INT #
 # note: is 32 bits wide, which is enough for the loop index and for the four counters. #
+# timing: clock is a68g's processor-time clock, in seconds, as a REAL; for this #
+# note: single-threaded interpreter that is the program's own work, which is what the #
+# note: contract brackets. TIME_MS is written to stand error as a whole number of #
+# note: milliseconds, and stdout is unchanged. #
+
+REAL tim0 = clock;
 
 INT a := 0, b := 0, c := 0, d := 0;
 
@@ -13,4 +19,6 @@ FOR i FROM 0 TO 99999999 DO
   FI
 OD;
 
+INT tms = ENTIER(1000.0 * (clock - tim0) + 0.5);
+putf(stand error, ($g$, "TIME_MS=" + whole(tms, 0), $l$));
 print((whole(a, 0), " ", whole(b, 0), " ", whole(c, 0), " ", whole(d, 0), newline))

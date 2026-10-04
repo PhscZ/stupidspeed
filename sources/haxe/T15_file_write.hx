@@ -15,6 +15,8 @@ class T15_file_write {
     static inline var REPEATS = 50;
 
     static function main() {
+        // timing: haxe.Timer.stamp() is QueryPerformanceCounter on cpp (sub-microsecond); Sys.time() there is wall-clock ms.
+        var t0 = haxe.Timer.stamp();
         var buf = haxe.io.Bytes.alloc(CHUNK);
         for (i in 0...CHUNK) {
             buf.set(i, i % 256);
@@ -30,6 +32,8 @@ class T15_file_write {
         f.flush();
         f.close();
 
+        var t1 = haxe.Timer.stamp();
+        Sys.stderr().writeString("TIME_MS=" + ((t1 - t0) * 1000.0) + "\n");
         Sys.println(written);
     }
 }

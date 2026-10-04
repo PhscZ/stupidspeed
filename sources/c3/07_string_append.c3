@@ -15,9 +15,11 @@
 module c3_07_string_append;
 import std::io;
 import std::core::mem;
+import std::time::clock;
 
 fn void main()
 {
+	Clock t0 = clock::now();
 	String text = "";
 
 	for (long i = 0; i < 250000; i++)
@@ -30,6 +32,8 @@ fn void main()
 		text = next;
 	}
 
+	NanoDuration elapsed = clock::now() - t0;
+	io::eprintfn("TIME_MS=%.3f", (double)elapsed / 1_000_000.0);
 	io::printfn("%d", text.len);
 	mem::free(text.ptr);
 }

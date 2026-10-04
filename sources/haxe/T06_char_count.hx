@@ -8,6 +8,8 @@
 
 class T06_char_count {
     static function main() {
+        // timing: haxe.Timer.stamp() is QueryPerformanceCounter on cpp (sub-microsecond); Sys.time() there is wall-clock ms.
+        var t0 = haxe.Timer.stamp();
         var blockLen = 10;
         var repeats = 10000000;
         var block = haxe.io.Bytes.ofString("abcdefghij");
@@ -33,6 +35,8 @@ class T06_char_count {
             }
         }
 
+        var t1 = haxe.Timer.stamp();
+        Sys.stderr().writeString("TIME_MS=" + ((t1 - t0) * 1000.0) + "\n");
         Sys.println(count);
     }
 }

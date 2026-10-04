@@ -17,9 +17,14 @@
 ; note: the full scan takes about 15 s on this machine, which is the cost of allocating a
 ;       one-character string and comparing it a hundred million times (a pass on the same
 ;       shared host measured 51 s).
+; timing: A_TickCount is the interpreter's own millisecond clock (GetTickCount, so about
+;       15 ms resolution); TIME_MS is written to stderr with FileAppend(..., "**") and
+;       stdout is unchanged.
 #Requires AutoHotkey v2.0
 #SingleInstance Off
 #NoTrayIcon
+
+t0 := A_TickCount
 
 block := "abcdefghij"
 Loop 20
@@ -32,4 +37,5 @@ Loop 100000000
     if (SubStr(text, A_Index, 1) = "h")
         count += 1
 
+FileAppend("TIME_MS=" (A_TickCount - t0) "`n", "**")
 FileAppend(count "`n", "*")

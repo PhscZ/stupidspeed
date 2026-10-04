@@ -6,8 +6,14 @@
 !       `/i` is a real big-integer division. Only the sum of the first 1000 digits is
 !       printed. The state (q r t k n l) plus (emitted sum) is carried by tail recursion.
 
-USING: kernel locals math prettyprint ;
+! timing: nano-count is Factor's monotonic nanosecond clock; TIME_MS is written to stderr
+!         through error-stream, and stdout is unchanged.
+USING: io kernel locals math math.parser namespaces prettyprint sequences system ;
 IN: scratchpad
+
+: ss-report ( t0 value -- value )
+    swap nano-count swap - 1000000 /i number>string
+    "TIME_MS=" swap append "\n" append error-stream get stream-write ;
 
 :: spigot ( q r t k n l emitted sum -- sum )
     emitted 1000 >= [
@@ -26,4 +32,4 @@ IN: scratchpad
         ] if
     ] if ;
 
-1 0 1 1 3 3 0 0 spigot .
+nano-count 1 0 1 1 3 3 0 0 spigot ss-report .

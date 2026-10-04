@@ -13,8 +13,11 @@
 use lib '.';
 use AddOne;
 
+my $__t0 = now;
 my int $value = 0;
 loop (my int $i = 0; $i < 100000000; $i++) {
     $value = add-one($value);
 }
+my $__t1 = now;
+$*ERR.say('TIME_MS=' ~ (($__t1 - $__t0) * 1000).Num.fmt('%.3f'));
 say $value;

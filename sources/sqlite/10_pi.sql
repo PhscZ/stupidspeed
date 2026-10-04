@@ -40,6 +40,12 @@
 --       changing the algorithm edits the two step programs, not the 4500 lines.
 -- note: measured wall time: 223-256 s for the whole run (SQLite 3.53.4, Windows 10, one
 --       core), so about four minutes.
+-- timing: the clock is SQLite's own julianday('now') in milliseconds, the same clock the
+--       row's notes record. The timer starts at the entry of the script's own body and
+--       stops when the spigot loop ends, before the scratch-file cleanup and the final
+--       output statement.
+CREATE TABLE __t0(t INTEGER);
+INSERT INTO __t0 VALUES (cast(julianday('now')*86400000 as integer));
 
 CREATE TABLE Q(id INTEGER PRIMARY KEY, v INTEGER);
 CREATE TABLE R(id INTEGER PRIMARY KEY, v INTEGER);
@@ -4752,5 +4758,9 @@ UPDATE fl SET v=CASE WHEN (SELECT v FROM fl WHERE k=''sr2'')<0 THEN -1 ELSE 1 EN
 .read t10_b.sql
 
 .shell del t10_a.sql t10_b.sql 2>nul
+
+.output stderr
+SELECT printf('TIME_MS=%d', cast(julianday('now')*86400000 as integer) - (SELECT t FROM __t0));
+.output stdout
 
 SELECT CASE WHEN cnt = 1000 THEN s ELSE -1 END FROM acc;

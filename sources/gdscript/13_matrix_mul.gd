@@ -5,6 +5,7 @@
 extends SceneTree
 
 func _initialize() -> void:
+	var t0 := Time.get_ticks_msec()
 	var n := 500
 	var size := n * n
 	var a := PackedInt64Array()
@@ -26,5 +27,6 @@ func _initialize() -> void:
 	var total := 0
 	for i in size:
 		total += c[i]
+	printerr("TIME_MS=%d" % (Time.get_ticks_msec() - t0))
 	print(total)
 	quit()

@@ -5,7 +5,10 @@
 
 module main
 
+import time
+
 fn main() {
+	t0 := time.now()
 	n := 1000
 	mut a := []i64{len: n * n}
 	mut b := []i64{len: n * n}
@@ -29,5 +32,6 @@ fn main() {
 		total += c[k]
 	}
 
+	eprintln('TIME_MS=${f64(time.since(t0).microseconds()) / 1000.0:.3f}')
 	println(total)
 }

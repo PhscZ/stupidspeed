@@ -7,8 +7,15 @@
 !       is 50 deep. 4294967296 is 2^32 and Factor's integers are arbitrary precision, so the
 !       final modulo is a real reduction rather than a wrapping overflow.
 
-USING: io io.encodings.binary io.files kernel math prettyprint sequences ;
+! timing: nano-count is Factor's monotonic nanosecond clock; TIME_MS is written to stderr
+!         through error-stream, and stdout is unchanged.
+USING: io io.encodings.binary io.files kernel math math.parser namespaces prettyprint
+sequences system ;
 IN: scratchpad
+
+: ss-report ( t0 value -- value )
+    swap nano-count swap - 1000000 /i number>string
+    "TIME_MS=" swap append "\n" append error-stream get stream-write ;
 
 : read-chunks ( total -- total )
     1048576 read dup [ sum + read-chunks ] [ drop ] if ;
@@ -16,4 +23,4 @@ IN: scratchpad
 : file-read ( -- total )
     "data.bin" binary [ 0 read-chunks 4294967296 mod ] with-file-reader ;
 
-file-read .
+nano-count file-read ss-report .

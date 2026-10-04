@@ -5,6 +5,7 @@
 extends SceneTree
 
 func _initialize() -> void:
+	var t0 := Time.get_ticks_msec()
 	var a := 0
 	var b := 0
 	var c := 0
@@ -18,5 +19,6 @@ func _initialize() -> void:
 			c += 1
 		else:
 			d += 1
+	printerr("TIME_MS=%d" % (Time.get_ticks_msec() - t0))
 	print("%d %d %d %d" % [a, b, c, d])
 	quit()

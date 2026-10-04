@@ -11,12 +11,16 @@
 
 class T07_string_append {
     static function main() {
+        // timing: Sys.time() is seconds as a Float on HashLink, so x1000 gives ms (1 ms effective).
+        var t0 = Sys.time();
         var text = "";
 
         for (i in 0...250000) {
             text += "x";
         }
 
+        var t1 = Sys.time();
+        Sys.stderr().writeString("TIME_MS=" + ((t1 - t0) * 1000.0) + "\n");
         Sys.println(text.length);
     }
 }

@@ -6,6 +6,7 @@
 // note: the total is 7.5e15, far past 2^31, so the accumulator is `int64`.
 
 using System;
+using System.Diagnostics;
 
 namespace Task;
 
@@ -13,6 +14,9 @@ class Program
 {
 	static void Main()
 	{
+		// timing: Stopwatch.GetTimestamp() is corlib's microsecond clock (QueryPerformanceCounter on Windows).
+		int64 t0 = Stopwatch.GetTimestamp();
+
 		int64 acc = 0;
 
 		for (int64 i = 0; i < 100000000; i++)
@@ -26,6 +30,8 @@ class Program
 			}
 		}
 
+		int64 t1 = Stopwatch.GetTimestamp();
+		Console.Error.WriteLine($"TIME_MS={(double)(t1 - t0) / 1000.0}");
 		Console.WriteLine("{0}", acc);
 	}
 }

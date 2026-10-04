@@ -21,8 +21,11 @@
 (* note: this is the slowest cell in the row. *)
 fun main () =
   let
+    val __t0 = Time.now ()
     fun app (k, s) = if k = 0 then s else app (k - 1, s ^ "x")
     val text = app (250000, "")
+    val result = String.size text
+    val () = TextIO.output (TextIO.stdErr, "TIME_MS=" ^ Real.fmt (StringCvt.FIX (SOME 3)) (Time.toReal (Time.- (Time.now (), __t0)) * 1000.0) ^ "\n")
   in
-    print (Int.toString (String.size text) ^ "\n")
+    print (Int.toString result ^ "\n")
   end

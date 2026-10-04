@@ -14,9 +14,17 @@
 ;       records. Nothing here narrows it: the loop is Arc's `loop`/`recur` and the
 ;       append is Arc's `+`, which dispatches to string-append for two strings.
 
+; Self-timing: t0 is read as the first thing the program's body does, and the elapsed
+; milliseconds are written to stderr with Arc's own `ero` (which prints through (stderr))
+; immediately before the answer goes to stdout with `prn`. The clock is the Racket host's
+; current-inexact-milliseconds, reached through Arc's ($ ...) escape, so the bracketed region
+; is this script's own work and stdout is unchanged.
+(= t0 ($ (current-inexact-milliseconds)))
+
 (with (text "")
   (loop (i 0)
     (when (< i 250000)
       (= text (+ text "x"))
       (recur (+ i 1))))
+  (ero "TIME_MS=" (- ($ (current-inexact-milliseconds)) t0))
   (prn (len text)))

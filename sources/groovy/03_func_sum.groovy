@@ -7,10 +7,12 @@
 private static long addOne(long n) {
     return n + 1L
 }
+long __t0 = System.nanoTime()
 
 long value = 0
 for (long i = 0; i < 100000000L; i++) {
     value = addOne(value)
 }
 
+System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
 println value

@@ -14,9 +14,18 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"time"
 )
 
+// timing: time.Now is Go's monotonic clock; TIME_MS goes to stderr and stdout is unchanged.
+var ssT0 time.Time
+
+func ssReport() {
+	fmt.Fprintf(os.Stderr, "TIME_MS=%.3f\n", float64(time.Since(ssT0).Nanoseconds())/1e6)
+}
+
 func main() {
+	ssT0 = time.Now()
 	f, err := os.Open("data.bin")
 	if err != nil {
 		panic(err)
@@ -37,5 +46,6 @@ func main() {
 			panic(err)
 		}
 	}
+	ssReport()
 	fmt.Println(total % 4294967296)
 }

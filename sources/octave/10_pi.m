@@ -24,6 +24,7 @@
 # in the row; see RUN.md.
 
 1;
+__t0 = tic;
 
 # --- base-10^9 limbs, little-endian, no leading zero limbs -------------------
 # A bignum is a struct: s is the sign, m the int64 row vector of limbs. The
@@ -265,4 +266,5 @@ while count < NDIGITS
     l = l + 2;
   end
 end
+fprintf(stderr, "TIME_MS=%.3f\n", toc(__t0) * 1000);
 printf("%.0f\n", total);

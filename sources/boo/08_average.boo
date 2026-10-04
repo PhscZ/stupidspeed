@@ -6,6 +6,9 @@
 //       pt-BR, whose decimal separator is a comma, so a plain print would emit 0,498046875.
 
 import System.Globalization
+import System.Diagnostics
+
+sw = Stopwatch.StartNew()
 
 total as double = 0.0
 
@@ -15,5 +18,7 @@ while i < 100000000:
     total = total + reading
     i += 1
 
+sw.Stop()
+System.Console.Error.WriteLine("TIME_MS=" + sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture))
 print((total / 100000000).ToString("R", CultureInfo.InvariantCulture))
 

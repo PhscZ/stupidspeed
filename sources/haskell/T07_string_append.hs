@@ -12,16 +12,26 @@
 
 module Main where
 
+import Control.Exception (evaluate)
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Char8 as BC
 import Data.IORef
+import Data.Time.Clock.POSIX (getPOSIXTime)
+import System.IO (stderr)
+import Text.Printf (hPrintf)
 
 main :: IO ()
 main = do
+  t0 <- getPOSIXTime
   s <- newIORef B.empty
   let go !i | i > 250000 = return ()
             | otherwise = do
                 modifyIORef' s (`B.append` BC.pack "x")
                 go (i + 1)
   go 1
-  print . B.length =<< readIORef s
+  v <- readIORef s
+  !n <- evaluate (B.length v)
+  t1 <- getPOSIXTime
+  let !ms = (realToFrac (t1 - t0) :: Double) * 1000
+  hPrintf stderr "TIME_MS=%.3f\n" ms
+  print n

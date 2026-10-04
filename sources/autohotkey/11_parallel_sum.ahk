@@ -35,9 +35,14 @@
 ;       total work run serially as task 02 measured 37 s in the same window, so the four child
 ;       processes are worth a little over two times on a shared host. A pass on the same host
 ;       measured 52 s for the four and 180 s for task 02.
+; timing: A_TickCount is the interpreter's own millisecond clock (GetTickCount, so about
+;       15 ms resolution); the parent writes TIME_MS to stderr with FileAppend(..., "**"),
+;       stdout is unchanged, and the children write no timing of their own.
 #Requires AutoHotkey v2.0
 #SingleInstance Off
 #NoTrayIcon
+
+t0 := A_TickCount
 
 if (A_Args.Length = 1) {
     ; child: compute one quarter and print it
@@ -71,4 +76,5 @@ Loop 4 {
     total += raw + 0
 }
 
+FileAppend("TIME_MS=" (A_TickCount - t0) "`n", "**")
 FileAppend(total "`n", "*")

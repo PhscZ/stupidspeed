@@ -4,6 +4,7 @@
 //       no-inline annotation, so the shell's JIT may inline it anyway, as the JavaScript row's
 //       file already records.
 
+var __t0 = performance.now();
 function addOne(n) {
   return n + 1;
 }
@@ -12,4 +13,5 @@ var value = 0;
 for (var i = 0; i < 100000000; i++) {
   value = addOne(value);
 }
+printErr("TIME_MS=" + (performance.now() - __t0));
 print(value);

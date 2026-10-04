@@ -2,6 +2,15 @@
 # build: (none; interpreted)    run: powershell -File 13_matrix_mul.ps1  (PowerShell 7: pwsh -File 13_matrix_mul.ps1)
 # note: the plain i, j, k triple loop in that order on flat long[] arrays; no library multiply and
 #       no loop reordering, so the k-stride is the deliberately unfriendly one.
+# timing: [System.Diagnostics.Stopwatch]::GetTimestamp() is the high-resolution counter and
+#         GetTimestamp()/Frequency converts it to seconds; TIME_MS goes to stderr with
+#         [Console]::Error.WriteLine and stdout is unchanged.
+$ssFreq = [System.Diagnostics.Stopwatch]::Frequency
+$ssT0 = [System.Diagnostics.Stopwatch]::GetTimestamp()
+function Write-SsTime {
+    $ms = ([System.Diagnostics.Stopwatch]::GetTimestamp() - $ssT0) * 1000.0 / $ssFreq
+    [Console]::Error.WriteLine("TIME_MS=" + $ms.ToString('F3', [System.Globalization.CultureInfo]::InvariantCulture))
+}
 
 $n = 500
 $size = $n * $n
@@ -32,4 +41,5 @@ for ([int]$idx = 0; $idx -lt $size; $idx++) {
     $total += $C[$idx]
 }
 
+Write-SsTime
 Write-Output $total

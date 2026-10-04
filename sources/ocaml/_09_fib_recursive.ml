@@ -17,6 +17,18 @@
          'Warning 24: bad source file name'; _01_branches.ml compiles clean. *)
 (* Naive fib(40): about 331 million calls, so this measures the call path itself rather than any
    arithmetic. *)
+(* timing: Unix.gettimeofday is the clock this build of the Unix module exposes (there is
+   no clock_gettime binding here, so the monotonic clock is not reachable from OCaml);
+   TIME_MS goes to stderr through Printf.eprintf and stdout is unchanged. *)
+let ss_t0 = ref 0.0
+let ss_now () = Unix.gettimeofday () *. 1000.0
+let ss_report () = Printf.eprintf "TIME_MS=%.3f\n" (ss_now () -. !ss_t0)
 let rec fib n = if n < 2 then n else fib (n - 1) + fib (n - 2)
 
-let () = Printf.printf "%d\n" (fib 40)
+let () =
+  ss_t0 := ss_now ();
+  (* the work is evaluated into a variable first: computing it inside the printf
+     argument list would place all 331 million calls after the timer stops. *)
+  let ss_r = fib 40 in
+  ss_report ();
+  Printf.printf "%d\n" ss_r

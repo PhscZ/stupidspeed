@@ -7,6 +7,7 @@
 //       the recursive call has the same shape as the C row's.
 
 using System;
+using System.Diagnostics;
 
 namespace Task;
 
@@ -21,6 +22,11 @@ class Program
 
 	static void Main()
 	{
-		Console.WriteLine("{0}", Fib(40));
+		// timing: Stopwatch.GetTimestamp() is corlib's microsecond clock (QueryPerformanceCounter on Windows).
+		int64 t0 = Stopwatch.GetTimestamp();
+		int64 answer = Fib(40);
+		int64 t1 = Stopwatch.GetTimestamp();
+		Console.Error.WriteLine($"TIME_MS={(double)(t1 - t0) / 1000.0}");
+		Console.WriteLine("{0}", answer);
 	}
 }

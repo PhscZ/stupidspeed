@@ -7,6 +7,7 @@ Imports System.Globalization
 
 Module Program
     Sub Main()
+        Dim sw As System.Diagnostics.Stopwatch = System.Diagnostics.Stopwatch.StartNew()
         Dim total As Double = 0.0
 
         For i As Long = 0 To 99999999
@@ -14,6 +15,8 @@ Module Program
             total += reading
         Next
 
+        sw.Stop()
+        Console.Error.WriteLine("TIME_MS=" & sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture))
         Console.WriteLine((total / 100000000.0).ToString("R", CultureInfo.InvariantCulture))
     End Sub
 End Module

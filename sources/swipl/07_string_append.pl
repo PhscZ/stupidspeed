@@ -10,11 +10,17 @@
 % note: -O is required, see 01_branches.pl.
 
 main :-
+    get_time(T0),
+    nb_setval(time_t0, T0),
     loop(250000, "").
 
 loop(0, Text) :-
     !,
     string_length(Text, L),
+    nb_getval(time_t0, T0),
+    get_time(T1),
+    Ms is (T1 - T0) * 1000,
+    format(standard_error, "TIME_MS=~3f~n", [Ms]),
     format("~w~n", [L]).
 loop(N, Text) :-
     string_concat(Text, "x", Text1),

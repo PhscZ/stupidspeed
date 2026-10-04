@@ -14,6 +14,7 @@
 module c3_06_char_count;
 import std::io;
 import std::core::mem;
+import std::time::clock;
 
 const long BLOCK_LEN = 10;
 const long REPEATS = 10000000;
@@ -21,6 +22,7 @@ const long TEXT_LEN = REPEATS * BLOCK_LEN;
 
 fn void main()
 {
+	Clock t0 = clock::now();
 	char[] text = mem::new_array(char, (sz)TEXT_LEN);
 
 	for (long i = 0; i < REPEATS; i++)
@@ -46,6 +48,8 @@ fn void main()
 		}
 	}
 
+	NanoDuration elapsed = clock::now() - t0;
+	io::eprintfn("TIME_MS=%.3f", (double)elapsed / 1_000_000.0);
 	io::printfn("%d", count);
 	mem::free(text.ptr);
 }

@@ -11,12 +11,16 @@
 
 class T03_func_sum {
     static function main() {
+        // timing: haxe.Timer.stamp() is QueryPerformanceCounter on cpp (sub-microsecond); Sys.time() there is wall-clock ms.
+        var t0 = haxe.Timer.stamp();
         var value = 0;
 
         for (i in 0...100000000) {
             value = AddOne.add_one(value);
         }
 
+        var t1 = haxe.Timer.stamp();
+        Sys.stderr().writeString("TIME_MS=" + ((t1 - t0) * 1000.0) + "\n");
         Sys.println(value);
     }
 }

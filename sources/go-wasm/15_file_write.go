@@ -9,9 +9,18 @@ package main
 import (
 	"fmt"
 	"os"
+	"time"
 )
 
+// timing: time.Now is Go's monotonic clock; TIME_MS goes to stderr and stdout is unchanged.
+var ssT0 time.Time
+
+func ssReport() {
+	fmt.Fprintf(os.Stderr, "TIME_MS=%.3f\n", float64(time.Since(ssT0).Nanoseconds())/1e6)
+}
+
 func main() {
+	ssT0 = time.Now()
 	buf := make([]byte, 1<<20)
 	for i := range buf {
 		buf[i] = byte(i % 256)
@@ -37,5 +46,6 @@ func main() {
 	if err := f.Close(); err != nil {
 		panic(err)
 	}
+	ssReport()
 	fmt.Println(written)
 }

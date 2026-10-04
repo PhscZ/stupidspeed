@@ -12,12 +12,15 @@ Module Program
     End Function
 
     Sub Main()
+        Dim sw As System.Diagnostics.Stopwatch = System.Diagnostics.Stopwatch.StartNew()
         Dim value As Long = 0
 
         For i As Long = 1 To 100000000
             value = AddOne(value)
         Next
 
+        sw.Stop()
+        Console.Error.WriteLine("TIME_MS=" & sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture))
         Console.WriteLine(value)
     End Sub
 End Module

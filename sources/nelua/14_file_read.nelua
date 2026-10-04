@@ -24,8 +24,18 @@
 -- note: measured on this host, built with -r: 0.0143 s for the 52428800 bytes, sum
 --       6684672000, mod 2^32 = 2389704704. The same file read through raw C stdio
 --       measured the same 0.0143 s, so the io module's chunk read is not the cost.
+require 'os'
+require 'string'
 require 'io'
 require 'filestream'
+
+-- timing: os.now is Nelua's monotonic clock in seconds (nanosecond resolution on
+--         Windows, via QueryPerformanceCounter); TIME_MS goes to stderr through
+--         io.stderr and stdout is unchanged.
+local ssT0 = os.now()
+local function ss_report()
+  io.stderr:write(string.format('TIME_MS=%.3f\n', (os.now() - ssT0) * 1000))
+end
 
 local CHUNK: usize = 1048576
 
@@ -47,4 +57,5 @@ end
 
 f:close()
 
+ss_report()
 print(total % 4294967296)

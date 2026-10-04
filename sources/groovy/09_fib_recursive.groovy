@@ -9,5 +9,8 @@ static long fib(long n) {
     }
     return fib(n - 1L) + fib(n - 2L)
 }
+long __t0 = System.nanoTime()
 
-println fib(40L)
+long result = fib(40L)
+System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
+println result

@@ -5,10 +5,13 @@
  quadratic by design, exactly as the Ruby row notes for String#+ (a WriteStream would
  grow in place and is deliberately not used)."
 
-| out text |
+| out err text t0 |
 out := Stdio stdout.
+err := Stdio stderr.
+t0 := Time microsecondClockValue.
 text := ''.
 
 1 to: 250000 do: [:i | text := text , 'x'].
 
+err nextPutAll: 'TIME_MS=', ((Time microsecondClockValue - t0) / 1000.0) printString, String lf; flush.
 out nextPutAll: text size printString; lf; flush.

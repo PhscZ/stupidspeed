@@ -8,6 +8,8 @@ use strict;
 use warnings;
 use IO::Handle;
 
+use Time::HiRes ();
+my $__t0 = Time::HiRes::time();
 my $pattern = pack('C*', 0 .. 255);
 my $buf = $pattern x 4096;
 my $written = 0;
@@ -19,4 +21,6 @@ for (my $i = 0; $i < 50; $i++) {
 $out->sync;
 close($out);
 
+my $__t1 = Time::HiRes::time();
+printf STDERR "TIME_MS=%.3f\n", ($__t1 - $__t0) * 1000.0;
 print $written, "\n";

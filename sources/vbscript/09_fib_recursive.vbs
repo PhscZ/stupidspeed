@@ -7,10 +7,20 @@
 '       arithmetic never leaves Long range.
 ' note: Fib is declared with an explicit return variable rather than by naming the
 '       function inside itself, which keeps the recursive call on the plain call path.
+
+' timing: Timer() is VBScript's seconds-since-midnight clock with centisecond resolution, so
+'         TIME_MS has 16 ms granularity; it goes to stderr and stdout is unchanged.
+Dim ssT0, ssR
+Sub ssReport()
+    WScript.StdErr.WriteLine "TIME_MS=" & CLng(Round((Timer() - ssT0) * 1000))
+End Sub
 Dim n
 
+ssT0 = Timer()
 n = 40
-WScript.Echo Fib(n)
+ssR = Fib(n)
+ssReport
+WScript.Echo ssR
 
 Function Fib(n)
     If n < 2 Then

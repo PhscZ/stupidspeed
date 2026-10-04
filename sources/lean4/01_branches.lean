@@ -17,6 +17,12 @@ where
       else if i % 7 == 0 then go fuel (i + 1) a b (c + 1) d
       else go fuel (i + 1) a b c (d + 1)
 
+@[noinline] def forceIO {α : Type} (x : Unit → α) : IO α := IO.lazyPure x
+
 def main : IO Unit := do
-  let (a, b, c, d) := branches 100000000
+  let t0 ← IO.monoNanosNow
+  let (a, b, c, d) ← forceIO (fun _ => branches 100000000)
+  let t1 ← IO.monoNanosNow
+  let ms : Float := (t1 - t0).toFloat / 1000000.0
+  IO.eprintln s!"TIME_MS={ms}"
   IO.println s!"{a} {b} {c} {d}"

@@ -127,7 +127,18 @@ variable slen
   again
 ;
 
+\ timing: utime is gforth's microsecond clock; TIME_MS is written to stderr with
+\         WRITE-FILE/WRITE-LINE and stdout is unchanged. The counter brackets the four
+\         spawns and the four joins.
+2variable ss-t0
+
+: ss-report ( -- )
+  s" TIME_MS=" stderr write-file drop
+  utime ss-t0 2@ d- drop 1000 /
+  s>d <# #s #> stderr write-line drop ;
+
 : main
+  utime ss-t0 2!
   argc @ 1 > if
     1 arg drop c@ '0' - child
   else
@@ -138,6 +149,7 @@ variable slen
       i get-part total +!
       i rm-part
     loop
+    ss-report
     total @ . cr
   then
 ;

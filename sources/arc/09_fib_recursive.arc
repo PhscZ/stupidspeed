@@ -11,9 +11,19 @@
 ;       the name through the global namespace and coerces the value to 'fn before applying it. That
 ;       is the call path this task is meant to measure.
 
+; Self-timing: t0 is read as the first thing the program's body does, and the elapsed
+; milliseconds are written to stderr with Arc's own `ero` (which prints through (stderr))
+; immediately before the answer goes to stdout with `prn`. The clock is the Racket host's
+; current-inexact-milliseconds, reached through Arc's ($ ...) escape, so the bracketed region
+; is this script's own work and stdout is unchanged. The result is bound before the timer is
+; read, so all 331 million calls are inside the bracketed region.
+(= t0 ($ (current-inexact-milliseconds)))
+
 (def fib (n)
   (if (< n 2)
       n
       (+ (fib (- n 1)) (fib (- n 2)))))
 
-(prn (fib 40))
+(with (answer (fib 40))
+  (ero "TIME_MS=" (- ($ (current-inexact-milliseconds)) t0))
+  (prn answer))

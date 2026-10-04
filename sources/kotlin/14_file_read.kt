@@ -6,6 +6,7 @@
 import java.io.FileInputStream
 
 fun main() {
+    val __t0 = System.nanoTime()
     val buf = ByteArray(1024 * 1024)
     var total = 0L
     FileInputStream("data.bin").use { input ->
@@ -19,5 +20,6 @@ fun main() {
             }
         }
     }
+    System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
     println(total % 4294967296L)
 }

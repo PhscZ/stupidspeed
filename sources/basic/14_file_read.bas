@@ -1,7 +1,11 @@
 ' task 14 file_read -- expected output: 2389704704
 ' build: fbc -O 2 -x prog.exe 14_file_read.bas    run: ./prog
 ' task 14 - file_read
+' timing: Timer is FreeBASIC's own clock, seconds since midnight as a Double. TIME_MS goes to
+'         stderr through the Err device, and stdout is unchanged. Instrumented by inspection:
+'         there is no FreeBASIC toolchain on this machine, so this row's timing is unverified.
 const CHUNK as integer = 1048576
+dim ss_t0 as double = timer
 dim as ubyte buf(0 to CHUNK-1)
 dim as integer f = freefile
 open "data.bin" for binary access read as #f
@@ -18,4 +22,8 @@ do
     if eof(f) then exit do
 loop
 close #f
+dim ss_ms as longint = clng((timer - ss_t0) * 1000)
+open err for output as #1
+print #1, "TIME_MS=" & ltrim(str(ss_ms))
+close #1
 print str(total mod 4294967296ULL)

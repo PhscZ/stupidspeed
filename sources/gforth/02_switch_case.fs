@@ -14,7 +14,17 @@
 variable acc
 variable i
 
+\ timing: utime is gforth's microsecond clock; TIME_MS is written to stderr with
+\         WRITE-FILE/WRITE-LINE and stdout is unchanged.
+2variable ss-t0
+
+: ss-report ( -- )
+  s" TIME_MS=" stderr write-file drop
+  utime ss-t0 2@ d- drop 1000 /
+  s>d <# #s #> stderr write-line drop ;
+
 : main
+  utime ss-t0 2!
   0 acc !
   0 i !
   begin
@@ -28,6 +38,7 @@ variable i
     then then then
     1 i +!
   repeat
+  ss-report
   acc @ . cr
 ;
 

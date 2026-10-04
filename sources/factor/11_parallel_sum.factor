@@ -10,8 +10,16 @@
 !       scheduling and data-stack setup costs far more than the parallelism could save, so
 !       the cell is not merely flat but several times slower than the serial task.
 
-USING: combinators concurrency.futures locals math prettyprint ranges sequences ;
+! timing: nano-count is Factor's monotonic nanosecond clock; TIME_MS is written to stderr
+!         through error-stream, and stdout is unchanged. The counter brackets the four
+!         futures and the join.
+USING: combinators concurrency.futures io kernel locals math math.parser namespaces
+prettyprint ranges sequences system ;
 IN: scratchpad
+
+: ss-report ( t0 value -- value )
+    swap nano-count swap - 1000000 /i number>string
+    "TIME_MS=" swap append "\n" append error-stream get stream-write ;
 
 :: work ( t -- acc )
     t 25000000 * :> base
@@ -29,4 +37,4 @@ IN: scratchpad
     4 <iota> [| t | [ t work ] future ] map
     [ ?future ] map sum ;
 
-parallel-sum .
+nano-count parallel-sum ss-report .

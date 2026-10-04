@@ -6,8 +6,14 @@
 !       flat n*n arrays indexed as i*n+j; the dot product and the row sum are separate words
 !       so each inner loop stays a simple two-index loop.
 
-USING: arrays locals math prettyprint sequences ;
+! timing: nano-count is Factor's monotonic nanosecond clock; TIME_MS is written to stderr
+!         through error-stream, and stdout is unchanged.
+USING: arrays io kernel locals math math.parser namespaces prettyprint sequences system ;
 IN: scratchpad
+
+: ss-report ( t0 value -- value )
+    swap nano-count swap - 1000000 /i number>string
+    "TIME_MS=" swap append "\n" append error-stream get stream-write ;
 
 :: dot-row ( i j n a b -- s )
     0 n [| s k |
@@ -40,4 +46,4 @@ IN: scratchpad
     ] each-integer
     0 n [| total i | total i n c row-sum + ] each-integer ;
 
-matrix-mul .
+nano-count matrix-mul ss-report .

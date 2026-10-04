@@ -2,8 +2,11 @@
 # build: unicon -s 02_switch_case.icn    run: 02_switch_case.exe
 # `case` is Unicon's own multi-way selection, the closest construct the language has to a
 # switch. Unicon's integers are arbitrary precision, so the total is exact with no workaround.
+# timing: &time is Unicon's wall clock in milliseconds since midnight, and &errout is
+#         the standard error stream, so TIME_MS goes to stderr and stdout is unchanged.
 
 procedure main()
+    ssT0 := &time
     acc := 0
     every i := 0 to 99999999 do {
         case i % 4 of {
@@ -13,5 +16,6 @@ procedure main()
             3: acc +:= 3 * i
         }
     }
+    write(&errout, "TIME_MS=", &time - ssT0)
     write(acc)
 end

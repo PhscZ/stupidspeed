@@ -1,13 +1,19 @@
 (* task 10 pi — expected output: 4470 *)
+(* timing: Time.Now is Modula-3's clock, seconds since the epoch as a REAL, so the
+   elapsed time is exact to well under a millisecond; TIME_MS is written to time.txt
+   with the FileWr/Wr idiom task 15 uses, because Modula-3's IO has no stderr stream,
+   and stdout is unchanged. Instrumented by inspection: cm3 is not installed on this
+   machine, so this row's timing is unverified. *)
 (* build: cm3 -build -O    run: AMD64_NT\prog.exe *)
 (* note: the unbounded spigot algorithm on BigInteger; the digit sum is printed *)
 (* note: measured at about 206 s on the development machine, by far the slowest cell *)
 (*       in this row; everything else here is under 10 s. *)
 
 MODULE Main;
-IMPORT IO, Fmt, BigInteger;
+IMPORT IO, Fmt, BigInteger, Time, FileWr, Wr;
 
-VAR q, r, t, nt, num, den, oldq, oldr: BigInteger.T;
+VAR ssT0: Time.T;
+    q, r, t, nt, num, den, oldq, oldr: BigInteger.T;
     k, n, l, emitted, total, digits: INTEGER;
 
 PROCEDURE I(x: INTEGER): BigInteger.T =
@@ -21,7 +27,20 @@ PROCEDURE Quot(a, b: BigInteger.T): INTEGER =
     RETURN BigInteger.ToInteger(BigInteger.DivMod(a, b).quot)
   END Quot;
 
+
+PROCEDURE SsReport(ms: INTEGER) =
+  (* one TIME_MS line in time.txt: Modula-3's IO has no stderr stream, so the contract's
+     fallback applies; the file is written with the same FileWr/Wr idiom task 15 uses *)
+  VAR wr: Wr.T;
+  BEGIN
+    wr := FileWr.Open("time.txt");
+    Wr.PutString(wr, "TIME_MS=" & Fmt.Int(ms) & "\n");
+    Wr.Flush(wr);
+    Wr.Close(wr);
+  END SsReport;
+
 BEGIN
+  ssT0 := Time.Now();
   digits := 1000;
   q := I(1); r := I(0); t := I(1);
   k := 1; n := 3; l := 3; emitted := 0; total := 0;
@@ -46,5 +65,6 @@ BEGIN
       INC(k); INC(l, 2);
     END
   END;
+  SsReport(ROUND((Time.Now() - ssT0) * 1000.0));
   IO.Put(Fmt.Int(total) & "\n");
 END Main.

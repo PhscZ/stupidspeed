@@ -12,7 +12,10 @@
 
 ;; Three flat 1000x1000 primitive long arrays, row-major, filled and added with plain
 ;; index arithmetic. The total fits in a long.
+(def ^:private __t0 (volatile! 0))
+
 (defn -main []
+  (vreset! __t0 (System/nanoTime))
   (let [n (long 1000)
         elems (unchecked-multiply n n)
         a (long-array elems)
@@ -30,6 +33,7 @@
     (loop [k (long 0) total (long 0)]
       (if (< k elems)
         (recur (inc k) (unchecked-add total (aget c k)))
-        (println total)))))
+        (do (.println System/err (str "TIME_MS=" (/ (- (System/nanoTime) (long @__t0)) 1000000.0)))
+            (println total))))))
 
 (-main)

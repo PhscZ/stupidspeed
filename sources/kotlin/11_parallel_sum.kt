@@ -20,6 +20,7 @@ private fun work(t: Long): Long {
 }
 
 fun main() {
+    val __t0 = System.nanoTime()
     val partials = LongArray(4)
     val workers = Array(4) { t ->
         Thread {
@@ -30,5 +31,6 @@ fun main() {
     for (w in workers) w.join()
     var total = 0L
     for (p in partials) total += p
+    System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
     println(total)
 }

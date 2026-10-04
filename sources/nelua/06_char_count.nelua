@@ -22,7 +22,17 @@
 -- note: measured on this host, built with -r: build 0.0401 s, scan 0.0181 s. With -r
 --       there is no bounds check in the index, so the loop is a plain load, compare and
 --       branch per byte.
+require 'io'
+require 'os'
 require 'string'
+
+-- timing: os.now is Nelua's monotonic clock in seconds (nanosecond resolution on
+--         Windows, via QueryPerformanceCounter); TIME_MS goes to stderr through
+--         io.stderr and stdout is unchanged.
+local ssT0 = os.now()
+local function ss_report()
+  io.stderr:write(string.format('TIME_MS=%.3f\n', (os.now() - ssT0) * 1000))
+end
 
 local text: string = string.rep('abcdefghij', 10000000)
 local count: integer = 0
@@ -40,4 +50,5 @@ for i = 1, #text do
   end
 end
 
+ss_report()
 print(count)

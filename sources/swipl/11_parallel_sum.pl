@@ -15,6 +15,7 @@
 :- use_module(library(thread)).
 
 main :-
+    get_time(T0),
     thread_self(Me),
     thread_create(work(Me, 0), Id0, []),
     thread_create(work(Me, 1), Id1, []),
@@ -25,6 +26,9 @@ main :-
     thread_join(Id1, _),
     thread_join(Id2, _),
     thread_join(Id3, _),
+    get_time(T1),
+    Ms is (T1 - T0) * 1000,
+    format(standard_error, "TIME_MS=~3f~n", [Ms]),
     format("~w~n", [Total]).
 
 work(Me, T) :-

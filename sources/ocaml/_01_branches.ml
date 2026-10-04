@@ -15,7 +15,14 @@
 (* note: filenames carry the row's _ prefix. OCaml derives a module name from the file
          name and a module name has to be a valid identifier, so 01_branches.ml draws
          'Warning 24: bad source file name'; _01_branches.ml compiles clean. *)
+(* timing: Unix.gettimeofday is the clock this build of the Unix module exposes (there is
+   no clock_gettime binding here, so the monotonic clock is not reachable from OCaml);
+   TIME_MS goes to stderr through Printf.eprintf and stdout is unchanged. *)
+let ss_t0 = ref 0.0
+let ss_now () = Unix.gettimeofday () *. 1000.0
+let ss_report () = Printf.eprintf "TIME_MS=%.3f\n" (ss_now () -. !ss_t0)
 let () =
+  ss_t0 := ss_now ();
   let a = ref 0 and b = ref 0 and c = ref 0 and d = ref 0 in
   for i = 0 to 100000000 - 1 do
     if i mod 3 = 0 then incr a
@@ -23,4 +30,5 @@ let () =
     else if i mod 7 = 0 then incr c
     else incr d
   done;
+  ss_report ();
   Printf.printf "%d %d %d %d\n" !a !b !c !d

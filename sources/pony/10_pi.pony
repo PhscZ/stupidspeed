@@ -1,4 +1,6 @@
 // task 10 pi — expected output: 4470
+// timing: Time.nanos() is Pony's monotonic clock (QueryPerformanceCounter on Windows);
+//        TIME_MS goes to stderr with env.err.print and stdout is unchanged.
 // build: mkdir -p temp/pony/10_pi && cp sources/pony/10_pi.pony temp/pony/10_pi/ && tools/ponyc/bin/ponyc.exe -o temp/pony/10_pi temp/pony/10_pi
 // run: temp/pony/10_pi/10_pi.exe
 // note: Pony's standard library has no arbitrary-precision integers, so this hand-rolls
@@ -11,6 +13,7 @@
 // note: the algorithm is Gibbons' unbounded spigot, the same loop as every other row.
 
 
+use "time"
 primitive BigMag
   """
   Unsigned base-1e9 limb arithmetic. Limbs are little-endian, U32, no leading zeros;
@@ -220,8 +223,20 @@ class Big
 
   fun box div_small(den: Big box): U64 => BigMag.div_floor(_m, den._m)
 
+class SsClock
+  var t0: U64 = 0
+  let env: Env
+  new create(env': Env) =>
+    env = env'
+  fun ref start() =>
+    t0 = Time.nanos()
+  fun ref report() =>
+    env.err.print("TIME_MS=" + ((Time.nanos() - t0) / 1000000).string())
+
 actor Main
   new create(env: Env) =>
+    let ss = SsClock(env)
+    ss.start()
     var q = Big.from_u64(1)
     var r = Big.from_u64(0)
     var t = Big.from_u64(1)
@@ -259,4 +274,5 @@ actor Main
         l = l + 2
       end
     end
+    ss.report()
     env.out.print(sum.string())

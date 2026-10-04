@@ -13,7 +13,10 @@
 ;; Ten million 64-byte buffers, each dropped into one of 256 slots so the buffer it replaces
 ;; becomes garbage for the collector -- the same reachability line the C and Java rows draw.
 ;; The running total adds v, the value written, exactly as the Java row does.
+(def ^:private __t0 (volatile! 0))
+
 (defn -main []
+  (vreset! __t0 (System/nanoTime))
   (let [slots (object-array 256)]
     (loop [i (long 0) total (long 0)]
       (if (< i (long 10000000))
@@ -22,6 +25,7 @@
           (aset buf 0 (byte v))
           (aset slots v buf)
           (recur (inc i) (unchecked-add total (long v))))
-        (println total)))))
+        (do (.println System/err (str "TIME_MS=" (/ (- (System/nanoTime) (long @__t0)) 1000000.0)))
+            (println total))))))
 
 (-main)

@@ -3,6 +3,12 @@
 # note: the row is filled and then read back in one pass over contiguous memory. The #
 # note: total 499999500000 does not fit the 32-bit INT, so it is accumulated in #
 # note: LONG INT. #
+# timing: clock is a68g's processor-time clock, in seconds, as a REAL; for this #
+# note: single-threaded interpreter that is the program's own work, which is what the #
+# note: contract brackets. TIME_MS is written to stand error as a whole number of #
+# note: milliseconds, and stdout is unchanged. #
+
+REAL tim0 = clock;
 
 [0:999999] INT array;
 
@@ -16,4 +22,6 @@ FOR i FROM 0 TO 999999 DO
   total +:= array[i]
 OD;
 
+INT tms = ENTIER(1000.0 * (clock - tim0) + 0.5);
+putf(stand error, ($g$, "TIME_MS=" + whole(tms, 0), $l$));
 print((whole(total, 0), newline))

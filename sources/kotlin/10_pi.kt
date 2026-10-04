@@ -263,6 +263,7 @@ private fun divFloor(num: Big, den: Big, prod: Big): Long {
 }
 
 fun main() {
+    val __t0 = System.nanoTime()
     // Gibbons' unbounded spigot: (q, r, t, k, n, l), n is the digit produced when safe.
     val q = Big()
     q.setLong(1L)
@@ -319,5 +320,6 @@ fun main() {
             l += 2L
         }
     }
+    System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
     println(sum)
 }

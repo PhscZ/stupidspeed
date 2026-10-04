@@ -7,10 +7,13 @@
 //       so the call really happens a hundred million times.
 
 import System.Runtime.CompilerServices
+import System.Diagnostics
 
 [MethodImpl(MethodImplOptions.NoInlining)]
 def add_one(n as long) as long:
     return n + 1
+
+sw = Stopwatch.StartNew()
 
 value as long = 0
 
@@ -19,5 +22,7 @@ while i < 100000000:
     value = add_one(value)
     i += 1
 
+sw.Stop()
+System.Console.Error.WriteLine("TIME_MS=" + sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture))
 print(value)
 

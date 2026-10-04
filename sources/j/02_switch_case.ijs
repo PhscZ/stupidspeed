@@ -4,6 +4,8 @@ NB. note: while., not for_i. i. 100000000, for the reason in 01_branches.ijs.
 NB. note: select./case. is J's switch. acc stays a machine integer; the total is
 NB.       below 2^63, so it is exact and ": prints it in full.
 
+__t0 =: 6!:1 ''
+
 switch_case =: 3 : 0
   acc =. 0
   i =. 0
@@ -22,6 +24,9 @@ switch_case =: 3 : 0
   end.
   ": acc
 )
+
+__t1 =: 6!:1 ''
+stderr 'TIME_MS=', (": (__t1 - __t0) * 1000)
 
 stdout (switch_case''), LF
 exit 0

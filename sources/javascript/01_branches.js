@@ -1,6 +1,8 @@
 // task 01 branches — expected output: 33333334 13333333 7619048 45714285
 // build: none    run: node 01_branches.js | bun 01_branches.js | deno run 01_branches.js
 
+const __t0 = performance.now();
+
 let a = 0;
 let b = 0;
 let c = 0;
@@ -16,4 +18,5 @@ for (let i = 0; i < 100000000; i++) {
     d += 1;
   }
 }
+console.error(`TIME_MS=${performance.now() - __t0}`);
 console.log(a, b, c, d);

@@ -10,6 +10,10 @@ Module Program
     End Function
 
     Sub Main()
-        Console.WriteLine(Fib(40))
+        Dim sw As System.Diagnostics.Stopwatch = System.Diagnostics.Stopwatch.StartNew()
+        Dim result As Long = Fib(40)
+        sw.Stop()
+        Console.Error.WriteLine("TIME_MS=" & sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture))
+        Console.WriteLine(result)
     End Sub
 End Module

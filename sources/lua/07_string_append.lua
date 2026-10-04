@@ -3,9 +3,12 @@
 -- build (wasm): lua.wasm is the wasm32-wasip1 build of this same interpreter (see BUILD.md); run: wasmtime -W exceptions=y --dir . lua.wasm <task>.lua
 -- Lua strings are immutable, so every append copies the whole string.
 
+local __t0 = os.clock()
 local text = ""
 for _ = 1, 250000 do
     text = text .. "x"
 end
 
+local __t1 = os.clock()
+io.stderr:write(string.format("TIME_MS=%.3f\n", (__t1 - __t0) * 1000.0))
 print(#text)

@@ -9,6 +9,7 @@
 # note: acc is a double; it ends at 7.5e15, below 2^53 = 9.007e15, and every
 # term is an integer, so the sum is exact and %.0f prints all sixteen digits.
 
+__t0 = tic;
 acc = 0;
 for i = 0:99999999
   switch mod(i, 4)
@@ -22,4 +23,5 @@ for i = 0:99999999
       acc = acc + 3 * i;
   end
 end
+fprintf(stderr, "TIME_MS=%.3f\n", toc(__t0) * 1000);
 printf("%.0f\n", acc);

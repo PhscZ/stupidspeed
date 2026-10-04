@@ -5,8 +5,14 @@
 !       block and concatenating once, never by appending. Factor's `each` walks the string
 !       as fixnum character codes.
 
-USING: kernel locals math prettyprint sequences ;
+! timing: nano-count is Factor's monotonic nanosecond clock; TIME_MS is written to stderr
+!         through error-stream, and stdout is unchanged.
+USING: io kernel locals math math.parser namespaces prettyprint sequences system ;
 IN: scratchpad
+
+: ss-report ( t0 value -- value )
+    swap nano-count swap - 1000000 /i number>string
+    "TIME_MS=" swap append "\n" append error-stream get stream-write ;
 
 :: char-count ( -- count )
     10000000 [ "abcdefghij" ] replicate concat :> text
@@ -16,4 +22,4 @@ IN: scratchpad
           [ ch CHAR: h = [ count 1 + ] [ count ] if ] if ] if
     ] each ;
 
-char-count .
+nano-count char-count ss-report .

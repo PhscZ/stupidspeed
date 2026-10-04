@@ -8,6 +8,7 @@ Imports System.Numerics
 
 Module Program
     Sub Main()
+        Dim sw As System.Diagnostics.Stopwatch = System.Diagnostics.Stopwatch.StartNew()
         Dim q As BigInteger = 1
         Dim r As BigInteger = 0
         Dim t As BigInteger = 1
@@ -45,6 +46,8 @@ Module Program
             End If
         End While
 
+        sw.Stop()
+        Console.Error.WriteLine("TIME_MS=" & sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture))
         Console.WriteLine(total)
     End Sub
 End Module

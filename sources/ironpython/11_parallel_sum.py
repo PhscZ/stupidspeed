@@ -6,7 +6,13 @@
 #       speedup of 2.4x rather than the 4x pure compute would give, because the interpreter's own
 #       bookkeeping contends. The row is parallel, not correct-answer-no-speedup.
 
+import clr
+from System.Diagnostics import Stopwatch
+from System.Globalization import CultureInfo
+import sys
 import threading
+
+_sw = Stopwatch.StartNew()
 
 partials = [0, 0, 0, 0]
 
@@ -30,4 +36,6 @@ for th in threads:
 for th in threads:
     th.join()
 
+_sw.Stop()
+sys.stderr.write("TIME_MS=" + _sw.Elapsed.TotalMilliseconds.ToString("F3", CultureInfo.InvariantCulture) + "\n")
 print(sum(partials))

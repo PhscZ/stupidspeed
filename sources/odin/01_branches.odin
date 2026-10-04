@@ -3,8 +3,10 @@
 package main
 
 import "core:fmt"
+import "core:time"
 
 main :: proc() {
+	t0 := time.now()
 	a, b, c, d: i64
 	for i in 0 ..< 100_000_000 {
 		if i % 3 == 0 {
@@ -17,5 +19,6 @@ main :: proc() {
 			d += 1
 		}
 	}
+	fmt.eprintfln("TIME_MS=%.3f", time.duration_milliseconds(time.since(t0)))
 	fmt.println(a, b, c, d)
 }

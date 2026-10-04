@@ -14,6 +14,7 @@ import java.io.FileInputStream
 
 object Main {
   def main(args: Array[String]): Unit = {
+    val __t0 = System.nanoTime()
     val in = new FileInputStream("data.bin")
     try {
       val buf = new Array[Byte](1024 * 1024)
@@ -27,6 +28,7 @@ object Main {
         }
         n = in.read(buf)
       }
+      System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
       println(total % 4294967296L)
     } finally {
       in.close()

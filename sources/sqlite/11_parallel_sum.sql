@@ -20,6 +20,14 @@
 --       the end of the run; out.bin and data.bin are the only files this row expects to
 --       find there.
 
+-- timing: the clock is SQLite's own julianday('now') in milliseconds. The timer starts at
+--       the entry of the script's own body and stops immediately before the final output
+--       statement, which here is the join-and-sum that prints the answer. The four worker
+--       processes are separate sqlite3 runs and print only their partial to a file, so this
+--       script emits exactly one TIME_MS line.
+CREATE TABLE __t0(t INTEGER);
+INSERT INTO __t0 VALUES (cast(julianday('now')*86400000 as integer));
+
 -- the four worker programs, one per quarter
 SELECT writefile('t11_w' || t || '.sql',
                  'WITH RECURSIVE c(x) AS (SELECT 0 UNION ALL SELECT x+1 FROM c WHERE x < 24999999) '
@@ -59,6 +67,9 @@ if %N% LSS 900 goto wait
 .shell t11_run.bat
 
 -- the join: all four partials exist, so sum them
+.output stderr
+SELECT printf('TIME_MS=%d', cast(julianday('now')*86400000 as integer) - (SELECT t FROM __t0));
+.output stdout
 SELECT sum(CAST(readfile('t11_r' || t || '.txt') AS INTEGER))
 FROM (SELECT 0 AS t UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3);
 

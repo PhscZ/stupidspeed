@@ -3,6 +3,8 @@
 
 open System.IO
 
+let sw = System.Diagnostics.Stopwatch.StartNew()
+
 // One megabyte: the bytes 0..255 repeated 4096 times.
 let chunk = 1024 * 1024
 let buffer : byte[] = Array.zeroCreate chunk
@@ -20,4 +22,6 @@ for _ in 1 .. 50 do
 stream.Flush(true)
 stream.Dispose()
 
+sw.Stop()
+System.Console.Error.WriteLine("TIME_MS=" + (sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture)))
 printfn "%d" written

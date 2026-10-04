@@ -7,6 +7,7 @@ Imports System.IO
 
 Module Program
     Sub Main()
+        Dim sw As System.Diagnostics.Stopwatch = System.Diagnostics.Stopwatch.StartNew()
         Dim buffer(1048575) As Byte
         Dim total As Long = 0
 
@@ -21,6 +22,8 @@ Module Program
             Loop
         End Using
 
+        sw.Stop()
+        Console.Error.WriteLine("TIME_MS=" & sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture))
         Console.WriteLine(total Mod 4294967296L)
     End Sub
 End Module

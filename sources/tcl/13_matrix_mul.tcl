@@ -3,6 +3,7 @@
 # Plain triple loop, no tricks: the innermost loop walks B down a column, which is
 # the cache-hostile order the task asks for.
 
+set __t0 [clock microseconds]
 set n 500
 set a {}
 set b {}
@@ -40,4 +41,6 @@ for {set i 0} {$i < $n} {incr i} {
     }
 }
 
+set __t1 [clock microseconds]
+puts stderr [format "TIME_MS=%.3f" [expr {($__t1 - $__t0) / 1000.0}]]
 puts $total

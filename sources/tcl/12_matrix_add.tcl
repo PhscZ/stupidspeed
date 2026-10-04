@@ -3,6 +3,7 @@
 # Three 1000x1000 arrays, 24 MB together, too big to sit in cache. Rows are lists of
 # lists, so a row is one contiguous Tcl list.
 
+set __t0 [clock microseconds]
 set n 1000
 set a {}
 set b {}
@@ -37,4 +38,6 @@ for {set i 0} {$i < $n} {incr i} {
     }
 }
 
+set __t1 [clock microseconds]
+puts stderr [format "TIME_MS=%.3f" [expr {($__t1 - $__t0) / 1000.0}]]
 puts $total

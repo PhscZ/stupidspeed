@@ -4,6 +4,7 @@
 # Plain i, j, k triple loop in that order, no reordering and no library
 # multiply. Flat double row vectors with the 1-based index i * n + j + 1.
 
+__t0 = tic;
 n = 500;
 A = zeros(1, n * n);
 B = zeros(1, n * n);
@@ -28,4 +29,5 @@ total = 0;
 for k = 1:n * n
   total = total + C(k);
 end
+fprintf(stderr, "TIME_MS=%.3f\n", toc(__t0) * 1000);
 printf("%.0f\n", total);

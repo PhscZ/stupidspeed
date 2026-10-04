@@ -7,6 +7,7 @@
 //       decimal 0.498046875 comes out with no trailing digits.
 
 using System;
+using System.Diagnostics;
 
 namespace Task;
 
@@ -14,6 +15,9 @@ class Program
 {
 	static void Main()
 	{
+		// timing: Stopwatch.GetTimestamp() is corlib's microsecond clock (QueryPerformanceCounter on Windows).
+		int64 t0 = Stopwatch.GetTimestamp();
+
 		double total = 0.0;
 
 		for (int64 i = 0; i < 100000000; i++)
@@ -22,6 +26,8 @@ class Program
 			total += reading;
 		}
 
+		int64 t1 = Stopwatch.GetTimestamp();
+		Console.Error.WriteLine($"TIME_MS={(double)(t1 - t0) / 1000.0}");
 		Console.WriteLine("{0}", total / 100000000.0);
 	}
 }

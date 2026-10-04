@@ -5,10 +5,13 @@
 // every iteration. `.=` would be the in-place grow path (zend_string_extend), which is a
 // different task and would not be comparable with the other languages.
 
+$__t0 = hrtime(true);
 $text = '';
 
 for ($i = 0; $i < 250000; $i++) {
     $text = $text . 'x';
 }
 
+$__t1 = hrtime(true);
+fwrite(STDERR, sprintf("TIME_MS=%.3f\n", ($__t1 - $__t0) / 1e6));
 echo strlen($text), "\n";

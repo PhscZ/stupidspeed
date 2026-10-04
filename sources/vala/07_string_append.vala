@@ -12,13 +12,22 @@
 //       on purpose, exactly like the C reference. `.length` is the byte length.
 // note: this is the slow one of the row.
 
+// timing: GLib.get_real_time() is GLib's monotonic clock in microseconds; TIME_MS goes
+//         to stderr and stdout is unchanged.
+static int64 ss_t0;
+static void ss_report () {
+    stderr.printf ("TIME_MS=%.3f\n", (GLib.get_real_time () - ss_t0) / 1000.0);
+}
+
 int main () {
+    ss_t0 = GLib.get_real_time ();
     string text = "";
 
     for (int64 i = 0; i < 250000; i++) {
         text = text + "x";
     }
 
+    ss_report ();
     stdout.printf ("%d\n", text.length);
     return 0;
 }

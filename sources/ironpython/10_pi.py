@@ -4,6 +4,13 @@
 #       Gibbons' unbounded spigot runs on the native big integers; // is a real division on them.
 #       Only the sum of the first 1000 emitted digits is printed, never the digits.
 
+import clr
+from System.Diagnostics import Stopwatch
+from System.Globalization import CultureInfo
+import sys
+
+_sw = Stopwatch.StartNew()
+
 DIGITS = 1000
 
 q, r, t, k, n, l = 1, 0, 1, 1, 3, 3
@@ -18,4 +25,6 @@ while emitted < DIGITS:
     else:
         q, r, t, k, n, l = q * k, (2 * q + r) * l, t * l, k + 1, (q * (7 * k + 2) + r * l) // (t * l), l + 2
 
+_sw.Stop()
+sys.stderr.write("TIME_MS=" + _sw.Elapsed.TotalMilliseconds.ToString("F3", CultureInfo.InvariantCulture) + "\n")
 print(total)

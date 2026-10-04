@@ -10,9 +10,13 @@
 module Main where
 
 import Data.IORef
+import Data.Time.Clock.POSIX (getPOSIXTime)
+import System.IO (stderr)
+import Text.Printf (hPrintf)
 
 main :: IO ()
 main = do
+  t0 <- getPOSIXTime
   total <- newIORef (0.0 :: Double)
   let go !i
         | i > 99999999 = return ()
@@ -22,4 +26,8 @@ main = do
             go (i + 1)
   go 0
   t <- readIORef total
-  print (t / 100000000)
+  let !avg = t / 100000000
+  t1 <- getPOSIXTime
+  let !ms = (realToFrac (t1 - t0) :: Double) * 1000
+  hPrintf stderr "TIME_MS=%.3f\n" ms
+  print avg

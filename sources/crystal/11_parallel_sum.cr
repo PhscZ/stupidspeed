@@ -22,6 +22,7 @@ def work(t : Int32) : Int64
   acc
 end
 
+t0 = Time.monotonic
 ctx = Fiber::ExecutionContext::Parallel.new("bench", 4)
 results = Array(Int64).new(4) { 0i64 }
 wg = WaitGroup.new(4)
@@ -40,4 +41,5 @@ wg.wait
 
 total = 0i64
 results.each { |v| total += v }
+STDERR.puts "TIME_MS=%.3f" % (Time.monotonic - t0).total_milliseconds
 puts total

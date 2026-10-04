@@ -30,6 +30,17 @@
 --       answer. The partials are written into a module-level array and summed after all
 --       four joins, so there is no shared mutable state during the run and no data race.
 -- note: the total 7500000075000000 stays below 2^63, so the int64 sum is exact.
+require 'io'
+require 'os'
+require 'string'
+-- timing: os.now is Nelua's monotonic clock in seconds (nanosecond resolution on
+--         Windows, via QueryPerformanceCounter); TIME_MS goes to stderr through
+--         io.stderr and stdout is unchanged.
+local ssT0 = os.now()
+local function ss_report()
+  io.stderr:write(string.format('TIME_MS=%.3f\n', (os.now() - ssT0) * 1000))
+end
+
 ## pragmas.nogc = true
 
 local function CreateThread(lpThreadAttributes: pointer, dwStackSize: usize,
@@ -93,4 +104,5 @@ for i = 0, 3 do
   total = total + results[i]
 end
 
+ss_report()
 print(total)

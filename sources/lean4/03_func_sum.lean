@@ -15,5 +15,12 @@ where
     | 0, _, value => value
     | fuel + 1, i, value => go fuel (i + 1) (addOne value)
 
+@[noinline] def forceIO {α : Type} (x : Unit → α) : IO α := IO.lazyPure x
+
 def main : IO Unit := do
-  IO.println (funcSum 100000000)
+  let t0 ← IO.monoNanosNow
+  let answer ← forceIO (fun _ => funcSum 100000000)
+  let t1 ← IO.monoNanosNow
+  let ms : Float := (t1 - t0).toFloat / 1000000.0
+  IO.eprintln s!"TIME_MS={ms}"
+  IO.println answer

@@ -15,6 +15,10 @@ partial def readAll (h : IO.FS.Handle) (total : UInt64) : IO UInt64 := do
     readAll h (total + sumBytes chunk)
 
 def main : IO Unit := do
+  let t0 ← IO.monoNanosNow
   IO.FS.withFile "data.bin" IO.FS.Mode.read fun h => do
     let total ← readAll h 0
+    let t1 ← IO.monoNanosNow
+    let ms : Float := (t1 - t0).toFloat / 1000000.0
+    IO.eprintln s!"TIME_MS={ms}"
     IO.println (total % 4294967296)

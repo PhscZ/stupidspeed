@@ -2,6 +2,7 @@
 // build: kotlinc 13_matrix_mul.kt -include-runtime -d prog.jar    run: java -jar prog.jar    [native build: kotlinc-native -opt -o prog 13_matrix_mul.kt    native run: ./prog]
 
 fun main() {
+    val __t0 = System.nanoTime()
     val n = 500
     val a = LongArray(n * n)
     val b = LongArray(n * n)
@@ -25,5 +26,6 @@ fun main() {
     for (i in 0 until n * n) {
         total += c[i]
     }
+    System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
     println(total)
 }

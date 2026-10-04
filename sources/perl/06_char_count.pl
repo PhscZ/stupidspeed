@@ -6,6 +6,8 @@
 use strict;
 use warnings;
 
+use Time::HiRes ();
+my $__t0 = Time::HiRes::time();
 my $text = "abcdefghij" x 10000000;
 my $len = length($text);
 my $count = 0;
@@ -16,4 +18,6 @@ for (my $i = 0; $i < $len; $i++) {
     }
 }
 
+my $__t1 = Time::HiRes::time();
+printf STDERR "TIME_MS=%.3f\n", ($__t1 - $__t0) * 1000.0;
 print $count, "\n";

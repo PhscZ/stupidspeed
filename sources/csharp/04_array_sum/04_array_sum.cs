@@ -6,6 +6,7 @@ class Program
 {
     static void Main()
     {
+        System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
         int n = 1000000;
         long[] array = new long[n];
         for (int i = 0; i < n; i++)
@@ -18,6 +19,8 @@ class Program
         {
             total += array[i];
         }
+        sw.Stop();
+        Console.Error.WriteLine("TIME_MS=" + sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture));
         Console.WriteLine(total);
     }
 }

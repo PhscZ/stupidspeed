@@ -7,6 +7,10 @@
 // hand-written below, and the two divisions (by the big t and by t*l) take their small
 // quotient by binary search on q*den <= num, which needs nothing but that same
 // multiply-by-small-int and a comparison.
+// timing: Instant::now() is std::time's monotonic clock (clock_gettime(CLOCK_MONOTONIC)
+//         on Windows and POSIX, clock_time_get on wasip1); TIME_MS goes to stderr with
+//         eprintln! and stdout is unchanged.
+use std::time::Instant;
 
 use std::cmp::Ordering;
 
@@ -205,6 +209,7 @@ fn smallest_ge(a: &[u64], d: &[u64], bound: u64) -> u64 {
 }
 
 fn main() {
+    let ss_t0 = Instant::now();
     let mut q = Big::from_u64(1);
     let mut r = Big::zero();
     let mut t = Big::from_u64(1);
@@ -245,5 +250,6 @@ fn main() {
         }
     }
 
+    eprintln!("TIME_MS={:.3}", ss_t0.elapsed().as_secs_f64() * 1000.0);
     println!("{}", sum);
 }

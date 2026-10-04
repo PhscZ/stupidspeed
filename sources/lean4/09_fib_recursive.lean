@@ -10,5 +10,12 @@ def fib : Nat → UInt64
   | 1 => 1
   | n + 2 => fib (n + 1) + fib n
 
+@[noinline] def forceIO {α : Type} (x : Unit → α) : IO α := IO.lazyPure x
+
 def main : IO Unit := do
-  IO.println (fib 40)
+  let t0 ← IO.monoNanosNow
+  let answer ← forceIO (fun _ => fib 40)
+  let t1 ← IO.monoNanosNow
+  let ms : Float := (t1 - t0).toFloat / 1000000.0
+  IO.eprintln s!"TIME_MS={ms}"
+  IO.println answer

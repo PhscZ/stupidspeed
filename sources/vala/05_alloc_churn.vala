@@ -12,7 +12,15 @@
 //       keeps the newest 256 buffers reachable and stops -O2 deleting the allocation, exactly
 //       as in the C reference. `uint8*[]` is Vala's array of raw pointers.
 
+// timing: GLib.get_real_time() is GLib's monotonic clock in microseconds; TIME_MS goes
+//         to stderr and stdout is unchanged.
+static int64 ss_t0;
+static void ss_report () {
+    stderr.printf ("TIME_MS=%.3f\n", (GLib.get_real_time () - ss_t0) / 1000.0);
+}
+
 int main () {
+    ss_t0 = GLib.get_real_time ();
     uint8*[] slots = new uint8*[256];
     for (int i = 0; i < 256; i++) {
         slots[i] = null;
@@ -33,6 +41,7 @@ int main () {
         GLib.free (slots[i]);
     }
 
+    ss_report ();
     stdout.printf ("%lld\n", total);
     return 0;
 }

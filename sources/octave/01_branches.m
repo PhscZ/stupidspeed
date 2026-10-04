@@ -13,6 +13,7 @@
 # printf("%.0f") prints them as integers rather than the 3.3333e+07 that disp()
 # would produce.
 
+__t0 = tic;
 a = 0;
 b = 0;
 c = 0;
@@ -28,4 +29,5 @@ for i = 0:99999999
     d = d + 1;
   end
 end
+fprintf(stderr, "TIME_MS=%.3f\n", toc(__t0) * 1000);
 printf("%.0f %.0f %.0f %.0f\n", a, b, c, d);

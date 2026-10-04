@@ -8,7 +8,7 @@ program prog;
 
 uses
   {$IFDEF UNIX}cthreads,{$ENDIF}
-  SysUtils, Classes;
+  SysUtils, Classes, Windows;
 
 type
   TWorker = class(TThread)
@@ -48,10 +48,13 @@ begin
 end;
 
 var
+  __clock_t0, __clock_t1, __clock_freq, __clock_us: Int64;
   workers: array[0..3] of TWorker;
   i: Integer;
   total: Int64;
 begin
+  QueryPerformanceFrequency(__clock_freq);
+  QueryPerformanceCounter(__clock_t0);
   for i := 0 to 3 do
     workers[i] := TWorker.Create(Int64(i) * 25000000, (Int64(i) + 1) * 25000000);
   for i := 0 to 3 do
@@ -63,5 +66,11 @@ begin
     total := total + workers[i].Partial;
     workers[i].Free;
   end;
+  QueryPerformanceCounter(__clock_t1);
+  __clock_us := (__clock_t1 - __clock_t0) * 1000000 div __clock_freq;
+  Write(StdErr, 'TIME_MS=', __clock_us div 1000, '.');
+  if __clock_us mod 1000 < 100 then Write(StdErr, '0');
+  if __clock_us mod 1000 < 10 then Write(StdErr, '0');
+  WriteLn(StdErr, __clock_us mod 1000);
   WriteLn(total);
 end.

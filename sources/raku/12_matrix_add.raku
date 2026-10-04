@@ -9,6 +9,7 @@
 #       used only where the value is known to fit, since native ops are much faster.
 # Three flat 1000x1000 native int arrays, row-major, filled and added with plain index
 # arithmetic. The total fits an int.
+my $__t0 = now;
 my int $n = 1000;
 my int @a; my int @b; my int @c;
 loop (my int $i = 0; $i < $n; $i++) {
@@ -26,4 +27,6 @@ loop (my int $p = 0; $p < $n; $p++) {
 }
 my int $total = 0;
 loop (my int $k = 0; $k < $n * $n; $k++) { $total += @c[$k] }
+my $__t1 = now;
+$*ERR.say('TIME_MS=' ~ (($__t1 - $__t0) * 1000).Num.fmt('%.3f'));
 say $total;

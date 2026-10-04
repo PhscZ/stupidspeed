@@ -8,8 +8,12 @@
 % note: -O is required, see 01_branches.pl.
 
 main :-
+    get_time(T0),
     loop(0, 0.0, Total),
     Avg is Total / 100000000,
+    get_time(T1),
+    Ms is (T1 - T0) * 1000,
+    format(standard_error, "TIME_MS=~3f~n", [Ms]),
     format("~w~n", [Avg]).
 
 loop(I, Acc, Total) :-

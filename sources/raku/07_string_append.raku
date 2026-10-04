@@ -14,8 +14,11 @@
 # The cell therefore measures MoarVM's optimised append, not the quadratic copy that task 07
 # is designed to measure. That is the runtime's real behaviour for this operation and is
 # recorded rather than worked around; forcing a copy would mean writing the row artificially.
+my $__t0 = now;
 my $text = '';
 loop (my int $i = 0; $i < 250000; $i++) {
     $text ~= 'x';
 }
+my $__t1 = now;
+$*ERR.say('TIME_MS=' ~ (($__t1 - $__t0) * 1000).Num.fmt('%.3f'));
 say $text.chars;

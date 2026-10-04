@@ -34,6 +34,11 @@
 ⍝       function here is a tradfn (∇...∇). Locals must be declared after the
 ⍝       semicolon in the header or they are globals, which would be a data race
 ⍝       under task 11.
+⍝ timing: 3⊃⎕AI is Dyalog's elapsed-time counter in milliseconds. APL exposes no
+⍝         stream handle for stderr, so the contract's fallback applies: TIME_MS is
+⍝         written to time.txt in the working directory with ⎕NPUT, and stdout is
+⍝         unchanged. Instrumented by inspection: Dyalog is not installed on this
+⍝         machine, so this row's timing is unverified.
 ⎕IO←0
 ⎕PP←17
 
@@ -273,4 +278,7 @@
   r←⍕sum
 ∇
 
-⎕←pi 1000
+ssT0←3⊃⎕AI
+ssR←pi 1000
+('TIME_MS=',⍕(3⊃⎕AI)-ssT0)⎕NPUT 'time.txt'
+⎕←ssR

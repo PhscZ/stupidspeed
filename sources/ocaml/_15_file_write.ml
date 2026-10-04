@@ -18,8 +18,15 @@
 (* note: the 1 MiB buffer is written 50 times, then flushed and closed. OCaml has no standard
          fsync, so the deviation is flush plus close -- the same one the Tcl, D, Julia, Nim, Dart,
          Pascal, COBOL and Dolphin rows note. *)
+(* timing: Unix.gettimeofday is the clock this build of the Unix module exposes (there is
+   no clock_gettime binding here, so the monotonic clock is not reachable from OCaml);
+   TIME_MS goes to stderr through Printf.eprintf and stdout is unchanged. *)
+let ss_t0 = ref 0.0
+let ss_now () = Unix.gettimeofday () *. 1000.0
+let ss_report () = Printf.eprintf "TIME_MS=%.3f\n" (ss_now () -. !ss_t0)
 
 let () =
+  ss_t0 := ss_now ();
   let chunk = 1048576 in
   let buf = Bytes.create chunk in
   for i = 0 to chunk - 1 do
@@ -31,4 +38,5 @@ let () =
   done;
   flush oc;
   close_out oc;
+  ss_report ();
   Printf.printf "%d\n" (50 * chunk)

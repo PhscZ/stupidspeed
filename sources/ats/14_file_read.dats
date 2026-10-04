@@ -11,6 +11,35 @@
 
 #include "share/atspre_staload.hats"
 
+// timing: ss_now_ms() is the monotonic clock of the C reference row (QueryPerformanceCounter on
+//         Windows, clock_gettime(CLOCK_MONOTONIC) elsewhere) and ss_report() writes TIME_MS to
+//         stderr, so stdout is unchanged. Instrumented by inspection: there is no ATS toolchain on
+//         this machine, so this row's timing is unverified.
+%{^
+#include <stdio.h>
+#if defined(_WIN32)
+#include <windows.h>
+static double ss_now_ms (void) {
+  static LARGE_INTEGER ss_freq;
+  static int ss_have = 0;
+  LARGE_INTEGER now;
+  if (!ss_have) { QueryPerformanceFrequency(&ss_freq); ss_have = 1; }
+  QueryPerformanceCounter(&now);
+  return (double)now.QuadPart * 1000.0 / (double)ss_freq.QuadPart;
+}
+#else
+#include <time.h>
+static double ss_now_ms (void) {
+  struct timespec ts;
+  clock_gettime(CLOCK_MONOTONIC, &ts);
+  return (double)ts.tv_sec * 1000.0 + (double)ts.tv_nsec / 1000000.0;
+}
+#endif
+static void ss_report (double ms) {
+  fprintf(stderr, "TIME_MS=%.3f\n", ms);
+}
+%}
+
 staload UN = "prelude/SATS/unsafe.sats"
 
 %{^
@@ -18,6 +47,7 @@ staload UN = "prelude/SATS/unsafe.sats"
 %}
 
 implement main0 () = let
+  val ss_t0 = $extfcall (double, "ss_now_ms")
   val chunk = 1048576
   val f = $extfcall (ptr, "fopen", "data.bin", "rb")
   val buf = $extfcall (ptr, "malloc", i2sz (chunk))
@@ -37,6 +67,7 @@ in
       end)
     );
     $extfcall (void, "fclose", f);
+    val () = $extfcall (void, "ss_report", $extfcall (double, "ss_now_ms") - ss_t0)
     $extfcall (void, "printf", "%lld\n", total mod 4294967296LL)
   )
 end

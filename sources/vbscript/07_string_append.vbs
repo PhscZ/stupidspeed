@@ -8,12 +8,21 @@
 '       total, which is the quadratic cost the task exists to measure.
 ' note: Len(text) is used as the printed value, so the loop cannot be deleted; an
 '       interpreted engine would not delete it anyway.
+
+' timing: Timer() is VBScript's seconds-since-midnight clock with centisecond resolution, so
+'         TIME_MS has 16 ms granularity; it goes to stderr and stdout is unchanged.
+Dim ssT0
+Sub ssReport()
+    WScript.StdErr.WriteLine "TIME_MS=" & CLng(Round((Timer() - ssT0) * 1000))
+End Sub
 Dim text, i
 
+ssT0 = Timer()
 text = ""
 
 For i = 1 To 250000
     text = text & "x"
 Next
 
+ssReport
 WScript.Echo Len(text)

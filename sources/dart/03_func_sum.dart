@@ -5,13 +5,17 @@
 //       its single call site and delete the 100000000 calls, which is exactly what the
 //       task exists to measure.
 
+import 'dart:io';
+
 @pragma('vm:never-inline')
 int addOne(int n) => n + 1;
 
 void main() {
+  final Stopwatch sw = Stopwatch()..start();
   int value = 0;
   for (int i = 0; i < 100000000; i++) {
     value = addOne(value);
   }
+  stderr.writeln('TIME_MS=${(sw.elapsedMicroseconds / 1000).toStringAsFixed(3)}');
   print(value);
 }

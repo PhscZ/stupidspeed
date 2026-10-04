@@ -27,6 +27,23 @@
 -- note: `int64` throughout. fib(40) = 102334155 fits in 32 bits, but the recursion's
 --       intermediates do not need to be re-examined for that, and int64 is the type every
 --       other row uses.
+-- timing: GetSystemTimePreciseAsFileTime is Windows' 100-nanosecond clock, imported
+--         with terralib.externfunction; TIME_MS goes to time.txt, the contract's
+--         fallback, because Terra's stdio has no stderr handle. stdout is unchanged.
+local C = terralib.includec("stdio.h")
+local GetSystemTimePreciseAsFileTime = terralib.externfunction("GetSystemTimePreciseAsFileTime", &int64 -> {})
+terra ssNow() : int64
+    var ft : int64
+    GetSystemTimePreciseAsFileTime(&ft)
+    return ft / 10000LL
+end
+terra ssReport(t0 : int64) : int64
+    var f = C.fopen("time.txt", "w")
+    C.fprintf(f, "TIME_MS=%lld\n", ssNow() - t0)
+    C.fclose(f)
+    return 0
+end
+local ssT0 = ssNow()
 
 terra fib(n : int64) : int64
     if n < 2 then
@@ -35,4 +52,6 @@ terra fib(n : int64) : int64
     return fib(n - 1) + fib(n - 2)
 end
 
-print(string.format("%d", fib(40LL)))
+local ssV = fib(40LL)
+ssReport(ssT0)
+print(string.format("%d", ssV))

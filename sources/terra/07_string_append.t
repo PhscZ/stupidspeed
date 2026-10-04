@@ -15,10 +15,29 @@
 --       would mean hand-writing a growable buffer, which is a different program from the one
 --       every other row writes.
 -- note: `#text` is the printed value, so the loop cannot be deleted.
+-- timing: GetSystemTimePreciseAsFileTime is Windows' 100-nanosecond clock, imported
+--         with terralib.externfunction; TIME_MS goes to time.txt, the contract's
+--         fallback, because Terra's stdio has no stderr handle. stdout is unchanged.
+local C = terralib.includec("stdio.h")
+local GetSystemTimePreciseAsFileTime = terralib.externfunction("GetSystemTimePreciseAsFileTime", &int64 -> {})
+terra ssNow() : int64
+    var ft : int64
+    GetSystemTimePreciseAsFileTime(&ft)
+    return ft / 10000LL
+end
+terra ssReport(t0 : int64) : int64
+    var f = C.fopen("time.txt", "w")
+    C.fprintf(f, "TIME_MS=%lld\n", ssNow() - t0)
+    C.fclose(f)
+    return 0
+end
+local ssT0 = ssNow()
 
 local text = ""
 for i = 1, 250000 do
     text = text .. "x"
 end
 
-print(string.format("%d", #text))
+local ssV = #text
+ssReport(ssT0)
+print(string.format("%d", ssV))

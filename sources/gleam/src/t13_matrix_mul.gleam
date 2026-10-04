@@ -12,6 +12,7 @@
 //       higher-order functions in any timed path.
 
 import gleam/erlang/atom
+import gleam/float
 import gleam/int
 import gleam/io
 
@@ -26,7 +27,11 @@ fn atomics_put(a: Atomics, index: Int, value: Int) -> atom.Atom
 @external(erlang, "atomics", "get")
 fn atomics_get(a: Atomics, index: Int) -> Int
 
+@external(erlang, "erlang", "monotonic_time")
+fn monotonic_time(unit: atom.Atom) -> Int
+
 pub fn main() {
+  let t0 = monotonic_time(atom.create("microsecond"))
   let n = 500
   let e = n * n
   let a = atomics_new(e, opts())
@@ -34,7 +39,10 @@ pub fn main() {
   let c = atomics_new(e, opts())
   fill(a, b, 0, n)
   mul(a, b, c, 0, n)
-  io.println(int.to_string(sum(c, 0, e)))
+  let answer = sum(c, 0, e)
+  let ms = int.to_float(monotonic_time(atom.create("microsecond")) - t0) /. 1000.0
+  io.println_error("TIME_MS=" <> float.to_string(ms))
+  io.println(int.to_string(answer))
 }
 
 fn opts() -> List(#(atom.Atom, Bool)) {

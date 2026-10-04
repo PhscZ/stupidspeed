@@ -6,6 +6,7 @@
 extends SceneTree
 
 func _initialize() -> void:
+	var t0 := Time.get_ticks_msec()
 	var f := FileAccess.open("data.bin", FileAccess.READ)
 	if f == null:
 		quit(1)
@@ -19,5 +20,6 @@ func _initialize() -> void:
 		for i in count:
 			total += buf[i]
 	f.close()
+	printerr("TIME_MS=%d" % (Time.get_ticks_msec() - t0))
 	print(total % 4294967296)
 	quit()

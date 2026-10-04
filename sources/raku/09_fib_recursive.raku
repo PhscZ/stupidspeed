@@ -9,8 +9,12 @@
 #       used only where the value is known to fit, since native ops are much faster.
 # Naive fib(40): about 331 million calls, so this measures the call path itself rather than
 # any arithmetic.
+my $__t0 = now;
 sub fib(int $n --> int) {
     return $n if $n < 2;
     return fib($n - 1) + fib($n - 2);
 }
-say fib(40);
+my $__result = fib(40);
+my $__t1 = now;
+$*ERR.say('TIME_MS=' ~ (($__t1 - $__t0) * 1000).Num.fmt('%.3f'));
+say $__result;

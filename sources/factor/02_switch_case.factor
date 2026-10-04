@@ -4,8 +4,14 @@
 ! note: `case` is Factor's switch. The accumulator rides on the data stack; the branch
 !       quotation only ever sees the accumulator, because case consumes the key first.
 
-USING: combinators locals math prettyprint ;
+! timing: nano-count is Factor's monotonic nanosecond clock; TIME_MS is written to stderr
+!         through error-stream, and stdout is unchanged.
+USING: combinators io kernel locals math math.parser namespaces prettyprint sequences system ;
 IN: scratchpad
+
+: ss-report ( t0 value -- value )
+    swap nano-count swap - 1000000 /i number>string
+    "TIME_MS=" swap append "\n" append error-stream get stream-write ;
 
 :: switch-case ( -- acc )
     0 100000000 [| acc i |
@@ -17,4 +23,4 @@ IN: scratchpad
         } case
     ] each-integer ;
 
-switch-case .
+nano-count switch-case ss-report .

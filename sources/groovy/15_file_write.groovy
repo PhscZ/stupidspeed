@@ -6,6 +6,7 @@
 // back a BufferedOutputStream, which has no file descriptor.
 
 int chunk = 1024 * 1024
+long __t0 = System.nanoTime()
 byte[] buf = new byte[chunk]
 for (int i = 0; i < chunk; i++) {
     buf[i] = (byte) (i % 256)
@@ -24,4 +25,5 @@ try {
     out.close()
 }
 
+System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
 println written

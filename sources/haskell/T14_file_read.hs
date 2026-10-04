@@ -10,9 +10,13 @@ module Main where
 
 import qualified Data.ByteString as B
 import Data.IORef
+import Data.Time.Clock.POSIX (getPOSIXTime)
+import System.IO (stderr)
+import Text.Printf (hPrintf)
 
 main :: IO ()
 main = do
+  t0 <- getPOSIXTime
   bs <- B.readFile "data.bin"
   tot <- newIORef (0 :: Integer)
   let go !i | i >= B.length bs = return ()
@@ -20,4 +24,8 @@ main = do
                 modifyIORef' tot (\s -> (s + toInteger (B.index bs i)) `mod` 4294967296)
                 go (i + 1)
   go 0
-  print =<< readIORef tot
+  v <- readIORef tot
+  t1 <- getPOSIXTime
+  let !ms = (realToFrac (t1 - t0) :: Double) * 1000
+  hPrintf stderr "TIME_MS=%.3f\n" ms
+  print v

@@ -7,7 +7,11 @@
 ' it returns the first character for strings this large.
 #include once "crt/string.bi"
 
+' timing: Timer is FreeBASIC's own clock, seconds since midnight as a Double. TIME_MS goes to
+'         stderr through the Err device, and stdout is unchanged. Instrumented by inspection:
+'         there is no FreeBASIC toolchain on this machine, so this row's timing is unverified.
 const TOTAL as integer = 100000000
+dim ss_t0 as double = timer
 const BLOCKLEN as integer = 10000
 const PATTERN as string = "abcdefghij"
 
@@ -40,4 +44,8 @@ for i = 0 to TOTAL - 1
     end if
 next
 
+dim ss_ms as longint = clng((timer - ss_t0) * 1000)
+open err for output as #1
+print #1, "TIME_MS=" & ltrim(str(ss_ms))
+close #1
 print str(count)

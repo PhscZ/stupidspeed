@@ -16,6 +16,9 @@ module Main where
 import Control.Concurrent
 import Control.Monad
 import Data.IORef
+import Data.Time.Clock.POSIX (getPOSIXTime)
+import System.IO (stderr)
+import Text.Printf (hPrintf)
 
 work :: Int -> IO Integer
 work t = do
@@ -37,9 +40,14 @@ work t = do
 
 main :: IO ()
 main = do
+  t0 <- getPOSIXTime
   vars <- forM [0 .. 3] $ \t -> do
     v <- newEmptyMVar
     _ <- forkIO (work t >>= putMVar v)
     return v
   rs <- mapM takeMVar vars
-  print (sum rs)
+  let !total = sum rs
+  t1 <- getPOSIXTime
+  let !ms = (realToFrac (t1 - t0) :: Double) * 1000
+  hPrintf stderr "TIME_MS=%.3f\n" ms
+  print total

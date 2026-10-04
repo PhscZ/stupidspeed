@@ -16,10 +16,14 @@
 (defn add-one ^long [^long n]
   (unchecked-add n (long 1)))
 
+(def ^:private __t0 (volatile! 0))
+
 (defn -main []
+  (vreset! __t0 (System/nanoTime))
   (loop [i (long 0) value (long 0)]
     (if (< i (long 100000000))
       (recur (inc i) (add-one value))
-      (println value))))
+      (do (.println System/err (str "TIME_MS=" (/ (- (System/nanoTime) (long @__t0)) 1000000.0)))
+          (println value)))))
 
 (-main)

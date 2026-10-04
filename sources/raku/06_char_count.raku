@@ -9,9 +9,12 @@
 #       used only where the value is known to fit, since native ops are much faster.
 # The 100 MB text is built once with the repetition operator, which allocates it in one go
 # rather than a hundred million appends, and then scanned one character at a time.
+my $__t0 = now;
 my $text = "abcdefghij" x 10000000;
 my int $count = 0;
 loop (my int $i = 0; $i < 100000000; $i++) {
     if $text.substr($i, 1) eq 'h' { $count++ }
 }
+my $__t1 = now;
+$*ERR.say('TIME_MS=' ~ (($__t1 - $__t0) * 1000).Num.fmt('%.3f'));
 say $count;

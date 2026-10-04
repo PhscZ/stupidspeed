@@ -1,5 +1,6 @@
 # task 14 file_read -- expected output: 2389704704
 # build: crystal build --release -o prog 14_file_read.cr    run: ./prog
+t0 = Time.monotonic
 CHUNK = 1048576
 total = 0u64
 File.open("data.bin", "rb") do |f|
@@ -8,4 +9,5 @@ File.open("data.bin", "rb") do |f|
     got.times { |i| total += buf[i].to_u64 }
   end
 end
+STDERR.puts "TIME_MS=%.3f" % (Time.monotonic - t0).total_milliseconds
 puts total % 4294967296_u64

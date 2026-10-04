@@ -13,6 +13,7 @@
 
 # `flat` is load-bearing: (0..255) xx 4096 is a list of 4096 Ranges, not a flat run of integers,
 # and Buf.new rejects a Range element.
+my $__t0 = now;
 my $buf = Buf.new( flat (0..255) xx 4096 );
 
 my $fh = open 'out.bin', :bin, :w;
@@ -22,4 +23,6 @@ loop (my int $i = 0; $i < 50; $i++) {
 $fh.flush;
 $fh.close;
 
+my $__t1 = now;
+$*ERR.say('TIME_MS=' ~ (($__t1 - $__t0) * 1000).Num.fmt('%.3f'));
 say 50 * 1048576;

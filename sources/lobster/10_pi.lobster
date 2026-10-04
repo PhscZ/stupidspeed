@@ -8,6 +8,10 @@
 // well inside 64 bits) and a single-digit quotient, which comes out of repeated
 // subtraction.
 
+// timing: seconds_elapsed() is the VM's monotonic clock (QueryPerformanceCounter on Windows).
+// Lobster has no stderr, so the contract's fallback applies: TIME_MS is written to time.txt.
+let t_start = seconds_elapsed()
+
 let BASE = 1000000000
 
 class Big:
@@ -195,4 +199,5 @@ while produced < 1000:
         l += 2
         n = next
 
+write_file("time.txt", "TIME_MS=" + string((seconds_elapsed() - t_start) * 1000.0) + "\n")
 print sum

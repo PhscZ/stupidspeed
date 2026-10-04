@@ -8,6 +8,8 @@
 use strict;
 use warnings;
 
+use Time::HiRes ();
+my $__t0 = Time::HiRes::time();
 my $BASE = 1000000000;
 
 # A big integer is a reference to an array: element 0 is the sign (1 = negative, 0 = zero or
@@ -201,4 +203,6 @@ for (my $produced = 0; $produced < 1000; ) {
     }
 }
 
+my $__t1 = Time::HiRes::time();
+printf STDERR "TIME_MS=%.3f\n", ($__t1 - $__t0) * 1000.0;
 print $sum, "\n";

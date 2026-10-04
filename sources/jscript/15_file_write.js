@@ -17,6 +17,13 @@
 // note: the printed count is the stream's Position, which counts bytes here, 52428800;
 //       the file on disk was checked to be that size.
 // note: the whole task measures 1.6 s to 3.7 s on this shared host.
+
+// timing: new Date().getTime() is the WSH clock in milliseconds (the system timer, so about
+//         15 ms resolution); TIME_MS goes to stderr with WScript.StdErr and stdout is unchanged.
+var ssT0 = new Date().getTime();
+function ssReport() {
+    WScript.StdErr.Write("TIME_MS=" + (new Date().getTime() - ssT0) + "\r\n");
+}
 var CHUNKSZ = 1048576, REPEATS = 50;
 var block = "", buf, st, i, written;
 
@@ -39,4 +46,5 @@ written = st.Position;
 st.SaveToFile("out.bin", 2);
 st.Close();
 
+ssReport();
 WScript.Echo(String(written));

@@ -5,6 +5,7 @@
 // those because their languages have no big integers. Only the digit sum is printed.
 
 def (q, r, t, k, n, l) = [1G, 0G, 1G, 1G, 3G, 3G]
+long __t0 = System.nanoTime()
 long total = 0
 long emitted = 0
 
@@ -32,4 +33,5 @@ while (emitted < 1000L) {
     }
 }
 
+System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
 println total

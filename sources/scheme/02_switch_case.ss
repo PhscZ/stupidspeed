@@ -10,9 +10,22 @@
 ;;       the bound is checked rather than assumed.
 
 ;; case on (fxmod i 4) with a single accumulator carried as a named-let argument.
+;; timing: (real-time) is Chez's monotonic clock in milliseconds since system start-up;
+;;         TIME_MS is written to time.txt, the contract's fallback, because Chez's
+;;         console-error-port is the console and this host sends the console to stdout
+;;         when it is redirected; stdout is unchanged.
+(define ss-t0 (real-time))
+(define (ss-report)
+  (let ([p (open-file-output-port "time.txt" (file-options no-fail)
+                                  (buffer-mode block))])
+    (put-bytevector p (string->utf8
+                       (string-append "TIME_MS="
+                                      (number->string (- (real-time) ss-t0))
+                                      "\n")))
+    (close-port p)))
 (let loop ([i 0] [acc 0])
   (if (fx= i 100000000)
-      (begin (display acc) (newline))
+      (begin (ss-report) (display acc) (newline))
       (loop (fx+ i 1)
             (fx+ acc (case (fxmod i 4)
                        [(0) 1]

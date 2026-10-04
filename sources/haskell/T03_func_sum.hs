@@ -12,13 +12,23 @@
 
 module Main where
 
+import Control.Exception (evaluate)
+import Data.Time.Clock.POSIX (getPOSIXTime)
+import System.IO (stderr)
+import Text.Printf (hPrintf)
+
 {-# NOINLINE addOne #-}
 addOne :: Int -> Int
 addOne n = n + 1
 
 main :: IO ()
 main = do
+  t0 <- getPOSIXTime
   let go !i !acc
         | i > 100000000 = acc
         | otherwise = go (i + 1) (addOne acc)
-  print (go 1 0)
+  !v <- evaluate (go 1 0)
+  t1 <- getPOSIXTime
+  let !ms = (realToFrac (t1 - t0) :: Double) * 1000
+  hPrintf stderr "TIME_MS=%.3f\n" ms
+  print v

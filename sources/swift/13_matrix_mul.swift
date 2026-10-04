@@ -1,5 +1,17 @@
 // task 13 matrix_mul — expected output: 599995000
 // build: swiftc -O -o prog 13_matrix_mul.swift    run: ./prog
+// timing: Date() is Foundation's wall clock in seconds since the reference date, and
+//         timeIntervalSinceDate gives the elapsed time in seconds as a Double; TIME_MS goes
+//         to stderr with FileHandle.standardError and stdout is unchanged. Instrumented by
+//         inspection: the installed Swift toolchain cannot compile on this machine (missing
+//         _complex and ucrt Swift modules), so this row's timing is unverified.
+import Foundation
+
+func ssReport(_ t0: Date) {
+    let ms = Date().timeIntervalSince(t0) * 1000
+    FileHandle.standardError.write("TIME_MS=" + String(format: "%.3f", ms) + "\n".data(using: .utf8)!)
+}
+let ssT0 = Date()
 
 let n = 500
 var a = [Int64](repeating: 0, count: n * n)
@@ -34,4 +46,5 @@ for idx in 0..<(n * n) {
     total += c[idx]
 }
 
+ssReport(ssT0)
 print(total)

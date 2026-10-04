@@ -13,6 +13,7 @@
 
 # Gibbons' unbounded spigot over Raku's built-in exact integers. n stays a native int because it
 # is always a single digit; q, r and t grow to a few hundred digits at 1000 and are plain Int.
+my $__t0 = now;
 my Int $q = 1; my Int $r = 0; my Int $t = 1;
 my int $k = 1; my int $l = 3; my int $n = 3;
 my int $sum = 0; my int $produced = 0;
@@ -42,4 +43,6 @@ while $produced < 1000 {
         $n = $next;
     }
 }
+my $__t1 = now;
+$*ERR.say('TIME_MS=' ~ (($__t1 - $__t0) * 1000).Num.fmt('%.3f'));
 say $sum;

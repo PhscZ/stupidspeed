@@ -18,6 +18,8 @@ class T14_file_read {
     static inline var CHUNK = 1048576;   // 1 MiB
 
     static function main() {
+        // timing: Sys.time() is seconds as a Float on HashLink, so x1000 gives ms (1 ms effective).
+        var t0 = Sys.time();
         var f = sys.io.File.read("data.bin", true);
         var buf = haxe.io.Bytes.alloc(CHUNK);
 
@@ -37,6 +39,8 @@ class T14_file_read {
         f.close();
 
         var modulus = haxe.Int64.make(1, 0);   // 4294967296
+        var t1 = Sys.time();
+        Sys.stderr().writeString("TIME_MS=" + ((t1 - t0) * 1000.0) + "\n");
         Sys.println(total % modulus);
     }
 }

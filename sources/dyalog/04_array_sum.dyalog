@@ -7,10 +7,16 @@
 ⍝ note: arr[i]←i is an in-place amend on a name that appears on both sides, so the
 ⍝       interpreter does not copy the million-element array per iteration.
 ⍝ note: the total is 499999500000, below 2^53, so the double accumulator is exact.
+⍝ timing: 3⊃⎕AI is Dyalog's elapsed-time counter in milliseconds. APL exposes no
+⍝         stream handle for stderr, so the contract's fallback applies: TIME_MS is
+⍝         written to time.txt in the working directory with ⎕NPUT, and stdout is
+⍝         unchanged. Instrumented by inspection: Dyalog is not installed on this
+⍝         machine, so this row's timing is unverified.
 ⎕IO←0
 ⎕PP←17
 
-∇ r←array_sum;arr;i;total
+∇ r←array_sum;arr;i;total;ssT0;ssMS
+  ssT0←3⊃⎕AI
   arr←1000000⍴0
   i←0
   :While i<1000000
@@ -23,6 +29,8 @@
     total+←arr[i]
     i+←1
   :EndWhile
+  ssMS←(3⊃⎕AI)-ssT0
+  ('TIME_MS=',⍕ssMS)⎕NPUT 'time.txt'
   r←⍕total
 ∇
 

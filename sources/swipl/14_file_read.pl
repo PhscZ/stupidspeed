@@ -9,10 +9,14 @@
 % note: -O is required, see 01_branches.pl.
 
 main :-
+    get_time(T0),
     open('data.bin', read, S, [type(binary)]),
     read_loop(S, 0, Total),
     close(S),
     Checksum is Total mod 4294967296,
+    get_time(T1),
+    Ms is (T1 - T0) * 1000,
+    format(standard_error, "TIME_MS=~3f~n", [Ms]),
     format("~w~n", [Checksum]).
 
 read_loop(S, Acc, Total) :-

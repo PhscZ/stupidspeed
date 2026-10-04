@@ -15,20 +15,22 @@
 %%       hatches -- the process dictionary (put/get) and the atomics module, which is a
 %%       real fixed-size mutable array of 64-bit integers.
 main(_) ->
-    loop(0, 0, 0, 0, 0).
+    T0 = erlang:monotonic_time(microsecond),
+    loop(0, 0, 0, 0, 0, T0).
 
-loop(I, A, B, C, D) when I >= 100000000 ->
+loop(I, A, B, C, D, T0) when I >= 100000000 ->
+    io:format(standard_error, "TIME_MS=~p~n", [(erlang:monotonic_time(microsecond) - T0) / 1000]),
     io:format("~w ~w ~w ~w~n", [A, B, C, D]);
-loop(I, A, B, C, D) ->
+loop(I, A, B, C, D, T0) ->
     case I rem 3 of
-        0 -> loop(I + 1, A + 1, B, C, D);
+        0 -> loop(I + 1, A + 1, B, C, D, T0);
         _ ->
             case I rem 5 of
-                0 -> loop(I + 1, A, B + 1, C, D);
+                0 -> loop(I + 1, A, B + 1, C, D, T0);
                 _ ->
                     case I rem 7 of
-                        0 -> loop(I + 1, A, B, C + 1, D);
-                        _ -> loop(I + 1, A, B, C, D + 1)
+                        0 -> loop(I + 1, A, B, C + 1, D, T0);
+                        _ -> loop(I + 1, A, B, C, D + 1, T0)
                     end
             end
     end.

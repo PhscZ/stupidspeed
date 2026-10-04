@@ -12,9 +12,11 @@
 
 module c3_08_average;
 import std::io;
+import std::time::clock;
 
 fn void main()
 {
+	Clock t0 = clock::now();
 	double total = 0.0;
 
 	for (long i = 0; i < 100000000; i++)
@@ -23,5 +25,7 @@ fn void main()
 		total += reading;
 	}
 
+	NanoDuration elapsed = clock::now() - t0;
+	io::eprintfn("TIME_MS=%.3f", (double)elapsed / 1_000_000.0);
 	io::printfn("%.9f", total / 100000000.0);
 }

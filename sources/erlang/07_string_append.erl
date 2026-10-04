@@ -20,8 +20,11 @@
 %% behaviour for this operation and is recorded rather than worked around; forcing a copy would
 %% mean writing the row artificially.
 main(_) ->
+    T0 = erlang:monotonic_time(microsecond),
     Acc = append(250000, <<>>),
-    io:format("~w~n", [byte_size(Acc)]).
+    Size = byte_size(Acc),
+    io:format(standard_error, "TIME_MS=~p~n", [(erlang:monotonic_time(microsecond) - T0) / 1000]),
+    io:format("~w~n", [Size]).
 
 append(0, Acc) -> Acc;
 append(N, Acc) -> append(N - 1, <<Acc/binary, "x">>).

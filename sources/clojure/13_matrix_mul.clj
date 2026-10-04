@@ -12,7 +12,10 @@
 
 ;; The plain i, j, k triple loop in that order on flat row-major arrays, so the k loop walks a
 ;; column of B. Reordering would be faster, which is the point.
+(def ^:private __t0 (volatile! 0))
+
 (defn -main []
+  (vreset! __t0 (System/nanoTime))
   (let [n (long 500)
         elems (unchecked-multiply n n)
         a (long-array elems)
@@ -35,6 +38,7 @@
     (loop [e (long 0) total (long 0)]
       (if (< e elems)
         (recur (inc e) (unchecked-add total (aget c e)))
-        (println total)))))
+        (do (.println System/err (str "TIME_MS=" (/ (- (System/nanoTime) (long @__t0)) 1000000.0)))
+            (println total))))))
 
 (-main)

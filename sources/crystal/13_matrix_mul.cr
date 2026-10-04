@@ -1,5 +1,6 @@
 # task 13 matrix_mul -- expected output: 599995000
 # build: crystal build --release -o prog 13_matrix_mul.cr    run: ./prog
+t0 = Time.monotonic
 n = 500
 a = Array(Array(Int64)).new(n) { |i| Array(Int64).new(n) { |j| ((i + j) % 7).to_i64 } }
 b = Array(Array(Int64)).new(n) { |i| Array(Int64).new(n) { |j| ((i * j) % 5).to_i64 } }
@@ -15,4 +16,5 @@ end
 
 total = 0i64
 n.times { |i| n.times { |j| total += c[i][j] } }
+STDERR.puts "TIME_MS=%.3f" % (Time.monotonic - t0).total_milliseconds
 puts total

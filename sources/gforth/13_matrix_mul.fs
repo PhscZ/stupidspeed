@@ -16,7 +16,17 @@ variable j
 variable k
 variable acc
 
+\ timing: utime is gforth's microsecond clock; TIME_MS is written to stderr with
+\         WRITE-FILE/WRITE-LINE and stdout is unchanged.
+2variable ss-t0
+
+: ss-report ( -- )
+  s" TIME_MS=" stderr write-file drop
+  utime ss-t0 2@ d- drop 1000 /
+  s>d <# #s #> stderr write-line drop ;
+
 : main
+  utime ss-t0 2!
   SIZE cells allocate throw A !
   SIZE cells allocate throw B !
   SIZE cells allocate throw C !
@@ -53,6 +63,7 @@ variable acc
     C @ i @ cells + @ total +!
     1 i +!
   repeat
+  ss-report
   total @ . cr
   A @ free throw  B @ free throw  C @ free throw
 ;

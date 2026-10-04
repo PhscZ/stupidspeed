@@ -6,14 +6,17 @@ program prog;
 {$mode objfpc}{$H+}
 
 uses
-  SysUtils;
+  SysUtils, Windows;
 
 var
+  __clock_t0, __clock_t1, __clock_freq, __clock_us: Int64;
   slots: array[0..255] of PByte;
   i, slot: Int64;
   total: Int64;
   buf, old: PByte;
 begin
+  QueryPerformanceFrequency(__clock_freq);
+  QueryPerformanceCounter(__clock_t0);
   for i := 0 to 255 do
     slots[i] := nil;
   total := 0;
@@ -31,5 +34,11 @@ begin
   for i := 0 to 255 do
     if slots[i] <> nil then
       FreeMem(slots[i]);
+  QueryPerformanceCounter(__clock_t1);
+  __clock_us := (__clock_t1 - __clock_t0) * 1000000 div __clock_freq;
+  Write(StdErr, 'TIME_MS=', __clock_us div 1000, '.');
+  if __clock_us mod 1000 < 100 then Write(StdErr, '0');
+  if __clock_us mod 1000 < 10 then Write(StdErr, '0');
+  WriteLn(StdErr, __clock_us mod 1000);
   WriteLn(total);
 end.

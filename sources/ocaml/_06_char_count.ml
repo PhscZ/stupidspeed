@@ -20,7 +20,14 @@
    Bytes rather than a String because OCaml 5 strings are immutable and String.blit no longer
    exists; the bytes are never mutated after the build, so this is a mutable text buffer only
    because that is what the language allows. *)
+(* timing: Unix.gettimeofday is the clock this build of the Unix module exposes (there is
+   no clock_gettime binding here, so the monotonic clock is not reachable from OCaml);
+   TIME_MS goes to stderr through Printf.eprintf and stdout is unchanged. *)
+let ss_t0 = ref 0.0
+let ss_now () = Unix.gettimeofday () *. 1000.0
+let ss_report () = Printf.eprintf "TIME_MS=%.3f\n" (ss_now () -. !ss_t0)
 let () =
+  ss_t0 := ss_now ();
   let n = 100000000 in
   let text = Bytes.create n in
   Bytes.blit_string "abcdefghij" 0 text 0 10;
@@ -33,4 +40,5 @@ let () =
   for i = 0 to n - 1 do
     if Bytes.unsafe_get text i = 'h' then incr count
   done;
+  ss_report ();
   Printf.printf "%d\n" !count

@@ -14,6 +14,7 @@
 # uint8 read back into the accumulator would make the accumulator a uint8 and
 # Octave's integer arithmetic saturates, so the total would stop at 255.
 
+__t0 = tic;
 fid = fopen('data.bin', 'rb');
 total = 0;
 while true
@@ -30,4 +31,5 @@ while true
   end
 end
 fclose(fid);
+fprintf(stderr, "TIME_MS=%.3f\n", toc(__t0) * 1000);
 printf("%.0f\n", mod(total, 4294967296));

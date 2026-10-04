@@ -23,7 +23,17 @@ variable buf
 
 create slots SLOT-COUNT cells allot
 
+\ timing: utime is gforth's microsecond clock; TIME_MS is written to stderr with
+\         WRITE-FILE/WRITE-LINE and stdout is unchanged.
+2variable ss-t0
+
+: ss-report ( -- )
+  s" TIME_MS=" stderr write-file drop
+  utime ss-t0 2@ d- drop 1000 /
+  s>d <# #s #> stderr write-line drop ;
+
 : main
+  utime ss-t0 2!
   0 total !
   slots SLOT-COUNT cells 0 fill
   0 i !
@@ -42,6 +52,7 @@ create slots SLOT-COUNT cells allot
     i @ cells slots + @ ?dup if free throw then
     1 i +!
   repeat
+  ss-report
   total @ . cr
 ;
 

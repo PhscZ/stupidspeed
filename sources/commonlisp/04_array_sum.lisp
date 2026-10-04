@@ -19,7 +19,18 @@
 ;; A million-element (simple-array fixnum (*)), filled and then summed in two separate passes so
 ;; the fill is not part of the read loop. 499999500000 is past 2^31, so the sum is a 64-bit
 ;; integer rather than a fixnum.
+;; Self-timing: get-internal-real-time is the monotonic tick counter and
+;; internal-time-units-per-second converts ticks to seconds. *timer-start* is set as the
+;; first thing main does and read once, immediately before the answer is printed, so the
+;; timed region is the task's own work and nothing else. The line goes to *error-output*,
+;; so stdout is unchanged.
+(defvar *timer-start* 0)
+
+(defun elapsed-ms ()
+  (* 1000.0d0 (/ (- (get-internal-real-time) *timer-start*) internal-time-units-per-second)))
+
 (defun main ()
+  (setf *timer-start* (get-internal-real-time))
   (let ((n 1000000))
     (declare (fixnum n))
     (let ((arr (make-array n :element-type 'fixnum)))
@@ -27,4 +38,5 @@
       (let ((total 0))
         (declare (type (signed-byte 64) total))
         (dotimes (i n) (incf total (aref arr i)))
+        (format *error-output* "TIME_MS=~,3f~%" (elapsed-ms))
         (format t "~a~%" total)))))

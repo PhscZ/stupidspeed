@@ -14,8 +14,10 @@
  takes no argument and the loop variable has to be captured by value. The Semaphore
  is the join: each worker signals it once and the parent waits four times."
 
-| out results done total |
+| out err results done total t0 |
 out := Stdio stdout.
+err := Stdio stderr.
+t0 := Time microsecondClockValue.
 results := Array new: 4.
 done := Semaphore new.
 
@@ -40,4 +42,5 @@ done := Semaphore new.
 total := 0.
 1 to: 4 do: [:t | total := total + (results at: t)].
 
+err nextPutAll: 'TIME_MS=', ((Time microsecondClockValue - t0) / 1000.0) printString, String lf; flush.
 out nextPutAll: total printString; lf; flush.

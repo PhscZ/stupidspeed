@@ -7,10 +7,16 @@
 ⍝       total is 16 digits, so it prints in full.
 ⍝ note: the total is 7500000075000000, below 2^53, so the interpreter's double
 ⍝       arithmetic is exact and the digits are the true ones.
+⍝ timing: 3⊃⎕AI is Dyalog's elapsed-time counter in milliseconds. APL exposes no
+⍝         stream handle for stderr, so the contract's fallback applies: TIME_MS is
+⍝         written to time.txt in the working directory with ⎕NPUT, and stdout is
+⍝         unchanged. Instrumented by inspection: Dyalog is not installed on this
+⍝         machine, so this row's timing is unverified.
 ⎕IO←0
 ⎕PP←17
 
-∇ r←switch;acc;i
+∇ r←switch;acc;i;ssT0;ssMS
+  ssT0←3⊃⎕AI
   acc←0
   i←0
   :While i<100000000
@@ -22,6 +28,8 @@
     :EndSelect
     i+←1
   :EndWhile
+  ssMS←(3⊃⎕AI)-ssT0
+  ('TIME_MS=',⍕ssMS)⎕NPUT 'time.txt'
   r←⍕acc
 ∇
 

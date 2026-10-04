@@ -3,8 +3,10 @@
 package main
 
 import "core:fmt"
+import "core:time"
 
 main :: proc() {
+	t0 := time.now()
 	N :: 1_000_000
 	array := make([]i64, N)
 	defer delete(array)
@@ -17,5 +19,6 @@ main :: proc() {
 	for i in 0 ..< N {
 		total += array[i]
 	}
+	fmt.eprintfln("TIME_MS=%.3f", time.duration_milliseconds(time.since(t0)))
 	fmt.println(total)
 }

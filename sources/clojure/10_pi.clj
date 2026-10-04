@@ -19,7 +19,10 @@
 
 ;; Gibbons' unbounded spigot over Clojure's built-in exact integers. n stays a primitive long
 ;; because it is always a single digit; q, r and t grow to about 16000 limbs.
+(def ^:private __t0 (volatile! 0))
+
 (defn -main []
+  (vreset! __t0 (System/nanoTime))
   (loop [q 1N r 0N t 1N
          k (long 1) l (long 3) n (long 3)
          produced (long 0) sum (long 0)]
@@ -35,6 +38,7 @@
                 next-n (long (quot u3 (*' t l)))
                 r2 (*' (+' (*' (long 2) q) r) l)]
             (recur (*' q k) r2 (*' t l) (inc k) (+ l (long 2)) next-n produced sum))))
-      (println sum))))
+      (do (.println System/err (str "TIME_MS=" (/ (- (System/nanoTime) (long @__t0)) 1000000.0)))
+          (println sum)))))
 
 (-main)

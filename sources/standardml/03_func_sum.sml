@@ -31,7 +31,10 @@ use "03_func_sum_add_one.sml";
 
 fun main () =
   let
+    val t0 = Time.now ()
     fun loop (i, v) = if i >= 100000000 then v else loop (i + 1, add_one v)
+    val result = loop (0, 0)
+    val () = TextIO.output (TextIO.stdErr, "TIME_MS=" ^ Real.fmt (StringCvt.FIX (SOME 3)) (Time.toReal (Time.- (Time.now (), t0)) * 1000.0) ^ "\n")
   in
-    print (Int.toString (loop (0, 0)) ^ "\n")
+    print (Int.toString result ^ "\n")
   end

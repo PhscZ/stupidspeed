@@ -2,6 +2,7 @@
 // build: none (interpreted)    run: C:\stupidspeed\tools\spidermonkey\js.exe 10_pi.js
 // note: Gibbons' unbounded spigot on the shell's native BigInt; only the digit sum is printed.
 
+var __t0 = performance.now();
 var DIGITS = 1000;
 
 /* BigInt division truncates toward zero; the spigot's quotients are floor divisions. */
@@ -45,4 +46,5 @@ while (emitted < DIGITS) {
     k = k + 1n;
   }
 }
+printErr("TIME_MS=" + (performance.now() - __t0));
 print(sum);

@@ -5,6 +5,10 @@
 // note: plain i, j, k triple loop with k innermost, no reordering; the matrices are flat long[]
 //       arrays for the same reason as task 12.
 
+import System.Diagnostics
+
+sw = Stopwatch.StartNew()
+
 n = 500
 a = array[of long](n * n)
 b = array[of long](n * n)
@@ -38,5 +42,7 @@ while idx < n * n:
     total += c[idx]
     idx += 1
 
+sw.Stop()
+System.Console.Error.WriteLine("TIME_MS=" + sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture))
 print(total)
 

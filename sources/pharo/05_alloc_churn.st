@@ -4,8 +4,10 @@
  reachable and the one it replaces becomes garbage. Pharo's scavenger reclaims the
  dead buffers; the ring keeps the allocation itself from being optimised away."
 
-| out slots total |
+| out err slots total t0 |
 out := Stdio stdout.
+err := Stdio stderr.
+t0 := Time microsecondClockValue.
 slots := Array new: 256.
 total := 0.
 
@@ -17,4 +19,5 @@ total := 0.
 	total := total + (buf at: 1).
 	slots at: idx + 1 put: buf].
 
+err nextPutAll: 'TIME_MS=', ((Time microsecondClockValue - t0) / 1000.0) printString, String lf; flush.
 out nextPutAll: total printString; lf; flush.

@@ -18,10 +18,13 @@
 %% closest thing Erlang has to an array, and genuinely imperative. Filled in one pass and
 %% summed in another, so the fill is not part of the read loop.
 main(_) ->
+    T0 = erlang:monotonic_time(microsecond),
     N = 1000000,
     Arr = atomics:new(N, [{signed, true}]),
     fill(Arr, 0, N),
-    io:format("~w~n", [sum(Arr, 0, N)]).
+    Total = sum(Arr, 0, N),
+    io:format(standard_error, "TIME_MS=~p~n", [(erlang:monotonic_time(microsecond) - T0) / 1000]),
+    io:format("~w~n", [Total]).
 
 fill(_Arr, I, N) when I >= N -> ok;
 fill(Arr, I, N) ->

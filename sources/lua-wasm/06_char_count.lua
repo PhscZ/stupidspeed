@@ -3,6 +3,7 @@
 -- build (wasm): lua.wasm is the wasm32-wasip1 build of this same interpreter (see BUILD.md); run: wasmtime -W exceptions=y --dir . lua.wasm <task>.lua
 -- The 100 MB text is built once with string.rep, then scanned one character at a time.
 
+local __t0 = os.clock()
 local text = string.rep("abcdefghij", 10000000)
 
 local count = 0
@@ -15,4 +16,6 @@ for i = 1, #text do
     end
 end
 
+local __t1 = os.clock()
+io.stderr:write(string.format("TIME_MS=%.3f\n", (__t1 - __t0) * 1000.0))
 print(count)

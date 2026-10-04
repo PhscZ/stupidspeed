@@ -5,6 +5,7 @@
 # as the i * n + j the other languages use. The fill, the add and the sum are
 # three separate loops, as in every other row.
 
+__t0 = tic;
 n = 1000;
 A = zeros(1, n * n);
 B = zeros(1, n * n);
@@ -26,4 +27,5 @@ total = 0;
 for k = 1:n * n
   total = total + C(k);
 end
+fprintf(stderr, "TIME_MS=%.3f\n", toc(__t0) * 1000);
 printf("%.0f\n", total);

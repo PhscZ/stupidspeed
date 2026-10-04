@@ -11,7 +11,15 @@
 //       tenth slot, the same way the C reference does it; nothing is appended in a loop. The
 //       scan then walks the buffer one byte at a time.
 
+// timing: GLib.get_real_time() is GLib's monotonic clock in microseconds; TIME_MS goes
+//         to stderr and stdout is unchanged.
+static int64 ss_t0;
+static void ss_report () {
+    stderr.printf ("TIME_MS=%.3f\n", (GLib.get_real_time () - ss_t0) / 1000.0);
+}
+
 int main () {
+    ss_t0 = GLib.get_real_time ();
     int64 repeats = 10000000;
     int64 block_len = 10;
     int64 text_len = repeats * block_len;
@@ -33,6 +41,7 @@ int main () {
         }
     }
 
+    ss_report ();
     stdout.printf ("%lld\n", count);
     return 0;
 }

@@ -3,6 +3,7 @@
 // A real `switch` on the primitive remainder, so the JVM sees a tableswitch.
 
 long acc = 0
+long __t0 = System.nanoTime()
 
 for (long i = 0; i < 100000000L; i++) {
     switch ((int) (i % 4)) {
@@ -13,4 +14,5 @@ for (long i = 0; i < 100000000L; i++) {
     }
 }
 
+System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
 println acc

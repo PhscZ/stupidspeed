@@ -5,8 +5,10 @@
  appending, so the build is not the benchmark. Then it is scanned one character at a
  time. `String` in Pharo is ByteString, so the characters are single bytes."
 
-| out block text count |
+| out err block text count t0 |
 out := Stdio stdout.
+err := Stdio stderr.
+t0 := Time microsecondClockValue.
 
 block := String new: 10000.
 1 to: 1000 do: [:k |
@@ -33,4 +35,5 @@ count := 0.
 			ch = $e
 				ifFalse: [ch = $h ifTrue: [count := count + 1]]]].
 
+err nextPutAll: 'TIME_MS=', ((Time microsecondClockValue - t0) / 1000.0) printString, String lf; flush.
 out nextPutAll: count printString; lf; flush.

@@ -7,6 +7,19 @@
 ;; note: every value stays inside the fixnum range -- A entries are 0..6, B entries 0..4, so
 ;;       an inner product is at most 500*24 = 12000 -- and the total 599995000 is a fixnum,
 ;;       so the fx family is exact here.
+;; timing: (real-time) is Chez's monotonic clock in milliseconds since system start-up;
+;;         TIME_MS is written to time.txt, the contract's fallback, because Chez's
+;;         console-error-port is the console and this host sends the console to stdout
+;;         when it is redirected; stdout is unchanged.
+(define ss-t0 (real-time))
+(define (ss-report)
+  (let ([p (open-file-output-port "time.txt" (file-options no-fail)
+                                  (buffer-mode block))])
+    (put-bytevector p (string->utf8
+                       (string-append "TIME_MS="
+                                      (number->string (- (real-time) ss-t0))
+                                      "\n")))
+    (close-port p)))
 
 (define n 500)
 (define elems (* n n))
@@ -39,5 +52,5 @@
 
 (let loop ([e 0] [total 0])
   (if (fx= e elems)
-      (begin (display total) (newline))
+      (begin (ss-report) (display total) (newline))
       (loop (fx+ e 1) (fx+ total (fxvector-ref c e)))))

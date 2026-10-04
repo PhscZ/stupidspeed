@@ -8,6 +8,12 @@
 #       left alone.
 # note: each element of C is a sum of 500 terms each at most 6 * 4 = 24, so it fits easily
 #       in a double; the grand total, 599995000, is below 2^53 and exact.
+
+# timing: os/clock is Janet's monotonic clock, in seconds as a double; TIME_MS goes to
+#         stderr with eprintf and stdout is unchanged.
+(def ss-t0 (os/clock))
+(defn ss-report [] (eprintf "TIME_MS=%.3f\n" (* 1000 (- (os/clock) ss-t0))))
+
 (def n 500)
 (def A (array/new-filled (* n n) 0))
 (def B (array/new-filled (* n n) 0))
@@ -29,4 +35,5 @@
 (for k 0 (* n n)
   (+= total (in C k)))
 
+(ss-report)
 (print total)

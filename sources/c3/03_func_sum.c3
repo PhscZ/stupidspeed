@@ -12,6 +12,7 @@
 
 module c3_03_func_sum;
 import std::io;
+import std::time::clock;
 
 fn long add_one(long n) @noinline
 {
@@ -20,6 +21,7 @@ fn long add_one(long n) @noinline
 
 fn void main()
 {
+	Clock t0 = clock::now();
 	long value = 0;
 
 	for (long i = 0; i < 100000000; i++)
@@ -27,5 +29,7 @@ fn void main()
 		value = add_one(value);
 	}
 
+	NanoDuration elapsed = clock::now() - t0;
+	io::eprintfn("TIME_MS=%.3f", (double)elapsed / 1_000_000.0);
 	io::printfn("%d", value);
 }

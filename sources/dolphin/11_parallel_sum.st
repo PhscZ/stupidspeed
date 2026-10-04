@@ -6,9 +6,14 @@
  production Smalltalk is in this position; there is no OS-thread class in the image.
  The four ranges are fixed, so the total does not depend on the order they finish in.
  Each worker is an argumentless block wrapping a one-argument block, because `fork`
- takes no argument and the loop variable has to be captured by value."
+ takes no argument and the loop variable has to be captured by value.
+ timing: Time millisecondClockValue is Dolphin's millisecond clock. Dolphin's console has no
+ stderr stream, so the contract's fallback applies and TIME_MS goes to time.txt in the working
+ directory. Instrumented by inspection: Dolphin is not installed on this machine, so this
+ row's timing is unverified."
 
-| out results done total |
+| ssT0 out results done total |
+ssT0 := Time millisecondClockValue.
 out := SessionManager current stdout.
 results := Array new: 4.
 done := Semaphore new.
@@ -33,6 +38,11 @@ done := Semaphore new.
 
 total := 0.
 1 to: 4 do: [:t | total := total + (results at: t)].
+
+(FileWriteStream write: 'time.txt' type: #binary)
+	nextPutAll: 'TIME_MS=', (Time millisecondClockValue - ssT0) printString;
+	cr;
+	close.
 
 out nextPutAll: total printString; cr; flush.
 SessionManager current quit: 0!

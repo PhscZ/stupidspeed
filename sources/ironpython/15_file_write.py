@@ -4,6 +4,12 @@
 #       fsynced; os.fsync flushes the .NET file stream through to the disk.
 
 import os
+import clr
+from System.Diagnostics import Stopwatch
+from System.Globalization import CultureInfo
+import sys
+
+_sw = Stopwatch.StartNew()
 
 buf = bytes(range(256)) * 4096
 written = 0
@@ -14,4 +20,6 @@ with open('out.bin', 'wb') as f:
     f.flush()
     os.fsync(f.fileno())
 
+_sw.Stop()
+sys.stderr.write("TIME_MS=" + _sw.Elapsed.TotalMilliseconds.ToString("F3", CultureInfo.InvariantCulture) + "\n")
 print(written)

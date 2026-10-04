@@ -14,9 +14,14 @@
 ;       period; the expected line is exactly nine digits after it.
 ; note: the full 100000000-iteration run takes about 35 s on this machine; a pass on the same
 ;       shared host measured 107 s for it.
+; timing: A_TickCount is the interpreter's own millisecond clock (GetTickCount, so about
+;       15 ms resolution); TIME_MS is written to stderr with FileAppend(..., "**") and
+;       stdout is unchanged.
 #Requires AutoHotkey v2.0
 #SingleInstance Off
 #NoTrayIcon
+
+t0 := A_TickCount
 
 total := 0.0
 
@@ -26,4 +31,5 @@ Loop 100000000 {
     total += reading
 }
 
+FileAppend("TIME_MS=" (A_TickCount - t0) "`n", "**")
 FileAppend(Format("{:.9f}", total / 100000000.0) "`n", "*")

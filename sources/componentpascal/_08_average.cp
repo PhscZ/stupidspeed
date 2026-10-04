@@ -13,21 +13,49 @@
    PATH, and %CROOT%\bin\RTS.dll and %CROOT%\bin\RealStr.dll copied next to the
    executable. gpcp has no optimisation levels; the documented invocation is plain
    "gpcp _08_average.cp" and /list- only suppresses the .lst listing file. *)
+(* timing: Env.Environment.get_TickCount() is .NET's millisecond clock, and the Error module
+   writes to stderr, so TIME_MS is reported there and stdout is unchanged. *)
 
 MODULE _08_average;
- IMPORT CPmain, Console, RealStr;
+ IMPORT CPmain, Console, Error, Env := mscorlib_System, RealStr;
 
  VAR total, reading : REAL;
+     ss_t0, ss_t1 : LONGINT;
      i : LONGINT;
      s : ARRAY 32 OF CHAR;
 
+ PROCEDURE WMs(x : LONGINT);
+   VAR s : ARRAY 24 OF CHAR;
+       n, k : INTEGER;
+       t : CHAR;
+ BEGIN
+   IF x = 0 THEN Error.Write("0"); RETURN END;
+   n := 0;
+   WHILE x > 0 DO
+     s[n] := CHR(SHORT(x MOD 10) + ORD("0"));
+     x := x DIV 10;
+     INC(n)
+   END;
+   s[n] := 0X;
+   k := 0; DEC(n);
+   WHILE k < n DO
+     t := s[k]; s[k] := s[n]; s[n] := t;
+     INC(k); DEC(n)
+   END;
+   Error.WriteString(s)
+ END WMs;
+
 BEGIN
+  ss_t0 := Env.Environment.get_TickCount();
   total := 0.0;
 
   FOR i := 0 TO 99999999 DO
     reading := (i MOD 256) / 256.0;
     total := total + reading
   END;
+
+  ss_t1 := Env.Environment.get_TickCount();
+  Error.WriteString("TIME_MS="); WMs(ss_t1 - ss_t0); Error.WriteLn();
 
   RealStr.RealToFixed(total / 100000000.0, 9, s);
   Console.WriteString(s); Console.WriteLn

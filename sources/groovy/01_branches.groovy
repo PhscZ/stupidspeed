@@ -4,6 +4,7 @@
 // the four counters are declared `long` and the arithmetic stays on primitives.
 
 long a = 0
+long __t0 = System.nanoTime()
 long b = 0
 long c = 0
 long d = 0
@@ -20,4 +21,5 @@ for (long i = 0; i < 100000000L; i++) {
     }
 }
 
+System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
 println "${a} ${b} ${c} ${d}"

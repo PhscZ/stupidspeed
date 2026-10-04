@@ -11,7 +11,15 @@
 //       up; the running total is reduced mod 2^32 only when it is printed. GLib.FileStream is
 //       a FILE* — `read` is fread and the chunk length comes from the array's own length.
 
+// timing: GLib.get_real_time() is GLib's monotonic clock in microseconds; TIME_MS goes
+//         to stderr and stdout is unchanged.
+static int64 ss_t0;
+static void ss_report () {
+    stderr.printf ("TIME_MS=%.3f\n", (GLib.get_real_time () - ss_t0) / 1000.0);
+}
+
 int main () {
+    ss_t0 = GLib.get_real_time ();
     var fs = GLib.FileStream.open ("data.bin", "rb");
     if (fs == null) {
         stderr.printf ("cannot open data.bin\n");
@@ -28,6 +36,7 @@ int main () {
         }
     }
 
+    ss_report ();
     stdout.printf ("%llu\n", (uint64) (total % 4294967296));
     return 0;
 }

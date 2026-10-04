@@ -6,12 +6,15 @@
 ! followed by close is the strongest durability the language offers.
 
 program main
+  use iso_fortran_env, only: error_unit
   implicit none
   integer, parameter :: chunk = 1048576
   integer(kind=1), allocatable :: buf(:)
   integer(kind=8) :: written
   integer :: u, i, v
+  integer(kind=8) :: ss_t0, ss_t1, ss_rate
 
+  call system_clock(ss_t0, ss_rate)
   ! The buffer comes from the heap so the program does not depend on a
   ! generous stack limit.
   allocate(buf(chunk))
@@ -33,5 +36,7 @@ program main
   flush(u)
   close(u)
 
+  call system_clock(ss_t1)
+  write(error_unit,'(a,i0)') 'TIME_MS=', (ss_t1 - ss_t0) * 1000_8 / ss_rate
   write(*,'(i0)') written
 end program main

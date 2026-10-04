@@ -19,10 +19,13 @@
 %%       range where a float is exact. Binaries are byte arrays, so each element is already 0..255.
 
 main(_) ->
+    T0 = erlang:monotonic_time(microsecond),
     {ok, F} = file:open("data.bin", [read, raw, binary]),
     Total = chunks(F, 0),
     file:close(F),
-    io:format("~w~n", [Total rem 4294967296]).
+    R = Total rem 4294967296,
+    io:format(standard_error, "TIME_MS=~p~n", [(erlang:monotonic_time(microsecond) - T0) / 1000]),
+    io:format("~w~n", [R]).
 
 chunks(F, Acc) ->
     case file:read(F, 1048576) of

@@ -8,6 +8,19 @@
 ;;       Racket, COBOL and Dolphin rows note. Nothing calls the Windows _commit.
 ;; note: the port is opened block-buffered, so the 50 put-bytevector calls go into the port
 ;;       buffer and the kernel sees the 1 MiB writes.
+;; timing: (real-time) is Chez's monotonic clock in milliseconds since system start-up;
+;;         TIME_MS is written to time.txt, the contract's fallback, because Chez's
+;;         console-error-port is the console and this host sends the console to stdout
+;;         when it is redirected; stdout is unchanged.
+(define ss-t0 (real-time))
+(define (ss-report)
+  (let ([p (open-file-output-port "time.txt" (file-options no-fail)
+                                  (buffer-mode block))])
+    (put-bytevector p (string->utf8
+                       (string-append "TIME_MS="
+                                      (number->string (- (real-time) ss-t0))
+                                      "\n")))
+    (close-port p)))
 
 (define len 1048576)
 (define buf (make-bytevector len 0))
@@ -27,5 +40,6 @@
 (flush-output-port out)
 (close-port out)
 
+(ss-report)
 (display (* 50 len))
 (newline)

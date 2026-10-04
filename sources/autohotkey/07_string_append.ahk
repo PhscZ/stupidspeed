@@ -17,13 +17,19 @@
 ;       VarSetStrCapacity exists to pre-size a variable for repeated concatenation and
 ;       is deliberately not used, because the task's loop is the plain one.
 ; note: StrLen(text) is used as the printed value, so the loop cannot be deleted.
+; timing: A_TickCount is the interpreter's own millisecond clock (GetTickCount, so about
+;       15 ms resolution); TIME_MS is written to stderr with FileAppend(..., "**") and
+;       stdout is unchanged.
 #Requires AutoHotkey v2.0
 #SingleInstance Off
 #NoTrayIcon
+
+t0 := A_TickCount
 
 text := ""
 
 Loop 250000
     text .= "x"
 
+FileAppend("TIME_MS=" (A_TickCount - t0) "`n", "**")
 FileAppend(StrLen(text) "`n", "*")

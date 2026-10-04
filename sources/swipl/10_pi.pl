@@ -9,7 +9,11 @@
 % note: -O is required, see 01_branches.pl.
 
 main :-
+    get_time(T0),
     spigot(1, 3, 3, 0, 0, 1, 0, 1, Sum),
+    get_time(T1),
+    Ms is (T1 - T0) * 1000,
+    format(standard_error, "TIME_MS=~3f~n", [Ms]),
     format("~w~n", [Sum]).
 
 % spigot(K, L, N, Produced, Sum, Q, R, T, Total)

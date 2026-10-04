@@ -14,9 +14,17 @@
 ; note: `prn` displays through Racket's display, which prints 0.498046875 rather than the shortest
 ;       round-tripping form a language with a different float printer would choose.
 
+; Self-timing: t0 is read as the first thing the program's body does, and the elapsed
+; milliseconds are written to stderr with Arc's own `ero` (which prints through (stderr))
+; immediately before the answer goes to stdout with `prn`. The clock is the Racket host's
+; current-inexact-milliseconds, reached through Arc's ($ ...) escape, so the bracketed region
+; is this script's own work and stdout is unchanged.
+(= t0 ($ (current-inexact-milliseconds)))
+
 (with (total 0.0)
   (loop (i 0)
     (when (< i 100000000)
       (= total (+ total (/ (mod i 256) 256.0)))
       (recur (+ i 1))))
+  (ero "TIME_MS=" (- ($ (current-inexact-milliseconds)) t0))
   (prn (/ total 100000000)))

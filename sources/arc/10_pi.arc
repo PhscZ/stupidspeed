@@ -21,6 +21,13 @@
 
 ; Gibbons' unbounded spigot, the same loop as every other row. Only the sum of the 1000 digits is
 ; printed. q and r grow to roughly 16000 limbs; n is always a single digit.
+; Self-timing: t0 is read as the first thing the program's body does, and the elapsed
+; milliseconds are written to stderr with Arc's own `ero` (which prints through (stderr))
+; immediately before the answer goes to stdout with `prn`. The clock is the Racket host's
+; current-inexact-milliseconds, reached through Arc's ($ ...) escape, so the bracketed region
+; is this script's own work and stdout is unchanged.
+(= t0 ($ (current-inexact-milliseconds)))
+
 (with (q 1 r 0 tt 1 k 1 l 3 n 3 produced 0 total 0)
   (loop ()
     (when (< produced 1000)
@@ -48,4 +55,5 @@
                  l (+ l 2)
                  n n2)))
         (recur))))
+  (ero "TIME_MS=" (- ($ (current-inexact-milliseconds)) t0))
   (prn total))

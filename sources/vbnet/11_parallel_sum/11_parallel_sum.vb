@@ -6,6 +6,7 @@ Imports System.Threading
 
 Module Program
     Sub Main()
+        Dim sw As System.Diagnostics.Stopwatch = System.Diagnostics.Stopwatch.StartNew()
         Dim results(3) As Long
         Dim threads(3) As Thread
 
@@ -27,6 +28,8 @@ Module Program
             total += results(t)
         Next
 
+        sw.Stop()
+        Console.Error.WriteLine("TIME_MS=" & sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture))
         Console.WriteLine(total)
     End Sub
 

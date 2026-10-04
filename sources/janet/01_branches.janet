@@ -7,6 +7,12 @@
 # note: `cond` is the if/else-if/else chain; its last form is the else branch.
 # note: `print` writes its arguments with no separator and appends one newline, so the four
 #       counters are joined with explicit " " strings, the same line the C row prints.
+
+# timing: os/clock is Janet's monotonic clock, in seconds as a double; TIME_MS goes to
+#         stderr with eprintf and stdout is unchanged.
+(def ss-t0 (os/clock))
+(defn ss-report [] (eprintf "TIME_MS=%.3f\n" (* 1000 (- (os/clock) ss-t0))))
+
 (var a 0)
 (var b 0)
 (var c 0)
@@ -19,4 +25,5 @@
     (= 0 (% i 7)) (++ c)
     (++ d)))
 
+(ss-report)
 (print a " " b " " c " " d)

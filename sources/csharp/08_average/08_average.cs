@@ -7,6 +7,7 @@ class Program
 {
     static void Main()
     {
+        System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
         double total = 0.0;
         for (int i = 0; i < 100000000; i++)
         {
@@ -14,6 +15,8 @@ class Program
             total += reading;
         }
         double average = total / 100000000;
+        sw.Stop();
+        Console.Error.WriteLine("TIME_MS=" + sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture));
         Console.WriteLine(average.ToString("R", CultureInfo.InvariantCulture));
     }
 }

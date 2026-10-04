@@ -9,6 +9,11 @@
 
 module Main where
 
+import Control.Exception (evaluate)
+import Data.Time.Clock.POSIX (getPOSIXTime)
+import System.IO (stderr)
+import Text.Printf (hPrintf)
+
 -- (q, r, t, k, n, l), the spigot state
 step :: (Integer, Integer, Integer, Integer, Integer, Integer) -> Bool
 step (q, r, t, _, n, _) = 4 * q + r - t < n * t
@@ -40,4 +45,10 @@ spigot digits = go 0 0 (1, 0, 1, 1, 3, 3)
       | otherwise = go count acc (advance st)
 
 main :: IO ()
-main = print (spigot 1000)
+main = do
+  t0 <- getPOSIXTime
+  !v <- evaluate (spigot 1000)
+  t1 <- getPOSIXTime
+  let !ms = (realToFrac (t1 - t0) :: Double) * 1000
+  hPrintf stderr "TIME_MS=%.3f\n" ms
+  print v

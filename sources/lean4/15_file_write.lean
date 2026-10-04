@@ -18,6 +18,7 @@ where
          (cur.append cur)
 
 def main : IO Unit := do
+  let t0 ← IO.monoNanosNow
   let buf := repeatBytes (ByteArray.mk (Array.ofFn fun i : Fin 256 => UInt8.ofNat i.val)) 4096
   IO.FS.withFile "out.bin" IO.FS.Mode.write fun h => do
     let mut written : Nat := 0
@@ -25,4 +26,7 @@ def main : IO Unit := do
       h.write buf
       written := written + buf.size
     h.flush
+    let t1 ← IO.monoNanosNow
+    let ms : Float := (t1 - t0).toFloat / 1000000.0
+    IO.eprintln s!"TIME_MS={ms}"
     IO.println written

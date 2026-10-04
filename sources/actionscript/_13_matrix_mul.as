@@ -11,16 +11,31 @@
 // note: the plain i, j, k triple loop in that order, on flat row-major
 //       Vector.<int>, so the k loop walks a column of B. Reordering would be faster,
 //       which is the point.
+// timing: getTimer() is the AVM2 clock, whole milliseconds since the VM started. AIR has
+//       no stderr, so the contract's fallback applies: TIME_MS goes to time.txt in
+//       File.applicationStorageDirectory -- %APPDATA%\stupidspeed.actionscript\Local Store\,
+//       the writable directory task 15 writes out.bin to, because the bundle directory is
+//       read-only. A FileStream cannot be opened from the constructor, so the write and the
+//       exit happen one event-loop turn later; the measured region is unchanged.
 package
 {
     import flash.display.Sprite;
+    import flash.filesystem.File;
+    import flash.filesystem.FileMode;
+    import flash.filesystem.FileStream;
     import flash.system.System;
     import flash.desktop.NativeApplication;
+    import flash.utils.getTimer;
+    import flash.utils.setTimeout;
 
     public class _13_matrix_mul extends Sprite
     {
+        private var __t0:int = 0;
+        private var __ms:int = 0;
+
         public function _13_matrix_mul()
         {
+            __t0 = getTimer();
             var n:int = 500;
             var elems:int = n * n;
             var A:Vector.<int> = new Vector.<int>(elems);
@@ -51,7 +66,22 @@ package
             {
                 total = total + C[e];
             }
+            __ms = getTimer() - __t0;
             System.output(total + "\n");
+            setTimeout(__report, 0);
+        }
+
+        private function __report():void
+        {
+            try
+            {
+                var f:File = File.applicationStorageDirectory.resolvePath("time.txt");
+                var s:FileStream = new FileStream();
+                s.open(f, FileMode.WRITE);
+                s.writeUTFBytes("TIME_MS=" + __ms + "\n");
+                s.close();
+            }
+            catch (e:Error) { }
             NativeApplication.nativeApplication.exit(0);
         }
     }

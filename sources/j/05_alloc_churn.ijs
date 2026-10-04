@@ -8,6 +8,8 @@ NB.       and the previous occupant of that slot is dropped. The amend is in pla
 NB.       because the same name is on both sides.
 NB. note: while., not for_i. i. 10000000, for the reason in 01_branches.ijs.
 
+__t0 =: 6!:1 ''
+
 alloc_churn =: 3 : 0
   slots =. 256 $ a:
   total =. 0
@@ -21,6 +23,9 @@ alloc_churn =: 3 : 0
   end.
   ": total
 )
+
+__t1 =: 6!:1 ''
+stderr 'TIME_MS=', (": (__t1 - __t0) * 1000)
 
 stdout (alloc_churn''), LF
 exit 0

@@ -17,6 +17,7 @@
 //       entirely and the cell measures process start-up.
 
 using System;
+using System.Diagnostics;
 
 namespace Task;
 
@@ -33,11 +34,16 @@ class Program
 
 	static void Main()
 	{
+		// timing: Stopwatch.GetTimestamp() is corlib's microsecond clock (QueryPerformanceCounter on Windows).
+		int64 t0 = Stopwatch.GetTimestamp();
+
 		int64 value = 0;
 
 		for (int64 i = 0; i < 100000000; i++)
 			value = sAddOne(value);
 
+		int64 t1 = Stopwatch.GetTimestamp();
+		Console.Error.WriteLine($"TIME_MS={(double)(t1 - t0) / 1000.0}");
 		Console.WriteLine("{0}", value);
 	}
 }

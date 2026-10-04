@@ -1,7 +1,10 @@
 // task 06 char_count — expected output: 10000000
 // build: dart compile exe -o prog 06_char_count.dart (aot; jit has no build step)    run: ./prog (aot) | dart 06_char_count.dart (jit)
 
+import 'dart:io';
+
 void main() {
+  final Stopwatch sw = Stopwatch()..start();
   // Built once, by repeating the whole block in one operation.
   final String text = 'abcdefghij' * 10000000;
 
@@ -17,5 +20,6 @@ void main() {
     }
     // anything else: skip
   }
+  stderr.writeln('TIME_MS=${(sw.elapsedMicroseconds / 1000).toStringAsFixed(3)}');
   print(count);
 }

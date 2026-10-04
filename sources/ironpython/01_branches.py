@@ -5,6 +5,13 @@
 #       resolve its runtime, set DOTNET_ROOT=tools/dotnet8 first.
 # note: every counter is a Python int (arbitrary precision), so no overflow and no double promotion.
 
+import clr
+from System.Diagnostics import Stopwatch
+from System.Globalization import CultureInfo
+import sys
+
+_sw = Stopwatch.StartNew()
+
 a = 0
 b = 0
 c = 0
@@ -20,4 +27,6 @@ for i in range(100000000):
     else:
         d += 1
 
+_sw.Stop()
+sys.stderr.write("TIME_MS=" + _sw.Elapsed.TotalMilliseconds.ToString("F3", CultureInfo.InvariantCulture) + "\n")
 print(a, b, c, d)

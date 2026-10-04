@@ -1,8 +1,20 @@
 // task 11 parallel_sum — expected output: 7500000075000000
 // build: swiftc -O -o prog 11_parallel_sum.swift    run: ./prog
 // concurrency: DispatchQueue.concurrentPerform (libdispatch), which ships with the toolchain
-
+// timing: Date() is Foundation's wall clock in seconds since the reference date, and
+//         timeIntervalSinceDate gives the elapsed time in seconds as a Double; TIME_MS goes
+//         to stderr with FileHandle.standardError and stdout is unchanged. Instrumented by
+//         inspection: the installed Swift toolchain cannot compile on this machine (missing
+//         _complex and ucrt Swift modules), so this row's timing is unverified.
 import Dispatch
+import Foundation
+
+func ssReport(_ t0: Date) {
+    let ms = Date().timeIntervalSince(t0) * 1000
+    FileHandle.standardError.write("TIME_MS=" + String(format: "%.3f", ms) + "\n".data(using: .utf8)!)
+}
+let ssT0 = Date()
+
 
 // The task 02 switch over one quarter of the range.
 func partial(_ t: Int64) -> Int64 {
@@ -39,4 +51,5 @@ for p in partials {
     total += p
 }
 
+ssReport(ssT0)
 print(total)

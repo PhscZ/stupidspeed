@@ -7,6 +7,7 @@
 # big-by-big divide whose quotient is a single digit, found by doubling.
 # The digits themselves are never printed.
 
+import std/monotimes, std/strutils, std/times
 const Base: int64 = 1_000_000_000
 
 type
@@ -133,6 +134,7 @@ proc divFloor(a, b: Big): int64 =
   return -(q + 1)
 
 proc main() =
+  let t0 = getMonoTime()
   var q = toBig(1)
   var r = toBig(0)
   var t = toBig(1)
@@ -162,6 +164,7 @@ proc main() =
       n = nextN
       inc k
       l = l + 2
+  stderr.writeLine("TIME_MS=" & formatFloat(float((getMonoTime() - t0).inMicroseconds) / 1000.0, ffDecimal, 3))
   echo total
 
 main()

@@ -8,6 +8,9 @@
 //       so only the 'h' test can change the count.
 
 import System.Text
+import System.Diagnostics
+
+sw = Stopwatch.StartNew()
 
 block = "abcdefghij"
 builder = StringBuilder(100000000)
@@ -25,5 +28,7 @@ while i < text.Length:
         count += 1
     i += 1
 
+sw.Stop()
+System.Console.Error.WriteLine("TIME_MS=" + sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture))
 print(count)
 

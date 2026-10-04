@@ -3,6 +3,7 @@
 // One pass over 50 MiB, reading 1 MiB at a time.
 
 byte[] buf = new byte[1024 * 1024]
+long __t0 = System.nanoTime()
 long total = 0
 
 new File('data.bin').withInputStream { input ->
@@ -15,4 +16,5 @@ new File('data.bin').withInputStream { input ->
     }
 }
 
+System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
 println(total % 4294967296L)

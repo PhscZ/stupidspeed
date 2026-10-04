@@ -1,6 +1,8 @@
 // task 12 matrix_add — expected output: 999000000
 // build: none    run: node 12_matrix_add.js | bun 12_matrix_add.js | deno run 12_matrix_add.js
 
+const __t0 = performance.now();
+
 const n = 1000;
 const size = n * n;
 
@@ -23,4 +25,5 @@ let sum = 0;
 for (let idx = 0; idx < size; idx++) {
   sum += C[idx];
 }
+console.error(`TIME_MS=${performance.now() - __t0}`);
 console.log(sum);

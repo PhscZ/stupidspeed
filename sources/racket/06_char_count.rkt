@@ -12,6 +12,14 @@
 ;;       slow way to write it here and the accumulator is the fast way.
 #lang racket/base
 
+;; Self-timing: current-inexact-milliseconds is Racket's monotonic wall-clock reading, in
+;; milliseconds as an inexact real. The start is the first form the module body runs and the
+;; stop is taken immediately before the answer is printed, so the bracketed region is the
+;; task's own work and nothing else. eprintf writes to (current-error-port), so stdout is
+;; unchanged.
+(define timer-start (current-inexact-milliseconds))
+(define (elapsed-ms) (- (current-inexact-milliseconds) timer-start))
+
 ;; The 100 MB text is built once by doubling the ten-character block, which is O(log n)
 ;; appends rather than a hundred million of them, and then scanned one character at a time.
 ;; The build writes into a single preallocated mutable string and doubles in place, so the
@@ -28,4 +36,5 @@
   (for/fold ([count 0]) ([i (in-range n)])
     (if (char=? (string-ref text i) #\h) (add1 count) count)))
 
+(eprintf "TIME_MS=~a\n" (elapsed-ms))
 (displayln count)

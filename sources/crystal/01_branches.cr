@@ -1,5 +1,6 @@
 # task 01 branches -- expected output: 33333334 13333333 7619048 45714285
 # build: crystal build --release -o prog 01_branches.cr    run: ./prog
+t0 = Time.monotonic
 a = 0i64
 b = 0i64
 c = 0i64
@@ -17,4 +18,5 @@ d = 0i64
   end
 end
 
+STDERR.puts "TIME_MS=%.3f" % (Time.monotonic - t0).total_milliseconds
 puts "#{a} #{b} #{c} #{d}"

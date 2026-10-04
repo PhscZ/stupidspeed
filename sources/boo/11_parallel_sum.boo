@@ -9,6 +9,7 @@
 
 import System
 import System.Threading
+import System.Diagnostics
 
 // work does task 02's four-way decision over one fixed quarter of the range.
 def work(t as long) as long:
@@ -38,6 +39,8 @@ class Worker:
     def Run():
         Result = work(Index)
 
+sw = Stopwatch.StartNew()
+
 workers = array[of Worker](4)
 threads = array[of Thread](4)
 
@@ -63,5 +66,7 @@ while t < 4:
     total += workers[t].Result
     t += 1
 
+sw.Stop()
+System.Console.Error.WriteLine("TIME_MS=" + sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture))
 print(total)
 

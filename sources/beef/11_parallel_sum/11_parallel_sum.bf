@@ -16,6 +16,7 @@
 
 using System;
 using System.Threading;
+using System.Diagnostics;
 
 namespace Task;
 
@@ -55,6 +56,9 @@ class Program
 
 	static void Main()
 	{
+		// timing: Stopwatch.GetTimestamp() is corlib's microsecond clock (QueryPerformanceCounter on Windows).
+		int64 t0 = Stopwatch.GetTimestamp();
+
 		Thread[4] threads = .();
 		Job[4] jobs = .();
 
@@ -77,6 +81,8 @@ class Program
 			delete jobs[t];
 		}
 
+		int64 t1 = Stopwatch.GetTimestamp();
+		Console.Error.WriteLine($"TIME_MS={(double)(t1 - t0) / 1000.0}");
 		Console.WriteLine("{0}", total);
 	}
 }

@@ -25,6 +25,13 @@
 ;       88.3 s, the same four calls sequentially 170.6 s, and the four on green threads 196.1 s.
 ;       That is about 1.9x over the serial form and the four cores are genuinely busy.
 
+; Self-timing: t0 is read as the first thing the program's body does, and the elapsed
+; milliseconds are written to stderr with Arc's own `ero` (which prints through (stderr))
+; immediately before the answer goes to stdout with `prn`. The clock is the Racket host's
+; current-inexact-milliseconds, reached through Arc's ($ ...) escape, so the bracketed region
+; is this script's own work and stdout is unchanged.
+(= t0 ($ (current-inexact-milliseconds)))
+
 ; worker t covers [t*25000000, (t+1)*25000000).
 (def work (t)
   (with (acc 0)
@@ -44,4 +51,5 @@
   (with (total 0)
     (each th threads
       (= total (+ total ($ (thread-wait ,th)))))
+    (ero "TIME_MS=" (- ($ (current-inexact-milliseconds)) t0))
     (prn total)))

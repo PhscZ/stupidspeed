@@ -14,13 +14,17 @@
 ;;       signed and the file holds the full 0..255 range.
 (import '(java.io FileInputStream))
 
+(def ^:private __t0 (volatile! 0))
+
 (defn -main []
+  (vreset! __t0 (System/nanoTime))
   (let [buf (byte-array (* 1024 1024))]
     (with-open [in (FileInputStream. "data.bin")]
       (loop [total (long 0)]
         (let [n (.read in buf)]
           (if (neg? n)
-            (println (rem total 4294967296))
+            (do (.println System/err (str "TIME_MS=" (/ (- (System/nanoTime) (long @__t0)) 1000000.0)))
+                (println (rem total 4294967296)))
             (recur (rem (loop [i (long 0) t total]
                           (if (< i (long n))
                             (recur (inc i)

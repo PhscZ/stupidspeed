@@ -22,6 +22,8 @@
 (module
   (import "wasi_snapshot_preview1" "fd_write"
     (func $fd_write (param i32 i32 i32 i32) (result i32)))
+  (import "wasi_snapshot_preview1" "clock_time_get"
+    (func $clock_time_get (param i32 i64 i32) (result i32)))
   (import "wasi" "thread-spawn" (func $spawn (param i32) (result i32)))
   (import "env" "memory" (memory 64 64 shared))
   (export "memory" (memory 0))
@@ -112,8 +114,42 @@
     (drop (memory.atomic.notify (local.get $flag) (i32.const 1))))
 
   ;; ---- the task -----------------------------------------------------------
+  ;; ---- self-timing: report TIME_MS on stderr (fd 2); stdout unchanged ------
+  (global $t0 (mut i64) (i64.const 0))
+  (global $t1 (mut i64) (i64.const 0))
+
+  (func $ss_now (result i64)
+    (drop (call $clock_time_get (i32.const 1) (i64.const 1000) (i32.const 2048)))
+    (i64.load (i32.const 2048)))
+
+  (func $ss_start
+    (global.set $t0 (call $ss_now)))
+
+  (func $ss_stop
+    (global.set $t1 (call $ss_now)))
+
+  (func $ss_report
+    (local $ms i64)
+    (global.set $out (i32.const 4096))   ;; start a fresh line, after $flush
+    (local.set $ms
+      (i64.div_u (i64.sub (global.get $t1) (global.get $t0)) (i64.const 1000000)))
+    (call $putc (i32.const 84))          ;; T
+    (call $putc (i32.const 73))          ;; I
+    (call $putc (i32.const 77))          ;; M
+    (call $putc (i32.const 69))          ;; E
+    (call $putc (i32.const 95))          ;; _
+    (call $putc (i32.const 77))          ;; M
+    (call $putc (i32.const 83))          ;; S
+    (call $putc (i32.const 61))          ;; =
+    (call $puti (local.get $ms))
+    (call $putc (i32.const 10))
+    (i32.store (i32.const 2048) (i32.const 4096))
+    (i32.store (i32.const 2052) (i32.sub (global.get $out) (i32.const 4096)))
+    (drop (call $fd_write (i32.const 2) (i32.const 2048) (i32.const 1)
+                          (i32.const 2056))))
   (func (export "_start")
     (local $t i32) (local $total i64) (local $flag i32)
+    (call $ss_start)
     (block $spawned
       (loop $sloop
         (br_if $spawned (i32.ge_u (local.get $t) (i32.const 4)))
@@ -140,4 +176,6 @@
         (br $wloop)))
     (call $puti (local.get $total))
     (call $putc (i32.const 10))
-    (call $flush)))
+    (call $ss_stop)
+    (call $flush)
+    (call $ss_report)))

@@ -4,6 +4,11 @@
 
 private const val BASE = 1000000000L
 
+import kotlin.time.TimeSource
+import kotlinx.cinterop.ExperimentalForeignApi
+import platform.posix.fputs
+import platform.posix.stderr
+
 private fun magCmp(a: LongArray, al: Int, b: LongArray, bl: Int): Int {
     if (al != bl) return if (al > bl) 1 else -1
     var i = al - 1
@@ -262,7 +267,9 @@ private fun divFloor(num: Big, den: Big, prod: Big): Long {
     return q
 }
 
+@OptIn(ExperimentalForeignApi::class)
 fun main() {
+    val __t0 = TimeSource.Monotonic.markNow()
     // Gibbons' unbounded spigot: (q, r, t, k, n, l), n is the digit produced when safe.
     val q = Big()
     q.setLong(1L)
@@ -319,5 +326,6 @@ fun main() {
             l += 2L
         }
     }
+    fputs("TIME_MS=" + __t0.elapsedNow().inWholeNanoseconds / 1000000.0 + "\n", stderr)
     println(sum)
 }

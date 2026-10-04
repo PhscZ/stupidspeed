@@ -8,11 +8,18 @@
 ;       integer type, so the arithmetic never leaves exact integer range.
 ; note: the full run takes about 249 s on this machine, a little over four minutes, for about
 ;       331 million calls (a pass on the same shared host measured 710 s).
+; timing: A_TickCount is the interpreter's own millisecond clock (GetTickCount, so about
+;       15 ms resolution); TIME_MS is written to stderr with FileAppend(..., "**") and
+;       stdout is unchanged.
 #Requires AutoHotkey v2.0
 #SingleInstance Off
 #NoTrayIcon
 
-FileAppend(Fib(40) "`n", "*")
+t0 := A_TickCount
+
+res := Fib(40)
+FileAppend("TIME_MS=" (A_TickCount - t0) "`n", "**")
+FileAppend(res "`n", "*")
 
 Fib(n) {
     if (n < 2)

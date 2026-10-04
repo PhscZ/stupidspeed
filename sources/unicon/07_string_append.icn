@@ -2,10 +2,14 @@
 # build: unicon -s 07_string_append.icn    run: 07_string_append.exe
 # Unicon strings are immutable and `||` concatenates, so every append allocates a fresh
 # string and copies the accumulator: the loop is quadratic, which is what the task measures.
+# timing: &time is Unicon's wall clock in milliseconds since midnight, and &errout is
+#         the standard error stream, so TIME_MS goes to stderr and stdout is unchanged.
 
 procedure main()
+    ssT0 := &time
     text := ""
     every i := 1 to 250000 do
         text := text || "x"
+    write(&errout, "TIME_MS=", &time - ssT0)
     write(*text)
 end

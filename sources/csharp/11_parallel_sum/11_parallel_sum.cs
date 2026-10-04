@@ -33,6 +33,7 @@ class Program
 
     static void Main()
     {
+        System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
         long[] results = new long[4];
         Thread[] threads = new Thread[4];
         for (int t = 0; t < 4; t++)
@@ -54,6 +55,8 @@ class Program
         {
             total += results[t];
         }
+        sw.Stop();
+        Console.Error.WriteLine("TIME_MS=" + sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture));
         Console.WriteLine(total);
     }
 }

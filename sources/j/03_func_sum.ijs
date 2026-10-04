@@ -11,6 +11,8 @@ NB.       overhead rather than a folded-away add. The README allows this
 NB.       disclosure for interpreted rows.
 NB. note: while., not for_i. i. 100000000, for the reason in 01_branches.ijs.
 
+__t0 =: 6!:1 ''
+
 0!:0 <'AddOne.ijs'
 
 func_sum =: 3 : 0
@@ -22,6 +24,9 @@ func_sum =: 3 : 0
   end.
   ": value
 )
+
+__t1 =: 6!:1 ''
+stderr 'TIME_MS=', (": (__t1 - __t0) * 1000)
 
 stdout (func_sum''), LF
 exit 0

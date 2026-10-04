@@ -12,8 +12,10 @@
  The loop is `0 to: 99999999 do:`, which Pharo's compiler turns into a counted loop
  rather than materialising a collection."
 
-| out a b c d |
+| out err a b c d t0 |
 out := Stdio stdout.
+err := Stdio stderr.
+t0 := Time microsecondClockValue.
 a := 0. b := 0. c := 0. d := 0.
 
 0 to: 99999999 do: [:i |
@@ -27,6 +29,7 @@ a := 0. b := 0. c := 0. d := 0.
 						ifTrue: [c := c + 1]
 						ifFalse: [d := d + 1]]]].
 
+err nextPutAll: 'TIME_MS=', ((Time microsecondClockValue - t0) / 1000.0) printString, String lf; flush.
 out
 	nextPutAll: a printString, ' ', b printString, ' ', c printString, ' ', d printString;
 	lf;

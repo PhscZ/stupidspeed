@@ -13,7 +13,17 @@
 -- note: `require 'string'` is required for `..` itself: Nelua's concatenation operator
 --       is defined by the string module, and without it the compiler rejects
 --       `text .. 'x'` with "invalid operation between types 'string' and 'string'".
+require 'io'
+require 'os'
 require 'string'
+
+-- timing: os.now is Nelua's monotonic clock in seconds (nanosecond resolution on
+--         Windows, via QueryPerformanceCounter); TIME_MS goes to stderr through
+--         io.stderr and stdout is unchanged.
+local ssT0 = os.now()
+local function ss_report()
+  io.stderr:write(string.format('TIME_MS=%.3f\n', (os.now() - ssT0) * 1000))
+end
 
 local text: string = ''
 
@@ -21,4 +31,5 @@ for i = 1, 250000 do
   text = text .. 'x'
 end
 
+ss_report()
 print(#text)

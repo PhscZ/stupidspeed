@@ -15,11 +15,13 @@ module c3_14_file_read;
 import std::io;
 import std::io::file;
 import std::core::mem;
+import std::time::clock;
 
 const long CHUNK = 1048576;   // 1 MiB
 
 fn void main()
 {
+	Clock t0 = clock::now();
 	io::File f = file::open("data.bin", "rb")!!;
 	char[] buf = mem::new_array(char, (sz)CHUNK);
 
@@ -40,5 +42,7 @@ fn void main()
 	f.close();
 	mem::free(buf.ptr);
 
+	NanoDuration elapsed = clock::now() - t0;
+	io::eprintfn("TIME_MS=%.3f", (double)elapsed / 1_000_000.0);
 	io::printfn("%d", total % 4294967296);
 }

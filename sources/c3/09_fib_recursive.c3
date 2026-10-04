@@ -11,6 +11,7 @@
 
 module c3_09_fib_recursive;
 import std::io;
+import std::time::clock;
 
 fn long fib(long n)
 {
@@ -23,5 +24,9 @@ fn long fib(long n)
 
 fn void main()
 {
-	io::printfn("%d", fib(40));
+	Clock t0 = clock::now();
+	long result = fib(40);
+	NanoDuration elapsed = clock::now() - t0;
+	io::eprintfn("TIME_MS=%.3f", (double)elapsed / 1_000_000.0);
+	io::printfn("%d", result);
 }

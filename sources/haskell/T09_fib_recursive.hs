@@ -8,9 +8,20 @@
 
 module Main where
 
+import Control.Exception (evaluate)
+import Data.Time.Clock.POSIX (getPOSIXTime)
+import System.IO (stderr)
+import Text.Printf (hPrintf)
+
 fib :: Int -> Int
 fib n | n < 2 = n
       | otherwise = fib (n - 1) + fib (n - 2)
 
 main :: IO ()
-main = print (fib 40)
+main = do
+  t0 <- getPOSIXTime
+  !v <- evaluate (fib 40)
+  t1 <- getPOSIXTime
+  let !ms = (realToFrac (t1 - t0) :: Double) * 1000
+  hPrintf stderr "TIME_MS=%.3f\n" ms
+  print v

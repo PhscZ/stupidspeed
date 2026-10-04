@@ -14,9 +14,13 @@ import platform.posix.fclose
 import platform.posix.fflush
 import platform.posix.fopen
 import platform.posix.fwrite
+import kotlin.time.TimeSource
+import platform.posix.fputs
+import platform.posix.stderr
 
 @OptIn(ExperimentalForeignApi::class)
 fun main() {
+    val __t0 = TimeSource.Monotonic.markNow()
     val chunk = 1024 * 1024
     val buf = ByteArray(chunk)
     for (i in 0 until chunk) {
@@ -30,5 +34,6 @@ fun main() {
     }
     fflush(file)
     fclose(file)
+    fputs("TIME_MS=" + __t0.elapsedNow().inWholeNanoseconds / 1000000.0 + "\n", stderr)
     println(written)
 }

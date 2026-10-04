@@ -20,11 +20,20 @@ For i = 0 To 99999999
     total = total + reading
 Next
 
+ssReport
 WScript.Echo Fixed9(total / 100000000.0)
 
 ' Nine decimal places, assembled by hand because the engine's locale is not C.
 ' Int(x + 0.5) rounds a half up; CLng would round it to even, and the fraction here is
 ' exactly 498046875.5, so CLng would print 0.498046876 instead of 0.498046875.
+
+' timing: Timer() is VBScript's seconds-since-midnight clock with centisecond resolution, so
+'         TIME_MS has 16 ms granularity; it goes to stderr and stdout is unchanged.
+Dim ssT0
+Sub ssReport()
+    WScript.StdErr.WriteLine "TIME_MS=" & CLng(Round((Timer() - ssT0) * 1000))
+End Sub
+ssT0 = Timer()
 Function Fixed9(v)
     Dim ip, fp, f
 

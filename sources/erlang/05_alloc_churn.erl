@@ -18,12 +18,14 @@
 %% becomes garbage -- the same reachability line the C and Java rows draw. The slots are the
 %% process dictionary, which is Erlang's mutable state. The total adds v, the value written.
 main(_) ->
-    churn(0, 0).
+    T0 = erlang:monotonic_time(microsecond),
+    churn(0, 0, T0).
 
-churn(I, Total) when I >= 10000000 ->
+churn(I, Total, T0) when I >= 10000000 ->
+    io:format(standard_error, "TIME_MS=~p~n", [(erlang:monotonic_time(microsecond) - T0) / 1000]),
     io:format("~w~n", [Total]);
-churn(I, Total) ->
+churn(I, Total, T0) ->
     V = I rem 256,
     Buf = binary:copy(<<V:8>>, 64),
     put({slot, V}, Buf),
-    churn(I + 1, Total + V).
+    churn(I + 1, Total + V, T0).

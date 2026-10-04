@@ -17,8 +17,11 @@
 %% A hundred million readings, each a multiple of 1/256, accumulated as a float. The total is
 %% far below 2^53, so the sum is exact and the digits do not depend on the order of addition.
 main(_) ->
+    T0 = erlang:monotonic_time(microsecond),
     Total = acc(0, 100000000, 0.0),
-    io:format("~w~n", [Total / 100000000]).
+    Avg = Total / 100000000,
+    io:format(standard_error, "TIME_MS=~p~n", [(erlang:monotonic_time(microsecond) - T0) / 1000]),
+    io:format("~w~n", [Avg]).
 
 acc(I, N, Total) when I >= N -> Total;
 acc(I, N, Total) -> acc(I + 1, N, Total + (I rem 256) / 256).

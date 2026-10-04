@@ -8,9 +8,14 @@
 ;       what makes the fill loop legal as well as fast.
 ; note: the total, 499999500000, is past 2^32 but exact in the 64-bit integer type.
 ; note: the fill and the sum together take about half a second on this machine.
+; timing: A_TickCount is the interpreter's own millisecond clock (GetTickCount, so about
+;       15 ms resolution); TIME_MS is written to stderr with FileAppend(..., "**") and
+;       stdout is unchanged.
 #Requires AutoHotkey v2.0
 #SingleInstance Off
 #NoTrayIcon
+
+t0 := A_TickCount
 
 arr := []
 arr.Length := 1000000
@@ -22,4 +27,5 @@ total := 0
 Loop 1000000
     total += arr[A_Index]
 
+FileAppend("TIME_MS=" (A_TickCount - t0) "`n", "**")
 FileAppend(total "`n", "*")

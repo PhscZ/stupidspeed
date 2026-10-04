@@ -10,6 +10,13 @@
 //       character code 104, which is the same work per character.
 // note: 100000000 characters measure 36 s to 183 s on this shared host, about 0.36 us to
 //       1.8 us a character (fastest 36.3 s, slowest 183.1 s).
+
+// timing: new Date().getTime() is the WSH clock in milliseconds (the system timer, so about
+//         15 ms resolution); TIME_MS goes to stderr with WScript.StdErr and stdout is unchanged.
+var ssT0 = new Date().getTime();
+function ssReport() {
+    WScript.StdErr.Write("TIME_MS=" + (new Date().getTime() - ssT0) + "\r\n");
+}
 var text, n, count, i;
 
 text = new Array(10000001).join("abcdefghij");
@@ -22,4 +29,5 @@ for (i = 0; i < n; i++) {
     }
 }
 
+ssReport();
 WScript.Echo(String(count));

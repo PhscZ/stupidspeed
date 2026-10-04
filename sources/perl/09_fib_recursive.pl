@@ -5,10 +5,15 @@
 use strict;
 use warnings;
 
+use Time::HiRes ();
+my $__t0 = Time::HiRes::time();
 sub fib {
     my ($n) = @_;
     return $n if $n < 2;
     return fib($n - 1) + fib($n - 2);
 }
 
-print fib(40), "\n";
+my $__result = fib(40);
+my $__t1 = Time::HiRes::time();
+printf STDERR "TIME_MS=%.3f\n", ($__t1 - $__t0) * 1000.0;
+print $__result, "\n";

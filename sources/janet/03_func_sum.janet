@@ -12,6 +12,12 @@
 # note: the module is imported with an empty prefix, so the helper is called as `add-one`
 #       rather than the default `03_func_sum_add_one/add-one`. The path is written as a
 #       string because the file name starts with a digit.
+
+# timing: os/clock is Janet's monotonic clock, in seconds as a double; TIME_MS goes to
+#         stderr with eprintf and stdout is unchanged.
+(def ss-t0 (os/clock))
+(defn ss-report [] (eprintf "TIME_MS=%.3f\n" (* 1000 (- (os/clock) ss-t0))))
+
 (import "./03_func_sum_add_one" :prefix "")
 
 (var value 0)
@@ -19,4 +25,5 @@
 (for i 0 100000000
   (set value (add-one value)))
 
+(ss-report)
 (print value)

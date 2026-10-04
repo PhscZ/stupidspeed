@@ -9,9 +9,16 @@
 #       the Racket row makes.
 # note: `(length text)` is the printed value, so the loop cannot be deleted.
 # note: this is the slowest cell in the row; see RUN.md for the measured cost.
+
+# timing: os/clock is Janet's monotonic clock, in seconds as a double; TIME_MS goes to
+#         stderr with eprintf and stdout is unchanged.
+(def ss-t0 (os/clock))
+(defn ss-report [] (eprintf "TIME_MS=%.3f\n" (* 1000 (- (os/clock) ss-t0))))
+
 (var text "")
 
 (for i 0 250000
   (set text (string text "x")))
 
+(ss-report)
 (print (length text))

@@ -18,6 +18,7 @@ private static long work(long t) {
     }
     return acc
 }
+long __t0 = System.nanoTime()
 
 long[] partials = new long[4]
 Thread[] workers = new Thread[4]
@@ -33,4 +34,5 @@ for (Thread w : workers) { w.join() }
 long total = 0
 for (long p : partials) { total += p }
 
+System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
 println total

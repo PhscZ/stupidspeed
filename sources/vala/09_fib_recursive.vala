@@ -15,7 +15,17 @@ int64 fib (int64 n) {
     return fib (n - 1) + fib (n - 2);
 }
 
+// timing: GLib.get_real_time() is GLib's monotonic clock in microseconds; TIME_MS goes
+//         to stderr and stdout is unchanged.
+static int64 ss_t0;
+static void ss_report () {
+    stderr.printf ("TIME_MS=%.3f\n", (GLib.get_real_time () - ss_t0) / 1000.0);
+}
+
 int main () {
-    stdout.printf ("%lld\n", fib (40));
+    ss_t0 = GLib.get_real_time ();
+    int64 ssR = fib (40);
+    ss_report ();
+    stdout.printf ("%lld\n", ssR);
     return 0;
 }

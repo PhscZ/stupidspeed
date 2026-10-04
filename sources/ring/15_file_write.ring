@@ -11,7 +11,14 @@
 #       constant.
 # note: Ring's file API has fflush and fclose but no fsync, so fflush + fclose is the whole
 #       flush story — the same deviation the VBScript row records.
+# timing: clock() is Ring's processor-time clock, in ticks since program start, and
+#         clocksPerSecond() gives the ticks per second, so TIME_MS is whole milliseconds
+#         of CPU time; it is written to time.txt with fopen/fputs/fclose, the contract's
+#         fallback, because Ring's documented stream globals are stdin and stdout.
+#         Instrumented by inspection: Ring is not installed on this machine, so this
+#         row's timing is unverified.
 
+ssT0 = clock()
 pat = ""
 
 for i = 0 to 255
@@ -30,4 +37,10 @@ next
 fflush(fp)
 fclose(fp)
 
+ssReport()
 ? written
+
+func ssReport
+    fp = fopen("time.txt", "w")
+    fputs(fp, "TIME_MS=" + string((clock() - ssT0) * 1000 / clocksPerSecond()) + nl)
+    fclose(fp)

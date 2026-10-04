@@ -133,6 +133,7 @@ div_quot <- function(A, B) {
 # --- the spigot --------------------------------------------------------------
 
 pi_digit_sum <- function() {
+  t0 <- proc.time()[["elapsed"]]
   q <- ONE
   r <- ZERO
   t <- ONE
@@ -163,6 +164,7 @@ pi_digit_sum <- function() {
       l <- l + 2
     }
   }
+  cat(sprintf("TIME_MS=%.3f\n", (proc.time()[["elapsed"]] - t0) * 1000), file = stderr())
   cat(sprintf("%.0f\n", total))
 }
 

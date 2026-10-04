@@ -11,6 +11,7 @@
 
 object Main {
   def main(args: Array[String]): Unit = {
+    val __t0 = System.nanoTime()
     var total = 0L
     val slots = new Array[Array[Byte]](256)
     var i = 0L
@@ -21,6 +22,7 @@ object Main {
       slots((i % 256L).toInt) = buf
       i += 1L
     }
+    System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
     println(total)
   }
 }

@@ -6,8 +6,10 @@
  ByteArray of up to n bytes and simply answers a short one at the end, so the loop
  stops on the empty chunk rather than on an exception."
 
-| out s buf total |
+| out err s buf total t0 |
 out := Stdio stdout.
+err := Stdio stderr.
+t0 := Time microsecondClockValue.
 s := 'data.bin' asFileReference binaryReadStream.
 total := 0.
 
@@ -17,4 +19,5 @@ buf := s next: 1048576.
 	buf := s next: 1048576].
 
 s close.
+err nextPutAll: 'TIME_MS=', ((Time microsecondClockValue - t0) / 1000.0) printString, String lf; flush.
 out nextPutAll: (total \\ 4294967296) printString; lf; flush.

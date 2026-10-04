@@ -16,10 +16,13 @@
 # summed in another, so the fill is not part of the read loop.
 defmodule T04 do
   def run do
+    t0 = System.monotonic_time(:microsecond)
     n = 1_000_000
     arr = :atomics.new(n, signed: true)
     fill(arr, 0, n)
-    IO.puts(sum(arr, 0, n))
+    total = sum(arr, 0, n)
+    IO.puts(:stderr, "TIME_MS=#{(System.monotonic_time(:microsecond) - t0) / 1000}")
+    IO.puts(total)
   end
 
   defp fill(_arr, i, n) when i >= n, do: :ok

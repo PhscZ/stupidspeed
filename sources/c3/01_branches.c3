@@ -11,9 +11,11 @@
 
 module c3_01_branches;
 import std::io;
+import std::time::clock;
 
 fn void main()
 {
+	Clock t0 = clock::now();
 	long a = 0;
 	long b = 0;
 	long c = 0;
@@ -39,5 +41,7 @@ fn void main()
 		}
 	}
 
+	NanoDuration elapsed = clock::now() - t0;
+	io::eprintfn("TIME_MS=%.3f", (double)elapsed / 1_000_000.0);
 	io::printfn("%d %d %d %d", a, b, c, d);
 }

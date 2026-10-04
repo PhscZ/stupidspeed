@@ -5,9 +5,11 @@
 private fun addOne(n: Long): Long = n + 1L
 
 fun main() {
+    val __t0 = System.nanoTime()
     var value = 0L
     for (i in 0 until 100000000) {
         value = addOne(value)
     }
+    System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
     println(value)
 }

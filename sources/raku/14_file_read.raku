@@ -11,6 +11,7 @@
 #       the running total is reduced mod 2^32 after each chunk so it stays inside the 2^53 range
 #       where a native num is exact. Buf elements are already 0..255, so no sign masking is needed.
 
+my $__t0 = now;
 my $fh = open 'data.bin', :bin, :r;
 
 my Int $total = 0;
@@ -25,4 +26,6 @@ loop {
 }
 $fh.close;
 
+my $__t1 = now;
+$*ERR.say('TIME_MS=' ~ (($__t1 - $__t0) * 1000).Num.fmt('%.3f'));
 say $total;

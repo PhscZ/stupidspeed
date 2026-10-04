@@ -15,7 +15,14 @@
 (* note: filenames carry the row's _ prefix. OCaml derives a module name from the file
          name and a module name has to be a valid identifier, so 01_branches.ml draws
          'Warning 24: bad source file name'; _01_branches.ml compiles clean. *)
+(* timing: Unix.gettimeofday is the clock this build of the Unix module exposes (there is
+   no clock_gettime binding here, so the monotonic clock is not reachable from OCaml);
+   TIME_MS goes to stderr through Printf.eprintf and stdout is unchanged. *)
+let ss_t0 = ref 0.0
+let ss_now () = Unix.gettimeofday () *. 1000.0
+let ss_report () = Printf.eprintf "TIME_MS=%.3f\n" (ss_now () -. !ss_t0)
 let () =
+  ss_t0 := ss_now ();
   let n = 1000 in
   let elems = n * n in
   let a = Array.make elems 0 and b = Array.make elems 0 and c = Array.make elems 0 in
@@ -36,4 +43,5 @@ let () =
   for k = 0 to elems - 1 do
     total := !total + c.(k)
   done;
+  ss_report ();
   Printf.printf "%d\n" !total

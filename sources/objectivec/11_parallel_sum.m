@@ -1,6 +1,18 @@
 // task 11 parallel_sum -- expected output: 7500000075000000
 // build: clang -fobjc-runtime=gnustep-2.2 -O2 -o prog 11_parallel_sum.m -lobjc -lgnustep-base    run: ./prog
 // Objective-C has no big integers in its standard library; task 10 hand-rolls base-1e9 limbs.
+/* timing: clock_gettime(CLOCK_MONOTONIC) is the monotonic clock, the same one the C row uses
+   on Linux; TIME_MS goes to stderr and stdout is unchanged. */
+#include <stdio.h>
+#include <time.h>
+static double ss_now_ms(void) {
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    return (double)ts.tv_sec * 1000.0 + (double)ts.tv_nsec / 1000000.0;
+}
+static void ss_report(double t0) {
+    fprintf(stderr, "TIME_MS=%.3f\n", ss_now_ms() - t0);
+}
 /* Benchmark task 11 equivalent: 4 real OS threads via Foundation NSThread.
    Expected: 7500000075000000 */
 #import <Foundation/Foundation.h>
@@ -29,6 +41,7 @@ static long long gParts[4];
 @end
 
 int main(void) {
+    double ss_t0 = ss_now_ms();
     @autoreleasepool {
         NSMutableArray *threads = [NSMutableArray array];
         for (int t = 0; t < 4; t++) {
@@ -45,6 +58,7 @@ int main(void) {
         }
         long long total = 0;
         for (int t = 0; t < 4; t++) total += gParts[t];
+    ss_report(ss_t0);
         printf("%lld\n", total);
     }
     return 0;

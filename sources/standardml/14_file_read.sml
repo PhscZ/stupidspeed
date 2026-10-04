@@ -46,6 +46,7 @@ val CHUNK = 65536
 
 fun main () =
   let
+    val __t0 = Time.now ()
     val ins = BinIO.openIn "data.bin"
     fun loop (nbytes, total) =
       let
@@ -64,6 +65,8 @@ fun main () =
       end
     val (nbytes, total) = loop (0, 0)
     val () = BinIO.closeIn ins
+    val result = total mod 4294967296
+    val () = TextIO.output (TextIO.stdErr, "TIME_MS=" ^ Real.fmt (StringCvt.FIX (SOME 3)) (Time.toReal (Time.- (Time.now (), __t0)) * 1000.0) ^ "\n")
   in
-    print (Int.toString (total mod 4294967296) ^ "\n")
+    print (Int.toString result ^ "\n")
   end

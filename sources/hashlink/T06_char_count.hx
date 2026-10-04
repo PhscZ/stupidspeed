@@ -8,6 +8,8 @@
 
 class T06_char_count {
     static function main() {
+        // timing: Sys.time() is seconds as a Float on HashLink, so x1000 gives ms (1 ms effective).
+        var t0 = Sys.time();
         var blockLen = 10;
         var repeats = 10000000;
         var block = haxe.io.Bytes.ofString("abcdefghij");
@@ -33,6 +35,8 @@ class T06_char_count {
             }
         }
 
+        var t1 = Sys.time();
+        Sys.stderr().writeString("TIME_MS=" + ((t1 - t0) * 1000.0) + "\n");
         Sys.println(count);
     }
 }

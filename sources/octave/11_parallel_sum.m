@@ -28,6 +28,7 @@
 # partials add exactly.
 
 1;
+__t0 = tic;
 
 function acc = work_range_(t)
   acc = 0;
@@ -64,5 +65,6 @@ else
     total = total + str2double(line);
     pclose(handles(t + 1));
   end
+  fprintf(stderr, "TIME_MS=%.3f\n", toc(__t0) * 1000);
   printf("%.0f\n", total);
 end

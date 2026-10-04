@@ -8,12 +8,14 @@
 add_one <- function(n) n + 1
 
 func_sum <- function() {
+  t0 <- proc.time()[["elapsed"]]
   value <- 0
   i <- 0
   while (i < 100000000) {
     value <- add_one(value)
     i <- i + 1
   }
+  cat(sprintf("TIME_MS=%.3f\n", (proc.time()[["elapsed"]] - t0) * 1000), file = stderr())
   cat(sprintf("%.0f\n", value))
 }
 

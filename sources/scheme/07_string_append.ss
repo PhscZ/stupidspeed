@@ -9,7 +9,20 @@
 ;;       quadratic cost, exactly as the Racket row's does.
 
 ;; text = text + "x", 250000 times.
+;; timing: (real-time) is Chez's monotonic clock in milliseconds since system start-up;
+;;         TIME_MS is written to time.txt, the contract's fallback, because Chez's
+;;         console-error-port is the console and this host sends the console to stdout
+;;         when it is redirected; stdout is unchanged.
+(define ss-t0 (real-time))
+(define (ss-report)
+  (let ([p (open-file-output-port "time.txt" (file-options no-fail)
+                                  (buffer-mode block))])
+    (put-bytevector p (string->utf8
+                       (string-append "TIME_MS="
+                                      (number->string (- (real-time) ss-t0))
+                                      "\n")))
+    (close-port p)))
 (let loop ([i 0] [text ""])
   (if (fx= i 250000)
-      (begin (display (string-length text)) (newline))
+      (begin (ss-report) (display (string-length text)) (newline))
       (loop (fx+ i 1) (string-append text "x"))))

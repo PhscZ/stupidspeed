@@ -6,7 +6,10 @@
 
 module main
 
+import time
+
 fn main() {
+	t0 := time.now()
 	mut slots := [][]u8{len: 256}
 	mut total := i64(0)
 
@@ -17,5 +20,6 @@ fn main() {
 		slots[i % 256] = buf
 	}
 
+	eprintln('TIME_MS=${f64(time.since(t0).microseconds()) / 1000.0:.3f}')
 	println(total)
 }

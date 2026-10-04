@@ -8,16 +8,24 @@
 ⍝       then prints 0.4980468750 — the same value with a trailing zero — while a
 ⍝       language that prints in %g form would give 0.498047. This is the Dyalog
 ⍝       counterpart of the J row's ("):!.12) fit form.
+⍝ timing: 3⊃⎕AI is Dyalog's elapsed-time counter in milliseconds. APL exposes no
+⍝         stream handle for stderr, so the contract's fallback applies: TIME_MS is
+⍝         written to time.txt in the working directory with ⎕NPUT, and stdout is
+⍝         unchanged. Instrumented by inspection: Dyalog is not installed on this
+⍝         machine, so this row's timing is unverified.
 ⎕IO←0
 ⎕PP←17
 
-∇ r←average;total;i
+∇ r←average;total;i;ssT0;ssMS
+  ssT0←3⊃⎕AI
   total←0.0
   i←0
   :While i<100000000
     total+←(256|i)÷256.0
     i+←1
   :EndWhile
+  ssMS←(3⊃⎕AI)-ssT0
+  ('TIME_MS=',⍕ssMS)⎕NPUT 'time.txt'
   r←⍕total÷100000000
 ∇
 

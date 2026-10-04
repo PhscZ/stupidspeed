@@ -1,4 +1,6 @@
 // task 03 func_sum — expected output: 100000000
+// timing: Time.nanos() is Pony's monotonic clock (QueryPerformanceCounter on Windows);
+//        TIME_MS goes to stderr with env.err.print and stdout is unchanged.
 // build: mkdir -p temp/pony/03_func_sum && cp sources/pony/03_func_sum.pony temp/pony/03_func_sum/ && tools/ponyc/bin/ponyc.exe -o temp/pony/03_func_sum temp/pony/03_func_sum
 // run: temp/pony/03_func_sum/03_func_sum.exe
 // note: DOCUMENTED DEVIATION. Pony has no no-inline marker, and ponyc compiles the whole
@@ -14,14 +16,27 @@
 //       is a genuine call a hundred million times: measured 0.5 s against 0.07 s for the
 //       folded version, on the same host before it was loaded.
 
+use "time"
 trait Adder
   fun add_one(n: U64): U64
 
 class AddOne is Adder
   fun add_one(n: U64): U64 => n + 1
 
+class SsClock
+  var t0: U64 = 0
+  let env: Env
+  new create(env': Env) =>
+    env = env'
+  fun ref start() =>
+    t0 = Time.nanos()
+  fun ref report() =>
+    env.err.print("TIME_MS=" + ((Time.nanos() - t0) / 1000000).string())
+
 actor Main
   new create(env: Env) =>
+    let ss = SsClock(env)
+    ss.start()
     let add: Adder = AddOne
     var value: U64 = 0
     var i: U64 = 0
@@ -29,4 +44,5 @@ actor Main
       value = add.add_one(value)
       i = i + 1
     end
+    ss.report()
     env.out.print(value.string())

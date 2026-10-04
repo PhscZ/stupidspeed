@@ -8,9 +8,13 @@
 % note: -O is required, see 01_branches.pl.
 
 main :-
+    get_time(T0),
     functor(A, a, 1000000),
     fill(0, A),
     sum(0, A, 0, Total),
+    get_time(T1),
+    Ms is (T1 - T0) * 1000,
+    format(standard_error, "TIME_MS=~3f~n", [Ms]),
     format("~w~n", [Total]).
 
 fill(I, A) :-

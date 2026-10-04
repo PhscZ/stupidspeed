@@ -16,6 +16,13 @@
 ;       `,idx` is the local index and `,(+ i j)` is computed by Arc. The loops are Arc's own
 ;       `loop`/`recur`.
 
+; Self-timing: t0 is read as the first thing the program's body does, and the elapsed
+; milliseconds are written to stderr with Arc's own `ero` (which prints through (stderr))
+; immediately before the answer goes to stdout with `prn`. The clock is the Racket host's
+; current-inexact-milliseconds, reached through Arc's ($ ...) escape, so the bracketed region
+; is this script's own work and stdout is unchanged.
+(= t0 ($ (current-inexact-milliseconds)))
+
 (with (n 1000
        size 1000000)
   (= a (vec size 0)
@@ -42,4 +49,5 @@
       (when (< e size)
         (= total (+ total ($ (vector-ref ,c ,e))))
         (recur (+ e 1))))
+    (ero "TIME_MS=" (- ($ (current-inexact-milliseconds)) t0))
     (prn total)))

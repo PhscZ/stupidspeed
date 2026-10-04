@@ -14,6 +14,18 @@
 // carried in hand-written ones: sign-magnitude, base 10^9 limbs, with
 // multiply-by-small and a division whose quotient is known to be small. Only the
 // sum of the digits is printed, never the digits themselves.
+// timing: Date() is Foundation's wall clock in seconds since the reference date, and
+//         timeIntervalSinceDate gives the elapsed time in seconds as a Double; TIME_MS goes
+//         to stderr with FileHandle.standardError and stdout is unchanged. Instrumented by
+//         inspection: the installed Swift toolchain cannot compile on this machine (missing
+//         _complex and ucrt Swift modules), so this row's timing is unverified.
+import Foundation
+
+func ssReport(_ t0: Date) {
+    let ms = Date().timeIntervalSince(t0) * 1000
+    FileHandle.standardError.write("TIME_MS=" + String(format: "%.3f", ms) + "\n".data(using: .utf8)!)
+}
+let ssT0 = Date()
 
 let BASE: UInt64 = 1_000_000_000
 
@@ -265,4 +277,5 @@ while produced < 1000 {
     }
 }
 
+ssReport(ssT0)
 print(digitSum)

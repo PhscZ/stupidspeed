@@ -1,9 +1,11 @@
 // task 12 matrix_add — expected output: 999000000
 // build: dart compile exe -o prog 12_matrix_add.dart (aot; jit has no build step)    run: ./prog (aot) | dart 12_matrix_add.dart (jit)
 
+import 'dart:io';
 import 'dart:typed_data';
 
 void main() {
+  final Stopwatch sw = Stopwatch()..start();
   const int n = 1000;
   final Int64List a = Int64List(n * n);
   final Int64List b = Int64List(n * n);
@@ -32,5 +34,6 @@ void main() {
       total += c[i * n + j];
     }
   }
+  stderr.writeln('TIME_MS=${(sw.elapsedMicroseconds / 1000).toStringAsFixed(3)}');
   print(total);
 }

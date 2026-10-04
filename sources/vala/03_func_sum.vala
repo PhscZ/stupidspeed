@@ -13,13 +13,22 @@
 //       so the hundred million calls are real calls. Verified with objdump: the loop body in
 //       main is `call <add_one>` and `add_one` is an exported symbol.
 
+// timing: GLib.get_real_time() is GLib's monotonic clock in microseconds; TIME_MS goes
+//         to stderr and stdout is unchanged.
+static int64 ss_t0;
+static void ss_report () {
+    stderr.printf ("TIME_MS=%.3f\n", (GLib.get_real_time () - ss_t0) / 1000.0);
+}
+
 int main () {
+    ss_t0 = GLib.get_real_time ();
     int64 value = 0;
 
     for (int64 i = 0; i < 100000000; i++) {
         value = add_one (value);
     }
 
+    ss_report ();
     stdout.printf ("%lld\n", value);
     return 0;
 }

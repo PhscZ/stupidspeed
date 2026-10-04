@@ -1,6 +1,7 @@
 // task 02 switch_case — expected output: 7500000075000000
 // build: none (interpreted)    run: C:\stupidspeed\tools\spidermonkey\js.exe 02_switch_case.js
 
+var __t0 = performance.now();
 var acc = 0;
 for (var i = 0; i < 100000000; i++) {
   switch (i % 4) {
@@ -18,4 +19,5 @@ for (var i = 0; i < 100000000; i++) {
       break;
   }
 }
+printErr("TIME_MS=" + (performance.now() - __t0));
 print(acc);

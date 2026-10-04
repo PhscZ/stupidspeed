@@ -14,6 +14,7 @@
 //       kept in that shape so the row is comparable line for line with the C row.
 
 using System;
+using System.Diagnostics;
 
 namespace Task;
 
@@ -21,6 +22,9 @@ class Program
 {
 	static void Main()
 	{
+		// timing: Stopwatch.GetTimestamp() is corlib's microsecond clock (QueryPerformanceCounter on Windows).
+		int64 t0 = Stopwatch.GetTimestamp();
+
 		int64 repeats = 10000000;
 
 		String text = new String(100000000);
@@ -41,6 +45,8 @@ class Program
 				count += 1;
 		}
 
+		int64 t1 = Stopwatch.GetTimestamp();
+		Console.Error.WriteLine($"TIME_MS={(double)(t1 - t0) / 1000.0}");
 		Console.WriteLine("{0}", count);
 		delete text;
 	}

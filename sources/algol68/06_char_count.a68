@@ -7,6 +7,12 @@
 # note: assignments, which are block moves, so the build is linear. This interpreter #
 # note: has no string-repeat operator: `block * k` concatenates one copy at a time and #
 # note: would make the build itself quadratic, which the task forbids. #
+# timing: clock is a68g's processor-time clock, in seconds, as a REAL; for this #
+# note: single-threaded interpreter that is the program's own work, which is what the #
+# note: contract brackets. TIME_MS is written to stand error as a whole number of #
+# note: milliseconds, and stdout is unchanged. #
+
+REAL tim0 = clock;
 
 INT n = 100000000;
 
@@ -40,4 +46,6 @@ FOR i TO n DO
   FI
 OD;
 
+INT tms = ENTIER(1000.0 * (clock - tim0) + 0.5);
+putf(stand error, ($g$, "TIME_MS=" + whole(tms, 0), $l$));
 print((whole(count, 0), newline))

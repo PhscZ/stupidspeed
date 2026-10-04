@@ -2,9 +2,15 @@
 # build: unicon -s 09_fib_recursive.icn    run: 09_fib_recursive.exe
 # Unicon has no no-inline marker and needs none: a call to a procedure is a real call in the
 # VM. fib(40) is about 331 million calls.
+# timing: &time is Unicon's wall clock in milliseconds since midnight, and &errout is
+#         the standard error stream, so TIME_MS goes to stderr and stdout is unchanged.
 
 procedure main()
-    write(fib(40))
+    ssT0 := &time
+    ssR := fib(40)
+    write(&errout, "TIME_MS=", &time - ssT0)
+    write(ssR)
+
 end
 
 procedure fib(n)

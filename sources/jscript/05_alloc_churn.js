@@ -11,6 +11,13 @@
 //       the same thing the C row's free(slots[slot]) does by hand.
 // note: 10000000 iterations measure 13 s to 45 s on this shared host, about 1.3 us to
 //       4.5 us an iteration (fastest 13.1 s, slowest 44.7 s).
+
+// timing: new Date().getTime() is the WSH clock in milliseconds (the system timer, so about
+//         15 ms resolution); TIME_MS goes to stderr with WScript.StdErr and stdout is unchanged.
+var ssT0 = new Date().getTime();
+function ssReport() {
+    WScript.StdErr.Write("TIME_MS=" + (new Date().getTime() - ssT0) + "\r\n");
+}
 var slots = new Array(256), total = 0, i, buf, slot;
 
 for (i = 0; i < 10000000; i++) {
@@ -21,4 +28,5 @@ for (i = 0; i < 10000000; i++) {
     slots[slot] = buf;
 }
 
+ssReport();
 WScript.Echo(String(total));

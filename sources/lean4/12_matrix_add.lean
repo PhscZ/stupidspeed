@@ -26,10 +26,17 @@ where
     | 0, _, total => total
     | fuel + 1, k, total => go fuel (k + 1) (total + a[k]!)
 
+@[noinline] def forceIO {α : Type} (x : Unit → α) : IO α := IO.lazyPure x
+
 def main : IO Unit := do
+  let t0 ← IO.monoNanosNow
   let n := 1000
   let elems := n * n
   let a := build n fun i j => Int64.ofNat i + Int64.ofNat j
   let b := build n fun i j => Int64.ofNat i - Int64.ofNat j
   let c := add a b elems
-  IO.println (sum c elems)
+  let answer ← forceIO (fun _ => sum c elems)
+  let t1 ← IO.monoNanosNow
+  let ms : Float := (t1 - t0).toFloat / 1000000.0
+  IO.eprintln s!"TIME_MS={ms}"
+  IO.println answer

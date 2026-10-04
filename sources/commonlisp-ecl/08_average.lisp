@@ -22,12 +22,24 @@
 ;; A hundred million readings, each an exact multiple of 1/256, accumulated as a double float.
 ;; The total stays far below 2^53, so the sum is exact and the digits do not depend on the
 ;; order of addition.
+;; Self-timing: get-internal-real-time is the monotonic tick counter and
+;; internal-time-units-per-second converts ticks to seconds. *timer-start* is set as the
+;; first thing main does and read once, immediately before the answer is printed, so the
+;; timed region is the task's own work and nothing else. The line goes to *error-output*,
+;; so stdout is unchanged.
+(defvar *timer-start* 0)
+
+(defun elapsed-ms ()
+  (* 1000.0d0 (/ (- (get-internal-real-time) *timer-start*) internal-time-units-per-second)))
+
 (defun main ()
+  (setf *timer-start* (get-internal-real-time))
   (let ((total 0.0d0))
     (declare (type double-float total))
     (dotimes (i 100000000)
       (declare (fixnum i))
       (incf total (/ (coerce (mod i 256) 'double-float) 256.0d0)))
+    (format *error-output* "TIME_MS=~,3f~%" (elapsed-ms))
     (format t "~,9f~%" (/ total 100000000.0d0))))
 
 (main)

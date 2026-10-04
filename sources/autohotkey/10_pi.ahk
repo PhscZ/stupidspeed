@@ -24,9 +24,14 @@
 ;       sums recomputed independently in Python with arbitrary-precision integers: 100 -> 471,
 ;       200 -> 897, 400 -> 1753, 1000 -> 4470. This program printed 471 at 100 digits (0.6 s)
 ;       and 4470 at the full 1000.
+; timing: A_TickCount is the interpreter's own millisecond clock (GetTickCount, so about
+;       15 ms resolution); TIME_MS is written to stderr with FileAppend(..., "**") and
+;       stdout is unchanged.
 #Requires AutoHotkey v2.0
 #SingleInstance Off
 #NoTrayIcon
+
+t0 := A_TickCount
 
 DIGITS := 1000
 MAXLIMB := 40000
@@ -90,6 +95,7 @@ while (produced < DIGITS) {
     }
 }
 
+FileAppend("TIME_MS=" (A_TickCount - t0) "`n", "**")
 FileAppend(sum "`n", "*")
 
 ; A fresh big number: [limb count, sign, limb 0, limb 1, ...], pre-sized so the limbs

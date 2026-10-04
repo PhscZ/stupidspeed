@@ -47,6 +47,7 @@ fun work (t : int, per : int) =
 
 fun main () =
   let
+    val __t0 = Time.now ()
     val per = 25000000
     val results = Array.array (4, 0)
     val mutex = Thread.Mutex.mutex ()
@@ -66,6 +67,7 @@ fun main () =
     val () = Thread.Mutex.lock mutex
     val () = while !done < 4 do Thread.ConditionVar.wait (cond, mutex)
     val () = Thread.Mutex.unlock mutex
+    val () = TextIO.output (TextIO.stdErr, "TIME_MS=" ^ Real.fmt (StringCvt.FIX (SOME 3)) (Time.toReal (Time.- (Time.now (), __t0)) * 1000.0) ^ "\n")
   in
     print (Int.toString (Array.foldl (op +) 0 results) ^ "\n")
   end

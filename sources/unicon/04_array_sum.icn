@@ -2,8 +2,11 @@
 # build: unicon -s 04_array_sum.icn    run: 04_array_sum.exe
 # Unicon's built-in array-like type is `list`, 1-indexed. It is filled and then read back
 # one element at a time, as the task asks.
+# timing: &time is Unicon's wall clock in milliseconds since midnight, and &errout is
+#         the standard error stream, so TIME_MS goes to stderr and stdout is unchanged.
 
 procedure main()
+    ssT0 := &time
     n := 1000000
     arr := list(n)
     every i := 0 to n - 1 do
@@ -11,5 +14,6 @@ procedure main()
     total := 0
     every i := 0 to n - 1 do
         total +:= arr[i + 1]
+    write(&errout, "TIME_MS=", &time - ssT0)
     write(total)
 end

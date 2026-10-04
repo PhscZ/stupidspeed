@@ -9,6 +9,8 @@ NB.       added one byte at a time in a while. loop. The total before the modulu
 NB.       (6684672000) is far below 2^63, so the accumulation is exact; the
 NB.       modulus is taken once, at the end.
 
+__t0 =: 6!:1 ''
+
 file_read =: 3 : 0
   fh =. 1!:21 <'data.bin'
   sz =. 1!:4 fh
@@ -28,6 +30,9 @@ file_read =: 3 : 0
   1!:22 fh
   ": 4294967296 | total
 )
+
+__t1 =: 6!:1 ''
+stderr 'TIME_MS=', (": (__t1 - __t0) * 1000)
 
 stdout (file_read''), LF
 exit 0

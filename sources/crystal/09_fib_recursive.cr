@@ -4,4 +4,7 @@ def fib(n : Int32) : Int64
   return n.to_i64 if n < 2
   fib(n - 1) + fib(n - 2)
 end
-puts fib(40)
+t0 = Time.monotonic
+result = fib(40)
+STDERR.puts "TIME_MS=%.3f" % (Time.monotonic - t0).total_milliseconds
+puts result

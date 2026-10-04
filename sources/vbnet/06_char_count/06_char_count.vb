@@ -8,6 +8,7 @@ Imports System.Linq
 
 Module Program
     Sub Main()
+        Dim sw As System.Diagnostics.Stopwatch = System.Diagnostics.Stopwatch.StartNew()
         Dim block As String = "abcdefghij"
         Dim parts As IEnumerable(Of String) = Enumerable.Repeat(block, 10000000)
         Dim text As String = String.Concat(parts)
@@ -19,6 +20,8 @@ Module Program
             End If
         Next
 
+        sw.Stop()
+        Console.Error.WriteLine("TIME_MS=" & sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture))
         Console.WriteLine(count)
     End Sub
 End Module

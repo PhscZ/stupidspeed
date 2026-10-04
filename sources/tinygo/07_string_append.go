@@ -4,12 +4,25 @@
 // note: plain "go build" only; do not set GOGC=off or any other tuning flags
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+	"time"
+)
+
+// timing: time.Now is Go's monotonic clock; TIME_MS goes to stderr and stdout is unchanged.
+var ssT0 time.Time
+
+func ssReport() {
+	fmt.Fprintf(os.Stderr, "TIME_MS=%.3f\n", float64(time.Since(ssT0).Nanoseconds())/1e6)
+}
 
 func main() {
+	ssT0 = time.Now()
 	text := ""
 	for i := 0; i < 250000; i++ {
 		text += "x"
 	}
+	ssReport()
 	fmt.Println(len(text))
 }

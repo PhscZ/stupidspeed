@@ -17,7 +17,18 @@
 
 ;; Four counters and one if/else chain, a hundred million times. The chain is `cond`, which
 ;; is Common Lisp's if/else-if, so the mispredicted branch shows up directly.
+;; Self-timing: get-internal-real-time is the monotonic tick counter and
+;; internal-time-units-per-second converts ticks to seconds. *timer-start* is set as the
+;; first thing main does and read once, immediately before the answer is printed, so the
+;; timed region is the task's own work and nothing else. The line goes to *error-output*,
+;; so stdout is unchanged.
+(defvar *timer-start* 0)
+
+(defun elapsed-ms ()
+  (* 1000.0d0 (/ (- (get-internal-real-time) *timer-start*) internal-time-units-per-second)))
+
 (defun main ()
+  (setf *timer-start* (get-internal-real-time))
   (let ((a 0) (b 0) (c 0) (d 0))
     (declare (fixnum a b c d))
     (dotimes (i 100000000)
@@ -26,6 +37,7 @@
             ((= 0 (mod i 5)) (incf b))
             ((= 0 (mod i 7)) (incf c))
             (t (incf d))))
+    (format *error-output* "TIME_MS=~,3f~%" (elapsed-ms))
     (format t "~a ~a ~a ~a~%" a b c d)))
 
 (main)

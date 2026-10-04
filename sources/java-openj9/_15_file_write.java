@@ -10,6 +10,7 @@ import java.io.IOException;
 
 public class _15_file_write {
     public static void main(String[] args) throws IOException {
+        long __t0 = System.nanoTime();
         byte[] buf = new byte[1024 * 1024];
         for (int i = 0; i < buf.length; i++) {
             buf[i] = (byte) (i % 256);
@@ -23,6 +24,7 @@ public class _15_file_write {
             out.flush();
             out.getFD().sync();
         }
+        System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6);
         System.out.println(written);
     }
 }

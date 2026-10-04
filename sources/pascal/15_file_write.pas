@@ -8,17 +8,20 @@ program prog;
 {$mode objfpc}{$H+}
 
 uses
-  SysUtils, Classes;
+  SysUtils, Classes, Windows;
 
 const
   ChunkSize = 1024 * 1024;   { 1 MiB }
 
 var
+  __clock_t0, __clock_t1, __clock_freq, __clock_us: Int64;
   fs: TFileStream;
   buf: array[0..ChunkSize - 1] of Byte;
   i, rep: Integer;
   written: Int64;
 begin
+  QueryPerformanceFrequency(__clock_freq);
+  QueryPerformanceCounter(__clock_t0);
   for i := 0 to ChunkSize - 1 do
     buf[i] := Byte(i mod 256);   { 0, 1, 2, ... 255, over and over }
 
@@ -33,5 +36,11 @@ begin
   finally
     fs.Free;   { closes the handle, which is the flush }
   end;
+  QueryPerformanceCounter(__clock_t1);
+  __clock_us := (__clock_t1 - __clock_t0) * 1000000 div __clock_freq;
+  Write(StdErr, 'TIME_MS=', __clock_us div 1000, '.');
+  if __clock_us mod 1000 < 100 then Write(StdErr, '0');
+  if __clock_us mod 1000 < 10 then Write(StdErr, '0');
+  WriteLn(StdErr, __clock_us mod 1000);
   WriteLn(written);
 end.

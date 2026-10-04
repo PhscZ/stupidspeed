@@ -13,10 +13,14 @@
 ;; A hundred million readings, each a multiple of 1/256, accumulated in a primitive double.
 ;; The total is far below 2^53, so the sum is exact and the digits do not depend on the order
 ;; of addition. Double/toString is what keeps the output to the one expected line.
+(def ^:private __t0 (volatile! 0))
+
 (defn -main []
+  (vreset! __t0 (System/nanoTime))
   (loop [i (long 0) total (double 0.0)]
     (if (< i (long 100000000))
       (recur (inc i) (unchecked-add total (/ (double (rem i 256)) 256.0)))
-      (println (Double/toString (/ total 100000000.0))))))
+      (do (.println System/err (str "TIME_MS=" (/ (- (System/nanoTime) (long @__t0)) 1000000.0)))
+          (println (Double/toString (/ total 100000000.0)))))))
 
 (-main)

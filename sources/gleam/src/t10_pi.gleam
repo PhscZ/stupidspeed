@@ -12,13 +12,22 @@
 // note: Gleam has no loop syntax and no mutable variables. Every loop in this row is tail
 //       recursion with explicit accumulators, which the BEAM turns into a jump.
 
+import gleam/erlang/atom
+import gleam/float
 import gleam/int
 import gleam/io
 
 const digits = 1000
 
+@external(erlang, "erlang", "monotonic_time")
+fn monotonic_time(unit: atom.Atom) -> Int
+
 pub fn main() {
-  io.println(int.to_string(loop(1, 0, 1, 1, 3, 3, 0, 0)))
+  let t0 = monotonic_time(atom.create("microsecond"))
+  let answer = loop(1, 0, 1, 1, 3, 3, 0, 0)
+  let ms = int.to_float(monotonic_time(atom.create("microsecond")) - t0) /. 1000.0
+  io.println_error("TIME_MS=" <> float.to_string(ms))
+  io.println(int.to_string(answer))
 }
 
 fn loop(q: Int, r: Int, t: Int, k: Int, n: Int, l: Int, emitted: Int, sum: Int) -> Int {

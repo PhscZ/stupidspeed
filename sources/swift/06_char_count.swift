@@ -2,6 +2,18 @@
 // build: swiftc -O -o prog 06_char_count.swift    run: ./prog
 
 // The 100 MB text is built once, by repeating the ten-character block.
+// timing: Date() is Foundation's wall clock in seconds since the reference date, and
+//         timeIntervalSinceDate gives the elapsed time in seconds as a Double; TIME_MS goes
+//         to stderr with FileHandle.standardError and stdout is unchanged. Instrumented by
+//         inspection: the installed Swift toolchain cannot compile on this machine (missing
+//         _complex and ucrt Swift modules), so this row's timing is unverified.
+import Foundation
+
+func ssReport(_ t0: Date) {
+    let ms = Date().timeIntervalSince(t0) * 1000
+    FileHandle.standardError.write("TIME_MS=" + String(format: "%.3f", ms) + "\n".data(using: .utf8)!)
+}
+let ssT0 = Date()
 let text = String(repeating: "abcdefghij", count: 10_000_000)
 
 // The scan walks the UTF-8 bytes of the string directly; materialising the
@@ -20,4 +32,5 @@ text.withCString { ptr in
     }
 }
 
+ssReport(ssT0)
 print(count)

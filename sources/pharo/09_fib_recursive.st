@@ -5,8 +5,10 @@
  also runs a do-it. `value:` is a real send, so the ~331 million calls are still 331
  million sends, and each one re-enters the same CompiledBlock."
 
-| out fib |
+| out err fib result t0 |
 out := Stdio stdout.
+err := Stdio stderr.
+t0 := Time microsecondClockValue.
 
 fib := nil.
 fib := [:n |
@@ -14,4 +16,6 @@ fib := [:n |
 		ifTrue: [n]
 		ifFalse: [(fib value: n - 1) + (fib value: n - 2)]].
 
-out nextPutAll: (fib value: 40) printString; lf; flush.
+result := fib value: 40.
+err nextPutAll: 'TIME_MS=', ((Time microsecondClockValue - t0) / 1000.0) printString, String lf; flush.
+out nextPutAll: result printString; lf; flush.

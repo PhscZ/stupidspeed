@@ -19,6 +19,23 @@
 -- note: `for i = 0, 100000000 do` in Terra is C-style and half-open, [0, 100000000), which is
 --       what the spec's "from 0 to 99999999" means. Lua's own `for` is inclusive, so the two
 --       must not be confused inside one file.
+-- timing: GetSystemTimePreciseAsFileTime is Windows' 100-nanosecond clock, imported
+--         with terralib.externfunction; TIME_MS goes to time.txt, the contract's
+--         fallback, because Terra's stdio has no stderr handle. stdout is unchanged.
+local C = terralib.includec("stdio.h")
+local GetSystemTimePreciseAsFileTime = terralib.externfunction("GetSystemTimePreciseAsFileTime", &int64 -> {})
+terra ssNow() : int64
+    var ft : int64
+    GetSystemTimePreciseAsFileTime(&ft)
+    return ft / 10000LL
+end
+terra ssReport(t0 : int64) : int64
+    var f = C.fopen("time.txt", "w")
+    C.fprintf(f, "TIME_MS=%lld\n", ssNow() - t0)
+    C.fclose(f)
+    return 0
+end
+local ssT0 = ssNow()
 
 struct Counts { a : int64; b : int64; c : int64; d : int64 }
 
@@ -43,4 +60,5 @@ terra branches() : Counts
 end
 
 local r = branches()
+ssReport(ssT0)
 print(string.format("%d %d %d %d", r.a, r.b, r.c, r.d))

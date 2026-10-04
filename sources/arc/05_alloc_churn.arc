@@ -17,6 +17,13 @@
 ;       into the Racket form; `integer->char` and `modulo` are the host's own names and are left
 ;       alone.
 
+; Self-timing: t0 is read as the first thing the program's body does, and the elapsed
+; milliseconds are written to stderr with Arc's own `ero` (which prints through (stderr))
+; immediately before the answer goes to stdout with `prn`. The clock is the Racket host's
+; current-inexact-milliseconds, reached through Arc's ($ ...) escape, so the bracketed region
+; is this script's own work and stdout is unchanged.
+(= t0 ($ (current-inexact-milliseconds)))
+
 (with (slots (vec 256 nil) total 0)
   (loop (i 0)
     (when (< i 10000000)
@@ -25,4 +32,5 @@
       (= total (+ total ($ (char->integer (string-ref ,buf 0)))))
       ($ (vector-set! ,slots (modulo ,i 256) ,buf))
       (recur (+ i 1))))
+  (ero "TIME_MS=" (- ($ (current-inexact-milliseconds)) t0))
   (prn total))

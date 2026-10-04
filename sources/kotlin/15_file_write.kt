@@ -6,6 +6,7 @@
 import java.io.FileOutputStream
 
 fun main() {
+    val __t0 = System.nanoTime()
     val chunk = 1024 * 1024
     val buf = ByteArray(chunk)
     for (i in 0 until chunk) {
@@ -20,5 +21,6 @@ fun main() {
         out.flush()
         out.getFD().sync()
     }
+    System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
     println(written)
 }

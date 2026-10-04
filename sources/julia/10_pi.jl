@@ -3,6 +3,9 @@
 
 # Gibbons' unbounded spigot: each state transition emits one digit, starting with the
 # leading 3 of pi. Sum the first 1000 emitted digits and print only the sum.
+
+using Printf
+
 function pi_digit_sum(count::Int)
     q = big(1)
     r = big(0)
@@ -40,7 +43,10 @@ function pi_digit_sum(count::Int)
 end
 
 function main()
-    println(pi_digit_sum(1000))
+    t0 = time_ns()
+    v = pi_digit_sum(1000)
+    @printf(stderr, "TIME_MS=%.3f\n", (time_ns() - t0) / 1e6)
+    println(v)
 end
 
 main()

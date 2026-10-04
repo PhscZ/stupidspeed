@@ -22,6 +22,12 @@
 # note: count, but it doubles the arithmetic per element, so the four byte INT word is kept: #
 # note: it is the one that lines up with the file and keeps the chunk a whole number of #
 # note: elements. #
+# timing: clock is a68g's processor-time clock, in seconds, as a REAL; for this #
+# note: single-threaded interpreter that is the program's own work, which is what the #
+# note: contract brackets. TIME_MS is written to stand error as a whole number of #
+# note: milliseconds, and stdout is unchanged. #
+
+REAL tim0 = clock;
 
 INT chunk = 1048576;
 INT chunks = 50;     # data.bin is exactly 50 MiB, so 50 chunks of 1 MiB #
@@ -53,4 +59,6 @@ OD;
 
 close (f);
 
+INT tms = ENTIER(1000.0 * (clock - tim0) + 0.5);
+putf(stand error, ($g$, "TIME_MS=" + whole(tms, 0), $l$));
 print((whole(total MOD 4294967296, 0), newline))

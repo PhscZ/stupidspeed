@@ -6,6 +6,7 @@
 extends SceneTree
 
 func _initialize() -> void:
+	var t0 := Time.get_ticks_msec()
 	var buf := PackedByteArray()
 	buf.resize(1048576)
 	for i in 1048576:
@@ -19,5 +20,6 @@ func _initialize() -> void:
 	f.flush()
 	var written := f.get_position()
 	f.close()
+	printerr("TIME_MS=%d" % (Time.get_ticks_msec() - t0))
 	print(written)
 	quit()

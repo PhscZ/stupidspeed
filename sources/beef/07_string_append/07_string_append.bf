@@ -15,6 +15,7 @@
 //       the one every other row writes.
 
 using System;
+using System.Diagnostics;
 
 namespace Task;
 
@@ -22,11 +23,16 @@ class Program
 {
 	static void Main()
 	{
+		// timing: Stopwatch.GetTimestamp() is corlib's microsecond clock (QueryPerformanceCounter on Windows).
+		int64 t0 = Stopwatch.GetTimestamp();
+
 		String text = scope String();
 
 		for (int64 i = 0; i < 250000; i++)
 			text += "x";
 
+		int64 t1 = Stopwatch.GetTimestamp();
+		Console.Error.WriteLine($"TIME_MS={(double)(t1 - t0) / 1000.0}");
 		Console.WriteLine("{0}", text.Length);
 	}
 }

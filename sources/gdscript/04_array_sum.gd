@@ -4,6 +4,7 @@
 extends SceneTree
 
 func _initialize() -> void:
+	var t0 := Time.get_ticks_msec()
 	var n := 1000000
 	var values := PackedInt64Array()
 	values.resize(n)
@@ -12,5 +13,6 @@ func _initialize() -> void:
 	var total := 0
 	for i in n:
 		total += values[i]
+	printerr("TIME_MS=%d" % (Time.get_ticks_msec() - t0))
 	print(total)
 	quit()

@@ -6,6 +6,7 @@
 
 public class _01_branches {
     public static void main(String[] args) {
+        long __t0 = System.nanoTime();
         long a = 0, b = 0, c = 0, d = 0;
         for (long i = 0; i < 100000000L; i++) {
             if (i % 3 == 0) {
@@ -18,6 +19,7 @@ public class _01_branches {
                 d += 1;
             }
         }
+        System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6);
         System.out.println(a + " " + b + " " + c + " " + d);
     }
 }

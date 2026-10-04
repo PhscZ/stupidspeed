@@ -11,11 +11,17 @@
 :- use_module('03_func_sum_add_one.pl').
 
 main :-
+    get_time(T0),
+    nb_setval(time_t0, T0),
     loop(0, 0).
 
 loop(I, V) :-
     (   I >= 100000000
-    ->  format("~w~n", [V])
+    ->  nb_getval(time_t0, T0),
+        get_time(T1),
+        Ms is (T1 - T0) * 1000,
+        format(standard_error, "TIME_MS=~3f~n", [Ms]),
+        format("~w~n", [V])
     ;   add_one(V, V1),
         I1 is I + 1,
         loop(I1, V1)

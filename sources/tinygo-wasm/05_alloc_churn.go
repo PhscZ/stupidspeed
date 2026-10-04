@@ -6,9 +6,21 @@
 //       release zip ships no wasm-opt, and every wasm target runs it.
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+	"time"
+)
+
+// timing: time.Now is Go's monotonic clock; TIME_MS goes to stderr and stdout is unchanged.
+var ssT0 time.Time
+
+func ssReport() {
+	fmt.Fprintf(os.Stderr, "TIME_MS=%.3f\n", float64(time.Since(ssT0).Nanoseconds())/1e6)
+}
 
 func main() {
+	ssT0 = time.Now()
 	var slots [256][]byte
 	var total uint64
 	for i := range 10000000 {
@@ -17,5 +29,6 @@ func main() {
 		total += uint64(buf[0])
 		slots[i%256] = buf
 	}
+	ssReport()
 	fmt.Println(total)
 }

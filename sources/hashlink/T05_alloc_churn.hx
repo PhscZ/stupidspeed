@@ -10,6 +10,8 @@
 
 class T05_alloc_churn {
     static function main() {
+        // timing: Sys.time() is seconds as a Float on HashLink, so x1000 gives ms (1 ms effective).
+        var t0 = Sys.time();
         var slots = new Array<haxe.io.Bytes>();
         for (i in 0...256) {
             slots.push(null);
@@ -24,6 +26,8 @@ class T05_alloc_churn {
             slots[i % 256] = buf;
         }
 
+        var t1 = Sys.time();
+        Sys.stderr().writeString("TIME_MS=" + ((t1 - t0) * 1000.0) + "\n");
         Sys.println(total);
     }
 }

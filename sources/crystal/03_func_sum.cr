@@ -5,8 +5,10 @@ def add_one(n : Int64) : Int64
   n + 1
 end
 
+t0 = Time.monotonic
 value = 0i64
 100_000_000.times do
   value = add_one(value)
 end
+STDERR.puts "TIME_MS=%.3f" % (Time.monotonic - t0).total_milliseconds
 puts value

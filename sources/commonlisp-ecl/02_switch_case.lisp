@@ -20,7 +20,18 @@
 
 ;; The same four-way decision as task 01 with a different predicate, written as `case` on
 ;; (mod i 4). `case` on a small integer is what a switch is in Common Lisp.
+;; Self-timing: get-internal-real-time is the monotonic tick counter and
+;; internal-time-units-per-second converts ticks to seconds. *timer-start* is set as the
+;; first thing main does and read once, immediately before the answer is printed, so the
+;; timed region is the task's own work and nothing else. The line goes to *error-output*,
+;; so stdout is unchanged.
+(defvar *timer-start* 0)
+
+(defun elapsed-ms ()
+  (* 1000.0d0 (/ (- (get-internal-real-time) *timer-start*) internal-time-units-per-second)))
+
 (defun main ()
+  (setf *timer-start* (get-internal-real-time))
   (let ((acc 0))
     (declare (fixnum acc))
     (dotimes (i 100000000)
@@ -30,6 +41,7 @@
                   (1 i)
                   (2 (* 2 i))
                   (t (* 3 i)))))
+    (format *error-output* "TIME_MS=~,3f~%" (elapsed-ms))
     (format t "~a~%" acc)))
 
 (main)

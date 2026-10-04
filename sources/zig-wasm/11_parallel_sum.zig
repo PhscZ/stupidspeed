@@ -37,6 +37,27 @@ const range: u64 = 25_000_000;
 
 const Iovec = extern struct { base: [*]const u8, len: usize };
 extern "wasi_snapshot_preview1" fn fd_write(fd: i32, iovs: [*]const Iovec, iovs_len: usize, nwritten: *usize) i32;
+extern "wasi_snapshot_preview1" fn clock_time_get(id: i32, precision: u64, timestamp: *u64) i32;
+
+// timing: clock_time_get(1, ...) is WASI's CLOCK_MONOTONIC in nanoseconds; TIME_MS goes to
+//         stderr (fd 2) and stdout is unchanged. Written with the raw WASI imports because
+//         this file instantiates no std.Io (see the notes above).
+fn monotonic_ns() u64 {
+    var ts: u64 = 0;
+    _ = clock_time_get(1, 1, &ts);
+    return ts;
+}
+
+var ss_t0: u64 = undefined;
+
+fn ssReport() void {
+    const ms: f64 = @as(f64, @floatFromInt(monotonic_ns() - ss_t0)) / 1e6;
+    var buf: [48]u8 = undefined;
+    const line = std.fmt.bufPrint(&buf, "TIME_MS={d:.3}\n", .{ms}) catch return;
+    var iov = Iovec{ .base = line.ptr, .len = line.len };
+    var written: usize = 0;
+    _ = fd_write(2, @ptrCast(&iov), 1, &written);
+}
 
 fn print(line: []const u8) void {
     var iov = Iovec{ .base = line.ptr, .len = line.len };
@@ -71,6 +92,7 @@ var stack_pool: [8 << 20]u8 align(64) = undefined;
 var stack_allocator: std.heap.FixedBufferAllocator = undefined;
 
 pub fn main() u8 {
+    ss_t0 = monotonic_ns();
     stack_allocator = std.heap.FixedBufferAllocator.init(&stack_pool);
 
     var workers: [4]Worker = undefined;
@@ -92,6 +114,7 @@ pub fn main() u8 {
 
     var line_buf: [32]u8 = undefined;
     const line = std.fmt.bufPrint(&line_buf, "{d}\n", .{total}) catch return 1;
+    ssReport();
     print(line);
     return 0;
 }

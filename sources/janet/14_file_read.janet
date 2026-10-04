@@ -14,6 +14,12 @@
 #       text mode, which on Windows would translate CRLF pairs; data.bin has no adjacent
 #       0x0D 0x0A, so the sum is the same either way, but `b` is the correct mode for a byte
 #       stream.
+
+# timing: os/clock is Janet's monotonic clock, in seconds as a double; TIME_MS goes to
+#         stderr with eprintf and stdout is unchanged.
+(def ss-t0 (os/clock))
+(defn ss-report [] (eprintf "TIME_MS=%.3f\n" (* 1000 (- (os/clock) ss-t0))))
+
 (def CHUNK 1048576)
 
 (def f (file/open "data.bin" :rb))
@@ -30,4 +36,5 @@
 
 (file/close f)
 
+(ss-report)
 (print (% total 4294967296))

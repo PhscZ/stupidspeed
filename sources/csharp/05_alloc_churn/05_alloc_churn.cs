@@ -6,6 +6,7 @@ class Program
 {
     static void Main()
     {
+        System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
         long total = 0;
         byte[][] slots = new byte[256][];
         for (int i = 0; i < 10000000; i++)
@@ -16,6 +17,8 @@ class Program
             // Storing the buffer keeps it reachable; the array it replaces becomes garbage.
             slots[i % 256] = buf;
         }
+        sw.Stop();
+        Console.Error.WriteLine("TIME_MS=" + sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture));
         Console.WriteLine(total);
     }
 }

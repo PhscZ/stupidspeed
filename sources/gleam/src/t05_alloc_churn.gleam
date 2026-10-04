@@ -13,8 +13,13 @@
 //       functional style is deliberately avoided: no list.map, no fold and no
 //       higher-order functions in any timed path.
 
+import gleam/erlang/atom
+import gleam/float
 import gleam/int
 import gleam/io
+
+@external(erlang, "erlang", "monotonic_time")
+fn monotonic_time(unit: atom.Atom) -> Int
 
 @external(erlang, "binary", "copy")
 fn binary_copy(subject: BitArray, times: Int) -> BitArray
@@ -23,17 +28,22 @@ fn binary_copy(subject: BitArray, times: Int) -> BitArray
 fn process_dictionary_put(key: a, value: b) -> c
 
 pub fn main() {
-  churn(0, 0)
+  let t0 = monotonic_time(atom.create("microsecond"))
+  churn(0, 0, t0)
 }
 
-fn churn(i: Int, total: Int) -> Nil {
+fn churn(i: Int, total: Int, t0: Int) -> Nil {
   case i {
-    10000000 -> io.println(int.to_string(total))
+    10000000 -> {
+      let ms = int.to_float(monotonic_time(atom.create("microsecond")) - t0) /. 1000.0
+      io.println_error("TIME_MS=" <> float.to_string(ms))
+      io.println(int.to_string(total))
+    }
     _ -> {
       let v = i % 256
       let buf = binary_copy(<<v:8>>, 64)
       let _ = process_dictionary_put(v, buf)
-      churn(i + 1, total + v)
+      churn(i + 1, total + v, t0)
     }
   }
 }

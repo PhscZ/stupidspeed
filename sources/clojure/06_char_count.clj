@@ -12,7 +12,10 @@
 
 ;; The 100 MB text is built once with String.repeat, the same call the Java row uses, and then
 ;; scanned one character at a time with charAt. Nothing is cached between characters.
+(def ^:private __t0 (volatile! 0))
+
 (defn -main []
+  (vreset! __t0 (System/nanoTime))
   (let [text (.repeat "abcdefghij" (int 10000000))
         len (long (.length text))]
     (loop [i (long 0) count (long 0)]
@@ -21,6 +24,7 @@
                (if (= (.charAt text (int i)) \h)
                  (unchecked-inc count)
                  count))
-        (println count)))))
+        (do (.println System/err (str "TIME_MS=" (/ (- (System/nanoTime) (long @__t0)) 1000000.0)))
+            (println count))))))
 
 (-main)

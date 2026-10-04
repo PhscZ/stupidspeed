@@ -25,6 +25,7 @@ object Main {
   }
 
   def main(args: Array[String]): Unit = {
+    val __t0 = System.nanoTime()
     var q = One
     var r = Zero
     var t = One
@@ -63,6 +64,7 @@ object Main {
       }
     }
 
+    System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
     println(sum)
   }
 }

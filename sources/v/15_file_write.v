@@ -7,6 +7,7 @@
 module main
 
 import os
+import time
 
 const chunk = 1048576
 
@@ -25,6 +26,7 @@ fn commit(fd int) {
 }
 
 fn main() {
+	t0 := time.now()
 	mut buf := []u8{len: chunk}
 	for i in 0 .. chunk {
 		buf[i] = u8(i % 256)
@@ -42,5 +44,6 @@ fn main() {
 	commit(f.fd)
 	f.close()
 
+	eprintln('TIME_MS=${f64(time.since(t0).microseconds()) / 1000.0:.3f}')
 	println(written)
 }

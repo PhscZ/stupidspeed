@@ -5,6 +5,10 @@
 // note: the three matrices are flat long[] arrays, as in the C# row: matrix[of long](n, n) would
 //       be a real long[,] and pay the bounds-checked two-dimensional indexer on every access.
 
+import System.Diagnostics
+
+sw = Stopwatch.StartNew()
+
 n = 1000
 a = array[of long](n * n)
 b = array[of long](n * n)
@@ -30,5 +34,7 @@ while idx < n * n:
     total += c[idx]
     idx += 1
 
+sw.Stop()
+System.Console.Error.WriteLine("TIME_MS=" + sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture))
 print(total)
 

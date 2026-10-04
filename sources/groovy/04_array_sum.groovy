@@ -3,6 +3,7 @@
 // long[] is a real primitive array, so this walks contiguous 8-byte memory.
 
 long[] arr = new long[1000000]
+long __t0 = System.nanoTime()
 for (int i = 0; i < 1000000; i++) {
     arr[i] = i
 }
@@ -12,4 +13,5 @@ for (int i = 0; i < 1000000; i++) {
     total += arr[i]
 }
 
+System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
 println total

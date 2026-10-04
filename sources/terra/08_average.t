@@ -15,6 +15,23 @@
 -- note: `%.9f` and not `%g`: `print(0.498046875)` in Lua 5.1/LuaJIT prints "0.498046875"
 --       already, but the format string pins it so a change in LuaJIT's default `%.14g` cannot
 --       change the line.
+-- timing: GetSystemTimePreciseAsFileTime is Windows' 100-nanosecond clock, imported
+--         with terralib.externfunction; TIME_MS goes to time.txt, the contract's
+--         fallback, because Terra's stdio has no stderr handle. stdout is unchanged.
+local C = terralib.includec("stdio.h")
+local GetSystemTimePreciseAsFileTime = terralib.externfunction("GetSystemTimePreciseAsFileTime", &int64 -> {})
+terra ssNow() : int64
+    var ft : int64
+    GetSystemTimePreciseAsFileTime(&ft)
+    return ft / 10000LL
+end
+terra ssReport(t0 : int64) : int64
+    var f = C.fopen("time.txt", "w")
+    C.fprintf(f, "TIME_MS=%lld\n", ssNow() - t0)
+    C.fclose(f)
+    return 0
+end
+local ssT0 = ssNow()
 
 terra average() : double
     var total : double = 0.0
@@ -25,4 +42,6 @@ terra average() : double
     return total / 100000000.0
 end
 
-print(string.format("%.9f", average()))
+local ssV = average()
+ssReport(ssT0)
+print(string.format("%.9f", ssV))

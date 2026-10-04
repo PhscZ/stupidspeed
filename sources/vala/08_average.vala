@@ -9,7 +9,15 @@
 //       1/256 the task asks for and the sum is exact. `%.9f` prints the nine digits the
 //       expected output has.
 
+// timing: GLib.get_real_time() is GLib's monotonic clock in microseconds; TIME_MS goes
+//         to stderr and stdout is unchanged.
+static int64 ss_t0;
+static void ss_report () {
+    stderr.printf ("TIME_MS=%.3f\n", (GLib.get_real_time () - ss_t0) / 1000.0);
+}
+
 int main () {
+    ss_t0 = GLib.get_real_time ();
     double total = 0.0;
 
     for (int64 i = 0; i < 100000000; i++) {
@@ -17,6 +25,7 @@ int main () {
         total += reading;
     }
 
+    ss_report ();
     stdout.printf ("%.9f\n", total / 100000000.0);
     return 0;
 }

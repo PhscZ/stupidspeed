@@ -24,6 +24,7 @@
 (* note: measured: 0.308 s, 3.1 ns per character. *)
 fun main () =
   let
+    val __t0 = Time.now ()
     val block = "abcdefghij"
     fun rep (s, k) =
       if k = 1 then s
@@ -42,6 +43,8 @@ fun main () =
           else
             scan (i + 1, count)
         end
+    val result = scan (0, 0)
+    val () = TextIO.output (TextIO.stdErr, "TIME_MS=" ^ Real.fmt (StringCvt.FIX (SOME 3)) (Time.toReal (Time.- (Time.now (), __t0)) * 1000.0) ^ "\n")
   in
-    print (Int.toString (scan (0, 0)) ^ "\n")
+    print (Int.toString result ^ "\n")
   end

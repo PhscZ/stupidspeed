@@ -4,6 +4,7 @@
 // the cache-hostile order the task asks for.
 
 int n = 500
+long __t0 = System.nanoTime()
 long[][] a = new long[n][n]
 long[][] b = new long[n][n]
 long[][] c = new long[n][n]
@@ -32,4 +33,5 @@ for (int i = 0; i < n; i++) {
     }
 }
 
+System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
 println total

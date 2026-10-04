@@ -6,6 +6,7 @@
 # are plain 1-D character arrays, so text(i) is the per-character step, one
 # indexed load per character and no intermediate string.
 
+__t0 = tic;
 text = repmat('abcdefghij', 1, 10000000);
 n = numel(text);
 count = 0;
@@ -19,4 +20,5 @@ for i = 1:n
     count = count + 1;
   end
 end
+fprintf(stderr, "TIME_MS=%.3f\n", toc(__t0) * 1000);
 printf("%.0f\n", count);

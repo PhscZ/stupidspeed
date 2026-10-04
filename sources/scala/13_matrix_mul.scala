@@ -11,6 +11,7 @@
 
 object Main {
   def main(args: Array[String]): Unit = {
+    val __t0 = System.nanoTime()
     val n = 500
     val size = n * n
     val a = new Array[Long](size)
@@ -59,6 +60,7 @@ object Main {
       total += c(i)
       i += 1
     }
+    System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
     println(total)
   }
 }

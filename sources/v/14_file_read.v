@@ -6,10 +6,12 @@
 module main
 
 import os
+import time
 
 const chunk = 1048576
 
 fn main() {
+	t0 := time.now()
 	mut f := os.open('data.bin') or { panic(err) }
 
 	mut buf := []u8{len: chunk}
@@ -27,5 +29,6 @@ fn main() {
 
 	f.close()
 
+	eprintln('TIME_MS=${f64(time.since(t0).microseconds()) / 1000.0:.3f}')
 	println(total % 4294967296)
 }

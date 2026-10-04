@@ -16,6 +16,23 @@
 --       against 1.70 ns for the C row's clang -O2 build and 1.90 ns for its gcc -O2 build.
 --       That is a toolchain effect and it is disclosed in temp/terra-doc.md §7.1, together
 --       with the mod-7 control loop that proves the modulo is really being computed.
+-- timing: GetSystemTimePreciseAsFileTime is Windows' 100-nanosecond clock, imported
+--         with terralib.externfunction; TIME_MS goes to time.txt, the contract's
+--         fallback, because Terra's stdio has no stderr handle. stdout is unchanged.
+local C = terralib.includec("stdio.h")
+local GetSystemTimePreciseAsFileTime = terralib.externfunction("GetSystemTimePreciseAsFileTime", &int64 -> {})
+terra ssNow() : int64
+    var ft : int64
+    GetSystemTimePreciseAsFileTime(&ft)
+    return ft / 10000LL
+end
+terra ssReport(t0 : int64) : int64
+    var f = C.fopen("time.txt", "w")
+    C.fprintf(f, "TIME_MS=%lld\n", ssNow() - t0)
+    C.fclose(f)
+    return 0
+end
+local ssT0 = ssNow()
 
 terra switch_case() : int64
     var acc : int64 = 0
@@ -34,4 +51,6 @@ terra switch_case() : int64
     return acc
 end
 
-print(string.format("%d", switch_case()))
+local ssV = switch_case()
+ssReport(ssT0)
+print(string.format("%d", ssV))

@@ -18,9 +18,14 @@
 ; note: the 1048576-byte fill and the 50 writes take about 0.6 s in total on this machine.
 ;       The file on disk was checked afterwards: 52428800 bytes, bytes 0..255 repeating,
 ;       and no byte order mark.
+; timing: A_TickCount is the interpreter's own millisecond clock (GetTickCount, so about
+;       15 ms resolution); TIME_MS is written to stderr with FileAppend(..., "**") and
+;       stdout is unchanged.
 #Requires AutoHotkey v2.0
 #SingleInstance Off
 #NoTrayIcon
+
+t0 := A_TickCount
 
 CHUNK := 1048576
 REPEATS := 50
@@ -41,4 +46,5 @@ Loop REPEATS
 DllCall("FlushFileBuffers", "Ptr", f.Handle)
 f.Close()
 
+FileAppend("TIME_MS=" (A_TickCount - t0) "`n", "**")
 FileAppend(written "`n", "*")

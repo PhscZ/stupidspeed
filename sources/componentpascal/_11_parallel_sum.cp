@@ -20,9 +20,11 @@
    and /list- only suppresses the .lst listing file. *)
 (* note: Console.WriteInt takes a 32 bit INTEGER only, so the LONGINT total is printed
    by the local WriteLong. *)
+(* timing: Env.Environment.get_TickCount() is .NET's millisecond clock, and the Error module
+   writes to stderr, so TIME_MS is reported there and stdout is unchanged. *)
 
 MODULE _11_parallel_sum;
- IMPORT CPmain, Console, Th := mscorlib_System_Threading;
+ IMPORT CPmain, Console, Error, Env := mscorlib_System, Th := mscorlib_System_Threading;
 
  CONST SLICE = 25000000;
 
@@ -32,6 +34,7 @@ MODULE _11_parallel_sum;
                END;
 
  VAR s0, s1, s2, s3 : Th.ThreadStart;
+     ss_t0, ss_t1 : LONGINT;
      th0, th1, th2, th3 : Th.Thread;
      w0, w1, w2, w3 : Worker;
      total : LONGINT;
@@ -71,7 +74,29 @@ MODULE _11_parallel_sum;
    Console.WriteString(s)
  END WriteLong;
 
+ PROCEDURE WMs(x : LONGINT);
+   VAR s : ARRAY 24 OF CHAR;
+       n, k : INTEGER;
+       t : CHAR;
+ BEGIN
+   IF x = 0 THEN Error.Write("0"); RETURN END;
+   n := 0;
+   WHILE x > 0 DO
+     s[n] := CHR(SHORT(x MOD 10) + ORD("0"));
+     x := x DIV 10;
+     INC(n)
+   END;
+   s[n] := 0X;
+   k := 0; DEC(n);
+   WHILE k < n DO
+     t := s[k]; s[k] := s[n]; s[n] := t;
+     INC(k); DEC(n)
+   END;
+   Error.WriteString(s)
+ END WMs;
+
 BEGIN
+  ss_t0 := Env.Environment.get_TickCount();
   NEW(w0); NEW(w1); NEW(w2); NEW(w3);
   w0.t := 0; w1.t := 1; w2.t := 2; w3.t := 3;
 
@@ -89,6 +114,9 @@ BEGIN
   th0.Join();  th1.Join();  th2.Join();  th3.Join();
 
   total := w0.acc + w1.acc + w2.acc + w3.acc;
+
+  ss_t1 := Env.Environment.get_TickCount();
+  Error.WriteString("TIME_MS="); WMs(ss_t1 - ss_t0); Error.WriteLn();
 
   WriteLong(total); Console.WriteLn
 END _11_parallel_sum.

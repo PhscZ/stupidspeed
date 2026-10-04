@@ -17,6 +17,13 @@
 ;       `$` splices an Arc expression back into the Racket form, so `,i` is the loop variable and
 ;       `,arr` is the local array.
 
+; Self-timing: t0 is read as the first thing the program's body does, and the elapsed
+; milliseconds are written to stderr with Arc's own `ero` (which prints through (stderr))
+; immediately before the answer goes to stdout with `prn`. The clock is the Racket host's
+; current-inexact-milliseconds, reached through Arc's ($ ...) escape, so the bracketed region
+; is this script's own work and stdout is unchanged.
+(= t0 ($ (current-inexact-milliseconds)))
+
 (with (n 1000000)
   (= arr (vec n 0))
 
@@ -30,4 +37,5 @@
       (when (< i n)
         (= total (+ total ($ (vector-ref ,arr ,i))))
         (recur (+ i 1))))
+    (ero "TIME_MS=" (- ($ (current-inexact-milliseconds)) t0))
     (prn total)))

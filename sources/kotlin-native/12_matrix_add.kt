@@ -1,7 +1,14 @@
 // task 12 matrix_add — expected output: 999000000
 // build: kotlinc 12_matrix_add.kt -include-runtime -d prog.jar    run: java -jar prog.jar    [native build: kotlinc-native -opt -o prog 12_matrix_add.kt    native run: ./prog]
 
+import kotlin.time.TimeSource
+import kotlinx.cinterop.ExperimentalForeignApi
+import platform.posix.fputs
+import platform.posix.stderr
+
+@OptIn(ExperimentalForeignApi::class)
 fun main() {
+    val __t0 = TimeSource.Monotonic.markNow()
     val n = 1000
     val a = LongArray(n * n)
     val b = LongArray(n * n)
@@ -21,5 +28,6 @@ fun main() {
     for (i in 0 until n * n) {
         total += c[i]
     }
+    fputs("TIME_MS=" + __t0.elapsedNow().inWholeNanoseconds / 1000000.0 + "\n", stderr)
     println(total)
 }

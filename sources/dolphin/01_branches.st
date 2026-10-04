@@ -1,9 +1,14 @@
 "task 01 branches — expected output: 33333334 13333333 7619048 45714285
  build: none (image is prebuilt)    run: Dolphin8 DPRO.img8 -u -f 01_branches.st -q
  Dolphin 8 is an interpreter with a JIT, and `SessionManager current stdout` is the
- headless console stream. Loop bounds are inclusive, as the task says: 0 to 99999999."
+ headless console stream. Loop bounds are inclusive, as the task says: 0 to: 99999999.
+ timing: Time millisecondClockValue is Dolphin's millisecond clock. Dolphin's console has no
+ stderr stream, so the contract's fallback applies and TIME_MS goes to time.txt in the working
+ directory. Instrumented by inspection: Dolphin is not installed on this machine, so this
+ row's timing is unverified."
 
-| out a b c d |
+| ssT0 out a b c d |
+ssT0 := Time millisecondClockValue.
 out := SessionManager current stdout.
 a := 0. b := 0. c := 0. d := 0.
 
@@ -17,6 +22,11 @@ a := 0. b := 0. c := 0. d := 0.
 					(i \\ 7) == 0
 						ifTrue: [c := c + 1]
 						ifFalse: [d := d + 1]]]].
+
+(FileWriteStream write: 'time.txt' type: #binary)
+	nextPutAll: 'TIME_MS=', (Time millisecondClockValue - ssT0) printString;
+	cr;
+	close.
 
 out
 	nextPutAll: a printString, ' ', b printString, ' ', c printString, ' ', d printString;

@@ -7,6 +7,7 @@
 
 public class _12_matrix_add {
     public static void main(String[] args) {
+        long __t0 = System.nanoTime();
         final int n = 1000;
         long[] a = new long[n * n];
         long[] b = new long[n * n];
@@ -30,6 +31,7 @@ public class _12_matrix_add {
         for (int idx = 0; idx < n * n; idx++) {
             total += c[idx];
         }
+        System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6);
         System.out.println(total);
     }
 }

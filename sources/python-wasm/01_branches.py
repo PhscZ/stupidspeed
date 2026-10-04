@@ -3,6 +3,8 @@
 # build (cython): cython --embed -3 --module-name _01_branches -o _01_branches.c 01_branches.py, then gcc -O2 -DMS_WIN64 -municode -I <python>/include -o prog _01_branches.c -L <python>/libs -lpython3xx
 # build (wasm): python.wasm is the wasm32-wasip1-threads build of CPython (see BUILD.md); run: wasmtime -S threads=y -W threads=y -W shared-memory=y --dir . python.wasm <task>.py
 
+import time as _time, sys as _sys
+_t0 = _time.perf_counter()
 a = 0
 b = 0
 c = 0
@@ -18,4 +20,6 @@ for i in range(100000000):
     else:
         d += 1
 
+_t1 = _time.perf_counter()
+_sys.stderr.write("TIME_MS=%.3f\n" % ((_t1 - _t0) * 1000.0))
 print(a, b, c, d)

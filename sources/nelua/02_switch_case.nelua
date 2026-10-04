@@ -13,6 +13,17 @@
 --       as task 01, which gcc folds to a bare `%` for a non-negative counter.
 -- note: the value is a multiple of 4 for every iteration's i, so floor and truncating
 --       modulo agree; nothing here depends on which one the compiler picks.
+require 'io'
+require 'os'
+require 'string'
+-- timing: os.now is Nelua's monotonic clock in seconds (nanosecond resolution on
+--         Windows, via QueryPerformanceCounter); TIME_MS goes to stderr through
+--         io.stderr and stdout is unchanged.
+local ssT0 = os.now()
+local function ss_report()
+  io.stderr:write(string.format('TIME_MS=%.3f\n', (os.now() - ssT0) * 1000))
+end
+
 local acc: integer = 0
 
 for i = 0, 99999999 do
@@ -24,4 +35,5 @@ for i = 0, 99999999 do
   end
 end
 
+ss_report()
 print(acc)

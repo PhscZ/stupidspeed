@@ -7,6 +7,7 @@ Imports System.IO
 
 Module Program
     Sub Main()
+        Dim sw As System.Diagnostics.Stopwatch = System.Diagnostics.Stopwatch.StartNew()
         Dim buffer(1048575) As Byte
         For i As Integer = 0 To buffer.Length - 1
             buffer(i) = CByte(i Mod 256)
@@ -22,6 +23,8 @@ Module Program
             stream.Flush(True)
         End Using
 
+        sw.Stop()
+        Console.Error.WriteLine("TIME_MS=" & sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture))
         Console.WriteLine(written)
     End Sub
 End Module

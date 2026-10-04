@@ -6,10 +6,12 @@
 extends SceneTree
 
 func _initialize() -> void:
+	var t0 := Time.get_ticks_msec()
 	var text := "abcdefghij".repeat(10000000)
 	var count := 0
 	for i in text.length():
 		if text[i] == "h":
 			count += 1
+	printerr("TIME_MS=%d" % (Time.get_ticks_msec() - t0))
 	print(count)
 	quit()

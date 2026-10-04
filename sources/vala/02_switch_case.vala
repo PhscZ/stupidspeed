@@ -8,7 +8,15 @@
 // note: the total needs more than 32 bits, so the accumulator is `int64`; the loop index is
 //       `int64` too, which is what keeps `i mod 4` from wrapping.
 
+// timing: GLib.get_real_time() is GLib's monotonic clock in microseconds; TIME_MS goes
+//         to stderr and stdout is unchanged.
+static int64 ss_t0;
+static void ss_report () {
+    stderr.printf ("TIME_MS=%.3f\n", (GLib.get_real_time () - ss_t0) / 1000.0);
+}
+
 int main () {
+    ss_t0 = GLib.get_real_time ();
     int64 acc = 0;
 
     for (int64 i = 0; i < 100000000; i++) {
@@ -20,6 +28,7 @@ int main () {
         }
     }
 
+    ss_report ();
     stdout.printf ("%lld\n", acc);
     return 0;
 }

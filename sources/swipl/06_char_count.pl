@@ -16,9 +16,13 @@
 % note: -O is required, see 01_branches.pl.
 
 main :-
+    get_time(T0),
     blocks(10000000, [], L),
     atomics_to_string(L, Text),
     count(Text, 0, 0, Total),
+    get_time(T1),
+    Ms is (T1 - T0) * 1000,
+    format(standard_error, "TIME_MS=~3f~n", [Ms]),
     format("~w~n", [Total]).
 
 blocks(0, Acc, Acc) :-

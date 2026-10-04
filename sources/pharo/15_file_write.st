@@ -7,8 +7,10 @@
  BinaryFileStream>>sync is Pharo's fsync, so the 50 MiB really is on the disk before
  the count is printed."
 
-| out buf w written |
+| out err buf w written t0 |
 out := Stdio stdout.
+err := Stdio stderr.
+t0 := Time microsecondClockValue.
 
 buf := ByteArray new: 1048576.
 1 to: 1048576 do: [:i | buf at: i put: ((i - 1) \\ 256)].
@@ -22,4 +24,5 @@ w flush.
 w sync.
 w close.
 
+err nextPutAll: 'TIME_MS=', ((Time microsecondClockValue - t0) / 1000.0) printString, String lf; flush.
 out nextPutAll: written printString; lf; flush.

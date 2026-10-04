@@ -3,6 +3,10 @@
 // note: the run needs Boo.Lang.dll (tools/boo/src/Boo.Lang/bin/Release/net10.0/) and a
 //       prog.runtimeconfig.json for Microsoft.NETCore.App 10.0.0 beside prog.exe.
 
+import System.Diagnostics
+
+sw = Stopwatch.StartNew()
+
 a as long = 0
 b as long = 0
 c as long = 0
@@ -20,5 +24,7 @@ while i < 100000000:
         d += 1
     i += 1
 
+sw.Stop()
+System.Console.Error.WriteLine("TIME_MS=" + sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture))
 print("$a $b $c $d")
 

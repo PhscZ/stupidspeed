@@ -13,6 +13,7 @@
 
 using System;
 using System.Collections;
+using System.Diagnostics;
 
 namespace Task;
 
@@ -219,6 +220,9 @@ class Program
 {
 	static void Main()
 	{
+		// timing: Stopwatch.GetTimestamp() is corlib's microsecond clock (QueryPerformanceCounter on Windows).
+		int64 t0 = Stopwatch.GetTimestamp();
+
 		Big q = new Big();
 		Big r = new Big();
 		Big t = new Big();
@@ -279,6 +283,8 @@ class Program
 			}
 		}
 
+		int64 t1 = Stopwatch.GetTimestamp();
+		Console.Error.WriteLine($"TIME_MS={(double)(t1 - t0) / 1000.0}");
 		Console.WriteLine("{0}", sum);
 
 		delete q;

@@ -8,6 +8,7 @@
 # CRuby's GVL serializes the four threads, so this prints the right answer without running any faster;
 # JRuby's threads are real JVM threads and do run in parallel.
 
+_t0 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 def work(t)
   acc = 0
   i = t * 25_000_000
@@ -29,4 +30,6 @@ threads = (0...4).map { |t| Thread.new { work(t) } }
 total = 0
 threads.each { |th| total += th.value }
 
+_t1 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+$stderr.write("TIME_MS=%.3f\n" % ((_t1 - _t0) * 1000.0))
 puts total

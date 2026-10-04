@@ -5,6 +5,7 @@ Imports System
 
 Module Program
     Sub Main()
+        Dim sw As System.Diagnostics.Stopwatch = System.Diagnostics.Stopwatch.StartNew()
         Dim a As Long = 0
         Dim b As Long = 0
         Dim c As Long = 0
@@ -22,6 +23,8 @@ Module Program
             End If
         Next
 
+        sw.Stop()
+        Console.Error.WriteLine("TIME_MS=" & sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture))
         Console.WriteLine(a & " " & b & " " & c & " " & d)
     End Sub
 End Module

@@ -7,6 +7,7 @@
 
 public class _06_char_count {
     public static void main(String[] args) {
+        long __t0 = System.nanoTime();
         String text = "abcdefghij".repeat(10000000);
         long count = 0;
         for (int i = 0; i < text.length(); i++) {
@@ -14,6 +15,7 @@ public class _06_char_count {
                 count += 1;
             }
         }
+        System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6);
         System.out.println(count);
     }
 }

@@ -7,5 +7,8 @@ private fun fib(n: Long): Long {
 }
 
 fun main() {
-    println(fib(40L))
+    val __t0 = System.nanoTime()
+    val result = fib(40L)
+    System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
+    println(result)
 }

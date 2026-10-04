@@ -18,8 +18,11 @@
 %% than a hundred million appends, and then scanned one byte at a time with binary:at, which is
 %% O(1).
 main(_) ->
+    T0 = erlang:monotonic_time(microsecond),
     Text = binary:copy(<<"abcdefghij">>, 10000000),
-    io:format("~w~n", [scan(Text, 0, 100000000, 0)]).
+    Count = scan(Text, 0, 100000000, 0),
+    io:format(standard_error, "TIME_MS=~p~n", [(erlang:monotonic_time(microsecond) - T0) / 1000]),
+    io:format("~w~n", [Count]).
 
 scan(_Text, I, N, Count) when I >= N -> Count;
 scan(Text, I, N, Count) ->

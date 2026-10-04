@@ -1,6 +1,7 @@
 # task 02 switch_case -- expected output: 7500000075000000
 # build: crystal build --release -o prog 02_switch_case.cr    run: ./prog
 # note: Crystal integer literals default to Int32; task 02 needs the Int64 form or it raises OverflowError.
+t0 = Time.monotonic
 acc = 0i64
 
 100000000.times do |i|
@@ -16,4 +17,5 @@ acc = 0i64
   end
 end
 
+STDERR.puts "TIME_MS=%.3f" % (Time.monotonic - t0).total_milliseconds
 puts acc

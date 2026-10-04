@@ -1,7 +1,10 @@
 // task 01 branches — expected output: 33333334 13333333 7619048 45714285
 // build: dart compile exe -o prog 01_branches.dart (aot; jit has no build step)    run: ./prog (aot) | dart 01_branches.dart (jit)
 
+import 'dart:io';
+
 void main() {
+  final Stopwatch sw = Stopwatch()..start();
   int a = 0;
   int b = 0;
   int c = 0;
@@ -17,5 +20,6 @@ void main() {
       d += 1;
     }
   }
+  stderr.writeln('TIME_MS=${(sw.elapsedMicroseconds / 1000).toStringAsFixed(3)}');
   print('$a $b $c $d');
 }

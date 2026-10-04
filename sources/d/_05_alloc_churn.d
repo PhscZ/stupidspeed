@@ -5,9 +5,20 @@
 module _05_alloc_churn;
 
 import std.stdio;
+import core.time : MonoTime;
+
+// timing: MonoTime.currTime is core.time's monotonic clock; TIME_MS goes to stderr and stdout
+// is unchanged.
+MonoTime ss_t0;
+
+void ssReport()
+{
+    stderr.writefln("TIME_MS=%.3f", (MonoTime.currTime - ss_t0).total!"usecs" / 1000.0);
+}
 
 void main()
 {
+    ss_t0 = MonoTime.currTime;
     long total = 0;
     ubyte[][] slots = new ubyte[][256];
 
@@ -19,5 +30,6 @@ void main()
         slots[i % 256] = buf; // keeps buf reachable; the replaced one becomes GC garbage
     }
 
+    ssReport();
     writeln(total);
 }

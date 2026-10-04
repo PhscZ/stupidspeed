@@ -12,18 +12,23 @@
 #       hatches -- the process dictionary (Process.put/get) and the :atomics module,
 #       which is a real fixed-size mutable array of 64-bit integers.
 defmodule T01 do
-  def run, do: loop(0, 0, 0, 0, 0)
-
-  defp loop(i, a, b, c, d) when i >= 100_000_000 do
-    IO.puts("#{a} #{b} #{c} #{d}")
+  def run do
+    t0 = System.monotonic_time(:microsecond)
+    loop(0, 0, 0, 0, 0, t0)
   end
 
-  defp loop(i, a, b, c, d) do
+  defp loop(i, a, b, c, d, t0) when i >= 100_000_000 do
+    result = "#{a} #{b} #{c} #{d}"
+    IO.puts(:stderr, "TIME_MS=#{(System.monotonic_time(:microsecond) - t0) / 1000}")
+    IO.puts(result)
+  end
+
+  defp loop(i, a, b, c, d, t0) do
     cond do
-      rem(i, 3) == 0 -> loop(i + 1, a + 1, b, c, d)
-      rem(i, 5) == 0 -> loop(i + 1, a, b + 1, c, d)
-      rem(i, 7) == 0 -> loop(i + 1, a, b, c + 1, d)
-      true           -> loop(i + 1, a, b, c, d + 1)
+      rem(i, 3) == 0 -> loop(i + 1, a + 1, b, c, d, t0)
+      rem(i, 5) == 0 -> loop(i + 1, a, b + 1, c, d, t0)
+      rem(i, 7) == 0 -> loop(i + 1, a, b, c + 1, d, t0)
+      true           -> loop(i + 1, a, b, c, d + 1, t0)
     end
   end
 end

@@ -22,6 +22,23 @@
 -- note: `slots[i % 256] = buf` is what keeps the buffer reachable and drops the one it
 --       replaces, exactly as the spec requires; without it the allocation would be dead and
 --       LuaJIT's collector would reclaim it immediately.
+-- timing: GetSystemTimePreciseAsFileTime is Windows' 100-nanosecond clock, imported
+--         with terralib.externfunction; TIME_MS goes to time.txt, the contract's
+--         fallback, because Terra's stdio has no stderr handle. stdout is unchanged.
+local C = terralib.includec("stdio.h")
+local GetSystemTimePreciseAsFileTime = terralib.externfunction("GetSystemTimePreciseAsFileTime", &int64 -> {})
+terra ssNow() : int64
+    var ft : int64
+    GetSystemTimePreciseAsFileTime(&ft)
+    return ft / 10000LL
+end
+terra ssReport(t0 : int64) : int64
+    var f = C.fopen("time.txt", "w")
+    C.fprintf(f, "TIME_MS=%lld\n", ssNow() - t0)
+    C.fclose(f)
+    return 0
+end
+local ssT0 = ssNow()
 
 local slots = {}
 for i = 0, 255 do
@@ -36,4 +53,6 @@ for i = 0, 9999999 do
     slots[i % 256] = buf
 end
 
-print(string.format("%d", total))
+local ssV = total
+ssReport(ssT0)
+print(string.format("%d", ssV))

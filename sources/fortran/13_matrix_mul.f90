@@ -3,13 +3,19 @@
 !
 ! Plain i,j,k triple loop in that order, no reordering and no library
 ! multiply, so the loop nest is the same one every language runs.
+! timing: system_clock is the Fortran standard clock, read as a count and a count rate so
+!         the difference converts to milliseconds exactly; TIME_MS is written to error_unit
+!         (stderr) and stdout is unchanged.
 
 program main
+  use iso_fortran_env, only: error_unit
   implicit none
   integer, parameter :: n = 500
   integer(kind=8), allocatable :: a(:), b(:), c(:)
   integer(kind=8) :: total, i, j, k, s, idx
+  integer(kind=8) :: ss_t0, ss_t1, ss_rate
 
+  call system_clock(ss_t0, ss_rate)
   allocate(a(n*n), b(n*n), c(n*n))
   do j = 0_8, int(n, kind=8) - 1_8
     do i = 0_8, int(n, kind=8) - 1_8
@@ -33,5 +39,7 @@ program main
     total = total + c(idx)
   end do
 
+  call system_clock(ss_t1)
+  write(error_unit,'(a,i0)') 'TIME_MS=', (ss_t1 - ss_t0) * 1000_8 / ss_rate
   write(*,'(i0)') total
 end program main

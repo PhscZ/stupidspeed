@@ -1,6 +1,8 @@
 // task 04 array_sum — expected output: 499999500000
 // build: dotnet build -c Release 04_array_sum.fsproj    run: dotnet run -c Release (or bin/Release/net8.0/04_array_sum.dll)
 
+let sw = System.Diagnostics.Stopwatch.StartNew()
+
 let n = 1000000
 let arr : int64[] = Array.zeroCreate n
 
@@ -15,4 +17,6 @@ while i < n do
     total <- total + arr.[i]
     i <- i + 1
 
+sw.Stop()
+System.Console.Error.WriteLine("TIME_MS=" + (sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture)))
 printfn "%d" total

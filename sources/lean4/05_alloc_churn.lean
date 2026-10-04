@@ -13,5 +13,12 @@ where
       let buf := (ByteArray.mk (Array.replicate 64 (0 : UInt8))).set! 0 (UInt8.ofNat (i % 256))
       go fuel (i + 1) (slots.set! (i % 256) buf) (total + (buf[0]!).toUInt64)
 
+@[noinline] def forceIO {α : Type} (x : Unit → α) : IO α := IO.lazyPure x
+
 def main : IO Unit := do
-  IO.println (churn 10000000)
+  let t0 ← IO.monoNanosNow
+  let answer ← forceIO (fun _ => churn 10000000)
+  let t1 ← IO.monoNanosNow
+  let ms : Float := (t1 - t0).toFloat / 1000000.0
+  IO.eprintln s!"TIME_MS={ms}"
+  IO.println answer

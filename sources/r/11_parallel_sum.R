@@ -6,6 +6,8 @@
 # here, so this is four separate R processes over sockets, not four threads.
 # PSOCK workers start with an empty environment, so N is exported to them.
 
+t0 <- proc.time()[["elapsed"]]
+
 N <- 25000000
 
 cl <- parallel::makeCluster(4, type = "PSOCK")
@@ -22,4 +24,5 @@ parts <- parallel::parSapply(cl, 0:3, function(t) {
 })
 parallel::stopCluster(cl)
 
+cat(sprintf("TIME_MS=%.3f\n", (proc.time()[["elapsed"]] - t0) * 1000), file = stderr())
 cat(sprintf("%.0f\n", sum(parts)))

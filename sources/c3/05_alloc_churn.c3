@@ -14,9 +14,11 @@
 module c3_05_alloc_churn;
 import std::io;
 import std::core::mem;
+import std::time::clock;
 
 fn void main()
 {
+	Clock t0 = clock::now();
 	char*[256] slots;
 	for (int i = 0; i < 256; i++)
 	{
@@ -40,5 +42,7 @@ fn void main()
 		mem::free(slots[i]);
 	}
 
+	NanoDuration elapsed = clock::now() - t0;
+	io::eprintfn("TIME_MS=%.3f", (double)elapsed / 1_000_000.0);
 	io::printfn("%d", total);
 }

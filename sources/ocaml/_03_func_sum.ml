@@ -19,10 +19,18 @@
    attribute, so the call is a real call and not folded away -- the same facility the V row uses
    with @[noinline], and it means this task needs only the one file. *)
 let[@inline never] add_one n = n + 1
+(* timing: Unix.gettimeofday is the clock this build of the Unix module exposes (there is
+   no clock_gettime binding here, so the monotonic clock is not reachable from OCaml);
+   TIME_MS goes to stderr through Printf.eprintf and stdout is unchanged. *)
+let ss_t0 = ref 0.0
+let ss_now () = Unix.gettimeofday () *. 1000.0
+let ss_report () = Printf.eprintf "TIME_MS=%.3f\n" (ss_now () -. !ss_t0)
 
 let () =
+  ss_t0 := ss_now ();
   let value = ref 0 in
   for _ = 1 to 100000000 do
     value := add_one !value
   done;
+  ss_report ();
   Printf.printf "%d\n" !value

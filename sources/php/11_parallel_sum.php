@@ -6,6 +6,7 @@
 // captures nothing but its argument, and the whole loop lives inside it because the worker
 // threads share no userland functions.
 
+$__t0 = hrtime(true);
 $runtimes = [];
 $futures = [];
 
@@ -45,4 +46,6 @@ foreach ($runtimes as $runtime) {
     $runtime->close();
 }
 
+$__t1 = hrtime(true);
+fwrite(STDERR, sprintf("TIME_MS=%.3f\n", ($__t1 - $__t0) / 1e6));
 echo $total, "\n";

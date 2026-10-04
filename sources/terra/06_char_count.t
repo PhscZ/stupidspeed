@@ -17,6 +17,23 @@
 -- note: this cell is scan-bound and cheap — 100 million iterations of a three-way compare.
 --       The build of the 100 MB string happens before the timed region in any case, because
 --       RUN.md times the process.
+-- timing: GetSystemTimePreciseAsFileTime is Windows' 100-nanosecond clock, imported
+--         with terralib.externfunction; TIME_MS goes to time.txt, the contract's
+--         fallback, because Terra's stdio has no stderr handle. stdout is unchanged.
+local C = terralib.includec("stdio.h")
+local GetSystemTimePreciseAsFileTime = terralib.externfunction("GetSystemTimePreciseAsFileTime", &int64 -> {})
+terra ssNow() : int64
+    var ft : int64
+    GetSystemTimePreciseAsFileTime(&ft)
+    return ft / 10000LL
+end
+terra ssReport(t0 : int64) : int64
+    var f = C.fopen("time.txt", "w")
+    C.fprintf(f, "TIME_MS=%lld\n", ssNow() - t0)
+    C.fclose(f)
+    return 0
+end
+local ssT0 = ssNow()
 
 local text = ("abcdefghij"):rep(10000000)
 
@@ -33,4 +50,6 @@ terra count_h(p : &int8, n : int64) : int64
     return count
 end
 
-print(string.format("%d", count_h(terralib.cast(&int8, text), #text)))
+local ssV = count_h(terralib.cast(&int8, text), #text)
+ssReport(ssT0)
+print(string.format("%d", ssV))

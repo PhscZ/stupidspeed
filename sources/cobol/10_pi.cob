@@ -1,5 +1,9 @@
       *> task 10 pi -- expected output: 4470
       *> build: cobc -x -O2 -o prog 10_pi.cob    run: ./prog
+      *> timing: ACCEPT ... FROM TIME is GnuCOBOL's own clock, hhmmsscc, so the
+      *>         resolution is 10 ms; TIME_MS is DISPLAYed UPON STDERR and stdout is
+      *>         unchanged. Instrumented by inspection: there is no GnuCOBOL toolchain
+      *>         on this machine, so this row's timing is unverified.
       *> COBOL has no big integers, so this is the GDScript/BASIC/Pascal
       *> precedent: sign-magnitude big integers on base-1e9 limbs with the four
       *> operations Gibbons' unbounded spigot needs. Only the digit sum is
@@ -63,7 +67,21 @@
        01 TOTAL    PIC 9(9) COMP-5.
        01 EMITTED  PIC 9(9) COMP-5.
        01 OT       PIC 9(5).
+       01 WS-T0.
+           05 T0-HH PIC 9(2).
+           05 T0-MM PIC 9(2).
+           05 T0-SS PIC 9(2).
+           05 T0-CC PIC 9(2).
+       01 WS-T1.
+           05 T1-HH PIC 9(2).
+           05 T1-MM PIC 9(2).
+           05 T1-SS PIC 9(2).
+           05 T1-CC PIC 9(2).
+       01 CS0      PIC 9(18) COMP-5.
+       01 CS1      PIC 9(18) COMP-5.
+       01 MS       PIC 9(18) COMP-5.
        PROCEDURE DIVISION.
+           ACCEPT WS-T0 FROM TIME.
            MOVE 0 TO Q-NEG
            MOVE 1 TO Q-N
            MOVE 1 TO Q-D(1)
@@ -122,6 +140,14 @@
                END-IF
            END-PERFORM.
            MOVE TOTAL TO OT.
+           ACCEPT WS-T1 FROM TIME.
+           COMPUTE CS0 = ((((T0-HH * 60) + T0-MM) * 60) + T0-SS) * 100 + T0-CC.
+           COMPUTE CS1 = ((((T1-HH * 60) + T1-MM) * 60) + T1-SS) * 100 + T1-CC.
+           IF CS1 < CS0
+               ADD 8640000 TO CS1
+           END-IF.
+           COMPUTE MS = (CS1 - CS0) * 10.
+           DISPLAY "TIME_MS=" MS UPON STDERR.
            DISPLAY OT.
            STOP RUN.
        END PROGRAM T10.

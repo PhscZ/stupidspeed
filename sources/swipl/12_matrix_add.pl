@@ -7,11 +7,15 @@
 % note: -O is required, see 01_branches.pl.
 
 main :-
+    get_time(T0),
     functor(A, a, 1000000),
     functor(B, b, 1000000),
     functor(C, c, 1000000),
     fill(0, A, B),
     add(1, A, B, C, 0, Total),
+    get_time(T1),
+    Ms is (T1 - T0) * 1000,
+    format(standard_error, "TIME_MS=~3f~n", [Ms]),
     format("~w~n", [Total]).
 
 fill(I, A, B) :-

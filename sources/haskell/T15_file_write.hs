@@ -8,12 +8,21 @@
 
 module Main where
 
+import Control.Exception (evaluate)
 import qualified Data.ByteString as B
+import Data.Time.Clock.POSIX (getPOSIXTime)
+import System.IO (stderr)
+import Text.Printf (hPrintf)
 
 main :: IO ()
 main = do
+  t0 <- getPOSIXTime
   let unit = B.pack [0 .. 255]
       chunk = B.concat (replicate 4096 unit)
       total = B.concat (replicate 50 chunk)
   B.writeFile "out.bin" total
-  print (B.length total)
+  !n <- evaluate (B.length total)
+  t1 <- getPOSIXTime
+  let !ms = (realToFrac (t1 - t0) :: Double) * 1000
+  hPrintf stderr "TIME_MS=%.3f\n" ms
+  print n

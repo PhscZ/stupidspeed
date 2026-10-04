@@ -10,6 +10,8 @@
 (module
   (import "wasi_snapshot_preview1" "fd_write"
     (func $fd_write (param i32 i32 i32 i32) (result i32)))
+  (import "wasi_snapshot_preview1" "clock_time_get"
+    (func $clock_time_get (param i32 i64 i32) (result i32)))
   (memory (export "memory") 4)
 
   ;; ---- stdout: decimal digits are built backwards in 0..32, copied into the
@@ -60,8 +62,42 @@
   (func $add_one (param $n i64) (result i64)
     (i64.add (local.get $n) (i64.const 1)))
 
+  ;; ---- self-timing: report TIME_MS on stderr (fd 2); stdout unchanged ------
+  (global $t0 (mut i64) (i64.const 0))
+  (global $t1 (mut i64) (i64.const 0))
+
+  (func $ss_now (result i64)
+    (drop (call $clock_time_get (i32.const 1) (i64.const 1000) (i32.const 2048)))
+    (i64.load (i32.const 2048)))
+
+  (func $ss_start
+    (global.set $t0 (call $ss_now)))
+
+  (func $ss_stop
+    (global.set $t1 (call $ss_now)))
+
+  (func $ss_report
+    (local $ms i64)
+    (global.set $out (i32.const 4096))   ;; start a fresh line, after $flush
+    (local.set $ms
+      (i64.div_u (i64.sub (global.get $t1) (global.get $t0)) (i64.const 1000000)))
+    (call $putc (i32.const 84))          ;; T
+    (call $putc (i32.const 73))          ;; I
+    (call $putc (i32.const 77))          ;; M
+    (call $putc (i32.const 69))          ;; E
+    (call $putc (i32.const 95))          ;; _
+    (call $putc (i32.const 77))          ;; M
+    (call $putc (i32.const 83))          ;; S
+    (call $putc (i32.const 61))          ;; =
+    (call $puti (local.get $ms))
+    (call $putc (i32.const 10))
+    (i32.store (i32.const 2048) (i32.const 4096))
+    (i32.store (i32.const 2052) (i32.sub (global.get $out) (i32.const 4096)))
+    (drop (call $fd_write (i32.const 2) (i32.const 2048) (i32.const 1)
+                          (i32.const 2056))))
   (func (export "_start")
     (local $i i64) (local $value i64)
+    (call $ss_start)
     (block $done
       (loop $loop
         (br_if $done (i64.ge_s (local.get $i) (i64.const 100000000)))
@@ -70,4 +106,6 @@
         (br $loop)))
     (call $puti (local.get $value))
     (call $putc (i32.const 10))
-    (call $flush)))
+    (call $ss_stop)
+    (call $flush)
+    (call $ss_report)))

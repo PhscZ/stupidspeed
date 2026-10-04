@@ -16,7 +16,17 @@ variable text
 variable count
 variable i
 
+\ timing: utime is gforth's microsecond clock; TIME_MS is written to stderr with
+\         WRITE-FILE/WRITE-LINE and stdout is unchanged.
+2variable ss-t0
+
+: ss-report ( -- )
+  s" TIME_MS=" stderr write-file drop
+  utime ss-t0 2@ d- drop 1000 /
+  s>d <# #s #> stderr write-line drop ;
+
 : main
+  utime ss-t0 2!
   TEXTLEN allocate throw text !
   \ build "abcdefghij" repeated: 'a' + (i mod 10)
   0 i !
@@ -32,6 +42,7 @@ variable i
     text @ i @ + c@ 'h' = if 1 count +! then
     1 i +!
   repeat
+  ss-report
   count @ . cr
   text @ free throw
 ;

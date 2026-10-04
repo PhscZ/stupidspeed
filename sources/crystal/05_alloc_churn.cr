@@ -1,5 +1,6 @@
 # task 05 alloc_churn -- expected output: 1274991808
 # build: crystal build --release -o prog 05_alloc_churn.cr    run: ./prog
+t0 = Time.monotonic
 total = 0i64
 slots = Array(Bytes?).new(256, nil)
 
@@ -9,4 +10,5 @@ slots = Array(Bytes?).new(256, nil)
   total += buf[0].to_i64
   slots[i % 256] = buf
 end
+STDERR.puts "TIME_MS=%.3f" % (Time.monotonic - t0).total_milliseconds
 puts total

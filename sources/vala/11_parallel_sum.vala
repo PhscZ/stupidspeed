@@ -29,7 +29,15 @@ int64 work (int64 t) {
     return acc;
 }
 
+// timing: GLib.get_real_time() is GLib's monotonic clock in microseconds; TIME_MS goes
+//         to stderr and stdout is unchanged.
+static int64 ss_t0;
+static void ss_report () {
+    stderr.printf ("TIME_MS=%.3f\n", (GLib.get_real_time () - ss_t0) / 1000.0);
+}
+
 int main () {
+    ss_t0 = GLib.get_real_time ();
     GLib.Thread<int64?>[] th = new GLib.Thread<int64?>[4];
 
     for (int t = 0; t < 4; t++) {
@@ -42,6 +50,7 @@ int main () {
         total += th[t].join ();
     }
 
+    ss_report ();
     stdout.printf ("%lld\n", total);
     return 0;
 }

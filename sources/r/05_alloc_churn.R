@@ -7,6 +7,7 @@
 # old one to the garbage collector.
 
 alloc_churn <- function() {
+  t0 <- proc.time()[["elapsed"]]
   total <- 0
   slots <- vector("list", 256)
   i <- 0
@@ -17,6 +18,7 @@ alloc_churn <- function() {
     slots[[as.integer(i %% 256) + 1]] <- buf
     i <- i + 1
   }
+  cat(sprintf("TIME_MS=%.3f\n", (proc.time()[["elapsed"]] - t0) * 1000), file = stderr())
   cat(sprintf("%.0f\n", total))
 }
 

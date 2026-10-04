@@ -1,20 +1,29 @@
 % task 15 file_write — expected output: 52428800
 % build: mmc --make m15_file_write -o prog    run: ./prog
 % note: 50 chunks of 1 MiB, each holding bytes 0..255 repeated 4096 times.
+% timing: time.clock is Mercury's CPU clock, in ticks, with time.clocks_per_sec
+%         ticks per second (1000 on Windows), so TIME_MS is whole milliseconds of
+%         CPU time; io.stderr_stream is the standard error stream, so stdout is
+%         unchanged. Verified on this machine with
+%         mercury_compile --make <module> --grade hlc.gc.pregen.
 
 :- module m15_file_write.
 :- interface.
 :- import_module io.
 :- pred main(io::di, io::uo) is det.
 :- implementation.
-:- import_module int, list, string.
+:- import_module int, list, string, time.
 
 main(!IO) :-
+    time.clock(SS_T0, !IO),
     io.open_binary_output("out.bin", OpenRes, !IO),
     (
         OpenRes = ok(Stream),
         write_chunks(0, 50, Stream, 0, Written, !IO),
         io.close_binary_output(Stream, !IO),
+            time.clock(SS_T1, !IO),
+    SS_MS = (SS_T1 - SS_T0) * 1000 / time.clocks_per_sec,
+    io.format(io.stderr_stream, "TIME_MS=%d\n", [i(SS_MS)], !IO),
         io.format("%d\n", [i(Written)], !IO)
     ;
         OpenRes = error(Error),

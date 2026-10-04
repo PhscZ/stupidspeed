@@ -2,8 +2,11 @@
 # build: unicon -s 12_matrix_add.icn    run: 12_matrix_add.exe
 # Three 1000x1000 matrices as flat `list`s indexed `i * n + j + 1`, because Unicon's only
 # built-in aggregate is the 1-indexed list and a list of lists allocates 1000 extra objects.
+# timing: &time is Unicon's wall clock in milliseconds since midnight, and &errout is
+#         the standard error stream, so TIME_MS goes to stderr and stdout is unchanged.
 
 procedure main()
+    ssT0 := &time
     n := 1000
     size := n * n
     a := list(size); b := list(size); c := list(size)
@@ -16,5 +19,6 @@ procedure main()
         c[k] := a[k] + b[k]
     total := 0
     every total +:= !c
+    write(&errout, "TIME_MS=", &time - ssT0)
     write(total)
 end

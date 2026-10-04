@@ -6,8 +6,10 @@
  numbers are added in. Float printString answers the shortest round-tripping form,
  which for this value is 0.498046875."
 
-| out total |
+| out err total t0 |
 out := Stdio stdout.
+err := Stdio stderr.
+t0 := Time microsecondClockValue.
 total := 0.0.
 
 0 to: 99999999 do: [:i |
@@ -15,4 +17,5 @@ total := 0.0.
 	reading := (i \\ 256) / 256.0.
 	total := total + reading].
 
+err nextPutAll: 'TIME_MS=', ((Time microsecondClockValue - t0) / 1000.0) printString, String lf; flush.
 out nextPutAll: (total / 100000000.0) printString; lf; flush.

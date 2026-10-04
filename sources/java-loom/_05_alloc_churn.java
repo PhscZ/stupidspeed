@@ -7,6 +7,7 @@
 
 public class _05_alloc_churn {
     public static void main(String[] args) {
+        long __t0 = System.nanoTime();
         long total = 0;
         byte[][] slots = new byte[256][];
         for (long i = 0; i < 10000000L; i++) {
@@ -16,6 +17,7 @@ public class _05_alloc_churn {
             total += v;
             slots[v] = buf;
         }
+        System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6);
         System.out.println(total);
     }
 }

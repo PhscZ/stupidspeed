@@ -4,6 +4,7 @@
 // character at a time.
 
 String text = 'abcdefghij' * 10000000
+long __t0 = System.nanoTime()
 long count = 0
 
 for (int i = 0; i < text.length(); i++) {
@@ -17,4 +18,5 @@ for (int i = 0; i < text.length(); i++) {
     }
 }
 
+System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
 println count

@@ -28,6 +28,7 @@ object Main {
   }
 
   def main(args: Array[String]): Unit = {
+    val __t0 = System.nanoTime()
     val results = new Array[Long](4)
     val threads = new Array[Thread](4)
     var t = 0
@@ -54,6 +55,7 @@ object Main {
       total += results(t)
       t += 1
     }
+    System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
     println(total)
   }
 }

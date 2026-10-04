@@ -4,6 +4,7 @@
 # 64-character string; the slot store drops the buffer it replaces and Tcl frees it,
 # which is the "free the old one" branch of the C reference.
 
+set __t0 [clock microseconds]
 set slots [lrepeat 256 ""]
 set total 0
 
@@ -15,4 +16,6 @@ for {set i 0} {$i < 10000000} {incr i} {
     lset slots [expr {$i % 256}] $buf
 }
 
+set __t1 [clock microseconds]
+puts stderr [format "TIME_MS=%.3f" [expr {($__t1 - $__t0) / 1000.0}]]
 puts $total

@@ -4,6 +4,7 @@ package main
 
 import "core:fmt"
 import "core:thread"
+import "core:time"
 
 WORK :: 25_000_000
 THREADS :: 4
@@ -34,6 +35,7 @@ worker :: proc(th: ^thread.Thread) {
 }
 
 main :: proc() {
+	t0 := time.now()
 	workers: [THREADS]Worker
 	threads: [THREADS]^thread.Thread
 
@@ -53,5 +55,6 @@ main :: proc() {
 		thread.destroy(threads[t])
 	}
 
+	fmt.eprintfln("TIME_MS=%.3f", time.duration_milliseconds(time.since(t0)))
 	fmt.println(total)
 }

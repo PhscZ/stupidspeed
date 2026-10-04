@@ -6,6 +6,7 @@
 # other row runs. (Summing the list with a single ::tcl::mathop::+ call would be a bulk
 # aggregate, which is not the loop the task asks for.)
 
+set __t0 [clock microseconds]
 set f [open "data.bin" rb]
 set total 0
 
@@ -22,4 +23,6 @@ while {![eof $f]} {
 
 close $f
 
+set __t1 [clock microseconds]
+puts stderr [format "TIME_MS=%.3f" [expr {($__t1 - $__t0) / 1000.0}]]
 puts [expr {$total % 4294967296}]

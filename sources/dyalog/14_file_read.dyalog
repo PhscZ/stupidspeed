@@ -14,10 +14,16 @@
 ⍝       interpreter's per-element loop, not I/O.
 ⍝ note: the running total is 6684672000, far below 2^53, so it is exact, and the
 ⍝       modulus is taken once at the end with 4294967296|total.
+⍝ timing: 3⊃⎕AI is Dyalog's elapsed-time counter in milliseconds. APL exposes no
+⍝         stream handle for stderr, so the contract's fallback applies: TIME_MS is
+⍝         written to time.txt in the working directory with ⎕NPUT, and stdout is
+⍝         unchanged. Instrumented by inspection: Dyalog is not installed on this
+⍝         machine, so this row's timing is unverified.
 ⎕IO←0
 ⎕PP←17
 
-∇ r←file_read;tie;sz;chunk;codes;total;i
+∇ r←file_read;tie;sz;chunk;codes;total;i;ssT0;ssMS
+  ssT0←3⊃⎕AI
   tie←'data.bin'⎕NTIE 0
   sz←⎕NSIZE tie
   chunk←⎕NREAD tie 80 sz 0
@@ -29,6 +35,8 @@
     i+←1
   :EndWhile
   ⎕NUNTIE tie
+  ssMS←(3⊃⎕AI)-ssT0
+  ('TIME_MS=',⍕ssMS)⎕NPUT 'time.txt'
   r←⍕4294967296|total
 ∇
 

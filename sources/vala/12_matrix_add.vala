@@ -11,7 +11,15 @@
 //       big for cache, so this measures memory traffic. Row-major indexing, as in the
 //       reference: A[i * n + j]. Negative B entries are fine, the sum of C is positive.
 
+// timing: GLib.get_real_time() is GLib's monotonic clock in microseconds; TIME_MS goes
+//         to stderr and stdout is unchanged.
+static int64 ss_t0;
+static void ss_report () {
+    stderr.printf ("TIME_MS=%.3f\n", (GLib.get_real_time () - ss_t0) / 1000.0);
+}
+
 int main () {
+    ss_t0 = GLib.get_real_time ();
     int64 n = 1000;
     int64 elems = n * n;
 
@@ -37,6 +45,7 @@ int main () {
         total += C[k];
     }
 
+    ss_report ();
     stdout.printf ("%lld\n", total);
     return 0;
 }

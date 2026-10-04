@@ -7,6 +7,7 @@
 # very slow; that is a legitimate result, not a bug.
 
 char_count <- function() {
+  t0 <- proc.time()[["elapsed"]]
   text <- strrep("abcdefghij", 10000000)
   n <- nchar(text)
   count <- 0
@@ -22,6 +23,7 @@ char_count <- function() {
     }
     i <- i + 1
   }
+  cat(sprintf("TIME_MS=%.3f\n", (proc.time()[["elapsed"]] - t0) * 1000), file = stderr())
   cat(sprintf("%.0f\n", count))
 }
 

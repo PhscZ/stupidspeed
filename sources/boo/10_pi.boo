@@ -7,6 +7,7 @@
 //       needs no -r: flag. The spigot below is Gibbons' unbounded one, identical to the C# row's.
 
 import System.Numerics
+import System.Diagnostics
 
 // BigInteger division truncates toward zero; the spigot needs a floor.
 def floor_div(a as BigInteger, b as BigInteger) as BigInteger:
@@ -18,6 +19,8 @@ def floor_div(a as BigInteger, b as BigInteger) as BigInteger:
 
 // State is (q, r, t, k, n, l), starting at (1, 0, 1, 1, 3, 3); every emitted n is a final
 // decimal digit of pi, the first one being the leading 3.
+sw = Stopwatch.StartNew()
+
 q as BigInteger = 1
 r as BigInteger = 0
 t as BigInteger = 1
@@ -45,5 +48,7 @@ while emitted < 1000:
         n = next_n
         r = next_r
 
+sw.Stop()
+System.Console.Error.WriteLine("TIME_MS=" + sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture))
 print(sum)
 

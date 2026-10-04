@@ -1,6 +1,8 @@
 // task 13 matrix_mul — expected output: 599995000
 // build: none    run: node 13_matrix_mul.js | bun 13_matrix_mul.js | deno run 13_matrix_mul.js
 
+const __t0 = performance.now();
+
 const n = 500;
 const size = n * n;
 
@@ -29,4 +31,5 @@ let total = 0;
 for (let idx = 0; idx < size; idx++) {
   total += C[idx];
 }
+console.error(`TIME_MS=${performance.now() - __t0}`);
 console.log(total);

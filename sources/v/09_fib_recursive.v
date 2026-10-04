@@ -4,6 +4,8 @@
 
 module main
 
+import time
+
 fn fib(n i64) i64 {
 	if n < 2 {
 		return n
@@ -12,5 +14,8 @@ fn fib(n i64) i64 {
 }
 
 fn main() {
-	println(fib(40))
+	t0 := time.now()
+	result := fib(40)
+	eprintln('TIME_MS=${f64(time.since(t0).microseconds()) / 1000.0:.3f}')
+	println(result)
 }

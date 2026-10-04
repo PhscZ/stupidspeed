@@ -7,6 +7,7 @@
 //       C row's malloc/free; there is no garbage collector to fall back on.
 
 using System;
+using System.Diagnostics;
 
 namespace Task;
 
@@ -14,6 +15,9 @@ class Program
 {
 	static void Main()
 	{
+		// timing: Stopwatch.GetTimestamp() is corlib's microsecond clock (QueryPerformanceCounter on Windows).
+		int64 t0 = Stopwatch.GetTimestamp();
+
 		int64 n = 1000000;
 		int64[] array = new int64[n];
 
@@ -24,6 +28,8 @@ class Program
 		for (int64 i = 0; i < n; i++)
 			total += array[i];
 
+		int64 t1 = Stopwatch.GetTimestamp();
+		Console.Error.WriteLine($"TIME_MS={(double)(t1 - t0) / 1000.0}");
 		Console.WriteLine("{0}", total);
 		delete array;
 	}

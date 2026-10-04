@@ -4,6 +4,7 @@
 // SplFixedArray for the three 250000-element matrices, flat indexing i * n + j, and the plain
 // i, j, k triple loop in that order — no reordering, no library multiply.
 
+$__t0 = hrtime(true);
 $n = 500;
 $size = $n * $n;
 
@@ -34,4 +35,6 @@ for ($idx = 0; $idx < $size; $idx++) {
     $total += $c[$idx];
 }
 
+$__t1 = hrtime(true);
+fwrite(STDERR, sprintf("TIME_MS=%.3f\n", ($__t1 - $__t0) / 1e6));
 echo $total, "\n";

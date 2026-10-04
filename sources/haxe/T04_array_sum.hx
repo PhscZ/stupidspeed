@@ -7,6 +7,8 @@
 
 class T04_array_sum {
     static function main() {
+        // timing: haxe.Timer.stamp() is QueryPerformanceCounter on cpp (sub-microsecond); Sys.time() there is wall-clock ms.
+        var t0 = haxe.Timer.stamp();
         var n = 1000000;
         var array = new Array<Int>();
 
@@ -19,6 +21,8 @@ class T04_array_sum {
             total += array[i];
         }
 
+        var t1 = haxe.Timer.stamp();
+        Sys.stderr().writeString("TIME_MS=" + ((t1 - t0) * 1000.0) + "\n");
         Sys.println(total);
     }
 }

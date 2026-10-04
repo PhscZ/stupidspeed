@@ -4,6 +4,7 @@
 # 1/256, exact in binary, so the sum is exact and the digits do not depend on the
 # order the numbers are added in.
 
+set __t0 [clock microseconds]
 set total 0.0
 
 for {set i 0} {$i < 100000000} {incr i} {
@@ -11,4 +12,6 @@ for {set i 0} {$i < 100000000} {incr i} {
     set total [expr {$total + $reading}]
 }
 
+set __t1 [clock microseconds]
+puts stderr [format "TIME_MS=%.3f" [expr {($__t1 - $__t0) / 1000.0}]]
 puts [expr {$total / 100000000.0}]

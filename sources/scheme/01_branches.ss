@@ -11,9 +11,22 @@
 
 ;; Four counters and one if/else chain over a hundred million iterations, the same nested
 ;; test as every other row.
+;; timing: (real-time) is Chez's monotonic clock in milliseconds since system start-up;
+;;         TIME_MS is written to time.txt, the contract's fallback, because Chez's
+;;         console-error-port is the console and this host sends the console to stdout
+;;         when it is redirected; stdout is unchanged.
+(define ss-t0 (real-time))
+(define (ss-report)
+  (let ([p (open-file-output-port "time.txt" (file-options no-fail)
+                                  (buffer-mode block))])
+    (put-bytevector p (string->utf8
+                       (string-append "TIME_MS="
+                                      (number->string (- (real-time) ss-t0))
+                                      "\n")))
+    (close-port p)))
 (let loop ([i 0] [a 0] [b 0] [c 0] [d 0])
   (if (fx= i 100000000)
-      (printf "~a ~a ~a ~a~%" a b c d)
+      (begin (ss-report) (printf "~a ~a ~a ~a~%" a b c d))
       (let ([next (fx+ i 1)])
         (cond [(fx= 0 (fxmod i 3)) (loop next (fx+ a 1) b c d)]
               [(fx= 0 (fxmod i 5)) (loop next a (fx+ b 1) c d)]

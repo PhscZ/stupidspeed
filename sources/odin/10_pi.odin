@@ -6,6 +6,7 @@
 package main
 
 import "core:fmt"
+import "core:time"
 
 BASE :: 1_000_000_000
 BASE_U :: u64(BASE)
@@ -263,6 +264,7 @@ big_divmod_floor :: proc(a, b: ^Big) -> (q: i64, rem: Big) {
 }
 
 main :: proc() {
+	t0 := time.now()
 	q := big_from_small(1)
 	r := big_from_small(0)
 	t := big_from_small(1)
@@ -345,6 +347,7 @@ main :: proc() {
 		big_free(&nt)
 	}
 
+	fmt.eprintfln("TIME_MS=%.3f", time.duration_milliseconds(time.since(t0)))
 	fmt.println(sum)
 
 	big_free(&q)

@@ -10,9 +10,13 @@ module Main where
 
 import Data.Array.IO
 import Data.IORef
+import Data.Time.Clock.POSIX (getPOSIXTime)
+import System.IO (stderr)
+import Text.Printf (hPrintf)
 
 main :: IO ()
 main = do
+  t0 <- getPOSIXTime
   let n = 1000
       size = n * n
   a <- newArray (0, size - 1) (0 :: Int) :: IO (IOUArray Int Int)
@@ -40,4 +44,8 @@ main = do
                     modifyIORef' tot (+ toInteger x)
                     sumAll (k + 1)
   sumAll 0
-  print =<< readIORef tot
+  v <- readIORef tot
+  t1 <- getPOSIXTime
+  let !ms = (realToFrac (t1 - t0) :: Double) * 1000
+  hPrintf stderr "TIME_MS=%.3f\n" ms
+  print v

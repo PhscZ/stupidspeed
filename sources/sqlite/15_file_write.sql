@@ -13,6 +13,12 @@
 --       the byte count, 52428800.
 -- note: writefile() fwrite()s and fclose()s the file. The CLI exposes no fsync, so the
 --       commit is the close, the same deviation the VBScript and JScript rows carry.
+-- timing: the clock is SQLite's own julianday('now') in milliseconds. The timer starts at
+--       the entry of the script's own body and stops immediately before the final output
+--       statement, so the answer is materialised into a one-row table first and the timed
+--       region still contains all of the work (including writefile()'s own write).
+CREATE TABLE __t0(t INTEGER);
+INSERT INTO __t0 VALUES (cast(julianday('now')*86400000 as integer));
 CREATE TABLE buf(b BLOB);
 INSERT INTO buf VALUES (unhex(replace(hex(zeroblob(4096)), '00',
     '000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F'
@@ -24,9 +30,16 @@ INSERT INTO buf VALUES (unhex(replace(hex(zeroblob(4096)), '00',
  || 'C0C1C2C3C4C5C6C7C8C9CACBCCCDCECFD0D1D2D3D4D5D6D7D8D9DADBDCDDDEDF'
  || 'E0E1E2E3E4E5E6E7E8E9EAEBECEDEEEFF0F1F2F3F4F5F6F7F8F9FAFBFCFDFEFF')));
 
+CREATE TABLE __res AS
 WITH RECURSIVE c(n, s) AS (
     SELECT 0, x''
     UNION ALL
     SELECT n + 1, s || (SELECT b FROM buf) FROM c WHERE n < 50
 )
-SELECT writefile('out.bin', s) FROM c WHERE n = 50;
+SELECT writefile('out.bin', s) AS v FROM c WHERE n = 50;
+
+.output stderr
+SELECT printf('TIME_MS=%d', cast(julianday('now')*86400000 as integer) - (SELECT t FROM __t0));
+.output stdout
+
+SELECT * FROM __res;

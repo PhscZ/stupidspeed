@@ -17,15 +17,17 @@
 %% 7500000075000000 is past 2^31 but far inside Erlang's arbitrary-precision integers, which
 %% promote automatically, so no type declaration is needed.
 main(_) ->
-    loop(0, 0).
+    T0 = erlang:monotonic_time(microsecond),
+    loop(0, 0, T0).
 
-loop(I, Acc) when I >= 100000000 ->
+loop(I, Acc, T0) when I >= 100000000 ->
+    io:format(standard_error, "TIME_MS=~p~n", [(erlang:monotonic_time(microsecond) - T0) / 1000]),
     io:format("~w~n", [Acc]);
-loop(I, Acc) ->
+loop(I, Acc, T0) ->
     V = case I rem 4 of
             0 -> 1;
             1 -> I;
             2 -> 2 * I;
             _ -> 3 * I
         end,
-    loop(I + 1, Acc + V).
+    loop(I + 1, Acc + V, T0).

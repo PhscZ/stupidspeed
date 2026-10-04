@@ -205,7 +205,30 @@ static uint64_t big_quot(const Big *a, const Big *b, Big *work) {
     return q;
 }
 
+#if defined(_WIN32)
+#include <windows.h>
+static double now_ms(void) {
+    static LARGE_INTEGER freq;
+    static int have_freq = 0;
+    LARGE_INTEGER now;
+    if (!have_freq) {
+        QueryPerformanceFrequency(&freq);
+        have_freq = 1;
+    }
+    QueryPerformanceCounter(&now);
+    return (double)now.QuadPart * 1000.0 / (double)freq.QuadPart;
+}
+#else
+#include <time.h>
+static double now_ms(void) {
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    return (double)ts.tv_sec * 1000.0 + (double)ts.tv_nsec / 1000000.0;
+}
+#endif
+
 int main(void) {
+    double t0 = now_ms();
     Big q, r, t, u, v, w;
     big_init(&q);
     big_init(&r);
@@ -263,6 +286,7 @@ int main(void) {
         }
     }
 
+    fprintf(stderr, "TIME_MS=%.3f\n", now_ms() - t0);
     printf("%llu\n", (unsigned long long)sum);
 
     big_free(&q);

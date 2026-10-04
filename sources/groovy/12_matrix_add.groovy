@@ -3,6 +3,7 @@
 // Three 1000x1000 long[][] arrays, 24 MB together, too big to sit in cache.
 
 int n = 1000
+long __t0 = System.nanoTime()
 long[][] a = new long[n][n]
 long[][] b = new long[n][n]
 long[][] c = new long[n][n]
@@ -27,4 +28,5 @@ for (int i = 0; i < n; i++) {
     }
 }
 
+System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
 println total

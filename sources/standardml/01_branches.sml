@@ -20,6 +20,7 @@
 (* note: measured: 0.581 s, 5.8 ns per iteration. *)
 fun main () =
   let
+    val t0 = Time.now ()
     val a = ref 0
     val b = ref 0
     val c = ref 0
@@ -32,8 +33,9 @@ fun main () =
          else if i mod 7 = 0 then c := !c + 1
          else d := !d + 1;
          loop (i + 1))
+    val () = loop 0
+    val () = TextIO.output (TextIO.stdErr, "TIME_MS=" ^ Real.fmt (StringCvt.FIX (SOME 3)) (Time.toReal (Time.- (Time.now (), t0)) * 1000.0) ^ "\n")
   in
-    loop 0;
     print (Int.toString (!a) ^ " " ^ Int.toString (!b) ^ " " ^
            Int.toString (!c) ^ " " ^ Int.toString (!d) ^ "\n")
   end

@@ -17,7 +17,12 @@
     n
     (unchecked-add (fib (unchecked-dec n)) (fib (unchecked-subtract n 2)))))
 
+(def ^:private __t0 (volatile! 0))
+
 (defn -main []
-  (println (fib (long 40))))
+  (vreset! __t0 (System/nanoTime))
+  (let [result (fib (long 40))]
+    (do (.println System/err (str "TIME_MS=" (/ (- (System/nanoTime) (long @__t0)) 1000000.0)))
+        (println result))))
 
 (-main)

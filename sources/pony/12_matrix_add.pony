@@ -1,12 +1,27 @@
 // task 12 matrix_add — expected output: 999000000
+// timing: Time.nanos() is Pony's monotonic clock (QueryPerformanceCounter on Windows);
+//        TIME_MS goes to stderr with env.err.print and stdout is unchanged.
 // build: mkdir -p temp/pony/12_matrix_add && cp sources/pony/12_matrix_add.pony temp/pony/12_matrix_add/ && tools/ponyc/bin/ponyc.exe -o temp/pony/12_matrix_add temp/pony/12_matrix_add
 // run: temp/pony/12_matrix_add/12_matrix_add.exe
 // note: A[i][j] = i + j and B[i][j] = i - j, so B needs a signed element; the three 1000x1000
 //       matrices are flat I64 arrays of a million elements each, 8 MB apiece.
 
 
+use "time"
+class SsClock
+  var t0: U64 = 0
+  let env: Env
+  new create(env': Env) =>
+    env = env'
+  fun ref start() =>
+    t0 = Time.nanos()
+  fun ref report() =>
+    env.err.print("TIME_MS=" + ((Time.nanos() - t0) / 1000000).string())
+
 actor Main
   new create(env: Env) =>
+    let ss = SsClock(env)
+    ss.start()
     let n: USize = 1000
     let cells = n * n
     let a = Array[I64].init(0, cells)
@@ -32,5 +47,6 @@ actor Main
         total = total + c(k)?
         k = k + 1
       end
+      ss.report()
       env.out.print(total.string())
     end

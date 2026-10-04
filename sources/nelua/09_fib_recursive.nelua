@@ -15,6 +15,9 @@
 --       instead of two. The control is a plain C `fib(40)` built by the same gcc with
 --       the same flags: 102334155 in 0.1155 s and 0.1188 s. Nelua and C are the same
 --       speed here, so this cell measures what the C row measures.
+require 'io'
+require 'os'
+require 'string'
 local function fib(n: integer): integer
   if n < 2 then
     return n
@@ -22,4 +25,16 @@ local function fib(n: integer): integer
   return fib(n - 1) + fib(n - 2)
 end
 
-print(fib(40))
+-- timing: os.now is Nelua's monotonic clock in seconds (nanosecond resolution on
+--         Windows, via QueryPerformanceCounter); TIME_MS goes to stderr through
+--         io.stderr and stdout is unchanged.
+local ssT0 = os.now()
+local function ss_report()
+  io.stderr:write(string.format('TIME_MS=%.3f\n', (os.now() - ssT0) * 1000))
+end
+
+-- the work is evaluated into a variable first: computing it inside the print
+-- argument list would place the whole task after the timer stops.
+local ssR = fib(40)
+ss_report()
+print(ssR)

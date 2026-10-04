@@ -15,7 +15,10 @@
 ;;       127, and the buffer holds the full 0..255 range.
 (import '(java.io FileOutputStream))
 
+(def ^:private __t0 (volatile! 0))
+
 (defn -main []
+  (vreset! __t0 (System/nanoTime))
   (let [len (int (* 1024 1024))
         buf (byte-array len)]
     (dotimes [i len]
@@ -25,6 +28,7 @@
         (.write out buf))
       (.flush out)
       (.sync (.getFD out)))
-    (println (* 50 len))))
+    (do (.println System/err (str "TIME_MS=" (/ (- (System/nanoTime) (long @__t0)) 1000000.0)))
+        (println (* 50 len)))))
 
 (-main)

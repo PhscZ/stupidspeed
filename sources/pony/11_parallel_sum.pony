@@ -1,4 +1,6 @@
 // task 11 parallel_sum — expected output: 7500000075000000
+// timing: Time.nanos() is Pony's monotonic clock (QueryPerformanceCounter on Windows);
+//        TIME_MS goes to stderr with env.err.print and stdout is unchanged.
 // build: mkdir -p temp/pony/11_parallel_sum && cp sources/pony/11_parallel_sum.pony temp/pony/11_parallel_sum/ && tools/ponyc/bin/ponyc.exe -o temp/pony/11_parallel_sum temp/pony/11_parallel_sum
 // run: temp/pony/11_parallel_sum/11_parallel_sum.exe --ponymaxthreads=4 --ponynoscale
 // note: PARALLEL. Pony's actors are the language's concurrency construct: each Worker is an
@@ -15,6 +17,7 @@
 //       a reply-to-collector join rather than a blocking join.
 
 
+use "time"
 actor Worker
   let _t: U64
   let _main: Main
@@ -38,12 +41,25 @@ actor Worker
     end
     _main.done(acc)
 
+class SsClock
+  var t0: U64 = 0
+  let env: Env
+  new create(env': Env) =>
+    env = env'
+  fun ref start() =>
+    t0 = Time.nanos()
+  fun ref report() =>
+    env.err.print("TIME_MS=" + ((Time.nanos() - t0) / 1000000).string())
+
 actor Main
   let _env: Env
+  let _ss: SsClock
   var _total: U64 = 0
   var _replies: USize = 0
 
   new create(env: Env) =>
+    _ss = SsClock(env)
+    _ss.start()
     _env = env
     var t: U64 = 0
     while t < 4 do
@@ -55,5 +71,6 @@ actor Main
     _total = _total + partial
     _replies = _replies + 1
     if _replies == 4 then
+      _ss.report()
       _env.out.print(_total.string())
     end

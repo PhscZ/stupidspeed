@@ -1,5 +1,9 @@
       *> task 11 parallel_sum -- expected output: 7500000075000000
       *> build: cobc -x -O2 -o prog 11_parallel_sum.cob    run: ./prog
+      *> timing: ACCEPT ... FROM TIME is GnuCOBOL's own clock, hhmmsscc, so the
+      *>         resolution is 10 ms; TIME_MS is DISPLAYed UPON STDERR and stdout is
+      *>         unchanged. Instrumented by inspection: there is no GnuCOBOL toolchain
+      *>         on this machine, so this row's timing is unverified.
       *> GnuCOBOL has no threads, so the four workers are four forked processes:
       *> CBL_GC_FORK is GnuCOBOL's own process facility and is the COBOL equivalent
       *> of the R row's forked workers. Each child owns one fixed quarter, writes
@@ -43,7 +47,21 @@
        01 CHILD-PID PIC S9(9) COMP-5.
        01 WAIT-STS  PIC S9(9) COMP-5.
        01 USED-FORK PIC X VALUE "N".
+       01 WS-T0.
+           05 T0-HH PIC 9(2).
+           05 T0-MM PIC 9(2).
+           05 T0-SS PIC 9(2).
+           05 T0-CC PIC 9(2).
+       01 WS-T1.
+           05 T1-HH PIC 9(2).
+           05 T1-MM PIC 9(2).
+           05 T1-SS PIC 9(2).
+           05 T1-CC PIC 9(2).
+       01 CS0      PIC 9(18) COMP-5.
+       01 CS1      PIC 9(18) COMP-5.
+       01 MS       PIC 9(18) COMP-5.
        PROCEDURE DIVISION.
+           ACCEPT WS-T0 FROM TIME.
            PERFORM VARYING T FROM 1 BY 1 UNTIL T > 4
                CALL "CBL_GC_FORK" RETURNING CHILD-PID
                END-CALL
@@ -76,6 +94,14 @@
                CLOSE PART-FILE
            END-PERFORM.
            MOVE TOTAL TO OT.
+           ACCEPT WS-T1 FROM TIME.
+           COMPUTE CS0 = ((((T0-HH * 60) + T0-MM) * 60) + T0-SS) * 100 + T0-CC.
+           COMPUTE CS1 = ((((T1-HH * 60) + T1-MM) * 60) + T1-SS) * 100 + T1-CC.
+           IF CS1 < CS0
+               ADD 8640000 TO CS1
+           END-IF.
+           COMPUTE MS = (CS1 - CS0) * 10.
+           DISPLAY "TIME_MS=" MS UPON STDERR.
            DISPLAY OT.
            STOP RUN.
 

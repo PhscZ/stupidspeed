@@ -7,7 +7,15 @@
 //       executable needs nothing at run time.
 // note: Vala's `int` is 32 bits, so the loop index and the four counters are `int64`.
 
+// timing: GLib.get_real_time() is GLib's monotonic clock in microseconds; TIME_MS goes
+//         to stderr and stdout is unchanged.
+static int64 ss_t0;
+static void ss_report () {
+    stderr.printf ("TIME_MS=%.3f\n", (GLib.get_real_time () - ss_t0) / 1000.0);
+}
+
 int main () {
+    ss_t0 = GLib.get_real_time ();
     int64 a = 0;
     int64 b = 0;
     int64 c = 0;
@@ -25,6 +33,7 @@ int main () {
         }
     }
 
+    ss_report ();
     stdout.printf ("%lld %lld %lld %lld\n", a, b, c, d);
     return 0;
 }

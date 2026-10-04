@@ -2,6 +2,7 @@
 -- build: none (interpreted)    run: lua 01_branches.lua (PUC Lua 5.4)    also runs on LuaJIT: luajit 01_branches.lua
 -- build (wasm): lua.wasm is the wasm32-wasip1 build of this same interpreter (see BUILD.md); run: wasmtime -W exceptions=y --dir . lua.wasm <task>.lua
 
+local __t0 = os.clock()
 local a, b, c, d = 0, 0, 0, 0
 
 for i = 0, 99999999 do
@@ -16,4 +17,6 @@ for i = 0, 99999999 do
     end
 end
 
+local __t1 = os.clock()
+io.stderr:write(string.format("TIME_MS=%.3f\n", (__t1 - __t0) * 1000.0))
 print(a .. " " .. b .. " " .. c .. " " .. d)

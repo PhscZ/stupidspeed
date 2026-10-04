@@ -4,6 +4,15 @@
 #       so the result does not depend on scheduling. Start-Job is not used because it starts a
 #       process per job, and ForEach-Object -Parallel does not exist before PowerShell 7.
 # note: measured at about 76 s for the four workers together; serial task 02 is about 264 s.
+# timing: [System.Diagnostics.Stopwatch]::GetTimestamp() is the high-resolution counter and
+#         GetTimestamp()/Frequency converts it to seconds; TIME_MS goes to stderr with
+#         [Console]::Error.WriteLine and stdout is unchanged.
+$ssFreq = [System.Diagnostics.Stopwatch]::Frequency
+$ssT0 = [System.Diagnostics.Stopwatch]::GetTimestamp()
+function Write-SsTime {
+    $ms = ([System.Diagnostics.Stopwatch]::GetTimestamp() - $ssT0) * 1000.0 / $ssFreq
+    [Console]::Error.WriteLine("TIME_MS=" + $ms.ToString('F3', [System.Globalization.CultureInfo]::InvariantCulture))
+}
 
 $worker = @'
 param([long]$t)
@@ -42,4 +51,5 @@ foreach ($job in $jobs) {
 $pool.Close()
 $pool.Dispose()
 
+Write-SsTime
 Write-Output $total

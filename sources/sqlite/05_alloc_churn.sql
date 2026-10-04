@@ -16,6 +16,12 @@
 --       single accumulator reaches.
 -- note: the 64-byte buffer is the hex text of its first byte followed by 126 zeros, which
 --       unhex() turns into 64 bytes.
+-- timing: the clock is SQLite's own julianday('now') in milliseconds. The timer starts at
+--       the entry of the script's own body and stops immediately before the final output
+--       statement, so the answer is materialised into a one-row table first and the timed
+--       region still contains all of the work.
+CREATE TABLE __t0(t INTEGER);
+INSERT INTO __t0 VALUES (cast(julianday('now')*86400000 as integer));
 CREATE TABLE slots(id INTEGER PRIMARY KEY, buf BLOB, acc INTEGER);
 CREATE TABLE lk(b BLOB);
 INSERT INTO lk VALUES (unhex('000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F'
@@ -40,4 +46,10 @@ SELECT x % 256,
 FROM c WHERE 1
 ON CONFLICT(id) DO UPDATE SET buf = excluded.buf, acc = slots.acc + excluded.acc;
 
-SELECT sum(acc) FROM slots;
+CREATE TABLE __res AS SELECT sum(acc) AS v FROM slots;
+
+.output stderr
+SELECT printf('TIME_MS=%d', cast(julianday('now')*86400000 as integer) - (SELECT t FROM __t0));
+.output stdout
+
+SELECT * FROM __res;

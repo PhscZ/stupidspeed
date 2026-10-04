@@ -8,9 +8,22 @@
 ;;       therefore exact and the digits do not depend on the order of addition.
 ;; note: Chez prints a flonum with the shortest representation that reads back to the same
 ;;       double, so display prints 0.498046875 and not a longer expansion.
+;; timing: (real-time) is Chez's monotonic clock in milliseconds since system start-up;
+;;         TIME_MS is written to time.txt, the contract's fallback, because Chez's
+;;         console-error-port is the console and this host sends the console to stdout
+;;         when it is redirected; stdout is unchanged.
+(define ss-t0 (real-time))
+(define (ss-report)
+  (let ([p (open-file-output-port "time.txt" (file-options no-fail)
+                                  (buffer-mode block))])
+    (put-bytevector p (string->utf8
+                       (string-append "TIME_MS="
+                                      (number->string (- (real-time) ss-t0))
+                                      "\n")))
+    (close-port p)))
 
 (let loop ([i 0] [total 0.0])
   (if (fx= i 100000000)
-      (begin (display (fl/ total 100000000.0)) (newline))
+      (begin (ss-report) (display (fl/ total 100000000.0)) (newline))
       (loop (fx+ i 1)
             (fl+ total (fl/ (fixnum->flonum (fxmod i 256)) 256.0)))))

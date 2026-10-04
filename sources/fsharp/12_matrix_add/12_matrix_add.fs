@@ -1,6 +1,8 @@
 // task 12 matrix_add — expected output: 999000000
 // build: dotnet build -c Release 12_matrix_add.fsproj    run: dotnet run -c Release (or bin/Release/net8.0/12_matrix_add.dll)
 
+let sw = System.Diagnostics.Stopwatch.StartNew()
+
 let n = 1000
 let size = n * n
 
@@ -20,4 +22,6 @@ let mutable total = 0L
 for idx in 0 .. size - 1 do
     total <- total + c.[idx]
 
+sw.Stop()
+System.Console.Error.WriteLine("TIME_MS=" + (sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture)))
 printfn "%d" total

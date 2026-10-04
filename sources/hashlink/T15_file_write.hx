@@ -17,6 +17,8 @@ class T15_file_write {
     static inline var REPEATS = 50;
 
     static function main() {
+        // timing: Sys.time() is seconds as a Float on HashLink, so x1000 gives ms (1 ms effective).
+        var t0 = Sys.time();
         var buf = haxe.io.Bytes.alloc(CHUNK);
         for (i in 0...CHUNK) {
             buf.set(i, i % 256);
@@ -32,6 +34,8 @@ class T15_file_write {
         f.flush();
         f.close();
 
+        var t1 = Sys.time();
+        Sys.stderr().writeString("TIME_MS=" + ((t1 - t0) * 1000.0) + "\n");
         Sys.println(written);
     }
 }

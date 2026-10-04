@@ -6,6 +6,7 @@
 # trailing zeros, no locale separators.
 
 average <- function() {
+  t0 <- proc.time()[["elapsed"]]
   total <- 0
   i <- 0
   while (i < 100000000) {
@@ -13,6 +14,7 @@ average <- function() {
     total <- total + reading
     i <- i + 1
   }
+  cat(sprintf("TIME_MS=%.3f\n", (proc.time()[["elapsed"]] - t0) * 1000), file = stderr())
   cat(sprintf("%.9f\n", total / 100000000))
 }
 

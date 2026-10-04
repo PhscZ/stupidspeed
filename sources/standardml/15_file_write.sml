@@ -38,6 +38,7 @@ val REPEATS = 50
 
 fun main () =
   let
+    val __t0 = Time.now ()
     val buf = Word8Vector.tabulate (CHUNK, fn i => Word8.fromInt (i mod 256))
     val outs = BinIO.openOut "out.bin"
     fun wr (k, written) =
@@ -46,6 +47,7 @@ fun main () =
     val written = wr (REPEATS, 0)
     val () = BinIO.flushOut outs
     val () = BinIO.closeOut outs
+    val () = TextIO.output (TextIO.stdErr, "TIME_MS=" ^ Real.fmt (StringCvt.FIX (SOME 3)) (Time.toReal (Time.- (Time.now (), __t0)) * 1000.0) ^ "\n")
   in
     print (Int.toString written ^ "\n")
   end

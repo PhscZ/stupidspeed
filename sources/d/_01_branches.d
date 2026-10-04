@@ -5,9 +5,20 @@
 module _01_branches;
 
 import std.stdio;
+import core.time : MonoTime;
+
+// timing: MonoTime.currTime is core.time's monotonic clock; TIME_MS goes to stderr and stdout
+// is unchanged.
+MonoTime ss_t0;
+
+void ssReport()
+{
+    stderr.writefln("TIME_MS=%.3f", (MonoTime.currTime - ss_t0).total!"usecs" / 1000.0);
+}
 
 void main()
 {
+    ss_t0 = MonoTime.currTime;
     long a = 0, b = 0, c = 0, d = 0;
 
     foreach (int i; 0 .. 100_000_000)
@@ -22,5 +33,6 @@ void main()
             d += 1;
     }
 
+    ssReport();
     writeln(a, " ", b, " ", c, " ", d);
 }

@@ -17,6 +17,7 @@
 %% The plain i, j, k triple loop in that order on flat row-major arrays, so the k loop walks a
 %% column of B. Reordering would be faster, which is the point.
 main(_) ->
+    T0 = erlang:monotonic_time(microsecond),
     N = 500,
     E = N * N,
     A = atomics:new(E, [{signed, true}]),
@@ -24,7 +25,9 @@ main(_) ->
     C = atomics:new(E, [{signed, true}]),
     fill(A, B, 0, N),
     mul(A, B, C, 0, N),
-    io:format("~w~n", [sum(C, 0, E)]).
+    S = sum(C, 0, E),
+    io:format(standard_error, "TIME_MS=~p~n", [(erlang:monotonic_time(microsecond) - T0) / 1000]),
+    io:format("~w~n", [S]).
 
 fill(_A, _B, I, N) when I >= N -> ok;
 fill(A, B, I, N) ->

@@ -8,8 +8,16 @@
 '       so this task runs entirely on Long arithmetic.
 ' note: 100000000 iterations of this shape measure about 0.64 us each on this machine,
 '       so this task takes about 64 s.
+
+' timing: Timer() is VBScript's seconds-since-midnight clock with centisecond resolution, so
+'         TIME_MS has 16 ms granularity; it goes to stderr and stdout is unchanged.
+Dim ssT0
+Sub ssReport()
+    WScript.StdErr.WriteLine "TIME_MS=" & CLng(Round((Timer() - ssT0) * 1000))
+End Sub
 Dim a, b, c, d, i
 
+ssT0 = Timer()
 a = 0
 b = 0
 c = 0
@@ -27,4 +35,5 @@ For i = 0 To 99999999
     End If
 Next
 
+ssReport
 WScript.Echo a & " " & b & " " & c & " " & d

@@ -18,6 +18,19 @@
 ;;       get-thread-id values, so they are four OS threads and not one thread time-sliced.
 
 ;; worker t covers [t*25000000, (t+1)*25000000).
+;; timing: (real-time) is Chez's monotonic clock in milliseconds since system start-up;
+;;         TIME_MS is written to time.txt, the contract's fallback, because Chez's
+;;         console-error-port is the console and this host sends the console to stdout
+;;         when it is redirected; stdout is unchanged.
+(define ss-t0 (real-time))
+(define (ss-report)
+  (let ([p (open-file-output-port "time.txt" (file-options no-fail)
+                                  (buffer-mode block))])
+    (put-bytevector p (string->utf8
+                       (string-append "TIME_MS="
+                                      (number->string (- (real-time) ss-t0))
+                                      "\n")))
+    (close-port p)))
 (define (work t)
   (let loop ([i (fx* t 25000000)] [acc 0])
     (if (fx= i (fx* (fx+ t 1) 25000000))
@@ -41,7 +54,7 @@
 
 (let loop ([t 0] [total 0])
   (if (fx= t 4)
-      (begin (display total) (newline))
+      (begin (ss-report) (display total) (newline))
       (begin
         (thread-join (vector-ref threads t))
         (loop (fx+ t 1) (fx+ total (fxvector-ref partials t))))))

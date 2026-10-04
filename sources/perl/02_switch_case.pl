@@ -7,6 +7,8 @@
 use strict;
 use warnings;
 
+use Time::HiRes ();
+my $__t0 = Time::HiRes::time();
 my $acc = 0;
 
 for (my $i = 0; $i < 100000000; $i++) {
@@ -22,4 +24,6 @@ for (my $i = 0; $i < 100000000; $i++) {
     }
 }
 
+my $__t1 = Time::HiRes::time();
+printf STDERR "TIME_MS=%.3f\n", ($__t1 - $__t0) * 1000.0;
 print $acc, "\n";

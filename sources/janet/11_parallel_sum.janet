@@ -17,6 +17,12 @@
 # note: each worker owns a fixed quarter, so which one finishes first cannot change the
 #       answer. The parent's total is a double and 7500000075000000 is below 2^53, so it is
 #       exact and printed as plain digits.
+
+# timing: os/clock is Janet's monotonic clock, in seconds as a double; TIME_MS goes to
+#         stderr with eprintf and stdout is unchanged.
+(def ss-t0 (os/clock))
+(defn ss-report [] (eprintf "TIME_MS=%.3f\n" (* 1000 (- (os/clock) ss-t0))))
+
 (defn worker [arg]
   (def [t chan] arg)
   (var acc 0)
@@ -39,4 +45,5 @@
 (for i 0 4
   (+= total (ev/take chan)))
 
+(ss-report)
 (print total)

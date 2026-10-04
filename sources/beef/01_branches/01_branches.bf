@@ -7,6 +7,7 @@
 // note: `int` is 32 bits in Beef, so every loop counter and counter here is `int64`.
 
 using System;
+using System.Diagnostics;
 
 namespace Task;
 
@@ -14,6 +15,9 @@ class Program
 {
 	static void Main()
 	{
+		// timing: Stopwatch.GetTimestamp() is corlib's microsecond clock (QueryPerformanceCounter on Windows).
+		int64 t0 = Stopwatch.GetTimestamp();
+
 		int64 a = 0, b = 0, c = 0, d = 0;
 
 		for (int64 i = 0; i < 100000000; i++)
@@ -28,6 +32,8 @@ class Program
 				d += 1;
 		}
 
+		int64 t1 = Stopwatch.GetTimestamp();
+		Console.Error.WriteLine($"TIME_MS={(double)(t1 - t0) / 1000.0}");
 		Console.WriteLine("{0} {1} {2} {3}", a, b, c, d);
 	}
 }

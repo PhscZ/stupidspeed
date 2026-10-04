@@ -5,6 +5,8 @@
 use strict;
 use warnings;
 
+use Time::HiRes ();
+my $__t0 = Time::HiRes::time();
 my $chunk_size = 1048576;
 my $total = 0;
 
@@ -14,4 +16,6 @@ while (my $got = read($fh, my $buf, $chunk_size)) {
 }
 close($fh);
 
+my $__t1 = Time::HiRes::time();
+printf STDERR "TIME_MS=%.3f\n", ($__t1 - $__t0) * 1000.0;
 print $total % 4294967296, "\n";

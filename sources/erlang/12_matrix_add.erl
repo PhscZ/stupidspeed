@@ -17,6 +17,7 @@
 %% Three flat 1000x1000 atomics arrays, row-major, filled and added with plain index
 %% arithmetic. The total fits comfortably in a 64-bit integer.
 main(_) ->
+    T0 = erlang:monotonic_time(microsecond),
     N = 1000,
     E = N * N,
     A = atomics:new(E, [{signed, true}]),
@@ -24,7 +25,9 @@ main(_) ->
     C = atomics:new(E, [{signed, true}]),
     fill(A, B, 0, N),
     add(A, B, C, 0, E),
-    io:format("~w~n", [sum(C, 0, E)]).
+    S = sum(C, 0, E),
+    io:format(standard_error, "TIME_MS=~p~n", [(erlang:monotonic_time(microsecond) - T0) / 1000]),
+    io:format("~w~n", [S]).
 
 fill(_A, _B, I, N) when I >= N -> ok;
 fill(A, B, I, N) ->

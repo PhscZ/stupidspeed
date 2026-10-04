@@ -7,8 +7,10 @@
 # which is the quadratic cost this task exists to measure, and makes this one of
 # the slowest cells in the row.
 
+__t0 = tic;
 text = '';
 for i = 1:250000
   text = [text 'x'];
 end
+fprintf(stderr, "TIME_MS=%.3f\n", toc(__t0) * 1000);
 printf("%.0f\n", numel(text));

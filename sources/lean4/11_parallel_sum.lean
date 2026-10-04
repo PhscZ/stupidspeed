@@ -24,6 +24,7 @@ where
       | _ => go fuel (i + 1) (acc + 3 * i)
 
 def main : IO Unit := do
+  let t0 ← IO.monoNanosNow
   let tasks ← (Array.range 4).mapM fun t =>
     IO.asTask (IO.lazyPure fun _ => work t.toUInt64)
   let mut total : UInt64 := 0
@@ -31,4 +32,7 @@ def main : IO Unit := do
     match ← IO.wait t with
     | Except.ok v => total := total + v
     | Except.error e => throw e
+  let t1 ← IO.monoNanosNow
+  let ms : Float := (t1 - t0).toFloat / 1000000.0
+  IO.eprintln s!"TIME_MS={ms}"
   IO.println total

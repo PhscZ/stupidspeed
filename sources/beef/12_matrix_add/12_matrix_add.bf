@@ -7,6 +7,7 @@
 //       the C row uses, so the memory traffic being measured is identical.
 
 using System;
+using System.Diagnostics;
 
 namespace Task;
 
@@ -14,6 +15,9 @@ class Program
 {
 	static void Main()
 	{
+		// timing: Stopwatch.GetTimestamp() is corlib's microsecond clock (QueryPerformanceCounter on Windows).
+		int64 t0 = Stopwatch.GetTimestamp();
+
 		int64 n = 1000;
 		int64 elems = n * n;
 
@@ -40,6 +44,8 @@ class Program
 		for (int64 k = 0; k < elems; k++)
 			total += c[k];
 
+		int64 t1 = Stopwatch.GetTimestamp();
+		Console.Error.WriteLine($"TIME_MS={(double)(t1 - t0) / 1000.0}");
 		Console.WriteLine("{0}", total);
 		delete a;
 		delete b;

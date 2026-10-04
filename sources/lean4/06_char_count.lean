@@ -19,8 +19,16 @@ where
 def charCount (text : String) : UInt64 :=
   text.foldl (fun acc ch => if ch == 'h' then acc + 1 else acc) 0
 
+@[noinline] def forceIO {α : Type} (x : Unit → α) : IO α := IO.lazyPure x
+
 def main : IO Unit := do
+  let t0 ← IO.monoNanosNow
   let bytes := repeatBytes "abcdefghij".toUTF8 10000000
   match String.fromUTF8? bytes with
-  | some text => IO.println (charCount text)
+  | some text =>
+    let answer ← forceIO (fun _ => charCount text)
+    let t1 ← IO.monoNanosNow
+    let ms : Float := (t1 - t0).toFloat / 1000000.0
+    IO.eprintln s!"TIME_MS={ms}"
+    IO.println answer
   | none => throw (IO.userError "text is not valid UTF-8")

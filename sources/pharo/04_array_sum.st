@@ -4,8 +4,10 @@
  Pharo's fixed-size indexable collection of object pointers; the integers themselves
  are tagged immediates, so the walk is over one contiguous run of slots."
 
-| out arr total |
+| out err arr total t0 |
 out := Stdio stdout.
+err := Stdio stderr.
+t0 := Time microsecondClockValue.
 arr := Array new: 1000000.
 
 1 to: 1000000 do: [:i | arr at: i put: i - 1].
@@ -13,4 +15,5 @@ arr := Array new: 1000000.
 total := 0.
 1 to: 1000000 do: [:i | total := total + (arr at: i)].
 
+err nextPutAll: 'TIME_MS=', ((Time microsecondClockValue - t0) / 1000.0) printString, String lf; flush.
 out nextPutAll: total printString; lf; flush.

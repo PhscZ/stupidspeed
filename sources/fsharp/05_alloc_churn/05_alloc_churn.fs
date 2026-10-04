@@ -1,6 +1,8 @@
 // task 05 alloc_churn — expected output: 1274991808
 // build: dotnet build -c Release 05_alloc_churn.fsproj    run: dotnet run -c Release (or bin/Release/net8.0/05_alloc_churn.dll)
 
+let sw = System.Diagnostics.Stopwatch.StartNew()
+
 let slots : byte[] array = Array.zeroCreate 256
 
 let mutable total = 0L
@@ -13,4 +15,6 @@ while i < 10000000 do
     slots.[i % 256] <- buf
     i <- i + 1
 
+sw.Stop()
+System.Console.Error.WriteLine("TIME_MS=" + (sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture)))
 printfn "%d" total

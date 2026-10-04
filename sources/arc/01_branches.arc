@@ -16,6 +16,13 @@
 ;       iteration against 0.8 us. `loop` is the plain named-let form and is what arc.arc itself uses
 ;       for its hot list walks.
 
+; Self-timing: t0 is read as the first thing the program's body does, and the elapsed
+; milliseconds are written to stderr with Arc's own `ero` (which prints through (stderr))
+; immediately before the answer goes to stdout with `prn`. The clock is the Racket host's
+; current-inexact-milliseconds, reached through Arc's ($ ...) escape, so the bracketed region
+; is this script's own work and stdout is unchanged.
+(= t0 ($ (current-inexact-milliseconds)))
+
 ; One if/else chain over a hundred million values.
 (with (a 0 b 0 c 0 d 0)
   (loop (i 0)
@@ -28,4 +35,5 @@
           (++ c)
           (++ d))
       (recur (+ i 1))))
+  (ero "TIME_MS=" (- ($ (current-inexact-milliseconds)) t0))
   (prn a " " b " " c " " d))

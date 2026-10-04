@@ -8,10 +8,18 @@
 //       Nothing in the standard library is used to avoid the copy; the engine simply does
 //       not make it.
 // note: text.length is the printed value, so the loop cannot be removed.
+
+// timing: new Date().getTime() is the WSH clock in milliseconds (the system timer, so about
+//         15 ms resolution); TIME_MS goes to stderr with WScript.StdErr and stdout is unchanged.
+var ssT0 = new Date().getTime();
+function ssReport() {
+    WScript.StdErr.Write("TIME_MS=" + (new Date().getTime() - ssT0) + "\r\n");
+}
 var text = "", i;
 
 for (i = 0; i < 250000; i++) {
     text = text + "x";
 }
 
+ssReport();
 WScript.Echo(String(text.length));

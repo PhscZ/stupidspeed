@@ -22,6 +22,12 @@
 ⍝ note: every local is declared after the semicolon in the header. A name assigned
 ⍝       inside a tradfn without that declaration is a global, which in a threaded
 ⍝       program is a data race rather than merely a leak.
+⍝ timing: 3⊃⎕AI is Dyalog's elapsed-time counter in milliseconds. APL exposes no
+⍝         stream handle for stderr, so the contract's fallback applies: TIME_MS is
+⍝         written to time.txt in the working directory with ⎕NPUT, and stdout is
+⍝         unchanged. The counter is read on the master thread around the spawn and
+⍝         the ⎕TSYNC join. Instrumented by inspection: Dyalog is not installed on
+⍝         this machine, so this row's timing is unverified.
 ⎕IO←0
 ⎕PP←17
 
@@ -41,9 +47,11 @@
   r←acc
 ∇
 
+ssT0←3⊃⎕AI
 h1←work& 0
 h2←work& 1
 h3←work& 2
 h4←work& 3
 p←⎕TSYNC h1 h2 h3 h4
+('TIME_MS=',⍕(3⊃⎕AI)-ssT0)⎕NPUT 'time.txt'
 ⎕←+/p

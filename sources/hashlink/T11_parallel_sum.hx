@@ -48,6 +48,8 @@ class T11_parallel_sum {
     }
 
     static function main() {
+        // timing: Sys.time() is seconds as a Float on HashLink, so x1000 gives ms (1 ms effective).
+        var t0 = Sys.time();
         var args = Sys.args();
         if (args.length > 0) {
             var t = Std.parseInt(args[0]);
@@ -71,6 +73,8 @@ class T11_parallel_sum {
             sys.FileSystem.deleteFile(path);
         }
 
+        var t1 = Sys.time();
+        Sys.stderr().writeString("TIME_MS=" + ((t1 - t0) * 1000.0) + "\n");
         Sys.println(total);
     }
 }

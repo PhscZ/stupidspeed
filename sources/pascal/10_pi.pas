@@ -11,7 +11,7 @@ program prog;
 {$mode objfpc}{$H+}
 
 uses
-  SysUtils;
+  SysUtils, Windows;
 
 const
   BASE = 1000000000;   { 1e9, so limb * small + carry still fits in a 64-bit word }
@@ -295,10 +295,13 @@ begin
 end;
 
 var
+  __clock_t0, __clock_t1, __clock_freq, __clock_us: Int64;
   q, r, t, u, v: TBig;
   n, k, l, sum: Int64;
   produced: Integer;
 begin
+  QueryPerformanceFrequency(__clock_freq);
+  QueryPerformanceCounter(__clock_t0);
   q := BigFromInt(1);
   r := BigFromInt(0);
   t := BigFromInt(1);
@@ -340,5 +343,11 @@ begin
     end;
   end;
 
+  QueryPerformanceCounter(__clock_t1);
+  __clock_us := (__clock_t1 - __clock_t0) * 1000000 div __clock_freq;
+  Write(StdErr, 'TIME_MS=', __clock_us div 1000, '.');
+  if __clock_us mod 1000 < 100 then Write(StdErr, '0');
+  if __clock_us mod 1000 < 10 then Write(StdErr, '0');
+  WriteLn(StdErr, __clock_us mod 1000);
   WriteLn(sum);
 end.

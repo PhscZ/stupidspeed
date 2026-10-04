@@ -9,6 +9,10 @@
 import kotlin.native.concurrent.ObsoleteWorkersApi
 import kotlin.native.concurrent.TransferMode
 import kotlin.native.concurrent.Worker
+import kotlin.time.TimeSource
+import kotlinx.cinterop.ExperimentalForeignApi
+import platform.posix.fputs
+import platform.posix.stderr
 
 private fun work(t: Long): Long {
     var acc = 0L
@@ -26,8 +30,9 @@ private fun work(t: Long): Long {
     return acc
 }
 
-@OptIn(ObsoleteWorkersApi::class)
+@OptIn(ObsoleteWorkersApi::class, ExperimentalForeignApi::class)
 fun main() {
+    val __t0 = TimeSource.Monotonic.markNow()
     val workers = Array(4) { Worker.start() }
 
     // The producer runs on this thread and carries t across; the job captures nothing, as
@@ -38,5 +43,6 @@ fun main() {
     for (f in futures) total += f.result
     for (w in workers) w.requestTermination().result
 
+    fputs("TIME_MS=" + __t0.elapsedNow().inWholeNanoseconds / 1000000.0 + "\n", stderr)
     println(total)
 }

@@ -14,6 +14,13 @@
 ;       coerces the value to 'fn before applying it. That coercion is part of Arc's call cost and
 ;       is deliberately left in rather than hoisted, because this task measures the call path.
 
+; Self-timing: t0 is read as the first thing the program's body does, and the elapsed
+; milliseconds are written to stderr with Arc's own `ero` (which prints through (stderr))
+; immediately before the answer goes to stdout with `prn`. The clock is the Racket host's
+; current-inexact-milliseconds, reached through Arc's ($ ...) escape, so the bracketed region
+; is this script's own work and stdout is unchanged.
+(= t0 ($ (current-inexact-milliseconds)))
+
 (def add-one (n)
   (+ n 1))
 
@@ -22,4 +29,5 @@
     (when (< i 100000000)
       (= value (add-one value))
       (recur (+ i 1))))
+  (ero "TIME_MS=" (- ($ (current-inexact-milliseconds)) t0))
   (prn value))

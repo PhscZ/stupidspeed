@@ -3,10 +3,12 @@
 package main
 
 import "core:fmt"
+import "core:time"
 
 N :: 1000
 
 main :: proc() {
+	t0 := time.now()
 	a := make([]i64, N * N)
 	b := make([]i64, N * N)
 	c := make([]i64, N * N)
@@ -31,5 +33,6 @@ main :: proc() {
 	for i in 0 ..< N * N {
 		sum += c[i]
 	}
+	fmt.eprintfln("TIME_MS=%.3f", time.duration_milliseconds(time.since(t0)))
 	fmt.println(sum)
 }

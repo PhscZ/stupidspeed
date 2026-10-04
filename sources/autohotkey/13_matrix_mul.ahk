@@ -12,9 +12,14 @@
 ; note: the full run takes about 75 s on this machine, about 0.6 us per inner multiply-add,
 ;       which is the price of two 1-based Array indexings per term (a pass on the same shared
 ;       host measured 319 s).
+; timing: A_TickCount is the interpreter's own millisecond clock (GetTickCount, so about
+;       15 ms resolution); TIME_MS is written to stderr with FileAppend(..., "**") and
+;       stdout is unchanged.
 #Requires AutoHotkey v2.0
 #SingleInstance Off
 #NoTrayIcon
+
+t0 := A_TickCount
 
 n := 500
 
@@ -51,4 +56,5 @@ total := 0
 Loop 250000
     total += C[A_Index]
 
+FileAppend("TIME_MS=" (A_TickCount - t0) "`n", "**")
 FileAppend(total "`n", "*")

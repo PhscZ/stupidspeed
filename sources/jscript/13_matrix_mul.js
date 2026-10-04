@@ -10,6 +10,13 @@
 //       the grand total, 599995000, is far below 2^53, so every value is exact.
 // note: the whole task measures 73 s to 303 s on this shared host, about 0.59 us to 2.4 us
 //       for each of the 125 million inner iterations (fastest 73.4 s, slowest 303.1 s).
+
+// timing: new Date().getTime() is the WSH clock in milliseconds (the system timer, so about
+//         15 ms resolution); TIME_MS goes to stderr with WScript.StdErr and stdout is unchanged.
+var ssT0 = new Date().getTime();
+function ssReport() {
+    WScript.StdErr.Write("TIME_MS=" + (new Date().getTime() - ssT0) + "\r\n");
+}
 var n = 500, N = 250000, A, B, C, i, j, k, sum, total = 0;
 
 A = new Array(N);
@@ -43,4 +50,5 @@ for (k = 0; k < N; k++) {
     total += C[k];
 }
 
+ssReport();
 WScript.Echo(String(total));

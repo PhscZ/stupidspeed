@@ -16,7 +16,10 @@
 %%       real fixed-size mutable array of 64-bit integers.
 %% Naive fib(40): about 331 million calls, so this measures the call path itself.
 main(_) ->
-    io:format("~w~n", [fib(40)]).
+    T0 = erlang:monotonic_time(microsecond),
+    R = fib(40),
+    io:format(standard_error, "TIME_MS=~p~n", [(erlang:monotonic_time(microsecond) - T0) / 1000]),
+    io:format("~w~n", [R]).
 
 fib(N) when N < 2 -> N;
 fib(N) -> fib(N - 1) + fib(N - 2).

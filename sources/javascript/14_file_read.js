@@ -1,6 +1,8 @@
 // task 14 file_read — expected output: 2389704704
 // build: none    run: node 14_file_read.js | bun 14_file_read.js | deno run --allow-read 14_file_read.js
 
+const __t0 = performance.now();
+
 const fs = require('node:fs');
 
 const CHUNK = 1048576;
@@ -17,4 +19,5 @@ for (;;) {
 }
 fs.closeSync(fd);
 
+console.error(`TIME_MS=${performance.now() - __t0}`);
 console.log(total % 4294967296);

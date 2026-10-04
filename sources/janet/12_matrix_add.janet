@@ -5,6 +5,12 @@
 #       the same layout the C row uses; `put` and `in` are the JOP_PUT and JOP_IN opcodes.
 # note: A holds i + j and B holds i - j, both small signed values; C holds their sum. The
 #       grand total, 999000000, is below 2^53, so it is exact.
+
+# timing: os/clock is Janet's monotonic clock, in seconds as a double; TIME_MS goes to
+#         stderr with eprintf and stdout is unchanged.
+(def ss-t0 (os/clock))
+(defn ss-report [] (eprintf "TIME_MS=%.3f\n" (* 1000 (- (os/clock) ss-t0))))
+
 (def n 1000)
 (def A (array/new-filled (* n n) 0))
 (def B (array/new-filled (* n n) 0))
@@ -23,4 +29,5 @@
 (for k 0 (* n n)
   (+= total (in C k)))
 
+(ss-report)
 (print total)

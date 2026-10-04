@@ -26,6 +26,13 @@
 // note: the four partials are summed in index order, which does not change the answer:
 //       every partial is far below 2^53, so the total is exact.
 
+// timing: getTimer() is the AVM2 clock, whole milliseconds since the VM started. AIR has
+//       no stderr, so the contract's fallback applies: TIME_MS goes to time.txt in
+//       File.applicationStorageDirectory -- %APPDATA%\stupidspeed.actionscript\Local Store\,
+//       the writable directory task 15 writes out.bin to, because the bundle directory is
+//       read-only. The constructor only schedules the work, so the timer starts there and
+//       stops just before the final output in collect(); the file write and the exit are one
+//       more event-loop turn later, outside the measured region.
 package
 {
     import flash.display.Sprite;
@@ -37,14 +44,18 @@ package
     import flash.system.WorkerDomain;
     import flash.desktop.NativeApplication;
     import flash.utils.ByteArray;
+    import flash.utils.getTimer;
     import flash.utils.setTimeout;
 
     public class _11_parallel_sum extends Sprite
     {
         private var workers:Array = [];
+        private var __t0:int = 0;
+        private var __ms:int = 0;
 
         public function _11_parallel_sum()
         {
+            __t0 = getTimer();
             // See task 14: a FileStream cannot be opened from the constructor, so the
             // worker SWF is loaded and the workers started one event-loop turn later.
             setTimeout(startWorkers, 0);
@@ -73,8 +84,9 @@ package
             }
             catch (err:Error)
             {
+                __ms = getTimer() - __t0;
                 System.output("error: " + err + "\n");
-                NativeApplication.nativeApplication.exit(0);
+                setTimeout(__report, 0);
             }
         }
 
@@ -91,7 +103,22 @@ package
                 }
                 total = total + Number(part);
             }
+            __ms = getTimer() - __t0;
             System.output(total + "\n");
+            setTimeout(__report, 0);
+        }
+
+        private function __report():void
+        {
+            try
+            {
+                var f:File = File.applicationStorageDirectory.resolvePath("time.txt");
+                var s:FileStream = new FileStream();
+                s.open(f, FileMode.WRITE);
+                s.writeUTFBytes("TIME_MS=" + __ms + "\n");
+                s.close();
+            }
+            catch (e:Error) { }
             NativeApplication.nativeApplication.exit(0);
         }
     }

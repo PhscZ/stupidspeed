@@ -10,6 +10,7 @@
 # Ten million 64-byte buffers, each stored into one of 256 slots so the buffer it replaces
 # becomes garbage -- the same reachability line the C and Java rows draw. The running total
 # adds v, the value written.
+my $__t0 = now;
 my $slots = (Any xx 256).Array;
 my int $total = 0;
 loop (my int $i = 0; $i < 10000000; $i++) {
@@ -18,4 +19,6 @@ loop (my int $i = 0; $i < 10000000; $i++) {
     $slots[$v] = $buf;
     $total += $v;
 }
+my $__t1 = now;
+$*ERR.say('TIME_MS=' ~ (($__t1 - $__t0) * 1000).Num.fmt('%.3f'));
 say $total;

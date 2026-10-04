@@ -5,8 +5,14 @@
 !       keeps it reachable and drops the buffer it replaces — the old one becomes garbage
 !       for Factor's generational copying GC.
 
-USING: arrays byte-arrays locals math prettyprint sequences ;
+! timing: nano-count is Factor's monotonic nanosecond clock; TIME_MS is written to stderr
+!         through error-stream, and stdout is unchanged.
+USING: arrays byte-arrays io kernel locals math math.parser namespaces prettyprint sequences system ;
 IN: scratchpad
+
+: ss-report ( t0 value -- value )
+    swap nano-count swap - 1000000 /i number>string
+    "TIME_MS=" swap append "\n" append error-stream get stream-write ;
 
 :: alloc-churn ( -- total )
     256 f <array> :> slots
@@ -17,4 +23,4 @@ IN: scratchpad
         buf i 256 mod slots set-nth
     ] each-integer ;
 
-alloc-churn .
+nano-count alloc-churn ss-report .

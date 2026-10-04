@@ -7,6 +7,7 @@
 // operations the spigot needs. The leading 3 is the first digit emitted and counts toward the
 // 1000; only their sum is printed, never the digits.
 
+$__t0 = hrtime(true);
 const BASE = 1000000000;
 
 // A big integer is a little-endian limb array with the sign appended as its last element:
@@ -273,4 +274,6 @@ while ($emitted < 1000) {
     }
 }
 
+$__t1 = hrtime(true);
+fwrite(STDERR, sprintf("TIME_MS=%.3f\n", ($__t1 - $__t0) / 1e6));
 echo $sum, "\n";

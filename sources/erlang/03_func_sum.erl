@@ -19,11 +19,13 @@
 %% given, so add_one/1 is a real call -- the same guarantee the Fortran, Tcl, Vala and Common
 %% Lisp rows get by splitting this task into two files.
 main(_) ->
-    loop(0, 0).
+    T0 = erlang:monotonic_time(microsecond),
+    loop(0, 0, T0).
 
-loop(I, Value) when I >= 100000000 ->
+loop(I, Value, T0) when I >= 100000000 ->
+    io:format(standard_error, "TIME_MS=~p~n", [(erlang:monotonic_time(microsecond) - T0) / 1000]),
     io:format("~w~n", [Value]);
-loop(I, Value) ->
-    loop(I + 1, add_one(Value)).
+loop(I, Value, T0) ->
+    loop(I + 1, add_one(Value), T0).
 
 add_one(N) -> N + 1.

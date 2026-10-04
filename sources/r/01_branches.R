@@ -6,6 +6,7 @@
 # and every value here is exact in a double.
 
 branches <- function() {
+  t0 <- proc.time()[["elapsed"]]
   a <- 0
   b <- 0
   c <- 0
@@ -23,6 +24,7 @@ branches <- function() {
     }
     i <- i + 1
   }
+  cat(sprintf("TIME_MS=%.3f\n", (proc.time()[["elapsed"]] - t0) * 1000), file = stderr())
   cat(sprintf("%.0f %.0f %.0f %.0f\n", a, b, c, d))
 }
 

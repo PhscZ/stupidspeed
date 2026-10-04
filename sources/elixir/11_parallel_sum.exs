@@ -19,9 +19,12 @@ defmodule T11 do
   @span 25_000_000
 
   def run do
+    t0 = System.monotonic_time(:microsecond)
     self = self()
     pids = for t <- [0, 1, 2, 3], do: spawn(fn -> send(self, {self(), work(t)}) end)
-    IO.puts(collect(pids, 0))
+    total = collect(pids, 0)
+    IO.puts(:stderr, "TIME_MS=#{(System.monotonic_time(:microsecond) - t0) / 1000}")
+    IO.puts(total)
   end
 
   defp collect([], acc), do: acc

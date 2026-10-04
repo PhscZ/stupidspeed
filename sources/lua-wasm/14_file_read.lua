@@ -4,6 +4,7 @@
 -- data.bin (50 MiB: the bytes 0..255 repeating) must sit in the working directory.
 -- Read in 1 MiB chunks, then scan every byte.
 
+local __t0 = os.clock()
 local f = io.open("data.bin", "rb")
 
 local total = 0
@@ -18,4 +19,6 @@ while true do
 end
 
 f:close()
+local __t1 = os.clock()
+io.stderr:write(string.format("TIME_MS=%.3f\n", (__t1 - __t0) * 1000.0))
 print(total % 4294967296)

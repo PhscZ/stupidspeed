@@ -5,7 +5,9 @@
 # so the data is flushed with flushFile and the file closed, which hands the
 # buffered writes to the OS.
 
+import std/monotimes, std/strutils, std/times
 const chunk = 1024 * 1024
+let t0 = getMonoTime()
 var buf = newSeq[byte](chunk)
 for i in 0 ..< chunk:
   buf[i] = byte(i mod 256)
@@ -16,4 +18,5 @@ for _ in 0 ..< 50:
   discard writeBuffer(f, addr buf[0], buf.len)
 flushFile(f)
 close(f)
+stderr.writeLine("TIME_MS=" & formatFloat(float((getMonoTime() - t0).inMicroseconds) / 1000.0, ffDecimal, 3))
 echo(50 * chunk)

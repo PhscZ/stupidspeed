@@ -4,6 +4,7 @@
 # The stock Windows CRuby build has no YJIT: `ruby --yjit` warns "Ruby was built without YJIT support".
 # Each slot holds the last buffer stored there, so the previous buffer becomes garbage (256 live buffers at most).
 
+_t0 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 total = 0
 slots = Array.new(256)
 
@@ -16,4 +17,6 @@ while i < 10_000_000
   i += 1
 end
 
+_t1 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+$stderr.write("TIME_MS=%.3f\n" % ((_t1 - _t0) * 1000.0))
 puts total

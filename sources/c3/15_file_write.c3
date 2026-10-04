@@ -16,6 +16,7 @@ module c3_15_file_write;
 import std::io;
 import std::io::file;
 import std::core::mem;
+import std::time::clock;
 
 extern fn int _commit(int fd);
 
@@ -24,6 +25,7 @@ const int REPEATS = 50;
 
 fn void main()
 {
+	Clock t0 = clock::now();
 	char[] buf = mem::new_array(char, (sz)CHUNK);
 	for (long i = 0; i < CHUNK; i++)
 	{
@@ -43,5 +45,7 @@ fn void main()
 	f.close();
 	mem::free(buf.ptr);
 
+	NanoDuration elapsed = clock::now() - t0;
+	io::eprintfn("TIME_MS=%.3f", (double)elapsed / 1_000_000.0);
 	io::printfn("%d", written);
 }

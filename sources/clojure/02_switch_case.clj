@@ -12,7 +12,10 @@
 
 ;; case on (rem i 4) with a primitive long accumulator. The total 7500000075000000 is past
 ;; 2^31, which is why the accumulator is a long and the arithmetic is unchecked.
+(def ^:private __t0 (volatile! 0))
+
 (defn -main []
+  (vreset! __t0 (System/nanoTime))
   (loop [i (long 0) acc (long 0)]
     (if (< i (long 100000000))
       (recur (inc i)
@@ -22,6 +25,7 @@
                               1 i
                               2 (unchecked-multiply 2 i)
                               3 (unchecked-multiply 3 i))))
-      (println acc))))
+      (do (.println System/err (str "TIME_MS=" (/ (- (System/nanoTime) (long @__t0)) 1000000.0)))
+          (println acc)))))
 
 (-main)

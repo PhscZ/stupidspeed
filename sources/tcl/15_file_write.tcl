@@ -6,6 +6,7 @@
 # deviation is flush + close, the same one the D, Julia, Nim, Dart, Pascal, COBOL and
 # Dolphin rows note.
 
+set __t0 [clock microseconds]
 set cycle {}
 for {set i 0} {$i < 256} {incr i} {
     lappend cycle $i
@@ -22,4 +23,6 @@ for {set t 0} {$t < 50} {incr t} {
 flush $f
 close $f
 
+set __t1 [clock microseconds]
+puts stderr [format "TIME_MS=%.3f" [expr {($__t1 - $__t0) / 1000.0}]]
 puts $written

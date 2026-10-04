@@ -4,6 +4,8 @@
 # build (cython): cython --embed -3 --module-name _14_file_read -o _14_file_read.c 14_file_read.py, then gcc -O2 -DMS_WIN64 -municode -I <python>/include -o prog _14_file_read.c -L <python>/libs -lpython3xx
 # build (wasm): python.wasm is the wasm32-wasip1-threads build of CPython (see BUILD.md); run: wasmtime -S threads=y -W threads=y -W shared-memory=y --dir . python.wasm <task>.py
 
+import time as _time, sys as _sys
+_t0 = _time.perf_counter()
 total = 0
 
 with open('data.bin', 'rb') as f:
@@ -14,4 +16,6 @@ with open('data.bin', 'rb') as f:
         for byte in chunk:
             total += byte
 
+_t1 = _time.perf_counter()
+_sys.stderr.write("TIME_MS=%.3f\n" % ((_t1 - _t0) * 1000.0))
 print(total % 4294967296)

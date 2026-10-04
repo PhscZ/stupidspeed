@@ -6,6 +6,7 @@
 extends SceneTree
 
 func _initialize() -> void:
+	var t0 := Time.get_ticks_msec()
 	var total := 0
 	var slots := []
 	slots.resize(256)
@@ -15,5 +16,6 @@ func _initialize() -> void:
 		buf[0] = i % 256
 		total += buf[0]
 		slots[i % 256] = buf
+	printerr("TIME_MS=%d" % (Time.get_ticks_msec() - t0))
 	print(total)
 	quit()

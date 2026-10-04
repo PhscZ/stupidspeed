@@ -17,13 +17,15 @@
 (* note: measured: 0.296 s, 3.0 ns per iteration. *)
 fun main () =
   let
+    val t0 = Time.now ()
     val acc = ref 0
     fun loop i =
       if i >= 100000000 then ()
       else
         (acc := !acc + (case i mod 4 of 0 => 1 | 1 => i | 2 => 2 * i | _ => 3 * i);
          loop (i + 1))
+    val () = loop 0
+    val () = TextIO.output (TextIO.stdErr, "TIME_MS=" ^ Real.fmt (StringCvt.FIX (SOME 3)) (Time.toReal (Time.- (Time.now (), t0)) * 1000.0) ^ "\n")
   in
-    loop 0;
     print (Int.toString (!acc) ^ "\n")
   end

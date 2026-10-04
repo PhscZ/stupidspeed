@@ -23,6 +23,7 @@ func work(t: int) -> int:
 	return acc
 
 func _initialize() -> void:
+	var t0 := Time.get_ticks_msec()
 	var threads: Array[Thread] = []
 	for t in 4:
 		var thread := Thread.new()
@@ -31,5 +32,6 @@ func _initialize() -> void:
 	var total := 0
 	for t in 4:
 		total += int(threads[t].wait_to_finish())
+	printerr("TIME_MS=%d" % (Time.get_ticks_msec() - t0))
 	print(total)
 	quit()

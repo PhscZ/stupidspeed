@@ -19,6 +19,11 @@
 ⍝       ask for, so the deviation is recorded rather than taken.
 ⍝ note: out.bin is deleted first so a rerun writes the same 52428800 bytes rather
 ⍝       than appending to the previous run's file.
+⍝ timing: 3⊃⎕AI is Dyalog's elapsed-time counter in milliseconds. APL exposes no
+⍝         stream handle for stderr, so the contract's fallback applies: TIME_MS is
+⍝         written to time.txt in the working directory with ⎕NPUT, and stdout is
+⍝         unchanged. Instrumented by inspection: Dyalog is not installed on this
+⍝         machine, so this row's timing is unverified.
 ⎕IO←0
 ⎕PP←17
 
@@ -26,7 +31,8 @@
   ⎕NDELETE 'out.bin'
 :EndIf
 
-∇ r←file_write;buf;tie;written;i
+∇ r←file_write;buf;tie;written;i;ssT0;ssMS
+  ssT0←3⊃⎕AI
   buf←⎕UCS 1048576⍴⍳256
   tie←'out.bin'⎕NCREATE 0
   written←0
@@ -37,6 +43,8 @@
     i+←1
   :EndWhile
   ⎕NUNTIE tie
+  ssMS←(3⊃⎕AI)-ssT0
+  ('TIME_MS=',⍕ssMS)⎕NPUT 'time.txt'
   r←⍕written
 ∇
 

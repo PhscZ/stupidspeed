@@ -5,6 +5,7 @@
 
 require "big"
 
+t0 = Time.monotonic
 DIGITS = 1000
 
 q = 1.to_big_i
@@ -27,4 +28,5 @@ while emitted < DIGITS
   end
 end
 
+STDERR.puts "TIME_MS=%.3f" % (Time.monotonic - t0).total_milliseconds
 puts total

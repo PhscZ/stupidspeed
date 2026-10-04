@@ -14,6 +14,12 @@
 --       it still prints the right line, and with data.bin only next to the executable it
 --       fails to open it.
 -- note: no fsync here, but the read path is unaffected; see t15_file_write.e.
+-- timing: TIME.make_now plus the hour/minute/second/millisecond fields is Eiffel's own
+--         clock, read in ss_report and reported as whole milliseconds; io.error is
+--         STD_FILES' standard error stream, so TIME_MS goes to stderr and stdout is
+--         unchanged. Instrumented by inspection: EiffelStudio is not installed on this
+--         machine, so this row's timing is unverified.
+
 class
 	T14_FILE_READ
 
@@ -22,6 +28,33 @@ create
 
 feature -- Benchmark
 
+	ss_t0: TIME
+
+	ss_now_ms (t: TIME): INTEGER_64
+		do
+			Result := (((t.hour * 60) + t.minute) * 60 + t.second) * 1000 + t.millisecond
+		end
+
+	ss_start
+		do
+			create ss_t0.make_now
+		end
+
+	ss_report
+		local
+			t: TIME
+			ms: INTEGER_64
+		do
+			create t.make_now
+			ms := ss_now_ms (t) - ss_now_ms (ss_t0)
+			if ms < 0 then
+				ms := ms + 86400000
+			end
+			io.error.put_string ("TIME_MS=")
+			io.error.put_integer_64 (ms)
+			io.error.put_new_line
+		end
+
 	make
 		local
 			f: RAW_FILE
@@ -29,6 +62,7 @@ feature -- Benchmark
 			total: INTEGER_64
 			got, i: INTEGER
 		do
+			ss_start
 			create buffer.make (1048576)
 			create f.make_open_read ("data.bin")
 
@@ -52,6 +86,7 @@ feature -- Benchmark
 
 			f.close
 
+			ss_report
 			io.put_integer_64 (total \\ 4294967296)
 			io.put_new_line
 		end

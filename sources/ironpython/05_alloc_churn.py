@@ -3,6 +3,13 @@
 # note: each 64-byte buffer is a bytearray; the store into slots keeps it reachable for 256 turns, so
 #       the allocation is real and the buffer it displaces becomes garbage for .NET's collector.
 
+import clr
+from System.Diagnostics import Stopwatch
+from System.Globalization import CultureInfo
+import sys
+
+_sw = Stopwatch.StartNew()
+
 total = 0
 slots = [None] * 256
 
@@ -12,4 +19,6 @@ for i in range(10000000):
     total += buf[0]
     slots[i % 256] = buf
 
+_sw.Stop()
+sys.stderr.write("TIME_MS=" + _sw.Elapsed.TotalMilliseconds.ToString("F3", CultureInfo.InvariantCulture) + "\n")
 print(total)

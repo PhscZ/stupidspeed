@@ -15,8 +15,11 @@
 # far below 2^53, so the sum is exact and the digits do not depend on the order of addition.
 defmodule T08 do
   def run do
+    t0 = System.monotonic_time(:microsecond)
     total = acc(0, 100_000_000, 0.0)
-    IO.puts(total / 100_000_000)
+    avg = total / 100_000_000
+    IO.puts(:stderr, "TIME_MS=#{(System.monotonic_time(:microsecond) - t0) / 1000}")
+    IO.puts(avg)
   end
 
   defp acc(i, n, total) when i >= n, do: total

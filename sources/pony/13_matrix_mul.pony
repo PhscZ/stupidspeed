@@ -1,12 +1,27 @@
 // task 13 matrix_mul — expected output: 599995000
+// timing: Time.nanos() is Pony's monotonic clock (QueryPerformanceCounter on Windows);
+//        TIME_MS goes to stderr with env.err.print and stdout is unchanged.
 // build: mkdir -p temp/pony/13_matrix_mul && cp sources/pony/13_matrix_mul.pony temp/pony/13_matrix_mul/ && tools/ponyc/bin/ponyc.exe -o temp/pony/13_matrix_mul temp/pony/13_matrix_mul
 // run: temp/pony/13_matrix_mul/13_matrix_mul.exe
 // note: plain triple loop in i, j, k order — the k loop walks B by column, which is the point.
 //       A holds (i+j) mod 7 and B holds (i*j) mod 5, both under U64.
 
 
+use "time"
+class SsClock
+  var t0: U64 = 0
+  let env: Env
+  new create(env': Env) =>
+    env = env'
+  fun ref start() =>
+    t0 = Time.nanos()
+  fun ref report() =>
+    env.err.print("TIME_MS=" + ((Time.nanos() - t0) / 1000000).string())
+
 actor Main
   new create(env: Env) =>
+    let ss = SsClock(env)
+    ss.start()
     let n: USize = 500
     let cells = n * n
     let a = Array[U64].init(0, cells)
@@ -48,5 +63,6 @@ actor Main
         total = total + c(m)?
         m = m + 1
       end
+      ss.report()
       env.out.print(total.string())
     end

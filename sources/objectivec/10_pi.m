@@ -1,6 +1,18 @@
 // task 10 pi -- expected output: 4470
 // build: clang -fobjc-runtime=gnustep-2.2 -O2 -o prog 10_pi.m -lobjc -lgnustep-base    run: ./prog
 // Objective-C has no big integers in its standard library; task 10 hand-rolls base-1e9 limbs.
+/* timing: clock_gettime(CLOCK_MONOTONIC) is the monotonic clock, the same one the C row uses
+   on Linux; TIME_MS goes to stderr and stdout is unchanged. */
+#include <stdio.h>
+#include <time.h>
+static double ss_now_ms(void) {
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    return (double)ts.tv_sec * 1000.0 + (double)ts.tv_nsec / 1000000.0;
+}
+static void ss_report(double t0) {
+    fprintf(stderr, "TIME_MS=%.3f\n", ss_now_ms() - t0);
+}
 /* Benchmark task 10 equivalent, idiomatic Objective-C: 1000 digits of pi via
    Gibbons' unbounded spigot, with the arbitrary-precision state in a hand-rolled
    BigInt class (ObjC has no bignum in its standard library, exactly like C).
@@ -179,6 +191,7 @@
 @end
 
 int main(void) {
+    double ss_t0 = ss_now_ms();
     @autoreleasepool {
         BigInt *q = [BigInt new];
         BigInt *r = [BigInt new];
@@ -234,6 +247,7 @@ int main(void) {
             }
         }
 
+    ss_report(ss_t0);
         printf("%llu\n", (unsigned long long)sum);
     }
     return 0;

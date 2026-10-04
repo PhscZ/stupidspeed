@@ -34,6 +34,7 @@ For t = 0 To 3
     total = total + CDbl(Trim(kids(t).StdOut.ReadAll()))
 Next
 
+ssReport
 WScript.Echo DecStr(total)
 
 Function WorkRange(t)
@@ -60,6 +61,14 @@ End Function
 ' Exact decimal digits for an integral number below 2^53. Splitting off 1e6 at a time
 ' keeps every intermediate below 2^53, so p * 1000000 is exact; the guard corrects the
 ' one-off error the division can make at that size.
+
+' timing: Timer() is VBScript's seconds-since-midnight clock with centisecond resolution, so
+'         TIME_MS has 16 ms granularity; it goes to stderr and stdout is unchanged.
+Dim ssT0
+Sub ssReport()
+    WScript.StdErr.WriteLine "TIME_MS=" & CLng(Round((Timer() - ssT0) * 1000))
+End Sub
+ssT0 = Timer()
 Function DecStr(v)
     Dim parts(), np, p, r, s, i
 

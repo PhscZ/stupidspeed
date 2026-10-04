@@ -1,6 +1,8 @@
 // task 01 branches — expected output: 33333334 13333333 7619048 45714285
 // build: dotnet build -c Release 01_branches.fsproj    run: dotnet run -c Release (or bin/Release/net8.0/01_branches.dll)
 
+let sw = System.Diagnostics.Stopwatch.StartNew()
+
 let mutable a = 0L
 let mutable b = 0L
 let mutable c = 0L
@@ -18,4 +20,6 @@ while i < 100000000L do
         d <- d + 1L
     i <- i + 1L
 
+sw.Stop()
+System.Console.Error.WriteLine("TIME_MS=" + (sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture)))
 printfn "%d %d %d %d" a b c d

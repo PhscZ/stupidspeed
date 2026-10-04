@@ -4,6 +4,7 @@
 // Writes out.bin: the 1 MiB pattern 0,1,2,...,255 repeated 4096 times, written 50 times,
 // then flushed and fsynced. Prints the number of bytes the writes reported.
 
+$__t0 = hrtime(true);
 $pattern = '';
 for ($i = 0; $i < 256; $i++) {
     $pattern .= chr($i);
@@ -21,4 +22,6 @@ fflush($handle);
 fsync($handle);
 fclose($handle);
 
+$__t1 = hrtime(true);
+fwrite(STDERR, sprintf("TIME_MS=%.3f\n", ($__t1 - $__t0) / 1e6));
 echo $written, "\n";

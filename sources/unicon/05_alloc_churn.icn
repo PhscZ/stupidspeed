@@ -2,8 +2,11 @@
 # build: unicon -s 05_alloc_churn.icn    run: 05_alloc_churn.exe
 # Ten million short-lived 64-element lists. `slots` keeps the buffer reachable, so the one
 # it replaces becomes garbage, which is what puts pressure on Unicon's collector.
+# timing: &time is Unicon's wall clock in milliseconds since midnight, and &errout is
+#         the standard error stream, so TIME_MS goes to stderr and stdout is unchanged.
 
 procedure main()
+    ssT0 := &time
     total := 0
     slots := list(256)
     every i := 0 to 9999999 do {
@@ -12,5 +15,6 @@ procedure main()
         total +:= buf[1]
         slots[(i % 256) + 1] := buf
     }
+    write(&errout, "TIME_MS=", &time - ssT0)
     write(total)
 end

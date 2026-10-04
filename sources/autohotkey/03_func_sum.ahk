@@ -11,9 +11,14 @@
 ; note: value stays inside the small range the whole way (it ends at 100000000).
 ; note: the full run takes about 35 s on this machine, which is the 100000000 interpreted
 ;       calls and nothing else (a pass on the same shared host measured 102 s).
+; timing: A_TickCount is the interpreter's own millisecond clock (GetTickCount, so about
+;       15 ms resolution); TIME_MS is written to stderr with FileAppend(..., "**") and
+;       stdout is unchanged.
 #Requires AutoHotkey v2.0
 #SingleInstance Off
 #NoTrayIcon
+
+t0 := A_TickCount
 
 #Include "03_func_sum_add_one.ahk"
 
@@ -22,4 +27,5 @@ value := 0
 Loop 100000000
     value := AddOne(value)
 
+FileAppend("TIME_MS=" (A_TickCount - t0) "`n", "**")
 FileAppend(value "`n", "*")

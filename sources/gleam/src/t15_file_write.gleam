@@ -16,6 +16,7 @@
 
 import gleam/bit_array
 import gleam/erlang/atom
+import gleam/float
 import gleam/int
 import gleam/io
 
@@ -36,7 +37,11 @@ fn file_close(fd: Fd) -> atom.Atom
 @external(erlang, "binary", "copy")
 fn binary_copy(subject: BitArray, times: Int) -> BitArray
 
+@external(erlang, "erlang", "monotonic_time")
+fn monotonic_time(unit: atom.Atom) -> Int
+
 pub fn main() {
+  let t0 = monotonic_time(atom.create("microsecond"))
   let buf = binary_copy(cycle(0, <<>>), 4096)
   let modes = [atom.create("write"), atom.create("raw"), atom.create("binary")]
   case file_open("out.bin", modes) {
@@ -44,6 +49,8 @@ pub fn main() {
       write(fd, buf, 50)
       check(file_datasync(fd))
       check(file_close(fd))
+      let ms = int.to_float(monotonic_time(atom.create("microsecond")) - t0) /. 1000.0
+      io.println_error("TIME_MS=" <> float.to_string(ms))
       io.println(int.to_string(50 * 1048576))
     }
     Error(_) -> panic as "cannot open out.bin"

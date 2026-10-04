@@ -8,6 +8,7 @@
 # them and prints the right total without running anything in parallel. That is the disposition
 # the Simula row carries for its cooperative PROCESS objects; the native Ruby rows keep Thread.
 
+_t0 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 def work(t)
   acc = 0
   i = t * 25_000_000
@@ -40,4 +41,6 @@ until running.empty?
   end
 end
 
+_t1 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+$stderr.write("TIME_MS=%.3f\n" % ((_t1 - _t0) * 1000.0))
 puts total

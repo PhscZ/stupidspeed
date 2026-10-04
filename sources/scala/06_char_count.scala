@@ -11,6 +11,7 @@
 
 object Main {
   def main(args: Array[String]): Unit = {
+    val __t0 = System.nanoTime()
     val text = "abcdefghij" * 10000000
     var count = 0L
     var i = 0
@@ -23,6 +24,7 @@ object Main {
       else ()
       i += 1
     }
+    System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
     println(count)
   }
 }

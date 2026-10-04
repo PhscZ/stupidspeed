@@ -8,17 +8,21 @@
 
 module main
 
+import time
+
 @[noinline]
 fn add_one(n i64) i64 {
 	return n + 1
 }
 
 fn main() {
+	t0 := time.now()
 	mut value := i64(0)
 
 	for _ in 0 .. 100000000 {
 		value = add_one(value)
 	}
 
+	eprintln('TIME_MS=${f64(time.since(t0).microseconds()) / 1000.0:.3f}')
 	println(value)
 }

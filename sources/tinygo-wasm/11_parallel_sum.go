@@ -10,8 +10,17 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"sync"
+	"time"
 )
+
+// timing: time.Now is Go's monotonic clock; TIME_MS goes to stderr and stdout is unchanged.
+var ssT0 time.Time
+
+func ssReport() {
+	fmt.Fprintf(os.Stderr, "TIME_MS=%.3f\n", float64(time.Since(ssT0).Nanoseconds())/1e6)
+}
 
 // work does task 02's switch over one fixed quarter of the range.
 func work(t uint64) uint64 {
@@ -34,6 +43,7 @@ func work(t uint64) uint64 {
 }
 
 func main() {
+	ssT0 = time.Now()
 	partials := make([]uint64, 4)
 	var wg sync.WaitGroup
 	for t := range uint64(4) {
@@ -49,5 +59,6 @@ func main() {
 	for _, p := range partials {
 		total += p
 	}
+	ssReport()
 	fmt.Println(total)
 }

@@ -8,12 +8,21 @@
 
 module Main where
 
+import Control.Exception (evaluate)
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Char8 as BC
+import Data.Time.Clock.POSIX (getPOSIXTime)
 import Data.Word
+import System.IO (stderr)
+import Text.Printf (hPrintf)
 
 main :: IO ()
 main = do
+  t0 <- getPOSIXTime
   let text = B.concat (replicate 10000000 (BC.pack "abcdefghij"))
       h = 104 :: Word8
-  print (B.length (B.filter (== h) text))
+  !n <- evaluate (B.length (B.filter (== h) text))
+  t1 <- getPOSIXTime
+  let !ms = (realToFrac (t1 - t0) :: Double) * 1000
+  hPrintf stderr "TIME_MS=%.3f\n" ms
+  print n

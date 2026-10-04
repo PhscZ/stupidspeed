@@ -9,6 +9,12 @@
 -- note: the slot array is ARRAY [detachable SPECIAL [NATURAL_8]] because the array is
 --       created empty and filled in; ARRAY is 1-based, hence the + 1 on the slot index.
 -- note: the total is 1274991808, past INTEGER's 2^31, so it is INTEGER_64.
+-- timing: TIME.make_now plus the hour/minute/second/millisecond fields is Eiffel's own
+--         clock, read in ss_report and reported as whole milliseconds; io.error is
+--         STD_FILES' standard error stream, so TIME_MS goes to stderr and stdout is
+--         unchanged. Instrumented by inspection: EiffelStudio is not installed on this
+--         machine, so this row's timing is unverified.
+
 class
 	T05_ALLOC_CHURN
 
@@ -16,6 +22,33 @@ create
 	make
 
 feature -- Benchmark
+
+	ss_t0: TIME
+
+	ss_now_ms (t: TIME): INTEGER_64
+		do
+			Result := (((t.hour * 60) + t.minute) * 60 + t.second) * 1000 + t.millisecond
+		end
+
+	ss_start
+		do
+			create ss_t0.make_now
+		end
+
+	ss_report
+		local
+			t: TIME
+			ms: INTEGER_64
+		do
+			create t.make_now
+			ms := ss_now_ms (t) - ss_now_ms (ss_t0)
+			if ms < 0 then
+				ms := ms + 86400000
+			end
+			io.error.put_string ("TIME_MS=")
+			io.error.put_integer_64 (ms)
+			io.error.put_new_line
+		end
 
 	make
 		local
@@ -25,6 +58,7 @@ feature -- Benchmark
 			i: INTEGER_64
 			slot: INTEGER
 		do
+			ss_start
 			create slots.make_filled (Void, 1, 256)
 
 			from
@@ -41,6 +75,7 @@ feature -- Benchmark
 				i := i + 1
 			end
 
+			ss_report
 			io.put_integer_64 (total)
 			io.put_new_line
 		end

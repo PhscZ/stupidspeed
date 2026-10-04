@@ -14,9 +14,13 @@ import kotlinx.cinterop.usePinned
 import platform.posix.fclose
 import platform.posix.fopen
 import platform.posix.fread
+import kotlin.time.TimeSource
+import platform.posix.fputs
+import platform.posix.stderr
 
 @OptIn(ExperimentalForeignApi::class)
 fun main() {
+    val __t0 = TimeSource.Monotonic.markNow()
     val buf = ByteArray(1024 * 1024)
     val file = fopen("data.bin", "rb")
     if (file == null) return
@@ -31,5 +35,6 @@ fun main() {
         }
     }
     fclose(file)
+    fputs("TIME_MS=" + __t0.elapsedNow().inWholeNanoseconds / 1000000.0 + "\n", stderr)
     println(total % 4294967296L)
 }

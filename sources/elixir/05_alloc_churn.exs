@@ -15,14 +15,21 @@
 # becomes garbage -- the same reachability line the C and Java rows draw. The slots are the
 # process dictionary, which is the BEAM's mutable state. The total adds v, the value written.
 defmodule T05 do
-  def run, do: churn(0, 0)
+  def run do
+    t0 = System.monotonic_time(:microsecond)
+    churn(0, 0, t0)
+  end
 
-  defp churn(i, total) when i >= 10_000_000, do: IO.puts(total)
+  defp churn(i, total, t0) when i >= 10_000_000 do
+    result = total
+    IO.puts(:stderr, "TIME_MS=#{(System.monotonic_time(:microsecond) - t0) / 1000}")
+    IO.puts(result)
+  end
 
-  defp churn(i, total) do
+  defp churn(i, total, t0) do
     v = rem(i, 256)
     Process.put({:slot, v}, :binary.copy(<<v>>, 64))
-    churn(i + 1, total + v)
+    churn(i + 1, total + v, t0)
   end
 end
 

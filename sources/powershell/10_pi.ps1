@@ -4,6 +4,15 @@
 #       ship with. BigInteger's "/" truncates toward zero; that was checked against the reference
 #       spigot and produces the same digits, so no floor-division helper is needed.
 # note: the leading 3 is emitted first and counts as the first of the 1000 digits that are summed.
+# timing: [System.Diagnostics.Stopwatch]::GetTimestamp() is the high-resolution counter and
+#         GetTimestamp()/Frequency converts it to seconds; TIME_MS goes to stderr with
+#         [Console]::Error.WriteLine and stdout is unchanged.
+$ssFreq = [System.Diagnostics.Stopwatch]::Frequency
+$ssT0 = [System.Diagnostics.Stopwatch]::GetTimestamp()
+function Write-SsTime {
+    $ms = ([System.Diagnostics.Stopwatch]::GetTimestamp() - $ssT0) * 1000.0 / $ssFreq
+    [Console]::Error.WriteLine("TIME_MS=" + $ms.ToString('F3', [System.Globalization.CultureInfo]::InvariantCulture))
+}
 
 [System.Numerics.BigInteger]$q = 1
 [System.Numerics.BigInteger]$r = 0
@@ -43,4 +52,5 @@ while ($digits -lt 1000) {
     }
 }
 
+Write-SsTime
 Write-Output $sum

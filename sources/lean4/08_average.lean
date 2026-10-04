@@ -36,5 +36,12 @@ def exactFloat (x : Float) : String :=
       let fracPart := (padded.drop (padded.length - places)).toString.dropEndWhile '0'
       if fracPart.isEmpty then sign ++ intPart else sign ++ intPart ++ "." ++ fracPart
 
+@[noinline] def forceIO {α : Type} (x : Unit → α) : IO α := IO.lazyPure x
+
 def main : IO Unit := do
-  IO.println (exactFloat (avg 100000000 / 100000000.0))
+  let t0 ← IO.monoNanosNow
+  let answer ← forceIO (fun _ => exactFloat (avg 100000000 / 100000000.0))
+  let t1 ← IO.monoNanosNow
+  let ms : Float := (t1 - t0).toFloat / 1000000.0
+  IO.eprintln s!"TIME_MS={ms}"
+  IO.println answer

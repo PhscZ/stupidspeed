@@ -7,6 +7,19 @@
 ;;       Racket row makes; a vector of vectors would add a pointer chase per element.
 ;; note: the sum of C fits a fixnum (999000000), so the accumulation stays on the fixnum
 ;;       fast path.
+;; timing: (real-time) is Chez's monotonic clock in milliseconds since system start-up;
+;;         TIME_MS is written to time.txt, the contract's fallback, because Chez's
+;;         console-error-port is the console and this host sends the console to stdout
+;;         when it is redirected; stdout is unchanged.
+(define ss-t0 (real-time))
+(define (ss-report)
+  (let ([p (open-file-output-port "time.txt" (file-options no-fail)
+                                  (buffer-mode block))])
+    (put-bytevector p (string->utf8
+                       (string-append "TIME_MS="
+                                      (number->string (- (real-time) ss-t0))
+                                      "\n")))
+    (close-port p)))
 
 (define n 1000)
 (define elems (* n n))
@@ -35,5 +48,5 @@
 
 (let loop ([k 0] [total 0])
   (if (fx= k elems)
-      (begin (display total) (newline))
+      (begin (ss-report) (display total) (newline))
       (loop (fx+ k 1) (fx+ total (fxvector-ref c k)))))

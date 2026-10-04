@@ -8,6 +8,13 @@
 //       String() prints it as plain digits.
 // note: the whole task measures 1.1 s to 5.3 s on this shared host: 1000000 indexed stores
 //       and 1000000 indexed reads, plus process start-up.
+
+// timing: new Date().getTime() is the WSH clock in milliseconds (the system timer, so about
+//         15 ms resolution); TIME_MS goes to stderr with WScript.StdErr and stdout is unchanged.
+var ssT0 = new Date().getTime();
+function ssReport() {
+    WScript.StdErr.Write("TIME_MS=" + (new Date().getTime() - ssT0) + "\r\n");
+}
 var n = 1000000, arr = new Array(n), i, total = 0;
 
 for (i = 0; i < n; i++) {
@@ -18,4 +25,5 @@ for (i = 0; i < n; i++) {
     total += arr[i];
 }
 
+ssReport();
 WScript.Echo(String(total));

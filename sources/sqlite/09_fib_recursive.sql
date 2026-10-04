@@ -13,6 +13,14 @@
 -- note: the frontier of the breadth-first walk peaks at about a million rows (the level
 --       where the tree is widest), so the CTE's queue stays small while the total is 331
 --       million rows.
+-- timing: the clock is SQLite's own julianday('now') in milliseconds. The timer starts at
+--       the entry of the script's own body and stops immediately before the final output
+--       statement, so the answer is materialised into a one-row table first and the timed
+--       region still contains all of the work.
+CREATE TABLE __t0(t INTEGER);
+INSERT INTO __t0 VALUES (cast(julianday('now')*86400000 as integer));
+
+CREATE TABLE __res AS
 WITH RECURSIVE t(n) AS (
     SELECT 40
     UNION ALL
@@ -20,4 +28,10 @@ WITH RECURSIVE t(n) AS (
     UNION ALL
     SELECT n - 2 FROM t WHERE n >= 2
 )
-SELECT sum(n) FROM t WHERE n < 2;
+SELECT sum(n) AS v FROM t WHERE n < 2;
+
+.output stderr
+SELECT printf('TIME_MS=%d', cast(julianday('now')*86400000 as integer) - (SELECT t FROM __t0));
+.output stdout
+
+SELECT * FROM __res;

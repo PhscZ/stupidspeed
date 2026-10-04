@@ -4,6 +4,7 @@
 # loop, so the build is not the benchmark. The scan walks the string one character at
 # a time with string index.
 
+set __t0 [clock microseconds]
 set block [string repeat "abcdefghij" 1000]
 set text [string repeat $block 10000]
 
@@ -20,4 +21,6 @@ for {set i 0} {$i < $len} {incr i} {
     }
 }
 
+set __t1 [clock microseconds]
+puts stderr [format "TIME_MS=%.3f" [expr {($__t1 - $__t0) / 1000.0}]]
 puts $count
