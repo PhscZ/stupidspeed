@@ -1,0 +1,38 @@
+
+#ifndef _C2_he53_
+#define _C2_he53_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern void F71_980(EIF_REFERENCE);
+extern EIF_BOOLEAN F71_982(EIF_REFERENCE);
+extern void F71_985(EIF_REFERENCE, EIF_INTEGER_32);
+extern void F71_986(EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER_32);
+extern void F71_987(EIF_REFERENCE, EIF_CHARACTER_8);
+extern EIF_BOOLEAN F71_990(EIF_REFERENCE);
+extern EIF_NATURAL_32 F71_998(EIF_REFERENCE);
+RTOSHF (EIF_REFERENCE,1003)
+static EIF_REFERENCE F71_1003_body(EIF_REFERENCE);
+extern EIF_REFERENCE F71_1003(EIF_REFERENCE);
+extern void EIF_Minit53(void);
+extern EIF_BOOLEAN F781_4935(EIF_REFERENCE, EIF_CHARACTER_8);
+extern EIF_NATURAL_8 F707_3653(EIF_REFERENCE);
+extern EIF_BOOLEAN F707_3658(EIF_REFERENCE);
+extern EIF_BOOLEAN F725_4183(EIF_REFERENCE);
+extern void F69_955(EIF_REFERENCE);
+extern EIF_BOOLEAN F69_956(EIF_REFERENCE, EIF_NATURAL_64, EIF_NATURAL_64, EIF_INTEGER_32, EIF_INTEGER_32);
+extern void F781_4902(EIF_REFERENCE, EIF_REFERENCE);
+extern char *(*R3486[])();
+extern char *(*R3449[])();
+extern char *(*R3683[])();
+extern char *(*R3603[])();
+extern long O3685[];
+extern long O3605[];
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

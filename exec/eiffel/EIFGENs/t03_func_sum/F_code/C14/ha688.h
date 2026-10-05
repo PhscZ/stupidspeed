@@ -1,0 +1,23 @@
+
+#ifndef _C14_ha688_
+#define _C14_ha688_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern EIF_INTEGER_32 F236_2081(EIF_REFERENCE);
+extern EIF_INTEGER_32 F236_2082(EIF_REFERENCE);
+extern EIF_BOOLEAN F236_2084(EIF_REFERENCE);
+extern void F236_2085(EIF_REFERENCE);
+extern EIF_REFERENCE F236_2086(EIF_REFERENCE);
+extern void EIF_Minit688(void);
+extern EIF_INTEGER_32 F598_2972(EIF_REFERENCE, EIF_INTEGER_32);
+extern EIF_BOOLEAN F220_2067(EIF_REFERENCE);
+extern EIF_INTEGER_32 F598_2971(EIF_REFERENCE, EIF_INTEGER_32);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

@@ -1,0 +1,18 @@
+This is SBCL 2.6.9, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+[undoing binding stack and other enclosing state... done]
+[performing final GC... done]
+[defragmenting immobile space... (inst,code,sym)=782+20848+24687... done]
+[saving current Lisp image into prog.exe:
+writing 65536 bytes from the linkage space at 0000000fffb00000
+writing 1306624 bytes from the fixedobj space at 0000000020000000
+writing 2832 bytes from the static space at 0000000050000000
+writing 13041664 bytes from the dynamic space at 0000001100000000
+writing 9118096 bytes from the read-only space at 00000010ff740000
+writing 12290048 bytes from the text space at 0000001000000000
+done]

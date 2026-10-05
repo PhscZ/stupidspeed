@@ -1,0 +1,2 @@
+C:\stupidspeed\exec\csharp\nativeaot\13_matrix_mul\bin\Release\net8.0\win-x64\publish\13_matrix_mul.exe
+C:\stupidspeed\exec\csharp\nativeaot\13_matrix_mul\bin\Release\net8.0\win-x64\publish\13_matrix_mul.pdb

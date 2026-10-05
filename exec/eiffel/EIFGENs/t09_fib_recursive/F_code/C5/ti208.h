@@ -1,0 +1,26 @@
+
+#ifndef _C5_ti208_
+#define _C5_ti208_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern void F794_5296(EIF_REFERENCE, EIF_INTEGER_32, EIF_INTEGER_32, EIF_INTEGER_32);
+extern void F794_5298(EIF_REFERENCE);
+extern EIF_BOOLEAN F794_5306(EIF_REFERENCE, EIF_REFERENCE);
+extern void EIF_Minit208(void);
+extern void F7_205(EIF_REFERENCE);
+extern void F55_804(EIF_REFERENCE, EIF_INTEGER_32);
+extern EIF_INTEGER_32 F7_214(EIF_REFERENCE);
+extern EIF_INTEGER_32 F7_213(EIF_REFERENCE);
+extern void F55_805(EIF_REFERENCE, EIF_INTEGER_32);
+extern void F55_803(EIF_REFERENCE, EIF_INTEGER_32);
+extern EIF_INTEGER_32 F7_212(EIF_REFERENCE);
+extern EIF_INTEGER_32 F7_215(EIF_REFERENCE);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

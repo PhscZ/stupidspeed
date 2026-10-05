@@ -1,0 +1,21 @@
+
+#ifndef _C6_to282_
+#define _C6_to282_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern void F144_1884(EIF_REFERENCE, EIF_INTEGER_32);
+extern void F144_1885(EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER_32);
+extern void F144_1891(EIF_REFERENCE, EIF_REFERENCE);
+extern void EIF_Minit282(void);
+extern char *(*R2490[])();
+extern EIF_TYPE_INDEX Y1710[];
+extern EIF_TYPE_INDEX *Y1710_gen_type [];
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

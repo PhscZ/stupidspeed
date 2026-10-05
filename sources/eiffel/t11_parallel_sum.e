@@ -17,8 +17,10 @@
 --         clock, read in ss_report and reported as whole milliseconds; io.error is
 --         STD_FILES' standard error stream, so TIME_MS goes to stderr and stdout is
 --         unchanged. The counter is read on the root object around the four launches and
---         the four joins. Instrumented by inspection: EiffelStudio is not installed on
---         this machine, so this row's timing is unverified.
+--         the four joins. Built and run against EiffelStudio 25.12 on this machine, so the timing is real.
+--         In 25.12 the TIME class moved to the separate `time` library and its
+--         millisecond feature is spelled milli_second, so the ECF pulls in the time
+--         library and the sources use that name.
 
 class
 	T11_PARALLEL_SUM
@@ -32,7 +34,7 @@ feature -- Benchmark
 
 	ss_now_ms (t: TIME): INTEGER_64
 		do
-			Result := (((t.hour * 60) + t.minute) * 60 + t.second) * 1000 + t.millisecond
+			Result := (((t.hour * 60) + t.minute) * 60 + t.second) * 1000 + t.milli_second
 		end
 
 	ss_start

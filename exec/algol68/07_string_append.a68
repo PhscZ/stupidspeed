@@ -1,0 +1,23 @@
+# task 07 string_append — expected output: 250000 #
+# build: none (interpreter)    run: a68g 07_string_append.a68 #
+# note: a STRING is a FLEX ROW CHAR, and +:= allocates a new row and copies the old #
+# note: one, so the loop is quadratic by design, the same shape as the C row realloc #
+# note: plus strcat. Left at 250000 because ten times the count is a hundred times #
+# note: the work. Nothing is cut off for being slow; this is the row's second slowest #
+# note: task after task 10. #
+# timing: clock is a68g's processor-time clock, in seconds, as a REAL; for this #
+# note: single-threaded interpreter that is the program's own work, which is what the #
+# note: contract brackets. TIME_MS is written to stand error as a whole number of #
+# note: milliseconds, and stdout is unchanged. #
+
+REAL tim0 = clock;
+
+STRING text := "";
+
+FOR i FROM 1 TO 250000 DO
+  text +:= "x"
+OD;
+
+INT tms = ENTIER(1000.0 * (clock - tim0) + 0.5);
+putf(stand error, ($g$, "TIME_MS=" + whole(tms, 0), $l$));
+print((whole(UPB text, 0), newline))

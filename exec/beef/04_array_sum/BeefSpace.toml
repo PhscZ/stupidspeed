@@ -1,0 +1,5 @@
+FileVersion = 1
+Projects = {04_array_sum = {Path = "."}}
+
+[Workspace]
+StartupProject = "04_array_sum"

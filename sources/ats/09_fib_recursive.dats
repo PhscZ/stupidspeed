@@ -10,8 +10,8 @@
 
 // timing: ss_now_ms() is the monotonic clock of the C reference row (QueryPerformanceCounter on
 //         Windows, clock_gettime(CLOCK_MONOTONIC) elsewhere) and ss_report() writes TIME_MS to
-//         stderr, so stdout is unchanged. Instrumented by inspection: there is no ATS toolchain on
-//         this machine, so this row's timing is unverified.
+//         stderr, so stdout is unchanged. Built and run against ATS 0.4.2 on this machine, so the timing is real.
+//         The `int` counts in task 10 needed a syntax pass for 0.4.2 (see BUILD.md).
 %{^
 #include <stdio.h>
 #if defined(_WIN32)
@@ -43,7 +43,7 @@ fun fib (n: int): int =
 implement main0 () = let
   val ss_t0 = $extfcall (double, "ss_now_ms")
   val ss_r = fib (40)
-  val () = $extfcall (void, "ss_report", $extfcall (double, "ss_now_ms") - ss_t0)
 in
+  $extfcall (void, "ss_report", $extfcall (double, "ss_now_ms") - ss_t0);
   $extfcall (void, "printf", "%d\n", ss_r)
 end

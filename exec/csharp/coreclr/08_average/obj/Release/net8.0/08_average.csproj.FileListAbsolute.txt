@@ -1,0 +1,15 @@
+C:\stupidspeed\exec\csharp\coreclr\08_average\bin\Release\net8.0\08_average.exe
+C:\stupidspeed\exec\csharp\coreclr\08_average\bin\Release\net8.0\08_average.deps.json
+C:\stupidspeed\exec\csharp\coreclr\08_average\bin\Release\net8.0\08_average.runtimeconfig.json
+C:\stupidspeed\exec\csharp\coreclr\08_average\bin\Release\net8.0\08_average.dll
+C:\stupidspeed\exec\csharp\coreclr\08_average\bin\Release\net8.0\08_average.pdb
+C:\stupidspeed\exec\csharp\coreclr\08_average\obj\Release\net8.0\08_average.GeneratedMSBuildEditorConfig.editorconfig
+C:\stupidspeed\exec\csharp\coreclr\08_average\obj\Release\net8.0\08_average.AssemblyInfoInputs.cache
+C:\stupidspeed\exec\csharp\coreclr\08_average\obj\Release\net8.0\08_average.AssemblyInfo.cs
+C:\stupidspeed\exec\csharp\coreclr\08_average\obj\Release\net8.0\08_average.csproj.CoreCompileInputs.cache
+C:\stupidspeed\exec\csharp\coreclr\08_average\obj\Release\net8.0\08_average.sourcelink.json
+C:\stupidspeed\exec\csharp\coreclr\08_average\obj\Release\net8.0\08_average.dll
+C:\stupidspeed\exec\csharp\coreclr\08_average\obj\Release\net8.0\refint\08_average.dll
+C:\stupidspeed\exec\csharp\coreclr\08_average\obj\Release\net8.0\08_average.pdb
+C:\stupidspeed\exec\csharp\coreclr\08_average\obj\Release\net8.0\08_average.genruntimeconfig.cache
+C:\stupidspeed\exec\csharp\coreclr\08_average\obj\Release\net8.0\ref\08_average.dll

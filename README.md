@@ -16,7 +16,7 @@ the second is disposable. See the end of `BUILD.md` for what is in each.
 ## Results
 
 One row per toolchain, one column per task. The column headings are the task numbers, and
-the task names are the section headings under [Tasks](#tasks). All 142 toolchains, empty and
+the task names are the section headings under [Tasks](#tasks). All 141 toolchains, empty and
 ready to fill in.
 
 A cell holds the median of the 5 timed runs, in milliseconds. `WRONG` is an output that did
@@ -163,7 +163,6 @@ kept alongside the median in the raw results, not in this table.
 | DuckDB | duckdb |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Unicon | unicon |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Haskell | ghc |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| Haskell | runghc |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Forth | gforth |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Euphoria | eui |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Lobster | lobster |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -1035,20 +1034,17 @@ DOS build, whose `FASM.EXE` is a raw MZ image Windows refuses to run, and `fasmw
 Windows one — use its `FASM.EXE`, not the `FASMW.EXE` beside it, which is the GUI IDE and blocks
 waiting for a window.
 
-**Six rows hold a language fixed and move one stage of the pipeline**, and they are worth reading
-as pairs rather than alone: Erlang compiled with `erlc` against the same language under `escript`,
-which compiles on every run; Julia under `--compile=min -O0` against the default JIT; Haskell under
-`runghc` against `ghc -O2 -threaded`; R with `R_ENABLE_JIT=0` against R's byte-code compiler; and
-OCaml with `ocamlc` bytecode against `ocamlopt`. Three findings come out of the set. The cost of
-compiling on every run is large and measurable — Haskell's task 01 goes from under a second to
-**1005 s**, Julia's from about 20 ms to **438 s**, and R's from 82 s to 362 s, a 4.4x. Two of the
-interpreted halves **lose task 11's parallelism entirely**: `runghc`'s RTS is built non-threaded, so
-`+RTS -N4` is rejected with *the flag -N4 requires the program to be built with -threaded* and
-`forkIO` cannot reach a second capability, while Julia needs `-t4` or its four `Threads.@threads`
-workers share one thread — with `-t4` it is 151 s against a 497 s single-thread baseline. And the R
-row shows that the right lever is the **environment variable rather than the API**:
-`compiler::enableJIT(0)` does not propagate to task 11's PSOCK workers, which still report level 3,
-while `R_ENABLE_JIT=0` does.
+**Four rows hold a language fixed and move one stage of the pipeline**, and they are worth
+reading as pairs rather than alone: Erlang compiled with `erlc` against the same language under
+`escript`, which compiles on every run; Julia under `--compile=min -O0` against the default JIT; R
+with `R_ENABLE_JIT=0` against R's byte-code compiler; and OCaml with `ocamlc` bytecode against
+`ocamlopt`. Two findings come out of the set. The cost of compiling on every run is large and
+measurable — Julia's task 01 goes from about 20 ms to **438 s**, and R's from 82 s to 362 s, a
+4.4x. One of the interpreted halves **loses task 11's parallelism entirely**: Julia needs `-t4` or
+its four `Threads.@threads` workers share one thread — with `-t4` it is 151 s against a 497 s
+single-thread baseline. And the R row shows that the right lever is the **environment variable
+rather than the API**: `compiler::enableJIT(0)` does not propagate to task 11's PSOCK workers,
+which still report level 3, while `R_ENABLE_JIT=0` does.
 
 ## Rules
 
@@ -1523,7 +1519,7 @@ nothing else.
 | SQLite | sqlite3 |
 | DuckDB | duckdb |
 | Unicon | unicon |
-| Haskell | ghc, runghc |
+| Haskell | ghc |
 | Forth | gforth |
 | Euphoria | eui |
 | Lobster | lobster |

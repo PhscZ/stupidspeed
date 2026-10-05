@@ -1,0 +1,16 @@
+
+#ifndef _C2_mi77_
+#define _C2_mi77_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern EIF_INTEGER_32 F96_1173(EIF_REFERENCE);
+extern void EIF_Minit77(void);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

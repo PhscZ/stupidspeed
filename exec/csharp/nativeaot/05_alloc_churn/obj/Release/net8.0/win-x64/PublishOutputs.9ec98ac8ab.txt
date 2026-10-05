@@ -1,0 +1,2 @@
+C:\stupidspeed\exec\csharp\nativeaot\05_alloc_churn\bin\Release\net8.0\win-x64\publish\05_alloc_churn.exe
+C:\stupidspeed\exec\csharp\nativeaot\05_alloc_churn\bin\Release\net8.0\win-x64\publish\05_alloc_churn.pdb

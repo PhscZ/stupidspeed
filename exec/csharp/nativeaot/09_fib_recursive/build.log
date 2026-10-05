@@ -1,0 +1,5 @@
+  Determinando os projetos a serem restaurados...
+  C:\stupidspeed\exec\csharp\nativeaot\09_fib_recursive\09_fib_recursive.csproj restaurado (em 564 ms).
+  09_fib_recursive -> C:\stupidspeed\exec\csharp\nativeaot\09_fib_recursive\bin\Release\net8.0\win-x64\09_fib_recursive.dll
+  Generating native code
+  09_fib_recursive -> C:\stupidspeed\exec\csharp\nativeaot\09_fib_recursive\bin\Release\net8.0\win-x64\publish\

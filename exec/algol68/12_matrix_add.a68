@@ -1,0 +1,37 @@
+# task 12 matrix_add — expected output: 999000000 #
+# build: none (interpreter)    run: a68g 12_matrix_add.a68 #
+# note: three 1000 by 1000 rows of INT, indexed from 0 like the C row so that the same #
+# note: values are built and the same sum comes out. The sum of C fits the 32-bit INT. #
+# timing: clock is a68g's processor-time clock, in seconds, as a REAL; for this #
+# note: single-threaded interpreter that is the program's own work, which is what the #
+# note: contract brackets. TIME_MS is written to stand error as a whole number of #
+# note: milliseconds, and stdout is unchanged. #
+
+REAL tim0 = clock;
+
+[0:999, 0:999] INT a, b, c;
+
+FOR i FROM 0 TO 999 DO
+  FOR j FROM 0 TO 999 DO
+    a[i, j] := i + j;
+    b[i, j] := i - j
+  OD
+OD;
+
+FOR i FROM 0 TO 999 DO
+  FOR j FROM 0 TO 999 DO
+    c[i, j] := a[i, j] + b[i, j]
+  OD
+OD;
+
+INT total := 0;
+
+FOR i FROM 0 TO 999 DO
+  FOR j FROM 0 TO 999 DO
+    total +:= c[i, j]
+  OD
+OD;
+
+INT tms = ENTIER(1000.0 * (clock - tim0) + 0.5);
+putf(stand error, ($g$, "TIME_MS=" + whole(tms, 0), $l$));
+print((whole(total, 0), newline))

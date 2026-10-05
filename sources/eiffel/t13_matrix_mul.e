@@ -9,8 +9,10 @@
 -- timing: TIME.make_now plus the hour/minute/second/millisecond fields is Eiffel's own
 --         clock, read in ss_report and reported as whole milliseconds; io.error is
 --         STD_FILES' standard error stream, so TIME_MS goes to stderr and stdout is
---         unchanged. Instrumented by inspection: EiffelStudio is not installed on this
---         machine, so this row's timing is unverified.
+--         unchanged. Built and run against EiffelStudio 25.12 on this machine, so the timing is real.
+--         In 25.12 the TIME class moved to the separate `time` library and its
+--         millisecond feature is spelled milli_second, so the ECF pulls in the time
+--         library and the sources use that name.
 
 class
 	T13_MATRIX_MUL
@@ -24,7 +26,7 @@ feature -- Benchmark
 
 	ss_now_ms (t: TIME): INTEGER_64
 		do
-			Result := (((t.hour * 60) + t.minute) * 60 + t.second) * 1000 + t.millisecond
+			Result := (((t.hour * 60) + t.minute) * 60 + t.second) * 1000 + t.milli_second
 		end
 
 	ss_start

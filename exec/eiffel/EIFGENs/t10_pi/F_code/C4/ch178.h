@@ -1,0 +1,24 @@
+
+#ifndef _C4_ch178_
+#define _C4_ch178_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern EIF_INTEGER_32 F765_4425(EIF_REFERENCE);
+extern EIF_NATURAL_32 F765_4426(EIF_REFERENCE);
+extern EIF_BOOLEAN F765_4430(EIF_REFERENCE, EIF_REFERENCE);
+extern EIF_BOOLEAN F765_4431(EIF_REFERENCE, EIF_REFERENCE);
+extern EIF_CHARACTER_32 F765_4432(EIF_REFERENCE, EIF_NATURAL_32);
+extern void F765_4437(EIF_REFERENCE, EIF_CHARACTER_32);
+extern EIF_CHARACTER_8 F765_4441(EIF_REFERENCE);
+extern EIF_BOOLEAN F765_4448(EIF_REFERENCE);
+extern void EIF_Minit178(void);
+extern char *(*R3308[])();
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

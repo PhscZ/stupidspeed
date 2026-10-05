@@ -17,8 +17,8 @@
 
 // timing: ss_now_ms() is the monotonic clock of the C reference row (QueryPerformanceCounter on
 //         Windows, clock_gettime(CLOCK_MONOTONIC) elsewhere) and ss_report() writes TIME_MS to
-//         stderr, so stdout is unchanged. Instrumented by inspection: there is no ATS toolchain on
-//         this machine, so this row's timing is unverified.
+//         stderr, so stdout is unchanged. Built and run against ATS 0.4.2 on this machine, so the timing is real.
+//         The `int` counts in task 10 needed a syntax pass for 0.4.2 (see BUILD.md).
 %{^
 #include <stdio.h>
 #if defined(_WIN32)
@@ -52,23 +52,23 @@ staload UN = "prelude/SATS/unsafe.sats"
 
 #define BASE 1000000000LL
 
-typedef big = @{ limb = ptr, n = int, cap = int, neg = int }
+typedef big = @{ limb = ptr, n = llint, cap = llint, neg = llint }
 
 (* ****** ****** *)
 
 fun big_init (x: &big >> _): void = let
   val p = $extfcall (ptr, "malloc", i2sz (8 * 8))
 in
-  x.limb := p; x.n := 0; x.cap := 8; x.neg := 0
+  x.limb := p; x.n := 0LL; x.cap := 8LL; x.neg := 0LL
 end
 
-fun big_reserve (x: &big >> _, need: int): void =
+fun big_reserve (x: &big >> _, need: llint): void =
   if need <= x.cap then () else
     (let
-      var cap = x.cap
+      var cap: llint = x.cap
     in
-      while (cap < need) (cap := cap * 2);
-      x.limb := $extfcall (ptr, "realloc", x.limb, i2sz (cap * 8));
+      while (cap < need) (cap := cap * 2LL);
+      x.limb := $extfcall (ptr, "realloc", x.limb, $UN.cast{size_t} (cap * 8LL));
       x.cap := cap
     end)
 
@@ -76,22 +76,22 @@ fun big_trim (x: &big >> _): void = let
   var go: bool = true
 in
   while (go) (
-    if x.n <= 0 then go := false
-    else (if $UN.ptr0_get_at_int<llint> (x.limb, x.n - 1) = 0LL
-          then x.n := x.n - 1
+    if x.n <= 0LL then go := false
+    else (if $UN.ptr0_get_at_int<llint> (x.limb, $UN.cast{int} (x.n - 1LL)) = 0LL
+          then x.n := x.n - 1LL
           else go := false)
   );
-  if x.n = 0 then x.neg := 0 else ()
+  if x.n = 0LL then x.neg := 0LL else ()
 end
 
 fun big_set (x: &big >> _, v0: llint): void = let
-  var v = v0
+  var v: llint = v0
 in
-  x.n := 0; x.neg := 0;
+  x.n := 0LL; x.neg := 0LL;
   while (v > 0LL) (
-    big_reserve (x, x.n + 1);
-    $UN.ptr0_set_at_int<llint> (x.limb, x.n, v mod BASE);
-    x.n := x.n + 1;
+    big_reserve (x, x.n + 1LL);
+    $UN.ptr0_set_at_int<llint> (x.limb, $UN.cast{int} (x.n), v mod BASE);
+    x.n := x.n + 1LL;
     v := v / BASE
   )
 end
@@ -100,11 +100,11 @@ fun big_copy (dst: &big >> _, src: &big): void = let
 in
   big_reserve (dst, src.n);
   (let
-    var i: int = 0
+    var i: llint = 0LL
   in
     while (i < src.n) (
-      $UN.ptr0_set_at_int<llint> (dst.limb, i, $UN.ptr0_get_at_int<llint> (src.limb, i));
-      i := i + 1
+      $UN.ptr0_set_at_int<llint> (dst.limb, $UN.cast{int} (i), $UN.ptr0_get_at_int<llint> (src.limb, $UN.cast{int} (i)));
+      i := i + 1LL
     )
   end);
   dst.n := src.n;
@@ -116,16 +116,16 @@ end
 fun big_cmp_mag (a: &big, b: &big): int =
   if a.n != b.n then (if a.n < b.n then ~1 else 1) else
     (let
-      var i: int = a.n
+      var i: llint = a.n
       var res: int = 0
       var go: bool = true
     in
       while (go) (
-        if i <= 0 then go := false
-        else (i := i - 1;
+        if i <= 0LL then go := false
+        else (i := i - 1LL;
               (let
-                val x = $UN.ptr0_get_at_int<llint> (a.limb, i)
-                val y = $UN.ptr0_get_at_int<llint> (b.limb, i)
+                val x = $UN.ptr0_get_at_int<llint> (a.limb, $UN.cast{int} (i))
+                val y = $UN.ptr0_get_at_int<llint> (b.limb, $UN.cast{int} (i))
               in
                 if x != y then (res := (if x < y then ~1 else 1); go := false) else ()
               end))
@@ -134,37 +134,38 @@ fun big_cmp_mag (a: &big, b: &big): int =
     end)
 
 fun big_cmp (a: &big, b: &big): int =
-  if a.neg != b.neg then (if a.neg != 0 then ~1 else 1) else
+  if a.neg != b.neg then (if a.neg != 0LL then ~1 else 1) else
     (let
       val c = big_cmp_mag (a, b)
     in
-      if a.neg != 0 then ~c else c
+      if a.neg != 0LL then ~c else c
     end)
 
 (* ****** ****** *)
 
 fun big_add_mag (r: &big >> _, a: &big, b: &big): void = let
-  val m = (if a.n > b.n then a.n else b.n)
+  var m: llint = a.n
+  val _mx = (if b.n > m then m := b.n else ())
 in
-  big_reserve (r, m + 1);
+  big_reserve (r, m + 1LL);
   (let
-    var i: int = 0
+    var i: llint = 0LL
     var carry: llint = 0LL
   in
     while (i < m) (
       (let
-        var s = carry
+        var s: llint = carry
       in
-        (if i < a.n then s := s + $UN.ptr0_get_at_int<llint> (a.limb, i) else ());
-        (if i < b.n then s := s + $UN.ptr0_get_at_int<llint> (b.limb, i) else ());
+        (if i < a.n then s := s + $UN.ptr0_get_at_int<llint> (a.limb, $UN.cast{int} (i)) else ());
+        (if i < b.n then s := s + $UN.ptr0_get_at_int<llint> (b.limb, $UN.cast{int} (i)) else ());
         (if s >= BASE then (s := s - BASE; carry := 1LL) else carry := 0LL);
-        $UN.ptr0_set_at_int<llint> (r.limb, i, s)
+        $UN.ptr0_set_at_int<llint> (r.limb, $UN.cast{int} (i), s)
       end);
-      i := i + 1
+      i := i + 1LL
     );
-    $UN.ptr0_set_at_int<llint> (r.limb, m, carry);
-    r.n := m + (if carry != 0LL then 1 else 0);
-    r.neg := 0
+    $UN.ptr0_set_at_int<llint> (r.limb, $UN.cast{int} (m), carry);
+    r.n := m + (if carry != 0LL then 1LL else 0LL);
+    r.neg := 0LL
   end)
 end
 
@@ -173,21 +174,23 @@ fun big_sub_mag (r: &big >> _, a: &big, b: &big): void = let
 in
   big_reserve (r, a.n);
   (let
-    var i: int = 0
+    var i: llint = 0LL
     var borrow: llint = 0LL
   in
     while (i < a.n) (
       (let
-        val bi = (if i < b.n then $UN.ptr0_get_at_int<llint> (b.limb, i) else 0LL) + borrow
-        val ai = $UN.ptr0_get_at_int<llint> (a.limb, i)
+        var blimb: llint = 0LL
+        val _bl = (if i < b.n then blimb := $UN.ptr0_get_at_int<llint> (b.limb, $UN.cast{int} (i)) else ())
+        val bi = blimb + borrow
+        val ai = $UN.ptr0_get_at_int<llint> (a.limb, $UN.cast{int} (i))
       in
-        if ai >= bi then ($UN.ptr0_set_at_int<llint> (r.limb, i, ai - bi); borrow := 0LL)
-        else ($UN.ptr0_set_at_int<llint> (r.limb, i, ai + BASE - bi); borrow := 1LL)
+        if ai >= bi then ($UN.ptr0_set_at_int<llint> (r.limb, $UN.cast{int} (i), ai - bi); borrow := 0LL)
+        else ($UN.ptr0_set_at_int<llint> (r.limb, $UN.cast{int} (i), ai + BASE - bi); borrow := 1LL)
       end);
-      i := i + 1
+      i := i + 1LL
     );
     r.n := a.n;
-    r.neg := 0
+    r.neg := 0LL
   end);
   big_trim (r)
 end
@@ -210,37 +213,37 @@ in
   if an != bn then (big_add_mag (r, a, b); r.neg := an)
   else (if big_cmp_mag (a, b) >= 0
         then (big_sub_mag (r, a, b); r.neg := an)
-        else (big_sub_mag (r, b, a); r.neg := (if an = 0 then 1 else 0)));
+        else (big_sub_mag (r, b, a); r.neg := (if an = 0LL then 1LL else 0LL)));
   big_trim (r)
 end
 
 fun big_mul_small (r: &big >> _, a: &big, m: llint): void =
-  if m = 0LL then (r.n := 0; r.neg := 0) else
-  (if a.n = 0 then (r.n := 0; r.neg := 0) else
+  if m = 0LL then (r.n := 0LL; r.neg := 0LL) else
+  (if a.n = 0LL then (r.n := 0LL; r.neg := 0LL) else
     (let
       val an = a.n
       val aneg = a.neg
     in
-      big_reserve (r, an + 2);
+      big_reserve (r, an + 2LL);
       (let
-        var i: int = 0
+        var i: llint = 0LL
         var carry: llint = 0LL
       in
         while (i < an) (
           (let
-            val p = $UN.ptr0_get_at_int<llint> (a.limb, i) * m + carry
+            val p = $UN.ptr0_get_at_int<llint> (a.limb, $UN.cast{int} (i)) * m + carry
           in
-            $UN.ptr0_set_at_int<llint> (r.limb, i, p mod BASE);
+            $UN.ptr0_set_at_int<llint> (r.limb, $UN.cast{int} (i), p mod BASE);
             carry := p / BASE
           end);
-          i := i + 1
+          i := i + 1LL
         );
         (let
-          var j: int = an
+          var j: llint = an
         in
           while (carry > 0LL) (
-            $UN.ptr0_set_at_int<llint> (r.limb, j, carry mod BASE);
-            j := j + 1;
+            $UN.ptr0_set_at_int<llint> (r.limb, $UN.cast{int} (j), carry mod BASE);
+            j := j + 1LL;
             carry := carry / BASE
           );
           r.n := j
@@ -255,9 +258,9 @@ fun big_mul_small (r: &big >> _, a: &big, m: llint): void =
 fun big_quot (a: &big, b: &big, work: &big >> _): llint = let
   var q: llint = 0LL
 in
-  if a.neg != 0 then 0LL
-  else (if b.neg != 0 then 0LL
-        else (if b.n = 0 then 0LL
+  if a.neg != 0LL then 0LL
+  else (if b.neg != 0LL then 0LL
+        else (if b.n = 0LL then 0LL
               else (
                 big_copy (work, b);
                 while (big_cmp (a, work) >= 0) (
@@ -272,12 +275,12 @@ end
 
 implement main0 () = let
   val ss_t0 = $extfcall (double, "ss_now_ms")
-  var q: big = @{ limb = the_null_ptr, n = 0, cap = 0, neg = 0 }
-  var r: big = @{ limb = the_null_ptr, n = 0, cap = 0, neg = 0 }
-  var t: big = @{ limb = the_null_ptr, n = 0, cap = 0, neg = 0 }
-  var u: big = @{ limb = the_null_ptr, n = 0, cap = 0, neg = 0 }
-  var v: big = @{ limb = the_null_ptr, n = 0, cap = 0, neg = 0 }
-  var w: big = @{ limb = the_null_ptr, n = 0, cap = 0, neg = 0 }
+  var q: big = @{ limb = the_null_ptr, n = 0LL, cap = 0LL, neg = 0LL }
+  var r: big = @{ limb = the_null_ptr, n = 0LL, cap = 0LL, neg = 0LL }
+  var t: big = @{ limb = the_null_ptr, n = 0LL, cap = 0LL, neg = 0LL }
+  var u: big = @{ limb = the_null_ptr, n = 0LL, cap = 0LL, neg = 0LL }
+  var v: big = @{ limb = the_null_ptr, n = 0LL, cap = 0LL, neg = 0LL }
+  var w: big = @{ limb = the_null_ptr, n = 0LL, cap = 0LL, neg = 0LL }
   var k: llint = 1LL
   var l: llint = 3LL
   var n: llint = 3LL
@@ -330,6 +333,6 @@ in
       end)
     )
   );
-  val () = $extfcall (void, "ss_report", $extfcall (double, "ss_now_ms") - ss_t0)
+  $extfcall (void, "ss_report", $extfcall (double, "ss_now_ms") - ss_t0);
   $extfcall (void, "printf", "%lld\n", sum)
 end

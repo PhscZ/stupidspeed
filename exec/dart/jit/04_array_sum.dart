@@ -1,0 +1,21 @@
+// task 04 array_sum — expected output: 499999500000
+// build: dart compile exe -o prog 04_array_sum.dart (aot; jit has no build step)    run: ./prog (aot) | dart 04_array_sum.dart (jit)
+
+import 'dart:io';
+import 'dart:typed_data';
+
+void main() {
+  final Stopwatch sw = Stopwatch()..start();
+  const int n = 1000000;
+  final Int64List array = Int64List(n);
+  for (int i = 0; i < n; i++) {
+    array[i] = i;
+  }
+
+  int total = 0;
+  for (int i = 0; i < n; i++) {
+    total += array[i];
+  }
+  stderr.writeln('TIME_MS=${(sw.elapsedMicroseconds / 1000).toStringAsFixed(3)}');
+  print(total);
+}

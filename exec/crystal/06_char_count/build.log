@@ -1,0 +1,13 @@
+In 06_char_count.cr:3:11
+
+ 3 | t0 = Time.monotonic
+               ^--------
+Warning: Deprecated Time.monotonic. Use `Time.instant` instead.
+
+In 06_char_count.cr:16:36
+
+ 16 | STDERR.puts "TIME_MS=%.3f" % (Time.monotonic - t0).total_milliseconds
+                                         ^--------
+Warning: Deprecated Time.monotonic. Use `Time.instant` instead.
+
+A total of 2 warnings were found.

@@ -2,8 +2,8 @@
       *> build: cobc -x -O2 -o prog 09_fib_recursive.cob    run: ./prog
       *> timing: ACCEPT ... FROM TIME is GnuCOBOL's own clock, hhmmsscc, so the
       *>         resolution is 10 ms; TIME_MS is DISPLAYed UPON STDERR and stdout is
-      *>         unchanged. Instrumented by inspection: there is no GnuCOBOL toolchain
-      *>         on this machine, so this row's timing is unverified.
+      *>         unchanged. Built and run against GnuCOBOL 3.2 on this machine, so the timing is real.
+      *>         The two COMPUTE CS0/CS1 lines were past column 72 and are wrapped.
        IDENTIFICATION DIVISION.
        PROGRAM-ID. T09.
        DATA DIVISION.
@@ -30,8 +30,10 @@
            CALL 'FIB' USING N R.
            MOVE R TO ORR.
            ACCEPT WS-T1 FROM TIME.
-           COMPUTE CS0 = ((((T0-HH * 60) + T0-MM) * 60) + T0-SS) * 100 + T0-CC.
-           COMPUTE CS1 = ((((T1-HH * 60) + T1-MM) * 60) + T1-SS) * 100 + T1-CC.
+           COMPUTE CS0 = ((((T0-HH * 60) + T0-MM) * 60) + T0-SS)
+               * 100 + T0-CC.
+           COMPUTE CS1 = ((((T1-HH * 60) + T1-MM) * 60) + T1-SS)
+               * 100 + T1-CC.
            IF CS1 < CS0
                ADD 8640000 TO CS1
            END-IF.

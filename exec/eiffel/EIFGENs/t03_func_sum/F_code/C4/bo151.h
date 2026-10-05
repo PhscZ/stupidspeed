@@ -1,0 +1,22 @@
+
+#ifndef _C4_bo151_
+#define _C4_bo151_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern EIF_INTEGER_32 F702_3553(EIF_REFERENCE);
+extern void F702_3557(EIF_REFERENCE, EIF_BOOLEAN);
+extern EIF_BOOLEAN F702_3558(EIF_REFERENCE, EIF_REFERENCE);
+extern EIF_BOOLEAN F702_3559(EIF_REFERENCE, EIF_REFERENCE);
+extern EIF_BOOLEAN F702_3561(EIF_REFERENCE);
+extern EIF_BOOLEAN F702_3562(EIF_REFERENCE, EIF_REFERENCE);
+extern EIF_BOOLEAN F702_3563(EIF_REFERENCE, EIF_REFERENCE);
+extern void EIF_Minit151(void);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

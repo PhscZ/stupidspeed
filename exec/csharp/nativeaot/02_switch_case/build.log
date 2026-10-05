@@ -1,0 +1,5 @@
+  Determinando os projetos a serem restaurados...
+  C:\stupidspeed\exec\csharp\nativeaot\02_switch_case\02_switch_case.csproj restaurado (em 613 ms).
+  02_switch_case -> C:\stupidspeed\exec\csharp\nativeaot\02_switch_case\bin\Release\net8.0\win-x64\02_switch_case.dll
+  Generating native code
+  02_switch_case -> C:\stupidspeed\exec\csharp\nativeaot\02_switch_case\bin\Release\net8.0\win-x64\publish\
