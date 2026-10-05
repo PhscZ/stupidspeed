@@ -1,0 +1,25 @@
+# task 15 file_write — expected output: 52428800
+# build: julia 15_file_write.jl    run: julia 15_file_write.jl
+# deviation: Julia's standard library exposes no fsync, so the file is flushed and closed.
+
+using Printf
+
+function main()
+    t0 = time_ns()
+    buf = Vector{UInt8}(undef, 1048576)
+    for i in 1:1048576
+        buf[i] = UInt8((i - 1) % 256)
+    end
+
+    written = Int64(0)
+    open("out.bin", "w") do f
+        for _ in 1:50
+            written += write(f, buf)
+        end
+        flush(f)
+    end
+    @printf(stderr, "TIME_MS=%.3f\n", (time_ns() - t0) / 1e6)
+    println(written)
+end
+
+main()

@@ -1,0 +1,24 @@
+-- task 14 file_read — expected output: 2389704704
+-- build: none (interpreted)    run: lua 14_file_read.lua (PUC Lua 5.4)    also runs on LuaJIT: luajit 14_file_read.lua
+-- build (wasm): lua.wasm is the wasm32-wasip1 build of this same interpreter (see BUILD.md); run: wasmtime -W exceptions=y --dir . lua.wasm <task>.lua
+-- data.bin (50 MiB: the bytes 0..255 repeating) must sit in the working directory.
+-- Read in 1 MiB chunks, then scan every byte.
+
+local __t0 = os.clock()
+local f = io.open("data.bin", "rb")
+
+local total = 0
+while true do
+    local chunk = f:read(1048576)
+    if not chunk then
+        break
+    end
+    for i = 1, #chunk do
+        total = total + string.byte(chunk, i)
+    end
+end
+
+f:close()
+local __t1 = os.clock()
+io.stderr:write(string.format("TIME_MS=%.3f\n", (__t1 - __t0) * 1000.0))
+print(total % 4294967296)
