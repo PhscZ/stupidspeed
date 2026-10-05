@@ -1,0 +1,3 @@
+10_pi.kt:5:37: error: syntax error: imports are only allowed in the beginning of file.
+private const val BASE = 1000000000L
+                                    ^

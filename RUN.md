@@ -95,8 +95,8 @@ Languages compiled to a static native binary need nothing. The rest need the fol
 | PowerShell | powershell, pwsh | .NET runtime | **not a shell in the usual sense.** See below. |
 | Crystal | crystal | none | static by default; needs the MSVC toolchain to link |
 | Objective-C | clang | `libobjc-4.6.dll` + `gnustep-base-1_31.dll` + UCRT | the GNUstep runtime ships with the MSYS2 `ucrt64` packages |
-| Modula-2 | adw | none | static by default |
-| Modula-3 | cm3 | none | static by default |
+| Modula-2 | adw | none | static by default; the `time.txt` fallback carries `TIME_MS`, because ADW exposes no stderr handle. The clock is ISO `SysClock.GetClock` — local time of day, whole seconds plus `SysClock.fractions` — so a cell under a second is read in whole seconds. |
+| Modula-3 | cm3 | **three DLLs must sit beside the exe** — `m3.dll`, `m3core.dll`, and `arithmetic.dll` for task 10 | the produced `AMD64_NT\prog.exe` imports the cm3 runtime, so without them it exits `53` (`STATUS_DLL_NOT_FOUND`) before `main` with no diagnostic. `time.txt` carries `TIME_MS`, because Modula-3's `IO` has no stderr stream; the clock is `Time.Now` (seconds since the epoch as a `REAL`). |
 | COBOL | gnucobol | `libcob-4.dll` + UCRT | from MSYS2 `ucrt64` |
 | BASIC | freebasic | none | static by default |
 | BASIC | qb64 | none — the built .exe is static | QB64-PE compiles through C++, so each build takes a few seconds. `PRINT` pads numbers; the rows use `LTRIM$(STR$(x))`. No threads. |
@@ -148,7 +148,7 @@ Languages compiled to a static native binary need nothing. The rest need the fol
 Nine rows need a JVM, and they disagree about which one:
 
 - `jruby` needs **Java 25**; on Java 24 and older it dies with `UnsupportedClassVersionError`.
-- `kotlin/native` needs **Java 17**. Its launcher mis-parses JDK 24's version string and fails with a batch syntax error.
+- `kotlin/native` needs a JDK for its launcher. The 1.9-era launcher mis-parsed JDK 24's version string and failed with a batch syntax error; the current 2.4.20 prebuilt drives JDK 25.0.2 fine, so the constraint is a launcher-version question rather than a JDK ceiling. The first build downloads its LLVM and libffi dependencies (about 1.4 GB) into `%USERPROFILE%\.konan`.
 - `scala` needs anything modern. Oracle's `java8path` shim, if it is ahead of the real JDK on `PATH`, makes `scalac` fail on class file version 61.0.
 - `graalvm native-image` is its own JDK 25.
 - `java/graalvm jit` needs **GraalVM's own JDK**, not any JDK: a plain OpenJDK has no Graal compiler in it, so running the class files under HotSpot would silently be the `openjdk` row again. GraalVM 25 is the JDK the `native-image`, `graalpy` and `jruby` rows already need.

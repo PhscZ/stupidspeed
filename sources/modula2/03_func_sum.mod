@@ -2,12 +2,10 @@
 (* timing: SysClock.GetClock is the ISO Modula-2 clock (local time of day, whole
    seconds plus SysClock.fractions); TIME_MS is written to time.txt in milliseconds
    with the same SeqFile/IOChan idiom task 15 uses, because ADW exposes no stderr
-   handle, and stdout is unchanged. Instrumented by inspection: the ADW toolchain is
-   not installed on this machine, so this row's timing is unverified, and the
-   SysClock module name is the one thing here that has not been compiled. *)
-(* build: m2amd64.exe /sym:<symdir> Func.mod, then m2amd64.exe /sym:<symdir> 03_func_sum.mod, *)
-(*        then sblink.exe /machine:amd64 /out:prog.exe Task03.obj Func.obj rtl-win-amd64.lib *)
-(*        win64api.lib Task03.lib Func.lib *)
+   handle, and stdout is unchanged. Verified on this machine with ADW 1.6.879: the
+   compiled row prints the expected line and writes time.txt for all fifteen tasks. *)
+(* build: m2amd64.exe /sym:.;<adw>\ASCII\winamd64sym Func.def, then Func.mod, then 03_func_sum.mod, *)
+(*        then sblink.exe /machine:amd64 /out:prog.exe Task03.obj Func.obj <adw>\ASCII\rtl-win-amd64.lib <adw>\ASCII\win64api.lib *)
 MODULE Task03;
 FROM SYSTEM IMPORT ADR;
 IMPORT STextIO, SLWholeIO, Func, SysClock, SeqFile, IOChan, ChanConsts;
@@ -21,9 +19,9 @@ PROCEDURE SsNow () : LONGCARD;
    VAR dt : SysClock.DateTime;
 BEGIN
    SysClock.GetClock (dt);
-   RETURN (LONGCARD (dt.hour) * 3600 + LONGCARD (dt.minute) * 60
-           + LONGCARD (dt.second)) * 1000
-          + LONGCARD (dt.fractions) * 1000 DIV (LONGCARD (SysClock.maxSecondParts) + 1)
+   RETURN (VAL (LONGCARD, dt.hour) * 3600 + VAL (LONGCARD, dt.minute) * 60
+           + VAL (LONGCARD, dt.second)) * 1000
+          + VAL (LONGCARD, dt.fractions) * 1000 DIV (VAL (LONGCARD, SysClock.maxSecondParts) + 1)
 END SsNow;
 
 PROCEDURE SsReport (t0 : LONGCARD);

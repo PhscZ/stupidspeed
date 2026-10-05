@@ -1,0 +1,6 @@
+% exports of 07_string_append
+_define_pgm("prog")
+import_version("m3core", "AMD64_NT")
+import_version("libm3", "AMD64_NT")
+_map_add_module("Main.m3", "07_string_append", ".", "hidden")
+import_sys_lib("TCP")

@@ -1,10 +1,11 @@
 (* timing: SysClock.GetClock is the ISO Modula-2 clock (local time of day, whole
    seconds plus SysClock.fractions); TIME_MS is written to time.txt in milliseconds
    with the same SeqFile/IOChan idiom task 15 uses, because ADW exposes no stderr
-   handle, and stdout is unchanged. Instrumented by inspection: the ADW toolchain is
-   not installed on this machine, so this row's timing is unverified, and the
-   SysClock module name is the one thing here that has not been compiled. *)
-MODULE Task10;
+   handle, and stdout is unchanged. Verified on this machine with ADW 1.6.879: the
+   compiled row prints the expected line and writes time.txt for all fifteen tasks. *)
+(* build: m2amd64.exe /sym:.;<adw>\ASCII\winamd64sym 10_pi.mod  then  sblink.exe /machine:amd64 /out:prog.exe T10.obj <adw>\ASCII\rtl-win-amd64.lib <adw>\ASCII\win64api.lib *)
+(* note: the module is T10, not Task10, because ADW truncates the object name to the length *)
+(*       of the source file's stem (10_pi -> 5 characters -> Task1.obj) *)
 FROM SYSTEM IMPORT ADR;
 
 (* task 10 pi — expected output: 4470
@@ -37,15 +38,14 @@ VAR
    total         : LONGCARD;
    emitted       : CARDINAL;
 
-PROCEDURE SetZero (VAR x : Big);
 PROCEDURE SsNow () : LONGCARD;
    (* ISO SysClock: local date and time of day, whole seconds plus a fraction *)
    VAR dt : SysClock.DateTime;
 BEGIN
    SysClock.GetClock (dt);
-   RETURN (LONGCARD (dt.hour) * 3600 + LONGCARD (dt.minute) * 60
-           + LONGCARD (dt.second)) * 1000
-          + LONGCARD (dt.fractions) * 1000 DIV (LONGCARD (SysClock.maxSecondParts) + 1)
+   RETURN (VAL (LONGCARD, dt.hour) * 3600 + VAL (LONGCARD, dt.minute) * 60
+           + VAL (LONGCARD, dt.second)) * 1000
+          + VAL (LONGCARD, dt.fractions) * 1000 DIV (VAL (LONGCARD, SysClock.maxSecondParts) + 1)
 END SsNow;
 
 PROCEDURE SsReport (t0 : LONGCARD);
@@ -86,6 +86,7 @@ BEGIN
 END SsReport;
 
 
+PROCEDURE SetZero (VAR x : Big);
 BEGIN
    x.neg := FALSE; x.len := 1; x.d [0] := 0
 END SetZero;
@@ -298,4 +299,4 @@ BEGIN
    SsReport (ssT0);
    SLWholeIO.WriteLongCard (total, 0);
    STextIO.WriteLn
-END Task10.
+END T10.

@@ -1,0 +1,100 @@
+M3 v4.2
+N0 Main
+
+M0 1 7 0 0 0 0 19 0 0 22 0 0
+A0
+N1 Wr
+B1
+N2 FileWr
+B2
+N3 Time
+B3
+N4 Text
+B4
+N5 Fmt
+B5
+N6 IO
+B6
+N7 RTHooks
+B7
+N8 PushEFrame
+V0 7 8 fbf5f693d89731bf
+i0
+N9 Open
+V1 2 9 0380bd0d684b5d3f
+i1
+N10 TextLitInfo
+V2 7 10 fdc7f49fa7f061c3
+i2
+N11 TextLitGetChar
+V3 7 11 bf853738ef95b58f
+i3
+N12 TextLitGetWideChar
+V4 7 12 6b44a8081c4ee8f1
+i4
+N13 TextLitGetChars
+V5 7 13 e51aa8c54a895201
+i5
+N14 TextLitGetWideChars
+V6 7 14 face384698a06a95
+i6
+N15 Int
+V7 5 15 bb2b6ce9ab4d2f5d
+i7
+N16 Concat
+V8 7 16 2bcdb700e948c590
+i8
+N17 PutText
+V9 1 17 004d23e0fae46c51
+i9
+N18 Flush
+V10 1 18 93db3bd2acaaef5c
+i10
+N19 Close
+V11 1 19 451a2e5f987e2057
+i11
+N20 PopEFrame
+V12 7 20 4058e7247afdcd8a
+i12
+N21 Now
+V13 3 21 0dfd00a64c25011e
+i13
+N22 CheckLoadTracedRef
+V14 7 22 33cac043de87135c
+i14
+N23 Length
+V15 4 23 cf54e5d02c45f598
+i15
+N24 Put
+V16 6 24 97adfd90d26b4605
+i16
+N25 T
+V17 1 25 77ec1ed10766de4d
+i17
+V18 3 25 c424379ef6a5e315
+i18
+t62761487
+td154816f
+t9a0e5dbc
+t49473232
+t6d871b27
+tb750d684
+t38df5df5
+tb964357b
+t9132dde7
+t89cd34bd
+tc9e236c8
+ta19bdc21
+t966fe87f
+t2aa4581f
+tf2a35a9d
+t97f166d3
+t1bee6e85
+tc5f201d2
+te4e28466
+t37e50548
+t6c104196
+t43604b73
+Q6d871b27 50f86574
+Q9a0e5dbc 9a0e5dbf
+Q62761487 9d8fb489

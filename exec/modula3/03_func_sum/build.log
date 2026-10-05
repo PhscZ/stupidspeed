@@ -1,0 +1,12 @@
+--- building in AMD64_NT ---
+
+new source -> compiling AddOne.i3
+new source -> compiling AddOne.m3
+new source -> compiling Main.m3
+"..\Main.m3", line 23: warning: potentially unhandled exception: OSError.E
+"..\Main.m3", line 24: warning: potentially unhandled exceptions: Thread.Alerted, Wr.Failure
+"..\Main.m3", line 25: warning: potentially unhandled exceptions: Thread.Alerted, Wr.Failure
+"..\Main.m3", line 26: warning: potentially unhandled exceptions: Thread.Alerted, Wr.Failure
+"..\Main.m3", line 15: warning: not used (i)
+5 warnings encountered
+ -> linking prog.exe

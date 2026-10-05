@@ -1,0 +1,125 @@
+M3 v4.2
+N0 Main
+
+M0 1 7 0 0 0 0 25 0 0 29 0 0
+A0
+N1 Wr
+B1
+N2 FileWr
+B2
+N3 Time
+B3
+N4 BigInteger
+B4
+N5 Fmt
+B5
+N6 IO
+B6
+N7 RTHooks
+B7
+N8 FromInteger
+V0 4 8 bb10e612cc6fe4b3
+i0
+N9 PushEFrame
+V1 7 9 fbf5f693d89731bf
+i1
+N10 DivMod
+V2 4 10 48632a9ffafaba99
+i2
+N11 ToInteger
+V3 4 11 d0262720cc699914
+i3
+N12 PopEFrame
+V4 7 12 4058e7247afdcd8a
+i4
+N13 Open
+V5 2 13 0380bd0d684b5d3f
+i5
+N14 TextLitInfo
+V6 7 14 fdc7f49fa7f061c3
+i6
+N15 TextLitGetChar
+V7 7 15 bf853738ef95b58f
+i7
+N16 TextLitGetWideChar
+V8 7 16 6b44a8081c4ee8f1
+i8
+N17 TextLitGetChars
+V9 7 17 e51aa8c54a895201
+i9
+N18 TextLitGetWideChars
+V10 7 18 face384698a06a95
+i10
+N19 Int
+V11 5 19 bb2b6ce9ab4d2f5d
+i11
+N20 Concat
+V12 7 20 2bcdb700e948c590
+i12
+N21 PutText
+V13 1 21 004d23e0fae46c51
+i13
+N22 Flush
+V14 1 22 93db3bd2acaaef5c
+i14
+N23 Close
+V15 1 23 451a2e5f987e2057
+i15
+N24 Now
+V16 3 24 0dfd00a64c25011e
+i16
+N25 Mul
+V17 4 25 ce9a245e298f9ace
+i17
+N26 Add
+V18 4 26 e6e49d7fcfb45dde
+i18
+N27 Sub
+V19 4 27 d5d5a9ce757df3d3
+i19
+N28 Compare
+V20 4 28 b64a0588434471e0
+i20
+N29 Put
+V21 6 29 97adfd90d26b4605
+i21
+N30 T
+V22 1 30 77ec1ed10766de4d
+i22
+V23 3 30 c424379ef6a5e315
+i23
+V24 4 30 0c5725fcc0e07522
+i24
+t27db6424
+t02b96919
+t2d42b9a4
+t62761487
+td154816f
+t70f8976d
+t830c20b6
+ta7da8103
+t9a0e5dbc
+t49473232
+t6d871b27
+tb750d684
+t38df5df5
+tb964357b
+t9132dde7
+t89cd34bd
+tc9e236c8
+ta19bdc21
+t966fe87f
+t2aa4581f
+tf2a35a9d
+t97f166d3
+t1bee6e85
+tc5f201d2
+te4e28466
+t4995b31e
+t2db54900
+t42398092
+t43604b73
+Q6d871b27 50f86574
+Q9a0e5dbc 9a0e5dbf
+Q62761487 9d8fb489
+Q27db6424 1c1c45e6
