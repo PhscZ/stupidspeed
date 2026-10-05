@@ -1,3 +1,4 @@
+(* task 10 pi -- expected output: 4470 *)
 (* timing: SysClock.GetClock is the ISO Modula-2 clock (local time of day, whole
    seconds plus SysClock.fractions); TIME_MS is written to time.txt in milliseconds
    with the same SeqFile/IOChan idiom task 15 uses, because ADW exposes no stderr
@@ -6,6 +7,7 @@
 (* build: m2amd64.exe /sym:.;<adw>\ASCII\winamd64sym 10_pi.mod  then  sblink.exe /machine:amd64 /out:prog.exe T10.obj <adw>\ASCII\rtl-win-amd64.lib <adw>\ASCII\win64api.lib *)
 (* note: the module is T10, not Task10, because ADW truncates the object name to the length *)
 (*       of the source file's stem (10_pi -> 5 characters -> Task1.obj) *)
+MODULE T10;
 FROM SYSTEM IMPORT ADR;
 
 (* task 10 pi — expected output: 4470

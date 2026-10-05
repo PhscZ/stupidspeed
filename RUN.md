@@ -735,12 +735,12 @@ row's own `timing:` comment as well.
 - **Absent toolchains.** The J row (`j9.7`), `octave`, `swipl` and `sqlite` are not
   installed on the machine the rows were instrumented on, so their timing code was written by
   inspection and their cells stay unverified until the toolchain is present. The same applies to
-  `modula2`, `ring`, `seed7` and
-  `swift`, whose own `timing:` comments say so. `modula2` is in both lists for a second reason:
-  ADW is absent, and the row's clock is the ISO `SysClock` the language standard defines.
-  `ats`, `basic`, `beef`, `cobol`, `dolphin`, `dyalog`, `eiffel`, `babashka`, `boo`, `groovy` and
-  `qb64` were absent when the rows were instrumented but have since been installed here and verified
-  end to end (15/15 each), so their cells are no longer inspection-only.
+  `ring`, `seed7` and `swift`, whose own `timing:` comments say so.
+  `ats`, `basic`, `beef`, `cobol`, `dolphin`, `dyalog`, `eiffel`, `babashka`, `boo`, `groovy`,
+  `modula2`, `modula3` and `qb64` were absent when the rows were instrumented but have since been
+  installed here and verified end to end (15/15 each), so their cells are no longer
+  inspection-only. ADW and CM3 both installed portably — an Inno Setup unpack and a prebuilt zip —
+  with no admin rights.
 
 ## Expected cost
 
