@@ -1,8 +1,0 @@
-make_dir("D:/Users/pedro.cardoso/stupidspeed/tools/cm3/cm3-all-AMD64_NT-d5.10.0-VC2019-20210221/pkg/02_switch_case/AMD64_NT")
-install_file(".M3EXPORTS", "D:/Users/pedro.cardoso/stupidspeed/tools/cm3/cm3-all-AMD64_NT-d5.10.0-VC2019-20210221/pkg/02_switch_case/AMD64_NT", "0644")
-make_dir("D:/Users/pedro.cardoso/stupidspeed/tools/cm3/cm3-all-AMD64_NT-d5.10.0-VC2019-20210221/bin")
-install_file("prog.pdb", "D:/Users/pedro.cardoso/stupidspeed/tools/cm3/cm3-all-AMD64_NT-d5.10.0-VC2019-20210221/bin", "0755")
-install_file(".M3WEB", "D:/Users/pedro.cardoso/stupidspeed/tools/cm3/cm3-all-AMD64_NT-d5.10.0-VC2019-20210221/pkg/02_switch_case/AMD64_NT", "0644")
-make_dir("D:/Users/pedro.cardoso/stupidspeed/tools/cm3/cm3-all-AMD64_NT-d5.10.0-VC2019-20210221/pkg/02_switch_case")
-install_file("../Main.m3", "D:/Users/pedro.cardoso/stupidspeed/tools/cm3/cm3-all-AMD64_NT-d5.10.0-VC2019-20210221/pkg/02_switch_case", "0644")
-install_file("prog.exe", "D:/Users/pedro.cardoso/stupidspeed/tools/cm3/cm3-all-AMD64_NT-d5.10.0-VC2019-20210221/pkg/02_switch_case/AMD64_NT", "0644")

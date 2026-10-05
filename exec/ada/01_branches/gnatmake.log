@@ -1,3 +1,0 @@
-gcc -c -O3 t01_branches.adb
-gnatbind -x t01_branches.ali
-gnatlink t01_branches.ali -O3

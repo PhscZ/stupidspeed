@@ -1,5 +1,0 @@
-FileVersion = 1
-Projects = {13_matrix_mul = {Path = "."}}
-
-[Workspace]
-StartupProject = "13_matrix_mul"

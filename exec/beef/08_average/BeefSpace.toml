@@ -1,5 +1,0 @@
-FileVersion = 1
-Projects = {08_average = {Path = "."}}
-
-[Workspace]
-StartupProject = "08_average"

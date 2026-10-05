@@ -1,3 +1,0 @@
-./06_char_count.f90:20:10: portability: Result of REPEAT() is too large to compute at compilation time (1e+08 characters) [-Wfolding-limit]
-    text = repeat(block, 10000000)
-           ^^^^^^^^^^^^^^^^^^^^^^^

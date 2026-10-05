@@ -1,5 +1,0 @@
-FileVersion = 1
-Projects = {06_char_count = {Path = "."}}
-
-[Workspace]
-StartupProject = "06_char_count"

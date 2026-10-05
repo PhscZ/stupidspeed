@@ -1,5 +1,0 @@
-(* task 03 func_sum -- definition module for the add-one helper *)
-(* The implementation is in Func.mod; both are compiled before 03_func_sum.mod. *)
-DEFINITION MODULE Func;
-PROCEDURE AddOne (n : LONGCARD) : LONGCARD;
-END Func.

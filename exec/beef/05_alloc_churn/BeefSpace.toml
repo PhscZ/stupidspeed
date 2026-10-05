@@ -1,5 +1,0 @@
-FileVersion = 1
-Projects = {05_alloc_churn = {Path = "."}}
-
-[Workspace]
-StartupProject = "05_alloc_churn"

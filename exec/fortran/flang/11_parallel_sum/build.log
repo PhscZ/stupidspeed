@@ -1,2 +1,0 @@
-C:/stupidspeed/tools/msys64/msys64/ucrt64/bin/ld: cannot find -lomp: No such file or directory
-flang: error: linker command failed with exit code 1 (use -v to see invocation)

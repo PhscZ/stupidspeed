@@ -1,3 +1,0 @@
-gcc -c -O3 t13_matrix_mul.adb
-gnatbind -x t13_matrix_mul.ali
-gnatlink t13_matrix_mul.ali -O3

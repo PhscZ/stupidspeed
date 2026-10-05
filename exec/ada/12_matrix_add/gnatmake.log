@@ -1,3 +1,0 @@
-gcc -c -O3 t12_matrix_add.adb
-gnatbind -x t12_matrix_add.ali
-gnatlink t12_matrix_add.ali -O3

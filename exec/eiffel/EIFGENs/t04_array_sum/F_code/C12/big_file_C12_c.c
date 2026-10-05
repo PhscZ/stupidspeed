@@ -1,8 +1,0 @@
-#include "ar565.c"
-#include "co570.c"
-#include "fi571.c"
-#include "re552.c"
-#include "re576.c"
-#include "re588.c"
-#include "sp583.c"
-#include "to582.c"

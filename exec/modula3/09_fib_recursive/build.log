@@ -1,9 +1,0 @@
---- building in AMD64_NT ---
-
-new source -> compiling Main.m3
-"..\Main.m3", line 31: warning: potentially unhandled exception: OSError.E
-"..\Main.m3", line 32: warning: potentially unhandled exceptions: Thread.Alerted, Wr.Failure
-"..\Main.m3", line 33: warning: potentially unhandled exceptions: Thread.Alerted, Wr.Failure
-"..\Main.m3", line 34: warning: potentially unhandled exceptions: Thread.Alerted, Wr.Failure
-4 warnings encountered
- -> linking prog.exe

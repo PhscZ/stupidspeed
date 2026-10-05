@@ -1,5 +1,0 @@
-FileVersion = 1
-Projects = {11_parallel_sum = {Path = "."}}
-
-[Workspace]
-StartupProject = "11_parallel_sum"

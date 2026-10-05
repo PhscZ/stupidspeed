@@ -1,7 +1,0 @@
-#include "ty653.c"
-#include "ty657.c"
-#include "ty661.c"
-#include "ty666.c"
-#include "ty671.c"
-#include "ty675.c"
-#include "ty691.c"

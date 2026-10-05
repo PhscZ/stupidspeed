@@ -1,2 +1,0 @@
-C:\stupidspeed\exec\csharp\nativeaot\07_string_append\bin\Release\net8.0\win-x64\publish\07_string_append.exe
-C:\stupidspeed\exec\csharp\nativeaot\07_string_append\bin\Release\net8.0\win-x64\publish\07_string_append.pdb

@@ -1,3 +1,0 @@
-gcc -c -O3 t10_pi.adb
-gnatbind -x t10_pi.ali
-gnatlink t10_pi.ali -O3

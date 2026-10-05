@@ -1,6 +1,0 @@
-% exports of 04_array_sum
-_define_pgm("prog")
-import_version("m3core", "AMD64_NT")
-import_version("libm3", "AMD64_NT")
-_map_add_module("Main.m3", "04_array_sum", ".", "hidden")
-import_sys_lib("TCP")

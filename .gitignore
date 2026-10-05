@@ -8,3 +8,7 @@ temp/
 # Python bytecode from the helper scripts.
 __pycache__/
 *.pyc
+
+# Build outputs from exec/*/build_all.bat and the per-row verify.py scripts.
+# Nothing here is part of the benchmark.
+exec/

@@ -1,2 +1,0 @@
-C:\stupidspeed\exec\csharp\nativeaot\11_parallel_sum\bin\Release\net8.0\win-x64\publish\11_parallel_sum.exe
-C:\stupidspeed\exec\csharp\nativeaot\11_parallel_sum\bin\Release\net8.0\win-x64\publish\11_parallel_sum.pdb

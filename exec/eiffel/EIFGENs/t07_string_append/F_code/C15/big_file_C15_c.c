@@ -1,6 +1,0 @@
-#include "ha744.c"
-#include "ha747.c"
-#include "st735.c"
-#include "st749.c"
-#include "ty702.c"
-#include "ty706.c"

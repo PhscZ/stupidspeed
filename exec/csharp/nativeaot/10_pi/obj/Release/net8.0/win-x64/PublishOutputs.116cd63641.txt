@@ -1,2 +1,0 @@
-C:\stupidspeed\exec\csharp\nativeaot\10_pi\bin\Release\net8.0\win-x64\publish\10_pi.exe
-C:\stupidspeed\exec\csharp\nativeaot\10_pi\bin\Release\net8.0\win-x64\publish\10_pi.pdb

@@ -1,5 +1,0 @@
-FileVersion = 1
-Projects = {10_pi = {Path = "."}}
-
-[Workspace]
-StartupProject = "10_pi"
