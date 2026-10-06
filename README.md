@@ -11,7 +11,7 @@ them is in `RUN.md`.
 ## Results
 
 One row per toolchain, one column per task. The column headings are the task numbers, and
-the task names are the section headings under [Tasks](#tasks). All 141 toolchains, empty and
+the task names are the section headings under [Tasks](#tasks). All 140 toolchains, empty and
 ready to fill in.
 
 A cell holds the median of the 5 timed runs, in milliseconds.
@@ -118,7 +118,6 @@ A cell holds the median of the 5 timed runs, in milliseconds.
 | Seed7 | s7c |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Scheme | chez |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Prolog (SWI) | swipl |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| Octave | octave-cli |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | J | jconsole |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Janet | janet |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Ring | ring |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -381,7 +380,7 @@ differs is where the integers come from, and both routes are legitimate.
   and far more work per step. At 1000 digits that is about 0.6 s in C, and it runs to minutes
   in the interpreted rows that take this route — VBScript takes about 1.4 minutes, SQLite about
   4, and `a68g` about 7.5. `RUN.md` has the measurements. Among the rows that hand-roll them are
-  Beef, Haxe, Eiffel, Octave, Janet, Ring, JScript, AutoHotkey and Pony.
+  Beef, Haxe, Eiffel, Janet, Ring, JScript, AutoHotkey and Pony.
 
 A language with no bignum library is therefore **not** disqualified by this task, and no row
 here is missing because of it. `a68g`'s own arbitrary-precision `LONG LONG INT` mode was
@@ -575,7 +574,6 @@ Output: `52428800`
 | Seed7 | s7c |
 | Scheme | chez |
 | Prolog (SWI) | swipl |
-| Octave | octave-cli |
 | J | jconsole |
 | Janet | janet |
 | Ring | ring |
@@ -617,7 +615,7 @@ Output: `52428800`
 ### Languages that are not here, and why
 
 One line per language. A language is left out because it does not run on Windows x64, or
-because it fails a task. Task 10 alone is never a reason — a language without big integers
+because it fails a task, or because it is too slow to be worth measuring. Task 10 alone is never a reason — a language without big integers
 hand-rolls the limbs, as GDScript does. Nushell is the one exception: it fails task 10, and
 its hand-rolled limbs are two orders of magnitude too slow to run.
 
@@ -653,6 +651,7 @@ its hand-rolled limbs are two orders of magnitude too slow to run.
 | BCPL | Fails task 11: no concurrency of any kind. |
 | MLton | Fails task 11: no concurrency of any kind. |
 | Uiua | Too slow to be worth a row. It runs on Windows x64 and passes all fifteen tasks, but its scalar-loop floor is about **2.5 µs per iteration** — measured, with `⍥` the fastest of its loop primitives — so task 01 costs roughly **63 minutes a run** and the 100-million-iteration tasks cost 25-63 minutes each. The slowest cell the benchmark accepts is Raku's task 02 at about 10 minutes, so Uiua would add roughly 5 hours per pass and 30 hours to the six-run protocol. Its 0.19.1 release does ship `&ep`/`&epf` for stderr, so it is not a contract problem; it is a cost one. |
+| Octave | Too slow to be worth a row. It runs on Windows x64 and passes all fifteen tasks, but it is a tree-walking interpreter with no JIT. Its own `RUN.md` figures put one pass at about **1.8 hours** and the six-run protocol at **11 hours**; on this machine task 01 alone measured **2720 s** (45 minutes) against the documented 479 s, so roughly 4x slower again. The slowest cell the benchmark accepts is Raku's task 02 at about 10 minutes. |
 
 **Duplicate of a row that already exists.**
 
