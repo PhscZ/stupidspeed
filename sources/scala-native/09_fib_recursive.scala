@@ -15,7 +15,8 @@ object Main {
 
   def main(args: Array[String]): Unit = {
     val __t0 = System.nanoTime()
+    val answer = fib(40L)
     System.err.println("TIME_MS=" + (System.nanoTime() - __t0) / 1e6)
-    println(fib(40L))
+    println(answer)
   }
 }

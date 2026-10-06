@@ -20,7 +20,7 @@ NB.       4x cell: the same 25M-iteration worker takes 10.5 s on the master
 NB.       thread and 19.3 s inside a worker thread, so J's explicit verbs run
 NB.       about 1.8x slower per thread, which caps the gain. See RUN.md.
 
-__t0 =: 6!:1 ''
+t0 =: 6!:1 ''
 
 worker =: 3 : 0
   acc =. 0
@@ -49,8 +49,9 @@ worker =: 3 : 0
 
 parts =. > each worker t. 'worker'"0 ] 0 1 2 3
 
-__t1 =: 6!:1 ''
-stderr 'TIME_MS=', (": (__t1 - __t0) * 1000)
+res =: ": +/ > parts
+t1 =: 6!:1 ''
+stderr 'TIME_MS=', (": (t1 - t0) * 1000)
 
-stdout (": +/ > parts), LF
+stdout res, LF
 exit 0

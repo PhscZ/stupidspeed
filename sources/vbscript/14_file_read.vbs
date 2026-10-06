@@ -22,6 +22,7 @@ Const CHUNKSZ = 1048576
 
 Dim st, chunk, total, i, n
 
+ssT0 = Timer()
 Set st = CreateObject("ADODB.Stream")
 st.Type = 2
 st.Charset = "ISO-8859-1"
@@ -54,7 +55,6 @@ Dim ssT0
 Sub ssReport()
     WScript.StdErr.WriteLine "TIME_MS=" & CLng(Round((Timer() - ssT0) * 1000))
 End Sub
-ssT0 = Timer()
 Function DecStr(v)
     Dim parts(), np, p, r, s, i
 

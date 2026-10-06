@@ -24,7 +24,7 @@ main :-
     close(S),
     get_time(T1),
     Ms is (T1 - T0) * 1000,
-    format(standard_error, "TIME_MS=~3f~n", [Ms]),
+    format(user_error, "TIME_MS=~3f~n", [Ms]),
     format("~w~n", [Written]).
 
 copies(0, _, []) :-

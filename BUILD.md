@@ -226,7 +226,7 @@ their place come **OpenJ9 at 388 MB** — the IBM Semeru JDK zip, extracted, wit
 and `java` — and **MASM**, which installs nothing, because `ml64.exe` and `link.exe` come from
 the MSVC tree the `msvc` row already has. The `nasm` row's Windows build likewise reuses the
 assembler already on the host. **Unicon** adds 84 MB, unpacked from a 15 MB installer, and the four rows after it add about **4.4 GB**, almost all of it one term: **GHC at 4.1 GB**, extracted from a 452 MB `.tar.xz`, because the bindist carries a complete MinGW toolchain and the libraries for every package that ships with it. **gforth** is about 100 MB, **Lobster** about 30 MB and **Mercury** about 200 MB installed from a source build.
-That puts the current total at about **41 GB for all 138 toolchains**.
+That puts the current total at about **41 GB for all 137 toolchains**.
 The three interpreted WebAssembly rows add about **0.14 GB** on top of the six that already
 existed: the single-file `ruby.wasm` is 99 MB, the Lua build reuses the `wasi-sdk` tree the C
 row already installs and adds only a 716 KB `lua.wasm`, and the CPython WASI build is a 28 MB
@@ -620,7 +620,6 @@ time is zero. Everything is paid at run time.
 | PHP | zend + jit | as above | as above | Same interpreter, with `-d opcache.enable_cli=1 -d opcache.jit=tracing -d opcache.jit_buffer_size=64M`. **`-d opcache.jit=tracing` is required**: PHP 8.5 changed the master default of `opcache.jit` to `disable`, so `opcache.jit_buffer_size` alone leaves the JIT off (`opcache_get_status()` reports `jit.on=false`, `buffer_size=0`) and the row would measure only opcache bytecode caching. With the flag set the JIT is on and the effect is large — measured 4.2x on task 01, 6.0x on 09 and 12.3x on 11. |
 | Python | cpython, pypy, graalpy |
 | Python | jython | 2.7.4 | github.com/jython/jython releases, `jython-standalone-2.7.4.jar` (48 MB) — a single self-contained jar, no installer and no admin. Needs a JRE on `PATH`; the `openj9` row's JDK runs it. | **No build step**: `java -jar tools/jython/jython-standalone-2.7.4.jar <task>.py`. **Jython 2.7 is Python 2**, not Python 3: `print` is a statement, there are no f-strings, `/` on integers is floor division, and the loop form is `xrange`. The sources are therefore Python-2 rewrites, not the `cpython` row's files. Python 2's `long` is arbitrary precision, so task 10 uses native bignums rather than hand-rolled limbs. `java.lang.Thread` gives real JVM threads, so task 11 is four real threads. `System/nanoTime` is the clock and `sys.stderr` is stderr. |
-| Ruby | cruby + yjit, jruby |
 | Lua | puc-lua, luajit |
 | Perl | perl |
 | R | gnu-r |
@@ -1098,8 +1097,8 @@ deprecation makes the Windows Script Host engines a Feature on Demand in Windows
 present and enabled at first — then disables them by default, and finally removes them;
 `RUN.md` carries the platform detail.
 
-Note that six of these are JITs rather than plain interpreters, and the distinction matters
-for the numbers: `luajit`, `php zend + jit`, `cruby + yjit`, `dart jit`, `julia` and Dolphin all
+Note that five of these are JITs rather than plain interpreters, and the distinction matters
+for the numbers: `luajit`, `php zend + jit`, `dart jit`, `julia` and Dolphin all
 start out interpreting and compile hot code as they run, so their first seconds are slower
 than their steady state. A short task therefore measures the warm-up, not the JIT.
 

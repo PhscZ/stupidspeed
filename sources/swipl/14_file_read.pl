@@ -16,7 +16,7 @@ main :-
     Checksum is Total mod 4294967296,
     get_time(T1),
     Ms is (T1 - T0) * 1000,
-    format(standard_error, "TIME_MS=~3f~n", [Ms]),
+    format(user_error, "TIME_MS=~3f~n", [Ms]),
     format("~w~n", [Checksum]).
 
 read_loop(S, Acc, Total) :-

@@ -9,7 +9,7 @@ NB.       bulk count of 'h' with +/ text = 'h'. The 'a' and 'e' branches are the
 NB.       empty else-if arms the task asks for, present as comments in their bodies.
 NB. note: while., not for_i. i. 100000000, for the reason in 01_branches.ijs.
 
-__t0 =: 6!:1 ''
+t0 =: 6!:1 ''
 
 char_count =: 3 : 0
   text =. 100000000 $ 'abcdefghij'
@@ -30,8 +30,9 @@ char_count =: 3 : 0
   ": count
 )
 
-__t1 =: 6!:1 ''
-stderr 'TIME_MS=', (": (__t1 - __t0) * 1000)
+res =: char_count''
+t1 =: 6!:1 ''
+stderr 'TIME_MS=', (": (t1 - t0) * 1000)
 
-stdout (char_count''), LF
+stdout res, LF
 exit 0

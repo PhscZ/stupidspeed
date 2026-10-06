@@ -8,6 +8,7 @@
 # note: the total is reduced with 'mod 4294967296' at the end, as in the other rows.
 
 $ include "seed7_05.s7i";
+  include "time.s7i";
 
 (* timing: GET_TIME (TIM_NOW) is Seed7's clock, giving the local time of day down to
    the microsecond; TIME_MS goes to stderr with writeln(STD_ERR, ...), and stdout is

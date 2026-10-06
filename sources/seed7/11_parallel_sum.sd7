@@ -21,6 +21,7 @@
 #       these loop counts.
 
 $ include "seed7_05.s7i";
+  include "time.s7i";
   include "process.s7i";
 
 (* timing: GET_TIME (TIM_NOW) is Seed7's clock, giving the local time of day down to

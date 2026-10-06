@@ -5,7 +5,7 @@ NB.       explicit definitions, so every one of the ~331 million calls is an
 NB.       interpreted call; that is the honest shape of this cell and the reason
 NB.       it is the slowest in the row.
 
-__t0 =: 6!:1 ''
+t0 =: 6!:1 ''
 
 fib =: 3 : 0
   if. y < 2 do.
@@ -15,8 +15,9 @@ fib =: 3 : 0
   end.
 )
 
-__t1 =: 6!:1 ''
-stderr 'TIME_MS=', (": (__t1 - __t0) * 1000)
+res =: ": fib 40
+t1 =: 6!:1 ''
+stderr 'TIME_MS=', (": (t1 - t0) * 1000)
 
-stdout (": fib 40), LF
+stdout res, LF
 exit 0

@@ -6,7 +6,7 @@ NB. note: the four counters are machine integers (J's integer, 64-bit here), so 
 NB.       counts are exact. They are printed one atom at a time: ": on the whole
 NB.       list pads every number to a common width and would not match the line.
 
-__t0 =: 6!:1 ''
+t0 =: 6!:1 ''
 
 branches =: 3 : 0
   a =. 0
@@ -29,8 +29,9 @@ branches =: 3 : 0
   (": a) , ' ' , (": b) , ' ' , (": c) , ' ' , ": d
 )
 
-__t1 =: 6!:1 ''
-stderr 'TIME_MS=', (": (__t1 - __t0) * 1000)
+res =: branches''
+t1 =: 6!:1 ''
+stderr 'TIME_MS=', (": (t1 - t0) * 1000)
 
-stdout (branches''), LF
+stdout res, LF
 exit 0

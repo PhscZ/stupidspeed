@@ -19,7 +19,7 @@
 (* note: measured: 0.617 s for 125 million multiply-adds, 4.9 ns each. *)
 fun main () =
   let
-    val __t0 = Time.now ()
+    val t0 = Time.now ()
     val n = 500
     val a = Array.array (n * n, 0)
     val b = Array.array (n * n, 0)
@@ -58,7 +58,7 @@ fun main () =
     val () = build 0
     val () = mul 0
     val result = sum (0, 0)
-    val () = TextIO.output (TextIO.stdErr, "TIME_MS=" ^ Real.fmt (StringCvt.FIX (SOME 3)) (Time.toReal (Time.- (Time.now (), __t0)) * 1000.0) ^ "\n")
+    val () = TextIO.output (TextIO.stdErr, "TIME_MS=" ^ Real.fmt (StringCvt.FIX (SOME 3)) (Time.toReal (Time.- (Time.now (), t0)) * 1000.0) ^ "\n")
   in
     print (Int.toString result ^ "\n")
   end

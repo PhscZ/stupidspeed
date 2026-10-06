@@ -7,7 +7,7 @@ NB.       loop. No +/ . * (matrix product) anywhere in the timed path.
 NB. note: every index is parenthesised as ((i * n) + k) because J evaluates right
 NB.       to left and i * n + k would be i * (n + k); see 12_matrix_add.ijs.
 
-__t0 =: 6!:1 ''
+t0 =: 6!:1 ''
 
 matrix_mul =: 3 : 0
   n =. 500
@@ -49,8 +49,9 @@ matrix_mul =: 3 : 0
   ": total
 )
 
-__t1 =: 6!:1 ''
-stderr 'TIME_MS=', (": (__t1 - __t0) * 1000)
+res =: matrix_mul''
+t1 =: 6!:1 ''
+stderr 'TIME_MS=', (": (t1 - t0) * 1000)
 
-stdout (matrix_mul''), LF
+stdout res, LF
 exit 0

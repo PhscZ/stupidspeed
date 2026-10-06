@@ -20,9 +20,9 @@ fun fib n = if n < 2 then n else fib (n - 1) + fib (n - 2)
 
 fun main () =
   let
-    val __t0 = Time.now ()
+    val t0 = Time.now ()
     val result = fib 40
-    val () = TextIO.output (TextIO.stdErr, "TIME_MS=" ^ Real.fmt (StringCvt.FIX (SOME 3)) (Time.toReal (Time.- (Time.now (), __t0)) * 1000.0) ^ "\n")
+    val () = TextIO.output (TextIO.stdErr, "TIME_MS=" ^ Real.fmt (StringCvt.FIX (SOME 3)) (Time.toReal (Time.- (Time.now (), t0)) * 1000.0) ^ "\n")
   in
     print (Int.toString result ^ "\n")
   end

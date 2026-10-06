@@ -8,6 +8,7 @@
 '       through DecStr because CStr would use scientific notation above about 1e15.
 Dim arr(999999), i, total
 
+ssT0 = Timer()
 For i = 0 To 999999
     arr(i) = i
 Next
@@ -30,7 +31,6 @@ Dim ssT0
 Sub ssReport()
     WScript.StdErr.WriteLine "TIME_MS=" & CLng(Round((Timer() - ssT0) * 1000))
 End Sub
-ssT0 = Timer()
 Function DecStr(v)
     Dim parts(), np, p, r, s, i
 

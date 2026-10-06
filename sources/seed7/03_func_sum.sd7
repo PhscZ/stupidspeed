@@ -25,6 +25,7 @@
 #       only inlines calls whose body is a single special action, and INT_ADD is not one.
 
 $ include "seed7_05.s7i";
+  include "time.s7i";
   include "03_func_sum_add_one.s7i";
 
 (* timing: GET_TIME (TIM_NOW) is Seed7's clock, giving the local time of day down to

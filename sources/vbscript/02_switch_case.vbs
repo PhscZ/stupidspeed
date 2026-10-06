@@ -10,6 +10,7 @@
 '       DecStr, which assembles the digits by hand from 1e6-sized chunks.
 Dim acc, i
 
+ssT0 = Timer()
 acc = 0
 
 For i = 0 To 99999999
@@ -38,7 +39,6 @@ Dim ssT0
 Sub ssReport()
     WScript.StdErr.WriteLine "TIME_MS=" & CLng(Round((Timer() - ssT0) * 1000))
 End Sub
-ssT0 = Timer()
 Function DecStr(v)
     Dim parts(), np, p, r, s, i
 

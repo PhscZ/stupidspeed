@@ -28,7 +28,7 @@
         like. *)
 fun main () =
   let
-    val __t0 = Time.now ()
+    val t0 = Time.now ()
     val slots = Array.array (256, Word8Array.array (64, 0w0))
     fun loop (i, total) =
       if i >= 10000000 then total
@@ -42,7 +42,7 @@ fun main () =
           loop (i + 1, total + v)
         end
     val result = loop (0, 0)
-    val () = TextIO.output (TextIO.stdErr, "TIME_MS=" ^ Real.fmt (StringCvt.FIX (SOME 3)) (Time.toReal (Time.- (Time.now (), __t0)) * 1000.0) ^ "\n")
+    val () = TextIO.output (TextIO.stdErr, "TIME_MS=" ^ Real.fmt (StringCvt.FIX (SOME 3)) (Time.toReal (Time.- (Time.now (), t0)) * 1000.0) ^ "\n")
   in
     print (Int.toString result ^ "\n")
   end

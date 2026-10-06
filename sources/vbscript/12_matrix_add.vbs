@@ -10,6 +10,7 @@
 '       DecStr anyway so that every task in this row formats its integers the same way.
 Dim n, A(999999), B(999999), C(999999), i, j, k, total
 
+ssT0 = Timer()
 n = 1000
 
 For i = 0 To n - 1
@@ -43,7 +44,6 @@ Dim ssT0
 Sub ssReport()
     WScript.StdErr.WriteLine "TIME_MS=" & CLng(Round((Timer() - ssT0) * 1000))
 End Sub
-ssT0 = Timer()
 Function DecStr(v)
     Dim parts(), np, p, r, s, i
 

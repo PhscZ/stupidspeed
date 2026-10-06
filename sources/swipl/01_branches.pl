@@ -18,7 +18,7 @@ loop(I, A, B, C, D) :-
     ->  nb_getval(time_t0, T0),
         get_time(T1),
         Ms is (T1 - T0) * 1000,
-        format(standard_error, "TIME_MS=~3f~n", [Ms]),
+        format(user_error, "TIME_MS=~3f~n", [Ms]),
         format("~w ~w ~w ~w~n", [A, B, C, D])
     ;   M3 is I mod 3,
         (   M3 =:= 0

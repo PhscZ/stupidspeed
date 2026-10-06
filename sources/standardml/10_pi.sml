@@ -23,7 +23,7 @@
         README publishes for every row. *)
 fun main () =
   let
-    val __t0 = Time.now ()
+    val t0 = Time.now ()
     val NDIG = 1000
     fun go (q : IntInf.int, r, t, k, nn, l, count, acc) =
       if count >= NDIG then acc
@@ -34,7 +34,7 @@ fun main () =
         go (q * k, (2 * q + r) * l, t * l, k + 1,
             (q * (7 * k + 2) + r * l) div (t * l), l + 2, count, acc)
     val total = go (1, 0, 1, 1, 3, 3, 0, 0)
-    val () = TextIO.output (TextIO.stdErr, "TIME_MS=" ^ Real.fmt (StringCvt.FIX (SOME 3)) (Time.toReal (Time.- (Time.now (), __t0)) * 1000.0) ^ "\n")
+    val () = TextIO.output (TextIO.stdErr, "TIME_MS=" ^ Real.fmt (StringCvt.FIX (SOME 3)) (Time.toReal (Time.- (Time.now (), t0)) * 1000.0) ^ "\n")
   in
     print (IntInf.toString total ^ "\n")
   end

@@ -6,6 +6,7 @@
 #       peak working set for this task: about 390 MB, against 12 to 24 MB for the others.
 
 $ include "seed7_05.s7i";
+  include "time.s7i";
 
 (* timing: GET_TIME (TIM_NOW) is Seed7's clock, giving the local time of day down to
    the microsecond; TIME_MS goes to stderr with writeln(STD_ERR, ...), and stdout is

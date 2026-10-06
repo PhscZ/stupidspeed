@@ -8,7 +8,7 @@ NB.       is designed to probe — the same situation the Raku, Erlang and Elixi
 NB.       record. It is measured and recorded, not worked around.
 NB. note: while., not for_i. i. 250000, for the reason in 01_branches.ijs.
 
-__t0 =: 6!:1 ''
+t0 =: 6!:1 ''
 
 string_append =: 3 : 0
   text =. ''
@@ -20,8 +20,9 @@ string_append =: 3 : 0
   ": # text
 )
 
-__t1 =: 6!:1 ''
-stderr 'TIME_MS=', (": (__t1 - __t0) * 1000)
+res =: string_append''
+t1 =: 6!:1 ''
+stderr 'TIME_MS=', (": (t1 - t0) * 1000)
 
-stdout (string_append''), LF
+stdout res, LF
 exit 0

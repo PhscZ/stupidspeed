@@ -18,13 +18,13 @@
         prints the same thing.) measured: 1.140 s, 11.4 ns per iteration. *)
 fun main () =
   let
-    val __t0 = Time.now ()
+    val t0 = Time.now ()
     fun loop (i, total) =
       if i >= 100000000 then total
       else loop (i + 1, total + Real.fromInt (i mod 256) / 256.0)
-    val total = loop (0, 0)
+    val total = loop (0, 0.0)
     val result = total / 100000000.0
-    val () = TextIO.output (TextIO.stdErr, "TIME_MS=" ^ Real.fmt (StringCvt.FIX (SOME 3)) (Time.toReal (Time.- (Time.now (), __t0)) * 1000.0) ^ "\n")
+    val () = TextIO.output (TextIO.stdErr, "TIME_MS=" ^ Real.fmt (StringCvt.FIX (SOME 3)) (Time.toReal (Time.- (Time.now (), t0)) * 1000.0) ^ "\n")
   in
     print (Real.toString result ^ "\n")
   end

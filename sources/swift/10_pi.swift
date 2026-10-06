@@ -23,7 +23,7 @@ import Foundation
 
 func ssReport(_ t0: Date) {
     let ms = Date().timeIntervalSince(t0) * 1000
-    FileHandle.standardError.write("TIME_MS=" + String(format: "%.3f", ms) + "\n".data(using: .utf8)!)
+    FileHandle.standardError.write(("TIME_MS=" + String(format: "%.3f", ms) + "\n").data(using: .utf8)!)
 }
 let ssT0 = Date()
 

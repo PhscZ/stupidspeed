@@ -6,7 +6,7 @@ NB.       the amend in place because the same name is on both sides, so no copy 
 NB.       the million-element array is made per iteration. The sum is a plain
 NB.       accumulating loop, not +/ arr.
 
-__t0 =: 6!:1 ''
+t0 =: 6!:1 ''
 
 array_sum =: 3 : 0
   arr =. 1000000 $ 0
@@ -24,8 +24,9 @@ array_sum =: 3 : 0
   ": total
 )
 
-__t1 =: 6!:1 ''
-stderr 'TIME_MS=', (": (__t1 - __t0) * 1000)
+res =: array_sum''
+t1 =: 6!:1 ''
+stderr 'TIME_MS=', (": (t1 - t0) * 1000)
 
-stdout (array_sum''), LF
+stdout res, LF
 exit 0

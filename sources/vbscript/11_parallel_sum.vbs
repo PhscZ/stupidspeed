@@ -22,6 +22,7 @@ If WScript.Arguments.Count = 1 Then
     WScript.Quit 0
 End If
 
+ssT0 = Timer()
 Set shell = CreateObject("WScript.Shell")
 
 For t = 0 To 3
@@ -68,7 +69,6 @@ Dim ssT0
 Sub ssReport()
     WScript.StdErr.WriteLine "TIME_MS=" & CLng(Round((Timer() - ssT0) * 1000))
 End Sub
-ssT0 = Timer()
 Function DecStr(v)
     Dim parts(), np, p, r, s, i
 

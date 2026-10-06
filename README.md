@@ -11,7 +11,7 @@ them is in `RUN.md`.
 ## Results
 
 One row per toolchain, one column per task. The column headings are the task numbers, and
-the task names are the section headings under [Tasks](#tasks). All 138 toolchains, empty and
+the task names are the section headings under [Tasks](#tasks). All 137 toolchains, empty and
 ready to fill in.
 
 A cell holds the median of the 5 timed runs, in milliseconds.
@@ -62,7 +62,6 @@ A cell holds the median of the 5 timed runs, in milliseconds.
 | Python | cython |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Python | graalpy |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Python | jython |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| Ruby | cruby + yjit |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Ruby | jruby |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Lua | puc-lua |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Lua | luajit |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -530,7 +529,7 @@ Output: `52428800`
 | JavaScript | node, bun, deno, spidermonkey, quickjs |
 | PHP | zend, zend + jit |
 | Python | cpython, pypy, nuitka, cython, graalpy, jython |
-| Ruby | cruby + yjit, jruby |
+| Ruby | jruby |
 | Lua | puc-lua, luajit |
 | Perl | perl |
 | R | gnu-r, gnu-r (no JIT) |
@@ -629,6 +628,7 @@ its hand-rolled limbs are two orders of magnitude too slow to run.
 | Austral | v0.2.0 ships a Linux binary only. |
 | gccgo | No Windows port of the Go front end's runtime. |
 | OpenAPL | Needs a POSIX port: `values.h`, `sys/times.h`, `sys/wait.h` and `fork`/`pipe`/`kill` are used directly, and no Windows build exists. |
+| Ruby (`cruby + yjit`) | YJIT has no Windows support: its mingw build needs `sys/mman.h`, which mingw does not provide, so `--enable-yjit` fails to compile (Ruby bug #19267), and the MSVC route still lacks the Microsoft x86 calling convention (feature #18439, still assigned). Feature #19325 "YJIT: Windows support lacking" is open, and no RubyInstaller build enables it. The `jruby` row still covers Ruby on the JVM. |
 
 **Fails.**
 

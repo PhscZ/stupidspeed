@@ -7,6 +7,7 @@
 #       the Raku, Erlang and Elixir rows carry.
 
 $ include "seed7_05.s7i";
+  include "time.s7i";
 
 (* timing: GET_TIME (TIM_NOW) is Seed7's clock, giving the local time of day down to
    the microsecond; TIME_MS goes to stderr with writeln(STD_ERR, ...), and stdout is

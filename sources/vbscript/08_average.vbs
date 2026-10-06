@@ -13,6 +13,7 @@
 '       scaled is exactly 498046875.5.
 Dim total, i, reading
 
+ssT0 = Timer()
 total = 0.0
 
 For i = 0 To 99999999
@@ -33,7 +34,6 @@ Dim ssT0
 Sub ssReport()
     WScript.StdErr.WriteLine "TIME_MS=" & CLng(Round((Timer() - ssT0) * 1000))
 End Sub
-ssT0 = Timer()
 Function Fixed9(v)
     Dim ip, fp, f
 

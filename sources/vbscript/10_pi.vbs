@@ -43,6 +43,7 @@ Const WV = 5
 Dim LB(5, 39999), LN(5), LG(5)
 Dim k, l, n, sum, produced, nextn
 
+ssT0 = Timer()
 BSet QV, 1
 BSet RV, 0
 BSet TV, 1
@@ -110,7 +111,6 @@ Sub BSet(ByVal x, ByVal v)
     LG(x) = 0
 End Sub
 
-ssT0 = Timer()
 Sub BCopy(ByVal d, ByVal s)
     Dim i, c
     c = LN(s)

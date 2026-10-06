@@ -5,6 +5,7 @@
 #       exactly representable, so it prints unchanged.
 
 $ include "seed7_05.s7i";
+  include "time.s7i";
   include "float.s7i";
 
 (* timing: GET_TIME (TIM_NOW) is Seed7's clock, giving the local time of day down to

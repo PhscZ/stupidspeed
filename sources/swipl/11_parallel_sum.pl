@@ -28,7 +28,7 @@ main :-
     thread_join(Id3, _),
     get_time(T1),
     Ms is (T1 - T0) * 1000,
-    format(standard_error, "TIME_MS=~3f~n", [Ms]),
+    format(user_error, "TIME_MS=~3f~n", [Ms]),
     format("~w~n", [Total]).
 
 work(Me, T) :-

@@ -8,7 +8,7 @@ NB. note: J evaluates right to left, so the index is written ((i * n) + j): the
 NB.       unparenthesised i * n + j is i * (n + j). Every index in this row and in
 NB.       13_matrix_mul.ijs is parenthesised for that reason.
 
-__t0 =: 6!:1 ''
+t0 =: 6!:1 ''
 
 matrix_add =: 3 : 0
   n =. 1000
@@ -40,8 +40,9 @@ matrix_add =: 3 : 0
   ": total
 )
 
-__t1 =: 6!:1 ''
-stderr 'TIME_MS=', (": (__t1 - __t0) * 1000)
+res =: matrix_add''
+t1 =: 6!:1 ''
+stderr 'TIME_MS=', (": (t1 - t0) * 1000)
 
-stdout (matrix_add''), LF
+stdout res, LF
 exit 0

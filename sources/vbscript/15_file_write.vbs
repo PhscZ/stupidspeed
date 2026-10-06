@@ -23,6 +23,7 @@ Const REPEATS = 50
 
 Dim hexpat, hexbuf, doc, node, bytes, st, i, written
 
+ssT0 = Timer()
 hexpat = ""
 For i = 0 To 255
     hexpat = hexpat & Right("0" & Hex(i), 2)
@@ -60,7 +61,6 @@ Dim ssT0
 Sub ssReport()
     WScript.StdErr.WriteLine "TIME_MS=" & CLng(Round((Timer() - ssT0) * 1000))
 End Sub
-ssT0 = Timer()
 Function DecStr(v)
     Dim parts(), np, p, r, s, i
 

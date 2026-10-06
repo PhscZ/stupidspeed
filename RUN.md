@@ -64,7 +64,6 @@ Languages compiled to a static native binary need nothing. The rest need the fol
 | Python | jython | the JRE (`openj9`'s JDK) plus the standalone jar | Jython 2.7.4 is Python 2 — `print` is a statement and `xrange` is the loop form. `long` is arbitrary precision and `java.lang.Thread` is real threads. |
 | Python | cython | the interpreter's `python3xx.dll` | the built `.exe` is **not** standalone: it imports the CPython DLL, so the matching CPython installation has to be beside it or on `PATH`. That DLL is the interpreter the program embeds, not a runtime for the compiled code — the loops are native. |
 | Python | nuitka | none | standalone binary |
-| Ruby | cruby + yjit | Ruby | **the stock Windows build has no YJIT**: `ruby --yjit` warns "Ruby was built without YJIT support". The `cruby + yjit` row needs a Ruby built with rustc present. |
 | Ruby | jruby | JRE + JRuby | needs Java 25 |
 | Lua | puc-lua, luajit | the interpreter | task 11 also needs the Lanes extension, see below. A Windows Lua distribution that ships `luarocks.exe` (the 5.4.6 build used here) installs it with one command, `luarocks install lanes`, given a MinGW `gcc` on `PATH`; the rock lands outside the interpreter tree, so `LUA_PATH`/`LUA_CPATH` must point at it or `require("lanes")` fails with `module 'lanes' not found`. |
 | Luau | luau, lute | the interpreter, and Lute for tasks 11, 14 and 15 | the plain Luau CLI has no file I/O and no process API at all — no `io`, no `os.execute`, no `package` — so those three tasks need Lute, the Luau team's own runtime. |
@@ -711,7 +710,7 @@ row's own `timing:` comment as well.
 
 ## Expected cost
 
-Every task runs six times, in 138 toolchains.
+Every task runs six times, in 137 toolchains.
 
 - Fast compiled languages: under a second per run, so about **1.5 hours** for the matrix.
 - The 100-million-iteration tasks take 10 to 15 seconds in CPython.

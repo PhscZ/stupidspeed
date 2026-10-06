@@ -11,7 +11,7 @@ NB.       to the OS before the program prints, which is the strongest guarantee 
 NB.       offers. This is a documented deviation, not a silent one.
 NB. note: out.bin is erased first so that the result is the same on a rerun.
 
-__t0 =: 6!:1 ''
+t0 =: 6!:1 ''
 
 1!:55 :: 0: <'out.bin'
 
@@ -27,8 +27,9 @@ file_write =: 3 : 0
   ": written
 )
 
-__t1 =: 6!:1 ''
-stderr 'TIME_MS=', (": (__t1 - __t0) * 1000)
+res =: file_write''
+t1 =: 6!:1 ''
+stderr 'TIME_MS=', (": (t1 - t0) * 1000)
 
-stdout (file_write''), LF
+stdout res, LF
 exit 0

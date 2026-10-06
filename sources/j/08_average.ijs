@@ -8,7 +8,7 @@ NB.       them are exact in a double and the total does not depend on the order 
 NB.       the additions.
 NB. note: while., not for_i. i. 100000000, for the reason in 01_branches.ijs.
 
-__t0 =: 6!:1 ''
+t0 =: 6!:1 ''
 
 average =: 3 : 0
   total =. 0.0
@@ -21,8 +21,9 @@ average =: 3 : 0
   (":!.12) total % 100000000
 )
 
-__t1 =: 6!:1 ''
-stderr 'TIME_MS=', (": (__t1 - __t0) * 1000)
+res =: average''
+t1 =: 6!:1 ''
+stderr 'TIME_MS=', (": (t1 - t0) * 1000)
 
-stdout (average''), LF
+stdout res, LF
 exit 0

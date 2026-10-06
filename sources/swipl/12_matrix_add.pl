@@ -15,7 +15,7 @@ main :-
     add(1, A, B, C, 0, Total),
     get_time(T1),
     Ms is (T1 - T0) * 1000,
-    format(standard_error, "TIME_MS=~3f~n", [Ms]),
+    format(user_error, "TIME_MS=~3f~n", [Ms]),
     format("~w~n", [Total]).
 
 fill(I, A, B) :-

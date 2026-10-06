@@ -10,7 +10,7 @@ NB.       integer divide x <.@% y are exact on it. Every intermediate is
 NB.       parenthesised because J evaluates right to left: 7 * k + 2 would be
 NB.       7*(k+2), not (7*k)+2.
 
-__t0 =: 6!:1 ''
+t0 =: 6!:1 ''
 
 pi =: 3 : 0
   q =. 1x
@@ -47,8 +47,9 @@ pi =: 3 : 0
   ": sum
 )
 
-__t1 =: 6!:1 ''
-stderr 'TIME_MS=', (": (__t1 - __t0) * 1000)
+res =: pi''
+t1 =: 6!:1 ''
+stderr 'TIME_MS=', (": (t1 - t0) * 1000)
 
-stdout (pi''), LF
+stdout res, LF
 exit 0
