@@ -226,7 +226,7 @@ their place come **OpenJ9 at 388 MB** — the IBM Semeru JDK zip, extracted, wit
 and `java` — and **MASM**, which installs nothing, because `ml64.exe` and `link.exe` come from
 the MSVC tree the `msvc` row already has. The `nasm` row's Windows build likewise reuses the
 assembler already on the host. **Unicon** adds 84 MB, unpacked from a 15 MB installer, and the four rows after it add about **4.4 GB**, almost all of it one term: **GHC at 4.1 GB**, extracted from a 452 MB `.tar.xz`, because the bindist carries a complete MinGW toolchain and the libraries for every package that ships with it. **gforth** is about 100 MB, **Lobster** about 30 MB and **Mercury** about 200 MB installed from a source build.
-That puts the current total at about **41 GB for all 140 toolchains**.
+That puts the current total at about **41 GB for all 138 toolchains**.
 The three interpreted WebAssembly rows add about **0.14 GB** on top of the six that already
 existed: the single-file `ruby.wasm` is 99 MB, the Lua build reuses the `wasi-sdk` tree the C
 row already installs and adds only a 716 KB `lua.wasm`, and the CPython WASI build is a 28 MB
@@ -396,7 +396,7 @@ nothing is written to disk and nothing is reused between runs.
 
 | Rows | Notes |
 |---|---|
-| `perl`, `tcl`, `vbscript`, `jscript`, `autohotkey`, `powershell` | parse and execute on each run |
+| `perl`, `tcl`, `vbscript`, `jscript`, `autohotkey` | parse and execute on each run |
 | `euphoria` | a tree-walking interpreter; no bytecode file |
 | `babashka` | babashka runs Clojure on SCI, an interpreter, inside a GraalVM native image |
 | `j`, `dyalog` | APL interpreters |
@@ -616,7 +616,8 @@ time is zero. Everything is paid at run time.
 | Language | Toolchain |
 |---|---|
 | JavaScript | node, bun, deno |
-| PHP | zend, zend + jit |
+| PHP | zend | 8.5.11 (ZTS) | windows.php.net, `php-8.5.11-Win32-vs17-x64.zip` (36 MB, the non-`nts` name is the thread-safe build), extracted into `tools/php-zts/` — no installer, no admin | **No build step**: `php <task>.php`. The row uses the **ZTS** build rather than the NTS one, because task 11 needs the PECL `parallel` extension and that extension only loads into a thread-safe PHP; `php_parallel-1.2.10-8.5-ts-vs17-x64.zip` from the Windows PECL builds goes into `ext/`, with `pthreadVC3.dll` beside `php.exe`, and `php.ini` must set **`extension_dir`** as well as `extension=parallel` — the build's compiled-in default is `C:\php\ext`, so a bare `extension=parallel` fails with `Unable to load dynamic library`. |
+| PHP | zend + jit | as above | as above | Same interpreter, with `-d opcache.enable_cli=1 -d opcache.jit=tracing -d opcache.jit_buffer_size=64M`. **`-d opcache.jit=tracing` is required**: PHP 8.5 changed the master default of `opcache.jit` to `disable`, so `opcache.jit_buffer_size` alone leaves the JIT off (`opcache_get_status()` reports `jit.on=false`, `buffer_size=0`) and the row would measure only opcache bytecode caching. With the flag set the JIT is on and the effect is large — measured 4.2x on task 01, 6.0x on 09 and 12.3x on 11. |
 | Python | cpython, pypy, graalpy |
 | Python | jython | 2.7.4 | github.com/jython/jython releases, `jython-standalone-2.7.4.jar` (48 MB) — a single self-contained jar, no installer and no admin. Needs a JRE on `PATH`; the `openj9` row's JDK runs it. | **No build step**: `java -jar tools/jython/jython-standalone-2.7.4.jar <task>.py`. **Jython 2.7 is Python 2**, not Python 3: `print` is a statement, there are no f-strings, `/` on integers is floor division, and the loop form is `xrange`. The sources are therefore Python-2 rewrites, not the `cpython` row's files. Python 2's `long` is arbitrary precision, so task 10 uses native bignums rather than hand-rolled limbs. `java.lang.Thread` gives real JVM threads, so task 11 is four real threads. `System/nanoTime` is the clock and `sys.stderr` is stderr. |
 | Ruby | cruby + yjit, jruby |
@@ -628,7 +629,6 @@ time is zero. Everything is paid at run time.
 | Julia | julia (interpreted) | 1.11 | the same tree the `julia` row installs — nothing extra | **No build step**: `julia --compile=min -O0 <task>.jl`. The sources are the `julia` row's own fifteen files, unchanged, so this is a compilation-strategy comparison rather than a second program. `--compile=min` turns off Julia's type-specialised code generation and `-O0` the LLVM optimisation pass, so the loop bodies are interpreted rather than JIT-compiled. The cost is real and large: measured 438 s for task 01 and 535 s for task 02 against about 20 ms and 15 ms under the default JIT. Task 11 must be run with **`-t4`** (`julia --compile=min -O0 -t4`), or its four `Threads.@threads` workers have one thread to share and the cell becomes a correct-answer-no-speedup; with `-t4` it measured 151 s against a 497 s single-thread baseline on the same range, a 3.3x speedup. The worst cells are task 13 at **942 s** and task 14 at **954 s**. That is the honest price of the language's interpreter, not a workaround. |
 | Dart | jit |
 | GDScript | godot --headless | 4.7.2 | godotengine.org, `Godot_v4.7.2-stable_win64.exe` — a single self-contained binary, no installer and no admin | **No build step**: `Godot_v4.7.2-stable_win64_console.exe --headless --script <task>.gd`, run from the directory holding the scripts and `project.godot`. **Use the `_console.exe` build**: the plain `.exe` is a GUI subsystem program whose output never reaches a pipe, the same trap as Dyalog's `dyalog.exe` and Dolphin's `Dolphin8.exe`. Each script `extends SceneTree` and does its work in `_initialize()`. This is the slowest row in the matrix — the 100 M-iteration loops take tens of seconds each. |
-| PowerShell | powershell, pwsh |
 | Groovy | groovy | 4.0.33 | groovy.apache.org / dlcdn.apache.org, `apache-groovy-binary-4.0.33.zip` (30 MB), extracted — no installer and no admin | **No build step**: `groovy <task>.groovy`, with `GROOVY_HOME` set to the extracted tree and its `bin` on `PATH`. Needs a JDK on `PATH` (it runs on the system Java). Groovy's `def` would box the counters into `BigDecimal`, so the loop index and the four counters are declared `long` and the arithmetic stays primitive. `System.nanoTime` is the monotonic clock and `System.err` is stderr. |
 | Dolphin Smalltalk | Dolphin 8 | 8.2.3 | github.com/dolphinsmalltalk/Dolphin releases, `Dolphin8Setup.exe` (42 MB), an Inno Setup installer unpacked with `innoextract -e -d tools/dolphin/` — no admin | **No build step**: `Dolphin8.exe DPRO.img8 -u -f <task>.st -q`, run from the directory holding the script. `DPRO.img8` ships in `userdocs/Dolphin Smalltalk 8/` and is copied next to `Dolphin8.exe`; the VM is 32-bit and needs the x86 VC++ runtime, which the installer carries as `tmp/vc_redist.x86.exe`. Scripts write through `SessionManager current stdout` and end with `SessionManager current quit: 0`. Two source fixes were needed: `cr` on a file stream hangs the VM, so the `time.txt` write ends with `nextPut: 10` instead, and task 09 read its clock *before* `fib value: 40` ran (the call sat inside the final output expression), so the call is hoisted above the timing write. |
 | Tcl | tclsh |

@@ -59,7 +59,7 @@ Languages compiled to a static native binary need nothing. The rest need the fol
 | JavaScript | spidermonkey | the shell binary is the whole runtime | `js.exe <task>.js`. Real OS threads via `evalInWorker`, which runs its argument on a separate thread; cross-thread data needs a `SharedArrayBuffer` that the main thread has registered with `setSharedArrayBuffer()` first, with `Atomics` for the join — without that registration the worker's `getSharedArrayBuffer()` throws `RangeError`. Task 10 is a built-in-bignum cell: BigInt is native. `os.file.readFile(name, "binary")` gives the bytes as an ArrayBuffer, and `os.file` has no chunked read or append, so tasks 14 and 15 read and write the whole 50 MiB in one call. |
 | JavaScript | quickjs | none | the binary is the whole runtime. Needs `--std` for the `std`/`os` modules, which is also what gives stderr. No threads. |
 | PHP | zend | PHP + opcache | task 11 needs the `parallel` PECL extension, which stock PHP does not ship and which requires a ZTS build. |
-| PHP | zend + jit | PHP + opcache | JIT needs `opcache.enable_cli=1`. The stock Windows zip ships no `php.ini`, so JIT is off until you write one and set `opcache.jit_buffer_size`. Same `parallel` requirement as the row above for task 11. |
+| PHP | zend + jit | PHP + opcache | JIT needs `opcache.enable_cli=1` **and** `-d opcache.jit=tracing`: PHP 8.5 changed the master default of `opcache.jit` to `disable`, so `opcache.jit_buffer_size` alone leaves it off. Same ZTS + `parallel` requirement as the row above for task 11. |
 | Python | cpython, pypy, graalpy | the interpreter | |
 | Python | jython | the JRE (`openj9`'s JDK) plus the standalone jar | Jython 2.7.4 is Python 2 — `print` is a statement and `xrange` is the loop form. `long` is arbitrary precision and `java.lang.Thread` is real threads. |
 | Python | cython | the interpreter's `python3xx.dll` | the built `.exe` is **not** standalone: it imports the CPython DLL, so the matching CPython installation has to be beside it or on `PATH`. That DLL is the interpreter the program embeds, not a runtime for the compiled code — the loops are native. |
@@ -92,7 +92,6 @@ Languages compiled to a static native binary need nothing. The rest need the fol
 | Julia | julia | Julia | about 1 GB with the standard library. Task 11 must run as `julia -t4 <task>.jl`, or `Threads.@threads` stays on one thread. |
 | Julia | julia (interpreted) | Julia | `julia --compile=min -O0 <task>.jl`, and **`-t4` for task 11** (without it the four `Threads.@threads` workers share one thread and the cell is a correct-answer-no-speedup). Same fifteen files as the `julia` row. Interpreter, not JIT: the worst cells are 942 s (task 13) and 954 s (task 14) against ~20 ms compiled. |
 | GDScript | godot --headless | Godot binary | roughly a second of startup on its own |
-| PowerShell | powershell, pwsh | .NET runtime | **not a shell in the usual sense.** See below. |
 | Crystal | crystal | none | static by default; needs the MSVC toolchain to link |
 | Objective-C | clang | `libobjc-4.6.dll` + `gnustep-base-1_31.dll` + UCRT | the GNUstep runtime ships with the MSYS2 `ucrt64` packages |
 | Modula-2 | adw | none | static by default; the `time.txt` fallback carries `TIME_MS`, because ADW exposes no stderr handle. The clock is ISO `SysClock.GetClock` — local time of day, whole seconds plus `SysClock.fractions` — so a cell under a second is read in whole seconds. |
@@ -163,36 +162,6 @@ row's cells, so a difference there is a difference in the JDK rather than in the
 is the opposite case — the same fifteen files and the same `javac` invocation, a different VM
 executing them, so every one of its cells is a VM comparison.
 
-## PowerShell is a real language
-
-`powershell` is not a shell in the POSIX sense. It is a full language with typed data and
-real concurrency, and it can do far more of these tasks than a POSIX shell could. Every
-claim below was measured, not assumed.
-
-| Task | Needs | PowerShell 5.1 |
-|---|---|---|
-| 05 `alloc_churn` | allocation and GC | yes, the .NET GC |
-| 08 `average` | floating point | yes, `[double]` |
-| 10 `pi` | big integers | yes, `System.Numerics.BigInteger` |
-| 11 `parallel_sum` | threads | yes, runspace pools |
-
-### Task 11, measured
-
-Four workers of 25000000 iterations each, 100000000 total:
-
-| | Result | Time | Speedup vs serial |
-|---|---|---|---|
-| PowerShell, runspace pool | `7500000075000000` | **75.9 s** | 3.48x |
-| (serial, for reference) | `7500000075000000` | ~264 s | 1x |
-
-It prints the same number as the single-threaded task 02, which is the point of the task.
-
-How it does it: `[runspacefactory]::CreateRunspacePool(1, 4)`, backed by real .NET thread
-pool threads. `Start-Job` is the wrong choice here because it spawns a process per job,
-and `ForEach-Object -Parallel` does not exist before PowerShell 7.
-
-It should be listed beside C# and F#, not beside a POSIX shell.
-
 ## Task 11: which languages can actually do it
 
 Task 11 is the only task whose mechanism differs per language, and the only one that is not
@@ -207,7 +176,7 @@ C, C++, Rust, Zig, Go, D, Swift, Ada, Pascal, Java (three rows: `openjdk` uses
 parallel — an in-process probe of the identical loop measured **2.92x** for four virtual threads
 and **2.92x** for four platform threads on a 20-core host), Kotlin (both rows), C#, F#, VB.NET,
 Scala (both rows), Nim, Odin, Julia (`-t4`), Fortran (OpenMP, needs `-fopenmp`), Perl (ithreads),
-PHP (`parallel`, needs a ZTS build), PowerShell (runspace pools), Crystal (`Fiber::ExecutionContext::Parallel`),
+PHP (`parallel`, needs a ZTS build), Crystal (`Fiber::ExecutionContext::Parallel`),
 Objective-C (`NSThread`), Modula-2 (Win32 `Threads` module), Modula-3 (`Thread.Fork`), BASIC (`THREADCREATE`),
 Groovy (`java.lang.Thread`), Clojure (`java.lang.Thread` interop, not `future`), Common Lisp (`sb-thread:make-thread` on real Win32 threads), OCaml (`Domain.spawn`/`Domain.join`, OCaml 5 only), Erlang and Elixir (`spawn` onto a BEAM scheduler, one per core, no global lock), Raku (`start`, which MoarVM runs through `uv_thread_create`), Vala (`GLib.Thread`), Component Pascal (the .NET `Threading` module,
 via `REGISTER` on a bound method with the foreign `Th.ThreadStart` delegate), C3 (`std::thread`),
@@ -336,8 +305,8 @@ alternatives are `lua-llthreads2` and `LuaThread`, both also C extensions.
 does work everywhere is `makeCluster(type="PSOCK")`, which starts separate R processes and
 communicates over sockets. That produces the right answer. The `0.07 s against 0.15 s` figure
 this file used to quote for it is not consistent with the current task: 100000000 interpreter
-iterations of a `switch` cannot finish in 0.15 s when CPython needs 10 to 15 s and PowerShell
-264 s for the same work, so treat the R timing as unmeasured until it is re-run.
+iterations of a `switch` cannot finish in 0.15 s when CPython needs 10 to 15 s for the same
+work, so treat the R timing as unmeasured until it is re-run.
 Note that PSOCK workers start with an empty environment, so constants must be pushed out
 with `clusterExport` or they fail with `object 'N' not found`.
 
@@ -742,15 +711,10 @@ row's own `timing:` comment as well.
 
 ## Expected cost
 
-Every task runs six times, in 140 toolchains.
+Every task runs six times, in 138 toolchains.
 
 - Fast compiled languages: under a second per run, so about **1.5 hours** for the matrix.
 - The 100-million-iteration tasks take 10 to 15 seconds in CPython.
-- `powershell` costs about 2.64 us per iteration, so its 100-million-iteration loops take
-  around 264 seconds each. Its call-heavy and per-character tasks are far slower: 03 and 09
-  are 100 and 331 million interpreted calls, and 06 and 14 walk 100 million items one at a
-  time. Task 11 was measured at the full 100000000 iterations and prints the right answer;
-  see the section above.
 - The new rows are mostly slow, and they hold the slowest cells in the matrix:
   - **Component Pascal** task 10 is a .NET assembly running the same bounds-checked spigot; at
     10000 digits it took about 5 minutes a run, so about **3 s** at 1000.
@@ -935,8 +899,6 @@ discovering halfway through a run.
 
 | Toolchain | Linux | macOS | Windows |
 |---|---|---|---|
-| powershell (`powershell`) | no | no | yes |
-| powershell (`pwsh`) | yes | yes | yes |
 | tcc | yes | yes | yes (native win64 build) |
 | clang, clang++ | yes | yes | yes, but needs MinGW headers or the MSVC SDK |
 | swift | yes | yes | yes, via the burn-bundle extraction; needs MSVC to link |
@@ -996,9 +958,9 @@ discovering halfway through a run.
 official project builds only Windows targets) and both `assembly` rows (freestanding PE
 programs built against `kernel32.dll`). Linux also
 loses Tcl's task 11 unless the distribution bundles the `Thread` package. macOS loses
-both `assembly` rows, `msvc` and `dolphin smalltalk`, which exists nowhere else, plus the Windows
-PowerShell 5.1 row (use `pwsh` there), the Windows-only scripting rows (`vbscript`, `jscript`
-and `autohotkey`), and the two rows whose toolchain ships Windows-only
+both `assembly` rows, `msvc` and `dolphin smalltalk`, which exists nowhere else, plus the
+Windows-only scripting rows (`vbscript`, `jscript` and `autohotkey`), and the two rows whose
+toolchain ships Windows-only
 binaries: `oberon-07` (build the compiler with `make lin64` instead) and `component pascal`,
 which is .NET-only by construction and has no non-Windows release. The twenty-two newest rows were
 all verified on Windows x64; where a material file did not exercise Linux or macOS, the table

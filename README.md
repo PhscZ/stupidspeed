@@ -11,7 +11,7 @@ them is in `RUN.md`.
 ## Results
 
 One row per toolchain, one column per task. The column headings are the task numbers, and
-the task names are the section headings under [Tasks](#tasks). All 140 toolchains, empty and
+the task names are the section headings under [Tasks](#tasks). All 138 toolchains, empty and
 ready to fill in.
 
 A cell holds the median of the 5 timed runs, in milliseconds.
@@ -76,8 +76,6 @@ A cell holds the median of the 5 timed runs, in milliseconds.
 | Dart | jit |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Dart | aot |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | GDScript | godot --headless |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| PowerShell | powershell |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| PowerShell | pwsh |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Crystal | crystal |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | V | v |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | ATS | ats (gcc) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -541,7 +539,6 @@ Output: `52428800`
 | Odin | odin |
 | Dart | jit, aot |
 | GDScript | godot --headless |
-| PowerShell | powershell, pwsh |
 | Crystal | crystal |
 | V | v |
 | ATS | ats |
@@ -683,6 +680,22 @@ has nothing to contribute however fast the language is.
 | MATLAB | **Licence and replication.** Use is granted "solely for Internal Operations", and activation binds a licence to a specific physical Computer and Licensed User, with data sent to MathWorks at activation; clause 3.2.2 restricts a Designated Computer licence to one non-virtual machine. Clause 5.8 restricts using MathWorks' names in material distributed to third parties to "the form provided by MathWorks", and 5.6 forbids publishing any portion of the Programs. So the numbers could not be republished and a reader could not re-run them without their own activation. |
 | Simula | **No wall-clock facility, so it cannot report its own elapsed time.** GNU Cim's shipped library provides no elapsed-time primitive at all — the only time-related code in its `lib/` is `simset.sim` and `simulation.sim`, which supply *simulated* time for process scheduling rather than real time. The row was built and ran all fifteen tasks, and it was removed when self-timing became the measurement contract: a row that cannot time itself cannot contribute a comparable number. The language is otherwise unremarkable here — its task 11 was a correct-answer-no-speedup cell, because its `PROCESS` objects are scheduled cooperatively by its own process simulation. |
 
+**Moved out to a benchmark of its own.**
+
+PowerShell does not fail here and it is not too slow to run; it is a poor fit for a matrix
+built around small integer loops and file I/O, and it deserves a set of tasks chosen for a
+shell — fewer of them, and probably without the threading and arbitrary-precision cells that
+make it expensive. It is therefore being measured separately rather than dropped.
+
+| Language | Why it moved |
+|---|---|
+| PowerShell | A full language with typed data, a real .NET GC, `BigInteger` and thread-pool
+  concurrency — its own `RUN.md` section argued it belongs beside C# and F#, not beside a
+  POSIX shell. Both hosts (`powershell` 5.1 on .NET Framework and `pwsh` 7 on .NET) are real
+  toolchains, but the row's cost is dominated by tasks that a shell benchmark would not ask
+  for: 100-million-iteration interpreted loops at ~2.6 us an iteration, 100-million-call
+  task 03, 331-million-call task 09, and a runspace-pool task 11. |
+
 **Measured, but not added.**
 
 | Language | What was found |
@@ -698,7 +711,7 @@ has nothing to contribute however fast the language is.
 - One warmup run, then 5 timed runs. The median is reported, with min, max and stddev kept alongside it.
 - Peak memory recorded per run.
 - No timeout. Every run goes to completion however long it takes, and the time reported is
-  the real time. The slow rows are the ones to watch: PowerShell's call-heavy and
+  the real time. The slow rows are the ones to watch: the call-heavy and
   per-character tasks are the worst of them, at 100 to 331 million interpreted operations.
   Every row that hand-writes the base-1e9 limbs for task 10 pays more for it than for
   anything else — VBScript takes about 1.4 minutes at 1000 digits, and `a68g`, whose

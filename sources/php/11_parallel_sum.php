@@ -1,6 +1,10 @@
 <?php
 // task 11 parallel_sum — expected output: 7500000075000000
-// build: none (interpreted; this task needs the PECL parallel extension)    run: php 11_parallel_sum.php (zend) | php -d opcache.enable_cli=1 -d opcache.jit_buffer_size=64M 11_parallel_sum.php (zend + jit)
+// build: none (interpreted; this task needs the PECL parallel extension)    run: php 11_parallel_sum.php (zend) | php -d opcache.enable_cli=1 -d opcache.jit=tracing -d opcache.jit_buffer_size=64M 11_parallel_sum.php (zend + jit)
+// note: `-d opcache.jit=tracing` is required here. PHP 8.5 changed the default of
+//       `opcache.jit` to `disable`, so the older `-d opcache.jit_buffer_size=64M`
+//       alone leaves the JIT off (opcache_get_status() reports jit.on=false and
+//       buffer_size=0) and the row would measure only opcache bytecode caching.
 // PHP's standard library has no threads: `pecl install parallel` is the sanctioned mechanism,
 // and it needs a ZTS build of PHP. Four parallel\Runtime workers, one range each. The closure
 // captures nothing but its argument, and the whole loop lives inside it because the worker

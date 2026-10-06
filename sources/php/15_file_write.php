@@ -1,6 +1,10 @@
 <?php
 // task 15 file_write — expected output: 52428800
-// build: none (interpreted)    run: php 15_file_write.php (zend) | php -d opcache.enable_cli=1 -d opcache.jit_buffer_size=64M 15_file_write.php (zend + jit)
+// build: none (interpreted)    run: php 15_file_write.php (zend) | php -d opcache.enable_cli=1 -d opcache.jit=tracing -d opcache.jit_buffer_size=64M 15_file_write.php (zend + jit)
+// note: `-d opcache.jit=tracing` is required here. PHP 8.5 changed the default of
+//       `opcache.jit` to `disable`, so the older `-d opcache.jit_buffer_size=64M`
+//       alone leaves the JIT off (opcache_get_status() reports jit.on=false and
+//       buffer_size=0) and the row would measure only opcache bytecode caching.
 // Writes out.bin: the 1 MiB pattern 0,1,2,...,255 repeated 4096 times, written 50 times,
 // then flushed and fsynced. Prints the number of bytes the writes reported.
 

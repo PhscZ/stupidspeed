@@ -1,6 +1,10 @@
 <?php
 // task 10 pi — expected output: 4470
-// build: none (interpreted)    run: php 10_pi.php (zend) | php -d opcache.enable_cli=1 -d opcache.jit_buffer_size=64M 10_pi.php (zend + jit)
+// build: none (interpreted)    run: php 10_pi.php (zend) | php -d opcache.enable_cli=1 -d opcache.jit=tracing -d opcache.jit_buffer_size=64M 10_pi.php (zend + jit)
+// note: `-d opcache.jit=tracing` is required here. PHP 8.5 changed the default of
+//       `opcache.jit` to `disable`, so the older `-d opcache.jit_buffer_size=64M`
+//       alone leaves the JIT off (opcache_get_status() reports jit.on=false and
+//       buffer_size=0) and the row would measure only opcache bytecode caching.
 // Gibbons' unbounded spigot. PHP has no built-in arbitrary-precision integers — bcmath and gmp
 // are optional extensions and are not enabled in the stock Windows configuration — so q, r and
 // t are hand-written big integers: base-10^9 limb arrays with a sign, carrying exactly the
