@@ -14,6 +14,8 @@ them is in `RUN.md`.
 |---|---|
 | `sources/<row>/` | the fifteen task programs for every row, as written |
 | `exec/<row>/` | the same rows built: each task's compiled program or staged script, plus that row's `build_all.bat`/`run_all.bat` and `verify.py` |
+| `exec/harness.py` | the test harness: runs every built program in `exec/`, N times each, and records speed, peak memory and program size |
+| `exec/cells.json` | the harness's registry: how to run each of the 2025 cells, transcribed from the row verifiers |
 | `data.bin` | the 50 MiB fixture tasks 14 and 15 use, committed once at the root |
 | `BUILD.md`, `RUN.md` | how each row is built, and how it is run |
 
@@ -21,6 +23,29 @@ The built programs are committed, so a checkout can be verified without installi
 first — that is what `exec/<row>/verify.py` does, one row at a time. They are 4.0 GB across
 22 724 unique files; the paths number 34 485, because a build stages its own copies of the
 task sources and of the fixture, and git stores one blob per distinct content.
+
+`exec/harness.py` runs all of them and measures them. It reads the cell registry at
+`exec/cells.json` — how to invoke each of the 2025 cells, transcribed from the row verifiers,
+which stay the authority on how a row is built and run — runs each cell once as a warmup and
+then `--runs` times, and writes `exec/results.json` (every sample) and `exec/results.md` (the
+speed, peak-memory and program-size tables below, in the same shape as the results table).
+
+```
+python exec/harness.py --runs 5              # the whole matrix, five timed runs a cell
+python exec/harness.py --runs 1              # one pass, for a quick look
+python exec/harness.py --rows c,rust --tasks 01,07
+python exec/harness.py --check               # warmup only: pass/fail, no timing
+python exec/harness.py --list --rows zig     # what would run, without running it
+```
+
+For each cell it records the program's own `TIME_MS` line — the contract's number, which
+excludes start-up — beside the harness's end-to-end wall clock, the child's peak working set,
+and the size of the built program. A cell with no `TIME_MS` line is reported with its wall
+clock instead, marked `*`; a cell that cannot run on this machine — toolchain absent, or a
+runtime it needs not installed — is reported as skipped rather than failed, and one that ran
+but crashed after printing its answer is measured with a `!` note. Cells run one at a time,
+each pinned to a single core — four for task 11 — and nothing the harness runs writes to a
+terminal or can leave a crash dialog waiting for a click.
 
 `tools/` is **not** committed: it is ~28 GB of third-party compilers and runtimes, and
 `BUILD.md` lists what to install instead. `temp/` is scratch and is not committed either.

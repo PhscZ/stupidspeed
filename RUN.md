@@ -663,6 +663,96 @@ two verifiers — `verify_interpreters.py` for cpython/pypy/graalpy and `verify_
 for nuitka — because its four toolchains are two interpreters and two compilers with
 different run recipes.
 
+### The harness
+
+The verifiers answer "is this row still correct?". `exec/harness.py` answers "how fast is
+every cell, how much memory does it take, and how big is the program?" — it runs every built
+program in `exec/`, not just one row's, and it is the tool the results table comes from.
+
+```
+python exec/harness.py                    # every cell, 5 timed runs (the default)
+python exec/harness.py --runs 1           # one pass over the matrix
+python exec/harness.py --runs 3 --rows c,rust --tasks 01,07,10
+python exec/harness.py --check            # warmup only: pass/fail, no timing
+python exec/harness.py --validate         # check the registry without running anything
+python exec/harness.py --list             # print the cells that would run
+```
+
+`--runs N` is the whole-suite repetition count: `--runs 1` runs the entire suite once,
+`--runs 5` (the default) five times, `--runs 3` three times. Each cell gets one warmup run
+first, whose number is discarded, exactly as the Method section describes.
+
+Per cell the harness records
+
+| What | How |
+|---|---|
+| Speed | the program's own `TIME_MS`, plus the harness's end-to-end wall clock beside it |
+| Memory | `PeakWorkingSetSize` from `GetProcessMemoryInfo` on the child's handle |
+| File size | the built program — or, for an interpreted row, the script that was executed |
+| Correctness | stdout against the task's expected line, on the warmup run |
+
+and reports the median, minimum, maximum and standard deviation of the timed runs. Results go
+to `exec/results.json`, every sample, and `exec/results.md`, the three tables — speed, peak
+memory and program size — in the same Language/Toolchain/task shape as the results table in
+`README.md`, so a run can be pasted straight into it.
+
+A cell ends in one of four states, and the difference matters:
+
+| State | Meaning |
+|---|---|
+| measured | the warmup printed the expected answer and the timed runs produced numbers |
+| measured `!` | as above, but something about how it ran is worth knowing — see below |
+| skipped | the cell cannot run on this machine: the toolchain is not installed, or a runtime it needs is not (a `0xC0000135` or `0xC0000142` load failure with no output) |
+| failed | `WRONG` — the program ran and printed a different answer; or `ERROR` — it timed out, died without producing anything, or failed to load for some other reason |
+
+The pass criterion is the one the row verifiers use: the expected line on stdout, a `TIME_MS`
+value, and task 15's 52428800-byte `out.bin`. **The exit code is not part of it.** A row may
+die in teardown after printing both numbers — `hxcpp` does, with a heap-corruption code — and
+the contract brackets only the work up to the final output statement, so that measurement
+stands. Such a cell is measured and marked `!`, with the code recorded; the same applies to a
+timed run that produced no number at all, which is dropped from the statistics rather than
+counted as a zero. A cell with no `TIME_MS` line anywhere — the twelve `luau.exe` cells, whose
+CLI has no stderr — is measured by wall clock and marked `*` in the speed table.
+
+A crashed child would otherwise put a Windows error dialog on the screen, and Windows Error
+Reporting's handling of it costs seconds that land in the wall clock — measured, 2.8 s for a
+68 ms cell. The harness sets `SEM_NOGPFAULTERRORBOX | SEM_FAILCRITICALERRORS |
+SEM_NOOPENFILEERRORBOX` once at start-up, which every child inherits, so an unattended run
+cannot block on a modal dialog.
+
+**The registry.** How each cell is invoked lives in `exec/cells.json`, one entry per
+(row, toolchain): the exact argv, working directory, environment and timeout, transcribed
+from that row's `verify.py`. The verifier stays the authority — if a run recipe changes, the
+verifier changes first and the registry follows. Placeholders `{root}`, `{task}`, `{row}`,
+`{toolchain}`, `{PATH}` and `{env:NAME}` are substituted at run time; an entry's `tasks` list
+names the tasks it covers, `["*"]` covers the rest, and `except` carves out the tasks a
+different toolchain of the same row runs instead.
+
+The harness stages the fixture and clears residue the way the verifiers do — `data.bin`
+put into a cell's directory for task 14 (task 15 never reads it), `out.bin` and any
+`time.txt` deleted before *every* run, not once per cell, because several task-15 programs
+fail outright if `out.bin` is already there and a stale `time.txt` would be read as the new
+number. Everything it deletes is put back when the cell finishes — whether it measured, was
+skipped or failed — so a run leaves `exec/` exactly as it found it.
+
+Three rules from the sections above are built in rather than left to the operator:
+
+- **Nothing goes to a terminal.** The child's stdout is the null device, or a file on the
+  warmup run that has to be compared; its stderr is a file, so a chatty runtime cannot fill
+  a pipe and deadlock the run.
+- **One cell at a time, pinned.** Cells run in sequence, and each one is confined to a
+  single logical CPU — CPU 3 by default, `start /affinity 8` — except task 11, which gets
+  four. The mask is set on the harness process before the child starts and restored after,
+  so the child is pinned from its first instruction instead of from whenever the scheduler
+  was told. `--cpu N` moves the core and `--cpu -1` turns pinning off; `--cores N` changes
+  what task 11 gets.
+- **A tool this checkout keeps elsewhere still runs.** The registry records the path the
+  row's verifier uses. If that file is not where the registry says, the harness looks for it
+  under `tools/` and `exec/` by name and accepts only a single candidate that keeps the
+  registered path's directory components — the wasmtime executable lives one directory
+  deeper here than the verifier's constant, for instance. Anything ambiguous or absent is
+  left alone and the cell is reported as skipped, never as failed.
+
 | Need | Linux | Windows |
 |---|---|---|
 | Wall clock | your runner, `clock_gettime(CLOCK_MONOTONIC)` | `QueryPerformanceCounter` |
