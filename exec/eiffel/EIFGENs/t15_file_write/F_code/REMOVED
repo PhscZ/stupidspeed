@@ -1,0 +1,4901 @@
+elks	ANY	generator
+elks	ANY	conforms_to
+elks	ANY	standard_is_equal
+elks	ANY	equal
+elks	ANY	standard_equal
+elks	ANY	is_deep_equal
+elks	ANY	deep_equal
+elks	ANY	clone
+elks	ANY	standard_clone
+elks	ANY	standard_twin
+elks	ANY	deep_twin
+elks	ANY	deep_clone
+elks	ANY	deep_copy
+elks	ANY	out
+elks	ANY	tagged_out
+elks	ANY	print
+elks	ANY	operating_environment
+elks	ANY	default
+elks	ANY	as_attached
+elks	SPECIAL [G#1]	make_from_native_array
+elks	SPECIAL [G#1]	index_of
+elks	SPECIAL [G#1]	native_array
+elks	SPECIAL [G#1]	new_cursor
+elks	SPECIAL [G#1]	filled_with
+elks	SPECIAL [G#1]	valid_index
+elks	SPECIAL [G#1]	extend_filled
+elks	SPECIAL [G#1]	fill_with_default
+elks	SPECIAL [G#1]	insert_data
+elks	SPECIAL [G#1]	keep_head
+elks	SPECIAL [G#1]	keep_tail
+elks	SPECIAL [G#1]	remove_head
+elks	SPECIAL [G#1]	remove_tail
+elks	SPECIAL [G#1]	resized_area_with_default
+elks	SPECIAL [G#1]	replace_all
+elks	SPECIAL [G#1]	do_all_in_bounds
+elks	SPECIAL [G#1]	do_if_in_bounds
+elks	SPECIAL [G#1]	there_exists_in_bounds
+elks	SPECIAL [G#1]	for_all_in_bounds
+elks	SPECIAL [G#1]	do_all_with_index_in_bounds
+elks	SPECIAL [G#1]	do_if_with_index_in_bounds
+elks	SPECIAL [G#1]	debug_output
+elks	SPECIAL [INTEGER_32]	make_from_native_array
+elks	SPECIAL [INTEGER_32]	index_of
+elks	SPECIAL [INTEGER_32]	native_array
+elks	SPECIAL [INTEGER_32]	new_cursor
+elks	SPECIAL [INTEGER_32]	filled_with
+elks	SPECIAL [INTEGER_32]	valid_index
+elks	SPECIAL [INTEGER_32]	extend_filled
+elks	SPECIAL [INTEGER_32]	fill_with_default
+elks	SPECIAL [INTEGER_32]	insert_data
+elks	SPECIAL [INTEGER_32]	keep_head
+elks	SPECIAL [INTEGER_32]	keep_tail
+elks	SPECIAL [INTEGER_32]	remove_head
+elks	SPECIAL [INTEGER_32]	remove_tail
+elks	SPECIAL [INTEGER_32]	resized_area_with_default
+elks	SPECIAL [INTEGER_32]	replace_all
+elks	SPECIAL [INTEGER_32]	do_all_in_bounds
+elks	SPECIAL [INTEGER_32]	do_if_in_bounds
+elks	SPECIAL [INTEGER_32]	there_exists_in_bounds
+elks	SPECIAL [INTEGER_32]	for_all_in_bounds
+elks	SPECIAL [INTEGER_32]	do_all_with_index_in_bounds
+elks	SPECIAL [INTEGER_32]	do_if_with_index_in_bounds
+elks	SPECIAL [INTEGER_32]	debug_output
+elks	SPECIAL [POINTER]	make_from_native_array
+elks	SPECIAL [POINTER]	index_of
+elks	SPECIAL [POINTER]	native_array
+elks	SPECIAL [POINTER]	new_cursor
+elks	SPECIAL [POINTER]	filled_with
+elks	SPECIAL [POINTER]	valid_index
+elks	SPECIAL [POINTER]	extend_filled
+elks	SPECIAL [POINTER]	fill_with_default
+elks	SPECIAL [POINTER]	insert_data
+elks	SPECIAL [POINTER]	keep_head
+elks	SPECIAL [POINTER]	keep_tail
+elks	SPECIAL [POINTER]	remove_head
+elks	SPECIAL [POINTER]	remove_tail
+elks	SPECIAL [POINTER]	resized_area_with_default
+elks	SPECIAL [POINTER]	replace_all
+elks	SPECIAL [POINTER]	do_all_in_bounds
+elks	SPECIAL [POINTER]	do_if_in_bounds
+elks	SPECIAL [POINTER]	there_exists_in_bounds
+elks	SPECIAL [POINTER]	for_all_in_bounds
+elks	SPECIAL [POINTER]	do_all_with_index_in_bounds
+elks	SPECIAL [POINTER]	do_if_with_index_in_bounds
+elks	SPECIAL [POINTER]	debug_output
+elks	SPECIAL [REAL_32]	make_from_native_array
+elks	SPECIAL [REAL_32]	index_of
+elks	SPECIAL [REAL_32]	native_array
+elks	SPECIAL [REAL_32]	new_cursor
+elks	SPECIAL [REAL_32]	filled_with
+elks	SPECIAL [REAL_32]	valid_index
+elks	SPECIAL [REAL_32]	extend_filled
+elks	SPECIAL [REAL_32]	fill_with_default
+elks	SPECIAL [REAL_32]	insert_data
+elks	SPECIAL [REAL_32]	keep_head
+elks	SPECIAL [REAL_32]	keep_tail
+elks	SPECIAL [REAL_32]	remove_head
+elks	SPECIAL [REAL_32]	remove_tail
+elks	SPECIAL [REAL_32]	resized_area_with_default
+elks	SPECIAL [REAL_32]	replace_all
+elks	SPECIAL [REAL_32]	do_all_in_bounds
+elks	SPECIAL [REAL_32]	do_if_in_bounds
+elks	SPECIAL [REAL_32]	there_exists_in_bounds
+elks	SPECIAL [REAL_32]	for_all_in_bounds
+elks	SPECIAL [REAL_32]	do_all_with_index_in_bounds
+elks	SPECIAL [REAL_32]	do_if_with_index_in_bounds
+elks	SPECIAL [REAL_32]	debug_output
+elks	SPECIAL [REAL_64]	make_from_native_array
+elks	SPECIAL [REAL_64]	index_of
+elks	SPECIAL [REAL_64]	native_array
+elks	SPECIAL [REAL_64]	new_cursor
+elks	SPECIAL [REAL_64]	filled_with
+elks	SPECIAL [REAL_64]	valid_index
+elks	SPECIAL [REAL_64]	extend_filled
+elks	SPECIAL [REAL_64]	fill_with_default
+elks	SPECIAL [REAL_64]	insert_data
+elks	SPECIAL [REAL_64]	keep_head
+elks	SPECIAL [REAL_64]	keep_tail
+elks	SPECIAL [REAL_64]	remove_head
+elks	SPECIAL [REAL_64]	remove_tail
+elks	SPECIAL [REAL_64]	resized_area_with_default
+elks	SPECIAL [REAL_64]	replace_all
+elks	SPECIAL [REAL_64]	do_all_in_bounds
+elks	SPECIAL [REAL_64]	do_if_in_bounds
+elks	SPECIAL [REAL_64]	there_exists_in_bounds
+elks	SPECIAL [REAL_64]	for_all_in_bounds
+elks	SPECIAL [REAL_64]	do_all_with_index_in_bounds
+elks	SPECIAL [REAL_64]	do_if_with_index_in_bounds
+elks	SPECIAL [REAL_64]	debug_output
+elks	SPECIAL [NATURAL_16]	make_from_native_array
+elks	SPECIAL [NATURAL_16]	index_of
+elks	SPECIAL [NATURAL_16]	native_array
+elks	SPECIAL [NATURAL_16]	new_cursor
+elks	SPECIAL [NATURAL_16]	filled_with
+elks	SPECIAL [NATURAL_16]	valid_index
+elks	SPECIAL [NATURAL_16]	extend_filled
+elks	SPECIAL [NATURAL_16]	fill_with_default
+elks	SPECIAL [NATURAL_16]	insert_data
+elks	SPECIAL [NATURAL_16]	keep_head
+elks	SPECIAL [NATURAL_16]	keep_tail
+elks	SPECIAL [NATURAL_16]	remove_head
+elks	SPECIAL [NATURAL_16]	remove_tail
+elks	SPECIAL [NATURAL_16]	resized_area_with_default
+elks	SPECIAL [NATURAL_16]	replace_all
+elks	SPECIAL [NATURAL_16]	do_all_in_bounds
+elks	SPECIAL [NATURAL_16]	do_if_in_bounds
+elks	SPECIAL [NATURAL_16]	there_exists_in_bounds
+elks	SPECIAL [NATURAL_16]	for_all_in_bounds
+elks	SPECIAL [NATURAL_16]	do_all_with_index_in_bounds
+elks	SPECIAL [NATURAL_16]	do_if_with_index_in_bounds
+elks	SPECIAL [NATURAL_16]	debug_output
+elks	SPECIAL [NATURAL_8]	make_from_native_array
+elks	SPECIAL [NATURAL_8]	index_of
+elks	SPECIAL [NATURAL_8]	native_array
+elks	SPECIAL [NATURAL_8]	new_cursor
+elks	SPECIAL [NATURAL_8]	filled_with
+elks	SPECIAL [NATURAL_8]	valid_index
+elks	SPECIAL [NATURAL_8]	extend_filled
+elks	SPECIAL [NATURAL_8]	fill_with_default
+elks	SPECIAL [NATURAL_8]	insert_data
+elks	SPECIAL [NATURAL_8]	keep_head
+elks	SPECIAL [NATURAL_8]	keep_tail
+elks	SPECIAL [NATURAL_8]	remove_head
+elks	SPECIAL [NATURAL_8]	remove_tail
+elks	SPECIAL [NATURAL_8]	resized_area_with_default
+elks	SPECIAL [NATURAL_8]	replace_all
+elks	SPECIAL [NATURAL_8]	do_all_in_bounds
+elks	SPECIAL [NATURAL_8]	do_if_in_bounds
+elks	SPECIAL [NATURAL_8]	there_exists_in_bounds
+elks	SPECIAL [NATURAL_8]	for_all_in_bounds
+elks	SPECIAL [NATURAL_8]	do_all_with_index_in_bounds
+elks	SPECIAL [NATURAL_8]	do_if_with_index_in_bounds
+elks	SPECIAL [NATURAL_8]	debug_output
+elks	SPECIAL [BOOLEAN]	make_from_native_array
+elks	SPECIAL [BOOLEAN]	index_of
+elks	SPECIAL [BOOLEAN]	native_array
+elks	SPECIAL [BOOLEAN]	new_cursor
+elks	SPECIAL [BOOLEAN]	filled_with
+elks	SPECIAL [BOOLEAN]	valid_index
+elks	SPECIAL [BOOLEAN]	extend_filled
+elks	SPECIAL [BOOLEAN]	fill_with_default
+elks	SPECIAL [BOOLEAN]	insert_data
+elks	SPECIAL [BOOLEAN]	keep_head
+elks	SPECIAL [BOOLEAN]	keep_tail
+elks	SPECIAL [BOOLEAN]	remove_head
+elks	SPECIAL [BOOLEAN]	remove_tail
+elks	SPECIAL [BOOLEAN]	resized_area_with_default
+elks	SPECIAL [BOOLEAN]	replace_all
+elks	SPECIAL [BOOLEAN]	do_all_in_bounds
+elks	SPECIAL [BOOLEAN]	do_if_in_bounds
+elks	SPECIAL [BOOLEAN]	there_exists_in_bounds
+elks	SPECIAL [BOOLEAN]	for_all_in_bounds
+elks	SPECIAL [BOOLEAN]	do_all_with_index_in_bounds
+elks	SPECIAL [BOOLEAN]	do_if_with_index_in_bounds
+elks	SPECIAL [BOOLEAN]	debug_output
+elks	SPECIAL [CHARACTER_32]	make_from_native_array
+elks	SPECIAL [CHARACTER_32]	index_of
+elks	SPECIAL [CHARACTER_32]	native_array
+elks	SPECIAL [CHARACTER_32]	new_cursor
+elks	SPECIAL [CHARACTER_32]	filled_with
+elks	SPECIAL [CHARACTER_32]	valid_index
+elks	SPECIAL [CHARACTER_32]	extend_filled
+elks	SPECIAL [CHARACTER_32]	fill_with_default
+elks	SPECIAL [CHARACTER_32]	insert_data
+elks	SPECIAL [CHARACTER_32]	keep_head
+elks	SPECIAL [CHARACTER_32]	keep_tail
+elks	SPECIAL [CHARACTER_32]	remove_head
+elks	SPECIAL [CHARACTER_32]	remove_tail
+elks	SPECIAL [CHARACTER_32]	resized_area_with_default
+elks	SPECIAL [CHARACTER_32]	replace_all
+elks	SPECIAL [CHARACTER_32]	do_all_in_bounds
+elks	SPECIAL [CHARACTER_32]	do_if_in_bounds
+elks	SPECIAL [CHARACTER_32]	there_exists_in_bounds
+elks	SPECIAL [CHARACTER_32]	for_all_in_bounds
+elks	SPECIAL [CHARACTER_32]	do_all_with_index_in_bounds
+elks	SPECIAL [CHARACTER_32]	do_if_with_index_in_bounds
+elks	SPECIAL [CHARACTER_32]	debug_output
+elks	SPECIAL [NATURAL_64]	make_from_native_array
+elks	SPECIAL [NATURAL_64]	index_of
+elks	SPECIAL [NATURAL_64]	native_array
+elks	SPECIAL [NATURAL_64]	new_cursor
+elks	SPECIAL [NATURAL_64]	filled_with
+elks	SPECIAL [NATURAL_64]	valid_index
+elks	SPECIAL [NATURAL_64]	extend_filled
+elks	SPECIAL [NATURAL_64]	fill_with_default
+elks	SPECIAL [NATURAL_64]	insert_data
+elks	SPECIAL [NATURAL_64]	keep_head
+elks	SPECIAL [NATURAL_64]	keep_tail
+elks	SPECIAL [NATURAL_64]	remove_head
+elks	SPECIAL [NATURAL_64]	remove_tail
+elks	SPECIAL [NATURAL_64]	resized_area_with_default
+elks	SPECIAL [NATURAL_64]	replace_all
+elks	SPECIAL [NATURAL_64]	do_all_in_bounds
+elks	SPECIAL [NATURAL_64]	do_if_in_bounds
+elks	SPECIAL [NATURAL_64]	there_exists_in_bounds
+elks	SPECIAL [NATURAL_64]	for_all_in_bounds
+elks	SPECIAL [NATURAL_64]	do_all_with_index_in_bounds
+elks	SPECIAL [NATURAL_64]	do_if_with_index_in_bounds
+elks	SPECIAL [NATURAL_64]	debug_output
+elks	SPECIAL [NATURAL_32]	make_from_native_array
+elks	SPECIAL [NATURAL_32]	index_of
+elks	SPECIAL [NATURAL_32]	native_array
+elks	SPECIAL [NATURAL_32]	new_cursor
+elks	SPECIAL [NATURAL_32]	filled_with
+elks	SPECIAL [NATURAL_32]	valid_index
+elks	SPECIAL [NATURAL_32]	extend_filled
+elks	SPECIAL [NATURAL_32]	fill_with_default
+elks	SPECIAL [NATURAL_32]	insert_data
+elks	SPECIAL [NATURAL_32]	keep_head
+elks	SPECIAL [NATURAL_32]	keep_tail
+elks	SPECIAL [NATURAL_32]	remove_head
+elks	SPECIAL [NATURAL_32]	remove_tail
+elks	SPECIAL [NATURAL_32]	resized_area_with_default
+elks	SPECIAL [NATURAL_32]	replace_all
+elks	SPECIAL [NATURAL_32]	do_all_in_bounds
+elks	SPECIAL [NATURAL_32]	do_if_in_bounds
+elks	SPECIAL [NATURAL_32]	there_exists_in_bounds
+elks	SPECIAL [NATURAL_32]	for_all_in_bounds
+elks	SPECIAL [NATURAL_32]	do_all_with_index_in_bounds
+elks	SPECIAL [NATURAL_32]	do_if_with_index_in_bounds
+elks	SPECIAL [NATURAL_32]	debug_output
+elks	SPECIAL [CHARACTER_8]	make_from_native_array
+elks	SPECIAL [CHARACTER_8]	index_of
+elks	SPECIAL [CHARACTER_8]	native_array
+elks	SPECIAL [CHARACTER_8]	new_cursor
+elks	SPECIAL [CHARACTER_8]	filled_with
+elks	SPECIAL [CHARACTER_8]	valid_index
+elks	SPECIAL [CHARACTER_8]	extend_filled
+elks	SPECIAL [CHARACTER_8]	fill_with_default
+elks	SPECIAL [CHARACTER_8]	insert_data
+elks	SPECIAL [CHARACTER_8]	keep_head
+elks	SPECIAL [CHARACTER_8]	keep_tail
+elks	SPECIAL [CHARACTER_8]	remove_head
+elks	SPECIAL [CHARACTER_8]	remove_tail
+elks	SPECIAL [CHARACTER_8]	resized_area_with_default
+elks	SPECIAL [CHARACTER_8]	replace_all
+elks	SPECIAL [CHARACTER_8]	do_all_in_bounds
+elks	SPECIAL [CHARACTER_8]	do_if_in_bounds
+elks	SPECIAL [CHARACTER_8]	there_exists_in_bounds
+elks	SPECIAL [CHARACTER_8]	for_all_in_bounds
+elks	SPECIAL [CHARACTER_8]	do_all_with_index_in_bounds
+elks	SPECIAL [CHARACTER_8]	do_if_with_index_in_bounds
+elks	SPECIAL [CHARACTER_8]	debug_output
+elks	reference POINTER	is_default_pointer
+elks	reference POINTER	to_integer_32
+elks	reference POINTER	out
+elks	POINTER	is_default_pointer
+elks	POINTER	to_integer_32
+elks	POINTER	out
+elks	ARRAY [G#1]	make_empty
+elks	ARRAY [G#1]	make_from_array
+elks	ARRAY [G#1]	make_from_cil
+elks	ARRAY [G#1]	at
+elks	ARRAY [G#1]	entry
+elks	ARRAY [G#1]	has
+elks	ARRAY [G#1]	new_cursor
+elks	ARRAY [G#1]	occurrences
+elks	ARRAY [G#1]	all_default
+elks	ARRAY [G#1]	filled_with
+elks	ARRAY [G#1]	full
+elks	ARRAY [G#1]	same_items
+elks	ARRAY [G#1]	valid_index
+elks	ARRAY [G#1]	extendible
+elks	ARRAY [G#1]	prunable
+elks	ARRAY [G#1]	resizable
+elks	ARRAY [G#1]	enter
+elks	ARRAY [G#1]	force
+elks	ARRAY [G#1]	force_and_fill
+elks	ARRAY [G#1]	fill_with
+elks	ARRAY [G#1]	subcopy
+elks	ARRAY [G#1]	do_all
+elks	ARRAY [G#1]	do_if
+elks	ARRAY [G#1]	there_exists
+elks	ARRAY [G#1]	for_all
+elks	ARRAY [G#1]	do_all_with_index
+elks	ARRAY [G#1]	do_if_with_index
+elks	ARRAY [G#1]	wipe_out
+elks	ARRAY [G#1]	discard_items
+elks	ARRAY [G#1]	clear_all
+elks	ARRAY [G#1]	keep_head
+elks	ARRAY [G#1]	keep_tail
+elks	ARRAY [G#1]	remove_head
+elks	ARRAY [G#1]	remove_tail
+elks	ARRAY [G#1]	grow
+elks	ARRAY [G#1]	conservative_resize
+elks	ARRAY [G#1]	conservative_resize_with_default
+elks	ARRAY [G#1]	resize
+elks	ARRAY [G#1]	trim
+elks	ARRAY [G#1]	rebase
+elks	ARRAY [G#1]	to_c
+elks	ARRAY [G#1]	to_cil
+elks	ARRAY [G#1]	to_special
+elks	ARRAY [G#1]	linear_representation
+elks	ARRAY [G#1]	subarray
+elks	ARRAY [G#1]	prune
+elks	ARRAY [G#1]	extend
+elks	ARRAY [G#1]	empty_area
+elks	ARRAY [INTEGER_32]	make_empty
+elks	ARRAY [INTEGER_32]	make_from_array
+elks	ARRAY [INTEGER_32]	make_from_cil
+elks	ARRAY [INTEGER_32]	at
+elks	ARRAY [INTEGER_32]	entry
+elks	ARRAY [INTEGER_32]	has
+elks	ARRAY [INTEGER_32]	new_cursor
+elks	ARRAY [INTEGER_32]	occurrences
+elks	ARRAY [INTEGER_32]	all_default
+elks	ARRAY [INTEGER_32]	filled_with
+elks	ARRAY [INTEGER_32]	full
+elks	ARRAY [INTEGER_32]	same_items
+elks	ARRAY [INTEGER_32]	valid_index
+elks	ARRAY [INTEGER_32]	extendible
+elks	ARRAY [INTEGER_32]	prunable
+elks	ARRAY [INTEGER_32]	resizable
+elks	ARRAY [INTEGER_32]	enter
+elks	ARRAY [INTEGER_32]	force
+elks	ARRAY [INTEGER_32]	force_and_fill
+elks	ARRAY [INTEGER_32]	fill_with
+elks	ARRAY [INTEGER_32]	subcopy
+elks	ARRAY [INTEGER_32]	do_all
+elks	ARRAY [INTEGER_32]	do_if
+elks	ARRAY [INTEGER_32]	there_exists
+elks	ARRAY [INTEGER_32]	for_all
+elks	ARRAY [INTEGER_32]	do_all_with_index
+elks	ARRAY [INTEGER_32]	do_if_with_index
+elks	ARRAY [INTEGER_32]	wipe_out
+elks	ARRAY [INTEGER_32]	discard_items
+elks	ARRAY [INTEGER_32]	clear_all
+elks	ARRAY [INTEGER_32]	keep_head
+elks	ARRAY [INTEGER_32]	keep_tail
+elks	ARRAY [INTEGER_32]	remove_head
+elks	ARRAY [INTEGER_32]	remove_tail
+elks	ARRAY [INTEGER_32]	grow
+elks	ARRAY [INTEGER_32]	conservative_resize
+elks	ARRAY [INTEGER_32]	conservative_resize_with_default
+elks	ARRAY [INTEGER_32]	resize
+elks	ARRAY [INTEGER_32]	trim
+elks	ARRAY [INTEGER_32]	rebase
+elks	ARRAY [INTEGER_32]	to_c
+elks	ARRAY [INTEGER_32]	to_cil
+elks	ARRAY [INTEGER_32]	to_special
+elks	ARRAY [INTEGER_32]	linear_representation
+elks	ARRAY [INTEGER_32]	subarray
+elks	ARRAY [INTEGER_32]	prune
+elks	ARRAY [INTEGER_32]	extend
+elks	ARRAY [INTEGER_32]	empty_area
+elks	ARRAY [POINTER]	make_empty
+elks	ARRAY [POINTER]	make_from_array
+elks	ARRAY [POINTER]	make_from_cil
+elks	ARRAY [POINTER]	at
+elks	ARRAY [POINTER]	entry
+elks	ARRAY [POINTER]	has
+elks	ARRAY [POINTER]	new_cursor
+elks	ARRAY [POINTER]	occurrences
+elks	ARRAY [POINTER]	all_default
+elks	ARRAY [POINTER]	filled_with
+elks	ARRAY [POINTER]	full
+elks	ARRAY [POINTER]	same_items
+elks	ARRAY [POINTER]	valid_index
+elks	ARRAY [POINTER]	extendible
+elks	ARRAY [POINTER]	prunable
+elks	ARRAY [POINTER]	resizable
+elks	ARRAY [POINTER]	enter
+elks	ARRAY [POINTER]	force
+elks	ARRAY [POINTER]	force_and_fill
+elks	ARRAY [POINTER]	fill_with
+elks	ARRAY [POINTER]	subcopy
+elks	ARRAY [POINTER]	do_all
+elks	ARRAY [POINTER]	do_if
+elks	ARRAY [POINTER]	there_exists
+elks	ARRAY [POINTER]	for_all
+elks	ARRAY [POINTER]	do_all_with_index
+elks	ARRAY [POINTER]	do_if_with_index
+elks	ARRAY [POINTER]	wipe_out
+elks	ARRAY [POINTER]	discard_items
+elks	ARRAY [POINTER]	clear_all
+elks	ARRAY [POINTER]	keep_head
+elks	ARRAY [POINTER]	keep_tail
+elks	ARRAY [POINTER]	remove_head
+elks	ARRAY [POINTER]	remove_tail
+elks	ARRAY [POINTER]	grow
+elks	ARRAY [POINTER]	conservative_resize
+elks	ARRAY [POINTER]	conservative_resize_with_default
+elks	ARRAY [POINTER]	resize
+elks	ARRAY [POINTER]	trim
+elks	ARRAY [POINTER]	rebase
+elks	ARRAY [POINTER]	to_c
+elks	ARRAY [POINTER]	to_cil
+elks	ARRAY [POINTER]	to_special
+elks	ARRAY [POINTER]	linear_representation
+elks	ARRAY [POINTER]	subarray
+elks	ARRAY [POINTER]	prune
+elks	ARRAY [POINTER]	extend
+elks	ARRAY [POINTER]	empty_area
+elks	ARRAY [REAL_32]	make_empty
+elks	ARRAY [REAL_32]	make_from_array
+elks	ARRAY [REAL_32]	make_from_cil
+elks	ARRAY [REAL_32]	at
+elks	ARRAY [REAL_32]	entry
+elks	ARRAY [REAL_32]	has
+elks	ARRAY [REAL_32]	new_cursor
+elks	ARRAY [REAL_32]	occurrences
+elks	ARRAY [REAL_32]	all_default
+elks	ARRAY [REAL_32]	filled_with
+elks	ARRAY [REAL_32]	full
+elks	ARRAY [REAL_32]	same_items
+elks	ARRAY [REAL_32]	valid_index
+elks	ARRAY [REAL_32]	extendible
+elks	ARRAY [REAL_32]	prunable
+elks	ARRAY [REAL_32]	resizable
+elks	ARRAY [REAL_32]	enter
+elks	ARRAY [REAL_32]	force
+elks	ARRAY [REAL_32]	force_and_fill
+elks	ARRAY [REAL_32]	fill_with
+elks	ARRAY [REAL_32]	subcopy
+elks	ARRAY [REAL_32]	do_all
+elks	ARRAY [REAL_32]	do_if
+elks	ARRAY [REAL_32]	there_exists
+elks	ARRAY [REAL_32]	for_all
+elks	ARRAY [REAL_32]	do_all_with_index
+elks	ARRAY [REAL_32]	do_if_with_index
+elks	ARRAY [REAL_32]	wipe_out
+elks	ARRAY [REAL_32]	discard_items
+elks	ARRAY [REAL_32]	clear_all
+elks	ARRAY [REAL_32]	keep_head
+elks	ARRAY [REAL_32]	keep_tail
+elks	ARRAY [REAL_32]	remove_head
+elks	ARRAY [REAL_32]	remove_tail
+elks	ARRAY [REAL_32]	grow
+elks	ARRAY [REAL_32]	conservative_resize
+elks	ARRAY [REAL_32]	conservative_resize_with_default
+elks	ARRAY [REAL_32]	resize
+elks	ARRAY [REAL_32]	trim
+elks	ARRAY [REAL_32]	rebase
+elks	ARRAY [REAL_32]	to_c
+elks	ARRAY [REAL_32]	to_cil
+elks	ARRAY [REAL_32]	to_special
+elks	ARRAY [REAL_32]	linear_representation
+elks	ARRAY [REAL_32]	subarray
+elks	ARRAY [REAL_32]	prune
+elks	ARRAY [REAL_32]	extend
+elks	ARRAY [REAL_32]	empty_area
+elks	ARRAY [REAL_64]	make_empty
+elks	ARRAY [REAL_64]	make_from_array
+elks	ARRAY [REAL_64]	make_from_cil
+elks	ARRAY [REAL_64]	at
+elks	ARRAY [REAL_64]	entry
+elks	ARRAY [REAL_64]	has
+elks	ARRAY [REAL_64]	new_cursor
+elks	ARRAY [REAL_64]	occurrences
+elks	ARRAY [REAL_64]	all_default
+elks	ARRAY [REAL_64]	filled_with
+elks	ARRAY [REAL_64]	full
+elks	ARRAY [REAL_64]	same_items
+elks	ARRAY [REAL_64]	valid_index
+elks	ARRAY [REAL_64]	extendible
+elks	ARRAY [REAL_64]	prunable
+elks	ARRAY [REAL_64]	resizable
+elks	ARRAY [REAL_64]	enter
+elks	ARRAY [REAL_64]	force
+elks	ARRAY [REAL_64]	force_and_fill
+elks	ARRAY [REAL_64]	fill_with
+elks	ARRAY [REAL_64]	subcopy
+elks	ARRAY [REAL_64]	do_all
+elks	ARRAY [REAL_64]	do_if
+elks	ARRAY [REAL_64]	there_exists
+elks	ARRAY [REAL_64]	for_all
+elks	ARRAY [REAL_64]	do_all_with_index
+elks	ARRAY [REAL_64]	do_if_with_index
+elks	ARRAY [REAL_64]	wipe_out
+elks	ARRAY [REAL_64]	discard_items
+elks	ARRAY [REAL_64]	clear_all
+elks	ARRAY [REAL_64]	keep_head
+elks	ARRAY [REAL_64]	keep_tail
+elks	ARRAY [REAL_64]	remove_head
+elks	ARRAY [REAL_64]	remove_tail
+elks	ARRAY [REAL_64]	grow
+elks	ARRAY [REAL_64]	conservative_resize
+elks	ARRAY [REAL_64]	conservative_resize_with_default
+elks	ARRAY [REAL_64]	resize
+elks	ARRAY [REAL_64]	trim
+elks	ARRAY [REAL_64]	rebase
+elks	ARRAY [REAL_64]	to_c
+elks	ARRAY [REAL_64]	to_cil
+elks	ARRAY [REAL_64]	to_special
+elks	ARRAY [REAL_64]	linear_representation
+elks	ARRAY [REAL_64]	subarray
+elks	ARRAY [REAL_64]	prune
+elks	ARRAY [REAL_64]	extend
+elks	ARRAY [REAL_64]	empty_area
+elks	ARRAY [NATURAL_16]	make_empty
+elks	ARRAY [NATURAL_16]	make_from_array
+elks	ARRAY [NATURAL_16]	make_from_cil
+elks	ARRAY [NATURAL_16]	at
+elks	ARRAY [NATURAL_16]	entry
+elks	ARRAY [NATURAL_16]	has
+elks	ARRAY [NATURAL_16]	new_cursor
+elks	ARRAY [NATURAL_16]	occurrences
+elks	ARRAY [NATURAL_16]	all_default
+elks	ARRAY [NATURAL_16]	filled_with
+elks	ARRAY [NATURAL_16]	full
+elks	ARRAY [NATURAL_16]	same_items
+elks	ARRAY [NATURAL_16]	valid_index
+elks	ARRAY [NATURAL_16]	extendible
+elks	ARRAY [NATURAL_16]	prunable
+elks	ARRAY [NATURAL_16]	resizable
+elks	ARRAY [NATURAL_16]	enter
+elks	ARRAY [NATURAL_16]	force
+elks	ARRAY [NATURAL_16]	force_and_fill
+elks	ARRAY [NATURAL_16]	fill_with
+elks	ARRAY [NATURAL_16]	subcopy
+elks	ARRAY [NATURAL_16]	do_all
+elks	ARRAY [NATURAL_16]	do_if
+elks	ARRAY [NATURAL_16]	there_exists
+elks	ARRAY [NATURAL_16]	for_all
+elks	ARRAY [NATURAL_16]	do_all_with_index
+elks	ARRAY [NATURAL_16]	do_if_with_index
+elks	ARRAY [NATURAL_16]	wipe_out
+elks	ARRAY [NATURAL_16]	discard_items
+elks	ARRAY [NATURAL_16]	clear_all
+elks	ARRAY [NATURAL_16]	keep_head
+elks	ARRAY [NATURAL_16]	keep_tail
+elks	ARRAY [NATURAL_16]	remove_head
+elks	ARRAY [NATURAL_16]	remove_tail
+elks	ARRAY [NATURAL_16]	grow
+elks	ARRAY [NATURAL_16]	conservative_resize
+elks	ARRAY [NATURAL_16]	conservative_resize_with_default
+elks	ARRAY [NATURAL_16]	resize
+elks	ARRAY [NATURAL_16]	trim
+elks	ARRAY [NATURAL_16]	rebase
+elks	ARRAY [NATURAL_16]	to_c
+elks	ARRAY [NATURAL_16]	to_cil
+elks	ARRAY [NATURAL_16]	to_special
+elks	ARRAY [NATURAL_16]	linear_representation
+elks	ARRAY [NATURAL_16]	subarray
+elks	ARRAY [NATURAL_16]	prune
+elks	ARRAY [NATURAL_16]	extend
+elks	ARRAY [NATURAL_16]	empty_area
+elks	ARRAY [NATURAL_8]	make_empty
+elks	ARRAY [NATURAL_8]	make_from_array
+elks	ARRAY [NATURAL_8]	make_from_cil
+elks	ARRAY [NATURAL_8]	at
+elks	ARRAY [NATURAL_8]	entry
+elks	ARRAY [NATURAL_8]	has
+elks	ARRAY [NATURAL_8]	new_cursor
+elks	ARRAY [NATURAL_8]	occurrences
+elks	ARRAY [NATURAL_8]	all_default
+elks	ARRAY [NATURAL_8]	filled_with
+elks	ARRAY [NATURAL_8]	full
+elks	ARRAY [NATURAL_8]	same_items
+elks	ARRAY [NATURAL_8]	valid_index
+elks	ARRAY [NATURAL_8]	extendible
+elks	ARRAY [NATURAL_8]	prunable
+elks	ARRAY [NATURAL_8]	resizable
+elks	ARRAY [NATURAL_8]	enter
+elks	ARRAY [NATURAL_8]	force
+elks	ARRAY [NATURAL_8]	force_and_fill
+elks	ARRAY [NATURAL_8]	fill_with
+elks	ARRAY [NATURAL_8]	subcopy
+elks	ARRAY [NATURAL_8]	do_all
+elks	ARRAY [NATURAL_8]	do_if
+elks	ARRAY [NATURAL_8]	there_exists
+elks	ARRAY [NATURAL_8]	for_all
+elks	ARRAY [NATURAL_8]	do_all_with_index
+elks	ARRAY [NATURAL_8]	do_if_with_index
+elks	ARRAY [NATURAL_8]	wipe_out
+elks	ARRAY [NATURAL_8]	discard_items
+elks	ARRAY [NATURAL_8]	clear_all
+elks	ARRAY [NATURAL_8]	keep_head
+elks	ARRAY [NATURAL_8]	keep_tail
+elks	ARRAY [NATURAL_8]	remove_head
+elks	ARRAY [NATURAL_8]	remove_tail
+elks	ARRAY [NATURAL_8]	grow
+elks	ARRAY [NATURAL_8]	conservative_resize
+elks	ARRAY [NATURAL_8]	conservative_resize_with_default
+elks	ARRAY [NATURAL_8]	resize
+elks	ARRAY [NATURAL_8]	trim
+elks	ARRAY [NATURAL_8]	rebase
+elks	ARRAY [NATURAL_8]	to_c
+elks	ARRAY [NATURAL_8]	to_cil
+elks	ARRAY [NATURAL_8]	to_special
+elks	ARRAY [NATURAL_8]	linear_representation
+elks	ARRAY [NATURAL_8]	subarray
+elks	ARRAY [NATURAL_8]	prune
+elks	ARRAY [NATURAL_8]	extend
+elks	ARRAY [NATURAL_8]	empty_area
+elks	ARRAY [BOOLEAN]	make_empty
+elks	ARRAY [BOOLEAN]	make_from_array
+elks	ARRAY [BOOLEAN]	make_from_cil
+elks	ARRAY [BOOLEAN]	at
+elks	ARRAY [BOOLEAN]	entry
+elks	ARRAY [BOOLEAN]	has
+elks	ARRAY [BOOLEAN]	new_cursor
+elks	ARRAY [BOOLEAN]	occurrences
+elks	ARRAY [BOOLEAN]	all_default
+elks	ARRAY [BOOLEAN]	filled_with
+elks	ARRAY [BOOLEAN]	full
+elks	ARRAY [BOOLEAN]	same_items
+elks	ARRAY [BOOLEAN]	valid_index
+elks	ARRAY [BOOLEAN]	extendible
+elks	ARRAY [BOOLEAN]	prunable
+elks	ARRAY [BOOLEAN]	resizable
+elks	ARRAY [BOOLEAN]	enter
+elks	ARRAY [BOOLEAN]	force
+elks	ARRAY [BOOLEAN]	force_and_fill
+elks	ARRAY [BOOLEAN]	fill_with
+elks	ARRAY [BOOLEAN]	subcopy
+elks	ARRAY [BOOLEAN]	do_all
+elks	ARRAY [BOOLEAN]	do_if
+elks	ARRAY [BOOLEAN]	there_exists
+elks	ARRAY [BOOLEAN]	for_all
+elks	ARRAY [BOOLEAN]	do_all_with_index
+elks	ARRAY [BOOLEAN]	do_if_with_index
+elks	ARRAY [BOOLEAN]	wipe_out
+elks	ARRAY [BOOLEAN]	discard_items
+elks	ARRAY [BOOLEAN]	clear_all
+elks	ARRAY [BOOLEAN]	keep_head
+elks	ARRAY [BOOLEAN]	keep_tail
+elks	ARRAY [BOOLEAN]	remove_head
+elks	ARRAY [BOOLEAN]	remove_tail
+elks	ARRAY [BOOLEAN]	grow
+elks	ARRAY [BOOLEAN]	conservative_resize
+elks	ARRAY [BOOLEAN]	conservative_resize_with_default
+elks	ARRAY [BOOLEAN]	resize
+elks	ARRAY [BOOLEAN]	trim
+elks	ARRAY [BOOLEAN]	rebase
+elks	ARRAY [BOOLEAN]	to_c
+elks	ARRAY [BOOLEAN]	to_cil
+elks	ARRAY [BOOLEAN]	to_special
+elks	ARRAY [BOOLEAN]	linear_representation
+elks	ARRAY [BOOLEAN]	subarray
+elks	ARRAY [BOOLEAN]	prune
+elks	ARRAY [BOOLEAN]	extend
+elks	ARRAY [BOOLEAN]	empty_area
+elks	ARRAY [CHARACTER_32]	make_empty
+elks	ARRAY [CHARACTER_32]	make_from_array
+elks	ARRAY [CHARACTER_32]	make_from_cil
+elks	ARRAY [CHARACTER_32]	at
+elks	ARRAY [CHARACTER_32]	entry
+elks	ARRAY [CHARACTER_32]	has
+elks	ARRAY [CHARACTER_32]	new_cursor
+elks	ARRAY [CHARACTER_32]	occurrences
+elks	ARRAY [CHARACTER_32]	all_default
+elks	ARRAY [CHARACTER_32]	filled_with
+elks	ARRAY [CHARACTER_32]	full
+elks	ARRAY [CHARACTER_32]	same_items
+elks	ARRAY [CHARACTER_32]	valid_index
+elks	ARRAY [CHARACTER_32]	extendible
+elks	ARRAY [CHARACTER_32]	prunable
+elks	ARRAY [CHARACTER_32]	resizable
+elks	ARRAY [CHARACTER_32]	enter
+elks	ARRAY [CHARACTER_32]	force
+elks	ARRAY [CHARACTER_32]	force_and_fill
+elks	ARRAY [CHARACTER_32]	fill_with
+elks	ARRAY [CHARACTER_32]	subcopy
+elks	ARRAY [CHARACTER_32]	do_all
+elks	ARRAY [CHARACTER_32]	do_if
+elks	ARRAY [CHARACTER_32]	there_exists
+elks	ARRAY [CHARACTER_32]	for_all
+elks	ARRAY [CHARACTER_32]	do_all_with_index
+elks	ARRAY [CHARACTER_32]	do_if_with_index
+elks	ARRAY [CHARACTER_32]	wipe_out
+elks	ARRAY [CHARACTER_32]	discard_items
+elks	ARRAY [CHARACTER_32]	clear_all
+elks	ARRAY [CHARACTER_32]	keep_head
+elks	ARRAY [CHARACTER_32]	keep_tail
+elks	ARRAY [CHARACTER_32]	remove_head
+elks	ARRAY [CHARACTER_32]	remove_tail
+elks	ARRAY [CHARACTER_32]	grow
+elks	ARRAY [CHARACTER_32]	conservative_resize
+elks	ARRAY [CHARACTER_32]	conservative_resize_with_default
+elks	ARRAY [CHARACTER_32]	resize
+elks	ARRAY [CHARACTER_32]	trim
+elks	ARRAY [CHARACTER_32]	rebase
+elks	ARRAY [CHARACTER_32]	to_c
+elks	ARRAY [CHARACTER_32]	to_cil
+elks	ARRAY [CHARACTER_32]	to_special
+elks	ARRAY [CHARACTER_32]	linear_representation
+elks	ARRAY [CHARACTER_32]	subarray
+elks	ARRAY [CHARACTER_32]	prune
+elks	ARRAY [CHARACTER_32]	extend
+elks	ARRAY [CHARACTER_32]	empty_area
+elks	ARRAY [NATURAL_64]	make_empty
+elks	ARRAY [NATURAL_64]	make_from_array
+elks	ARRAY [NATURAL_64]	make_from_cil
+elks	ARRAY [NATURAL_64]	at
+elks	ARRAY [NATURAL_64]	entry
+elks	ARRAY [NATURAL_64]	has
+elks	ARRAY [NATURAL_64]	new_cursor
+elks	ARRAY [NATURAL_64]	occurrences
+elks	ARRAY [NATURAL_64]	all_default
+elks	ARRAY [NATURAL_64]	filled_with
+elks	ARRAY [NATURAL_64]	full
+elks	ARRAY [NATURAL_64]	same_items
+elks	ARRAY [NATURAL_64]	valid_index
+elks	ARRAY [NATURAL_64]	extendible
+elks	ARRAY [NATURAL_64]	prunable
+elks	ARRAY [NATURAL_64]	resizable
+elks	ARRAY [NATURAL_64]	enter
+elks	ARRAY [NATURAL_64]	force
+elks	ARRAY [NATURAL_64]	force_and_fill
+elks	ARRAY [NATURAL_64]	fill_with
+elks	ARRAY [NATURAL_64]	subcopy
+elks	ARRAY [NATURAL_64]	do_all
+elks	ARRAY [NATURAL_64]	do_if
+elks	ARRAY [NATURAL_64]	there_exists
+elks	ARRAY [NATURAL_64]	for_all
+elks	ARRAY [NATURAL_64]	do_all_with_index
+elks	ARRAY [NATURAL_64]	do_if_with_index
+elks	ARRAY [NATURAL_64]	wipe_out
+elks	ARRAY [NATURAL_64]	discard_items
+elks	ARRAY [NATURAL_64]	clear_all
+elks	ARRAY [NATURAL_64]	keep_head
+elks	ARRAY [NATURAL_64]	keep_tail
+elks	ARRAY [NATURAL_64]	remove_head
+elks	ARRAY [NATURAL_64]	remove_tail
+elks	ARRAY [NATURAL_64]	grow
+elks	ARRAY [NATURAL_64]	conservative_resize
+elks	ARRAY [NATURAL_64]	conservative_resize_with_default
+elks	ARRAY [NATURAL_64]	resize
+elks	ARRAY [NATURAL_64]	trim
+elks	ARRAY [NATURAL_64]	rebase
+elks	ARRAY [NATURAL_64]	to_c
+elks	ARRAY [NATURAL_64]	to_cil
+elks	ARRAY [NATURAL_64]	to_special
+elks	ARRAY [NATURAL_64]	linear_representation
+elks	ARRAY [NATURAL_64]	subarray
+elks	ARRAY [NATURAL_64]	prune
+elks	ARRAY [NATURAL_64]	extend
+elks	ARRAY [NATURAL_64]	empty_area
+elks	ARRAY [NATURAL_32]	make_empty
+elks	ARRAY [NATURAL_32]	make_from_array
+elks	ARRAY [NATURAL_32]	make_from_cil
+elks	ARRAY [NATURAL_32]	at
+elks	ARRAY [NATURAL_32]	entry
+elks	ARRAY [NATURAL_32]	has
+elks	ARRAY [NATURAL_32]	new_cursor
+elks	ARRAY [NATURAL_32]	occurrences
+elks	ARRAY [NATURAL_32]	all_default
+elks	ARRAY [NATURAL_32]	filled_with
+elks	ARRAY [NATURAL_32]	full
+elks	ARRAY [NATURAL_32]	same_items
+elks	ARRAY [NATURAL_32]	valid_index
+elks	ARRAY [NATURAL_32]	extendible
+elks	ARRAY [NATURAL_32]	prunable
+elks	ARRAY [NATURAL_32]	resizable
+elks	ARRAY [NATURAL_32]	enter
+elks	ARRAY [NATURAL_32]	force
+elks	ARRAY [NATURAL_32]	force_and_fill
+elks	ARRAY [NATURAL_32]	fill_with
+elks	ARRAY [NATURAL_32]	subcopy
+elks	ARRAY [NATURAL_32]	do_all
+elks	ARRAY [NATURAL_32]	do_if
+elks	ARRAY [NATURAL_32]	there_exists
+elks	ARRAY [NATURAL_32]	for_all
+elks	ARRAY [NATURAL_32]	do_all_with_index
+elks	ARRAY [NATURAL_32]	do_if_with_index
+elks	ARRAY [NATURAL_32]	wipe_out
+elks	ARRAY [NATURAL_32]	discard_items
+elks	ARRAY [NATURAL_32]	clear_all
+elks	ARRAY [NATURAL_32]	keep_head
+elks	ARRAY [NATURAL_32]	keep_tail
+elks	ARRAY [NATURAL_32]	remove_head
+elks	ARRAY [NATURAL_32]	remove_tail
+elks	ARRAY [NATURAL_32]	grow
+elks	ARRAY [NATURAL_32]	conservative_resize
+elks	ARRAY [NATURAL_32]	conservative_resize_with_default
+elks	ARRAY [NATURAL_32]	resize
+elks	ARRAY [NATURAL_32]	trim
+elks	ARRAY [NATURAL_32]	rebase
+elks	ARRAY [NATURAL_32]	to_c
+elks	ARRAY [NATURAL_32]	to_cil
+elks	ARRAY [NATURAL_32]	to_special
+elks	ARRAY [NATURAL_32]	linear_representation
+elks	ARRAY [NATURAL_32]	subarray
+elks	ARRAY [NATURAL_32]	prune
+elks	ARRAY [NATURAL_32]	extend
+elks	ARRAY [NATURAL_32]	empty_area
+elks	ARRAY [CHARACTER_8]	make_empty
+elks	ARRAY [CHARACTER_8]	make_from_array
+elks	ARRAY [CHARACTER_8]	make_from_cil
+elks	ARRAY [CHARACTER_8]	at
+elks	ARRAY [CHARACTER_8]	entry
+elks	ARRAY [CHARACTER_8]	has
+elks	ARRAY [CHARACTER_8]	new_cursor
+elks	ARRAY [CHARACTER_8]	occurrences
+elks	ARRAY [CHARACTER_8]	all_default
+elks	ARRAY [CHARACTER_8]	filled_with
+elks	ARRAY [CHARACTER_8]	full
+elks	ARRAY [CHARACTER_8]	same_items
+elks	ARRAY [CHARACTER_8]	valid_index
+elks	ARRAY [CHARACTER_8]	extendible
+elks	ARRAY [CHARACTER_8]	prunable
+elks	ARRAY [CHARACTER_8]	resizable
+elks	ARRAY [CHARACTER_8]	enter
+elks	ARRAY [CHARACTER_8]	force
+elks	ARRAY [CHARACTER_8]	force_and_fill
+elks	ARRAY [CHARACTER_8]	fill_with
+elks	ARRAY [CHARACTER_8]	subcopy
+elks	ARRAY [CHARACTER_8]	do_all
+elks	ARRAY [CHARACTER_8]	do_if
+elks	ARRAY [CHARACTER_8]	there_exists
+elks	ARRAY [CHARACTER_8]	for_all
+elks	ARRAY [CHARACTER_8]	do_all_with_index
+elks	ARRAY [CHARACTER_8]	do_if_with_index
+elks	ARRAY [CHARACTER_8]	wipe_out
+elks	ARRAY [CHARACTER_8]	discard_items
+elks	ARRAY [CHARACTER_8]	clear_all
+elks	ARRAY [CHARACTER_8]	keep_head
+elks	ARRAY [CHARACTER_8]	keep_tail
+elks	ARRAY [CHARACTER_8]	remove_head
+elks	ARRAY [CHARACTER_8]	remove_tail
+elks	ARRAY [CHARACTER_8]	grow
+elks	ARRAY [CHARACTER_8]	conservative_resize
+elks	ARRAY [CHARACTER_8]	conservative_resize_with_default
+elks	ARRAY [CHARACTER_8]	resize
+elks	ARRAY [CHARACTER_8]	trim
+elks	ARRAY [CHARACTER_8]	rebase
+elks	ARRAY [CHARACTER_8]	to_c
+elks	ARRAY [CHARACTER_8]	to_cil
+elks	ARRAY [CHARACTER_8]	to_special
+elks	ARRAY [CHARACTER_8]	linear_representation
+elks	ARRAY [CHARACTER_8]	subarray
+elks	ARRAY [CHARACTER_8]	prune
+elks	ARRAY [CHARACTER_8]	extend
+elks	ARRAY [CHARACTER_8]	empty_area
+elks	TUPLE	at
+elks	TUPLE	character_item
+elks	TUPLE	wide_character_item
+elks	TUPLE	double_item
+elks	TUPLE	integer_item
+elks	TUPLE	real_item
+elks	TUPLE	compare_objects
+elks	TUPLE	compare_references
+elks	TUPLE	valid_index
+elks	TUPLE	upper
+elks	TUPLE	is_empty
+elks	TUPLE	put_character
+elks	TUPLE	put_wide_character
+elks	TUPLE	put_double
+elks	TUPLE	put_real
+elks	TUPLE	put_integer
+elks	TUPLE	is_boolean_item
+elks	TUPLE	is_character_8_item
+elks	TUPLE	is_character_item
+elks	TUPLE	is_character_32_item
+elks	TUPLE	is_wide_character_item
+elks	TUPLE	is_natural_8_item
+elks	TUPLE	is_natural_16_item
+elks	TUPLE	is_natural_32_item
+elks	TUPLE	is_natural_64_item
+elks	TUPLE	is_integer_8_item
+elks	TUPLE	is_integer_16_item
+elks	TUPLE	is_integer_item
+elks	TUPLE	is_integer_32_item
+elks	TUPLE	is_integer_64_item
+elks	TUPLE	is_pointer_item
+elks	TUPLE	is_real_32_item
+elks	TUPLE	is_real_item
+elks	TUPLE	is_real_64_item
+elks	TUPLE	is_double_item
+elks	TUPLE	is_reference_item
+elks	TUPLE	is_numeric_item
+elks	TUPLE	is_uniform
+elks	TUPLE	is_uniform_boolean
+elks	TUPLE	is_uniform_character_8
+elks	TUPLE	is_uniform_character
+elks	TUPLE	is_uniform_character_32
+elks	TUPLE	is_uniform_wide_character
+elks	TUPLE	is_uniform_natural_8
+elks	TUPLE	is_uniform_natural_16
+elks	TUPLE	is_uniform_natural_32
+elks	TUPLE	is_uniform_natural_64
+elks	TUPLE	is_uniform_integer_8
+elks	TUPLE	is_uniform_integer_16
+elks	TUPLE	is_uniform_integer
+elks	TUPLE	is_uniform_integer_32
+elks	TUPLE	is_uniform_integer_64
+elks	TUPLE	is_uniform_pointer
+elks	TUPLE	is_uniform_real_32
+elks	TUPLE	is_uniform_real
+elks	TUPLE	is_uniform_real_64
+elks	TUPLE	is_uniform_double
+elks	TUPLE	is_uniform_reference
+elks	TUPLE	plus
+elks	TUPLE	convertible_to_double
+elks	TUPLE	convertible_to_real
+elks	TUPLE	arrayed
+elks	TUPLE	boolean_arrayed
+elks	TUPLE	character_8_arrayed
+elks	TUPLE	character_arrayed
+elks	TUPLE	double_arrayed
+elks	TUPLE	integer_arrayed
+elks	TUPLE	pointer_arrayed
+elks	TUPLE	real_arrayed
+elks	TUPLE	string_arrayed
+elks	TUPLE	is_tuple_uniform
+elks	TUPLE	set_object_comparison
+elks	ROUTINE [G#1]	(removed)
+elks	PROCEDURE [G#1]	(removed)
+elks	FUNCTION [G#1, G#2]	(removed)
+elks	FUNCTION [G#1, BOOLEAN]	(removed)
+elks	PREDICATE [G#1]	(removed)
+elks	reference TYPED_POINTER [G#1]	(empty)
+elks	reference TYPED_POINTER [CHARACTER_8]	(empty)
+elks	TYPED_POINTER [CHARACTER_8]	(empty)
+elks	reference TYPED_POINTER [INTEGER_16]	(empty)
+elks	TYPED_POINTER [INTEGER_16]	(empty)
+elks	TYPED_POINTER [G#1]	(empty)
+elks	reference TYPED_POINTER [INTEGER_64]	(empty)
+elks	TYPED_POINTER [INTEGER_64]	(empty)
+elks	reference TYPED_POINTER [NATURAL_64]	(empty)
+elks	TYPED_POINTER [NATURAL_64]	(empty)
+elks	reference TYPED_POINTER [NATURAL_16]	(empty)
+elks	TYPED_POINTER [NATURAL_16]	(empty)
+elks	reference TYPED_POINTER [NATURAL_32]	(empty)
+elks	TYPED_POINTER [NATURAL_32]	(empty)
+elks	reference TYPED_POINTER [REAL_64]	(empty)
+elks	TYPED_POINTER [REAL_64]	(empty)
+elks	reference TYPED_POINTER [CHARACTER_32]	(empty)
+elks	TYPED_POINTER [CHARACTER_32]	(empty)
+elks	reference TYPED_POINTER [INTEGER_32]	(empty)
+elks	TYPED_POINTER [INTEGER_32]	(empty)
+elks	reference TYPED_POINTER [INTEGER_8]	(empty)
+elks	TYPED_POINTER [INTEGER_8]	(empty)
+elks	reference TYPED_POINTER [NATURAL_8]	(empty)
+elks	TYPED_POINTER [NATURAL_8]	(empty)
+elks	reference TYPED_POINTER [POINTER]	(empty)
+elks	TYPED_POINTER [POINTER]	(empty)
+elks	reference TYPED_POINTER [REAL_32]	(empty)
+elks	TYPED_POINTER [REAL_32]	(empty)
+elks	reference TYPED_POINTER [BOOLEAN]	(empty)
+elks	TYPED_POINTER [BOOLEAN]	(empty)
+elks	TYPE [G#1]	name
+elks	TYPE [G#1]	generic_parameter_count
+elks	TYPE [G#1]	has_default
+elks	TYPE [G#1]	is_deferred
+elks	TYPE [G#1]	is_expanded
+elks	TYPE [G#1]	is_strictly_conforming_to
+elks	TYPE [G#1]	is_conforming_to
+elks	TYPE [G#1]	adapt
+elks	TYPE [G#1]	attempted
+elks	TYPE [G#1]	attempt
+elks	TYPE [G#1]	default_detachable_value
+elks	TYPE [G#1]	out
+elks	TYPE [G#1]	debug_output
+elks	TYPE [G#1]	plus
+elks	TYPE [G#1]	same_string
+elks	TYPE [G#1]	is_case_insensitive_equal
+elks	TYPE [G#1]	as_lower
+elks	TYPE [G#1]	as_upper
+elks	TYPE [G#1]	to_string_8
+elks	TYPE [G#1]	to_string_32
+elks	TYPE [INTEGER_8]	name
+elks	TYPE [INTEGER_8]	generic_parameter_count
+elks	TYPE [INTEGER_8]	has_default
+elks	TYPE [INTEGER_8]	is_deferred
+elks	TYPE [INTEGER_8]	is_expanded
+elks	TYPE [INTEGER_8]	is_strictly_conforming_to
+elks	TYPE [INTEGER_8]	is_conforming_to
+elks	TYPE [INTEGER_8]	adapt
+elks	TYPE [INTEGER_8]	attempted
+elks	TYPE [INTEGER_8]	attempt
+elks	TYPE [INTEGER_8]	default_detachable_value
+elks	TYPE [INTEGER_8]	out
+elks	TYPE [INTEGER_8]	debug_output
+elks	TYPE [INTEGER_8]	plus
+elks	TYPE [INTEGER_8]	same_string
+elks	TYPE [INTEGER_8]	is_case_insensitive_equal
+elks	TYPE [INTEGER_8]	as_lower
+elks	TYPE [INTEGER_8]	as_upper
+elks	TYPE [INTEGER_8]	to_string_8
+elks	TYPE [INTEGER_8]	to_string_32
+elks	TYPE [TYPED_POINTER [CHARACTER_8]]	name
+elks	TYPE [TYPED_POINTER [CHARACTER_8]]	generic_parameter_count
+elks	TYPE [TYPED_POINTER [CHARACTER_8]]	has_default
+elks	TYPE [TYPED_POINTER [CHARACTER_8]]	is_deferred
+elks	TYPE [TYPED_POINTER [CHARACTER_8]]	is_expanded
+elks	TYPE [TYPED_POINTER [CHARACTER_8]]	is_strictly_conforming_to
+elks	TYPE [TYPED_POINTER [CHARACTER_8]]	is_conforming_to
+elks	TYPE [TYPED_POINTER [CHARACTER_8]]	adapt
+elks	TYPE [TYPED_POINTER [CHARACTER_8]]	attempted
+elks	TYPE [TYPED_POINTER [CHARACTER_8]]	attempt
+elks	TYPE [TYPED_POINTER [CHARACTER_8]]	default_detachable_value
+elks	TYPE [TYPED_POINTER [CHARACTER_8]]	out
+elks	TYPE [TYPED_POINTER [CHARACTER_8]]	debug_output
+elks	TYPE [TYPED_POINTER [CHARACTER_8]]	plus
+elks	TYPE [TYPED_POINTER [CHARACTER_8]]	same_string
+elks	TYPE [TYPED_POINTER [CHARACTER_8]]	is_case_insensitive_equal
+elks	TYPE [TYPED_POINTER [CHARACTER_8]]	as_lower
+elks	TYPE [TYPED_POINTER [CHARACTER_8]]	as_upper
+elks	TYPE [TYPED_POINTER [CHARACTER_8]]	to_string_8
+elks	TYPE [TYPED_POINTER [CHARACTER_8]]	to_string_32
+elks	TYPE [POINTER]	name
+elks	TYPE [POINTER]	generic_parameter_count
+elks	TYPE [POINTER]	has_default
+elks	TYPE [POINTER]	is_deferred
+elks	TYPE [POINTER]	is_expanded
+elks	TYPE [POINTER]	is_strictly_conforming_to
+elks	TYPE [POINTER]	is_conforming_to
+elks	TYPE [POINTER]	adapt
+elks	TYPE [POINTER]	attempted
+elks	TYPE [POINTER]	attempt
+elks	TYPE [POINTER]	default_detachable_value
+elks	TYPE [POINTER]	out
+elks	TYPE [POINTER]	debug_output
+elks	TYPE [POINTER]	plus
+elks	TYPE [POINTER]	same_string
+elks	TYPE [POINTER]	is_case_insensitive_equal
+elks	TYPE [POINTER]	as_lower
+elks	TYPE [POINTER]	as_upper
+elks	TYPE [POINTER]	to_string_8
+elks	TYPE [POINTER]	to_string_32
+elks	TYPE [INTEGER_64]	name
+elks	TYPE [INTEGER_64]	generic_parameter_count
+elks	TYPE [INTEGER_64]	has_default
+elks	TYPE [INTEGER_64]	is_deferred
+elks	TYPE [INTEGER_64]	is_expanded
+elks	TYPE [INTEGER_64]	is_strictly_conforming_to
+elks	TYPE [INTEGER_64]	is_conforming_to
+elks	TYPE [INTEGER_64]	adapt
+elks	TYPE [INTEGER_64]	attempted
+elks	TYPE [INTEGER_64]	attempt
+elks	TYPE [INTEGER_64]	default_detachable_value
+elks	TYPE [INTEGER_64]	out
+elks	TYPE [INTEGER_64]	debug_output
+elks	TYPE [INTEGER_64]	plus
+elks	TYPE [INTEGER_64]	same_string
+elks	TYPE [INTEGER_64]	is_case_insensitive_equal
+elks	TYPE [INTEGER_64]	as_lower
+elks	TYPE [INTEGER_64]	as_upper
+elks	TYPE [INTEGER_64]	to_string_8
+elks	TYPE [INTEGER_64]	to_string_32
+elks	TYPE [TYPED_POINTER [INTEGER_16]]	name
+elks	TYPE [TYPED_POINTER [INTEGER_16]]	generic_parameter_count
+elks	TYPE [TYPED_POINTER [INTEGER_16]]	has_default
+elks	TYPE [TYPED_POINTER [INTEGER_16]]	is_deferred
+elks	TYPE [TYPED_POINTER [INTEGER_16]]	is_expanded
+elks	TYPE [TYPED_POINTER [INTEGER_16]]	is_strictly_conforming_to
+elks	TYPE [TYPED_POINTER [INTEGER_16]]	is_conforming_to
+elks	TYPE [TYPED_POINTER [INTEGER_16]]	adapt
+elks	TYPE [TYPED_POINTER [INTEGER_16]]	attempted
+elks	TYPE [TYPED_POINTER [INTEGER_16]]	attempt
+elks	TYPE [TYPED_POINTER [INTEGER_16]]	default_detachable_value
+elks	TYPE [TYPED_POINTER [INTEGER_16]]	out
+elks	TYPE [TYPED_POINTER [INTEGER_16]]	debug_output
+elks	TYPE [TYPED_POINTER [INTEGER_16]]	plus
+elks	TYPE [TYPED_POINTER [INTEGER_16]]	same_string
+elks	TYPE [TYPED_POINTER [INTEGER_16]]	is_case_insensitive_equal
+elks	TYPE [TYPED_POINTER [INTEGER_16]]	as_lower
+elks	TYPE [TYPED_POINTER [INTEGER_16]]	as_upper
+elks	TYPE [TYPED_POINTER [INTEGER_16]]	to_string_8
+elks	TYPE [TYPED_POINTER [INTEGER_16]]	to_string_32
+elks	TYPE [TYPED_POINTER [ANY]]	name
+elks	TYPE [TYPED_POINTER [ANY]]	generic_parameter_count
+elks	TYPE [TYPED_POINTER [ANY]]	has_default
+elks	TYPE [TYPED_POINTER [ANY]]	is_deferred
+elks	TYPE [TYPED_POINTER [ANY]]	is_expanded
+elks	TYPE [TYPED_POINTER [ANY]]	is_strictly_conforming_to
+elks	TYPE [TYPED_POINTER [ANY]]	is_conforming_to
+elks	TYPE [TYPED_POINTER [ANY]]	adapt
+elks	TYPE [TYPED_POINTER [ANY]]	attempted
+elks	TYPE [TYPED_POINTER [ANY]]	attempt
+elks	TYPE [TYPED_POINTER [ANY]]	default_detachable_value
+elks	TYPE [TYPED_POINTER [ANY]]	out
+elks	TYPE [TYPED_POINTER [ANY]]	debug_output
+elks	TYPE [TYPED_POINTER [ANY]]	plus
+elks	TYPE [TYPED_POINTER [ANY]]	same_string
+elks	TYPE [TYPED_POINTER [ANY]]	is_case_insensitive_equal
+elks	TYPE [TYPED_POINTER [ANY]]	as_lower
+elks	TYPE [TYPED_POINTER [ANY]]	as_upper
+elks	TYPE [TYPED_POINTER [ANY]]	to_string_8
+elks	TYPE [TYPED_POINTER [ANY]]	to_string_32
+elks	TYPE [REAL_64]	name
+elks	TYPE [REAL_64]	generic_parameter_count
+elks	TYPE [REAL_64]	has_default
+elks	TYPE [REAL_64]	is_deferred
+elks	TYPE [REAL_64]	is_expanded
+elks	TYPE [REAL_64]	is_strictly_conforming_to
+elks	TYPE [REAL_64]	is_conforming_to
+elks	TYPE [REAL_64]	adapt
+elks	TYPE [REAL_64]	attempted
+elks	TYPE [REAL_64]	attempt
+elks	TYPE [REAL_64]	default_detachable_value
+elks	TYPE [REAL_64]	out
+elks	TYPE [REAL_64]	debug_output
+elks	TYPE [REAL_64]	plus
+elks	TYPE [REAL_64]	same_string
+elks	TYPE [REAL_64]	is_case_insensitive_equal
+elks	TYPE [REAL_64]	as_lower
+elks	TYPE [REAL_64]	as_upper
+elks	TYPE [REAL_64]	to_string_8
+elks	TYPE [REAL_64]	to_string_32
+elks	TYPE [REAL_32]	name
+elks	TYPE [REAL_32]	generic_parameter_count
+elks	TYPE [REAL_32]	has_default
+elks	TYPE [REAL_32]	is_deferred
+elks	TYPE [REAL_32]	is_expanded
+elks	TYPE [REAL_32]	is_strictly_conforming_to
+elks	TYPE [REAL_32]	is_conforming_to
+elks	TYPE [REAL_32]	adapt
+elks	TYPE [REAL_32]	attempted
+elks	TYPE [REAL_32]	attempt
+elks	TYPE [REAL_32]	default_detachable_value
+elks	TYPE [REAL_32]	out
+elks	TYPE [REAL_32]	debug_output
+elks	TYPE [REAL_32]	plus
+elks	TYPE [REAL_32]	same_string
+elks	TYPE [REAL_32]	is_case_insensitive_equal
+elks	TYPE [REAL_32]	as_lower
+elks	TYPE [REAL_32]	as_upper
+elks	TYPE [REAL_32]	to_string_8
+elks	TYPE [REAL_32]	to_string_32
+elks	TYPE [NATURAL_8]	name
+elks	TYPE [NATURAL_8]	generic_parameter_count
+elks	TYPE [NATURAL_8]	has_default
+elks	TYPE [NATURAL_8]	is_deferred
+elks	TYPE [NATURAL_8]	is_expanded
+elks	TYPE [NATURAL_8]	is_strictly_conforming_to
+elks	TYPE [NATURAL_8]	is_conforming_to
+elks	TYPE [NATURAL_8]	adapt
+elks	TYPE [NATURAL_8]	attempted
+elks	TYPE [NATURAL_8]	attempt
+elks	TYPE [NATURAL_8]	default_detachable_value
+elks	TYPE [NATURAL_8]	out
+elks	TYPE [NATURAL_8]	debug_output
+elks	TYPE [NATURAL_8]	plus
+elks	TYPE [NATURAL_8]	same_string
+elks	TYPE [NATURAL_8]	is_case_insensitive_equal
+elks	TYPE [NATURAL_8]	as_lower
+elks	TYPE [NATURAL_8]	as_upper
+elks	TYPE [NATURAL_8]	to_string_8
+elks	TYPE [NATURAL_8]	to_string_32
+elks	TYPE [NATURAL_16]	name
+elks	TYPE [NATURAL_16]	generic_parameter_count
+elks	TYPE [NATURAL_16]	has_default
+elks	TYPE [NATURAL_16]	is_deferred
+elks	TYPE [NATURAL_16]	is_expanded
+elks	TYPE [NATURAL_16]	is_strictly_conforming_to
+elks	TYPE [NATURAL_16]	is_conforming_to
+elks	TYPE [NATURAL_16]	adapt
+elks	TYPE [NATURAL_16]	attempted
+elks	TYPE [NATURAL_16]	attempt
+elks	TYPE [NATURAL_16]	default_detachable_value
+elks	TYPE [NATURAL_16]	out
+elks	TYPE [NATURAL_16]	debug_output
+elks	TYPE [NATURAL_16]	plus
+elks	TYPE [NATURAL_16]	same_string
+elks	TYPE [NATURAL_16]	is_case_insensitive_equal
+elks	TYPE [NATURAL_16]	as_lower
+elks	TYPE [NATURAL_16]	as_upper
+elks	TYPE [NATURAL_16]	to_string_8
+elks	TYPE [NATURAL_16]	to_string_32
+elks	TYPE [NATURAL_32]	name
+elks	TYPE [NATURAL_32]	generic_parameter_count
+elks	TYPE [NATURAL_32]	has_default
+elks	TYPE [NATURAL_32]	is_deferred
+elks	TYPE [NATURAL_32]	is_expanded
+elks	TYPE [NATURAL_32]	is_strictly_conforming_to
+elks	TYPE [NATURAL_32]	is_conforming_to
+elks	TYPE [NATURAL_32]	adapt
+elks	TYPE [NATURAL_32]	attempted
+elks	TYPE [NATURAL_32]	attempt
+elks	TYPE [NATURAL_32]	default_detachable_value
+elks	TYPE [NATURAL_32]	out
+elks	TYPE [NATURAL_32]	debug_output
+elks	TYPE [NATURAL_32]	plus
+elks	TYPE [NATURAL_32]	same_string
+elks	TYPE [NATURAL_32]	is_case_insensitive_equal
+elks	TYPE [NATURAL_32]	as_lower
+elks	TYPE [NATURAL_32]	as_upper
+elks	TYPE [NATURAL_32]	to_string_8
+elks	TYPE [NATURAL_32]	to_string_32
+elks	TYPE [NATURAL_64]	name
+elks	TYPE [NATURAL_64]	generic_parameter_count
+elks	TYPE [NATURAL_64]	has_default
+elks	TYPE [NATURAL_64]	is_deferred
+elks	TYPE [NATURAL_64]	is_expanded
+elks	TYPE [NATURAL_64]	is_strictly_conforming_to
+elks	TYPE [NATURAL_64]	is_conforming_to
+elks	TYPE [NATURAL_64]	adapt
+elks	TYPE [NATURAL_64]	attempted
+elks	TYPE [NATURAL_64]	attempt
+elks	TYPE [NATURAL_64]	default_detachable_value
+elks	TYPE [NATURAL_64]	out
+elks	TYPE [NATURAL_64]	debug_output
+elks	TYPE [NATURAL_64]	plus
+elks	TYPE [NATURAL_64]	same_string
+elks	TYPE [NATURAL_64]	is_case_insensitive_equal
+elks	TYPE [NATURAL_64]	as_lower
+elks	TYPE [NATURAL_64]	as_upper
+elks	TYPE [NATURAL_64]	to_string_8
+elks	TYPE [NATURAL_64]	to_string_32
+elks	TYPE [INTEGER_16]	name
+elks	TYPE [INTEGER_16]	generic_parameter_count
+elks	TYPE [INTEGER_16]	has_default
+elks	TYPE [INTEGER_16]	is_deferred
+elks	TYPE [INTEGER_16]	is_expanded
+elks	TYPE [INTEGER_16]	is_strictly_conforming_to
+elks	TYPE [INTEGER_16]	is_conforming_to
+elks	TYPE [INTEGER_16]	adapt
+elks	TYPE [INTEGER_16]	attempted
+elks	TYPE [INTEGER_16]	attempt
+elks	TYPE [INTEGER_16]	default_detachable_value
+elks	TYPE [INTEGER_16]	out
+elks	TYPE [INTEGER_16]	debug_output
+elks	TYPE [INTEGER_16]	plus
+elks	TYPE [INTEGER_16]	same_string
+elks	TYPE [INTEGER_16]	is_case_insensitive_equal
+elks	TYPE [INTEGER_16]	as_lower
+elks	TYPE [INTEGER_16]	as_upper
+elks	TYPE [INTEGER_16]	to_string_8
+elks	TYPE [INTEGER_16]	to_string_32
+elks	TYPE [INTEGER_32]	name
+elks	TYPE [INTEGER_32]	generic_parameter_count
+elks	TYPE [INTEGER_32]	has_default
+elks	TYPE [INTEGER_32]	is_deferred
+elks	TYPE [INTEGER_32]	is_expanded
+elks	TYPE [INTEGER_32]	is_strictly_conforming_to
+elks	TYPE [INTEGER_32]	is_conforming_to
+elks	TYPE [INTEGER_32]	adapt
+elks	TYPE [INTEGER_32]	attempted
+elks	TYPE [INTEGER_32]	attempt
+elks	TYPE [INTEGER_32]	default_detachable_value
+elks	TYPE [INTEGER_32]	out
+elks	TYPE [INTEGER_32]	debug_output
+elks	TYPE [INTEGER_32]	plus
+elks	TYPE [INTEGER_32]	same_string
+elks	TYPE [INTEGER_32]	is_case_insensitive_equal
+elks	TYPE [INTEGER_32]	as_lower
+elks	TYPE [INTEGER_32]	as_upper
+elks	TYPE [INTEGER_32]	to_string_8
+elks	TYPE [INTEGER_32]	to_string_32
+elks	TYPE [CHARACTER_8]	name
+elks	TYPE [CHARACTER_8]	generic_parameter_count
+elks	TYPE [CHARACTER_8]	has_default
+elks	TYPE [CHARACTER_8]	is_deferred
+elks	TYPE [CHARACTER_8]	is_expanded
+elks	TYPE [CHARACTER_8]	is_strictly_conforming_to
+elks	TYPE [CHARACTER_8]	is_conforming_to
+elks	TYPE [CHARACTER_8]	adapt
+elks	TYPE [CHARACTER_8]	attempted
+elks	TYPE [CHARACTER_8]	attempt
+elks	TYPE [CHARACTER_8]	default_detachable_value
+elks	TYPE [CHARACTER_8]	out
+elks	TYPE [CHARACTER_8]	debug_output
+elks	TYPE [CHARACTER_8]	plus
+elks	TYPE [CHARACTER_8]	same_string
+elks	TYPE [CHARACTER_8]	is_case_insensitive_equal
+elks	TYPE [CHARACTER_8]	as_lower
+elks	TYPE [CHARACTER_8]	as_upper
+elks	TYPE [CHARACTER_8]	to_string_8
+elks	TYPE [CHARACTER_8]	to_string_32
+elks	TYPE [CHARACTER_32]	name
+elks	TYPE [CHARACTER_32]	generic_parameter_count
+elks	TYPE [CHARACTER_32]	has_default
+elks	TYPE [CHARACTER_32]	is_deferred
+elks	TYPE [CHARACTER_32]	is_expanded
+elks	TYPE [CHARACTER_32]	is_strictly_conforming_to
+elks	TYPE [CHARACTER_32]	is_conforming_to
+elks	TYPE [CHARACTER_32]	adapt
+elks	TYPE [CHARACTER_32]	attempted
+elks	TYPE [CHARACTER_32]	attempt
+elks	TYPE [CHARACTER_32]	default_detachable_value
+elks	TYPE [CHARACTER_32]	out
+elks	TYPE [CHARACTER_32]	debug_output
+elks	TYPE [CHARACTER_32]	plus
+elks	TYPE [CHARACTER_32]	same_string
+elks	TYPE [CHARACTER_32]	is_case_insensitive_equal
+elks	TYPE [CHARACTER_32]	as_lower
+elks	TYPE [CHARACTER_32]	as_upper
+elks	TYPE [CHARACTER_32]	to_string_8
+elks	TYPE [CHARACTER_32]	to_string_32
+elks	TYPE [BOOLEAN]	name
+elks	TYPE [BOOLEAN]	generic_parameter_count
+elks	TYPE [BOOLEAN]	has_default
+elks	TYPE [BOOLEAN]	is_deferred
+elks	TYPE [BOOLEAN]	is_expanded
+elks	TYPE [BOOLEAN]	is_strictly_conforming_to
+elks	TYPE [BOOLEAN]	is_conforming_to
+elks	TYPE [BOOLEAN]	adapt
+elks	TYPE [BOOLEAN]	attempted
+elks	TYPE [BOOLEAN]	attempt
+elks	TYPE [BOOLEAN]	default_detachable_value
+elks	TYPE [BOOLEAN]	out
+elks	TYPE [BOOLEAN]	debug_output
+elks	TYPE [BOOLEAN]	plus
+elks	TYPE [BOOLEAN]	same_string
+elks	TYPE [BOOLEAN]	is_case_insensitive_equal
+elks	TYPE [BOOLEAN]	as_lower
+elks	TYPE [BOOLEAN]	as_upper
+elks	TYPE [BOOLEAN]	to_string_8
+elks	TYPE [BOOLEAN]	to_string_32
+elks	TYPE [TYPED_POINTER [INTEGER_64]]	name
+elks	TYPE [TYPED_POINTER [INTEGER_64]]	generic_parameter_count
+elks	TYPE [TYPED_POINTER [INTEGER_64]]	has_default
+elks	TYPE [TYPED_POINTER [INTEGER_64]]	is_deferred
+elks	TYPE [TYPED_POINTER [INTEGER_64]]	is_expanded
+elks	TYPE [TYPED_POINTER [INTEGER_64]]	is_strictly_conforming_to
+elks	TYPE [TYPED_POINTER [INTEGER_64]]	is_conforming_to
+elks	TYPE [TYPED_POINTER [INTEGER_64]]	adapt
+elks	TYPE [TYPED_POINTER [INTEGER_64]]	attempted
+elks	TYPE [TYPED_POINTER [INTEGER_64]]	attempt
+elks	TYPE [TYPED_POINTER [INTEGER_64]]	default_detachable_value
+elks	TYPE [TYPED_POINTER [INTEGER_64]]	out
+elks	TYPE [TYPED_POINTER [INTEGER_64]]	debug_output
+elks	TYPE [TYPED_POINTER [INTEGER_64]]	plus
+elks	TYPE [TYPED_POINTER [INTEGER_64]]	same_string
+elks	TYPE [TYPED_POINTER [INTEGER_64]]	is_case_insensitive_equal
+elks	TYPE [TYPED_POINTER [INTEGER_64]]	as_lower
+elks	TYPE [TYPED_POINTER [INTEGER_64]]	as_upper
+elks	TYPE [TYPED_POINTER [INTEGER_64]]	to_string_8
+elks	TYPE [TYPED_POINTER [INTEGER_64]]	to_string_32
+elks	TYPE [TYPED_POINTER [NATURAL_64]]	name
+elks	TYPE [TYPED_POINTER [NATURAL_64]]	generic_parameter_count
+elks	TYPE [TYPED_POINTER [NATURAL_64]]	has_default
+elks	TYPE [TYPED_POINTER [NATURAL_64]]	is_deferred
+elks	TYPE [TYPED_POINTER [NATURAL_64]]	is_expanded
+elks	TYPE [TYPED_POINTER [NATURAL_64]]	is_strictly_conforming_to
+elks	TYPE [TYPED_POINTER [NATURAL_64]]	is_conforming_to
+elks	TYPE [TYPED_POINTER [NATURAL_64]]	adapt
+elks	TYPE [TYPED_POINTER [NATURAL_64]]	attempted
+elks	TYPE [TYPED_POINTER [NATURAL_64]]	attempt
+elks	TYPE [TYPED_POINTER [NATURAL_64]]	default_detachable_value
+elks	TYPE [TYPED_POINTER [NATURAL_64]]	out
+elks	TYPE [TYPED_POINTER [NATURAL_64]]	debug_output
+elks	TYPE [TYPED_POINTER [NATURAL_64]]	plus
+elks	TYPE [TYPED_POINTER [NATURAL_64]]	same_string
+elks	TYPE [TYPED_POINTER [NATURAL_64]]	is_case_insensitive_equal
+elks	TYPE [TYPED_POINTER [NATURAL_64]]	as_lower
+elks	TYPE [TYPED_POINTER [NATURAL_64]]	as_upper
+elks	TYPE [TYPED_POINTER [NATURAL_64]]	to_string_8
+elks	TYPE [TYPED_POINTER [NATURAL_64]]	to_string_32
+elks	TYPE [TYPED_POINTER [NATURAL_16]]	name
+elks	TYPE [TYPED_POINTER [NATURAL_16]]	generic_parameter_count
+elks	TYPE [TYPED_POINTER [NATURAL_16]]	has_default
+elks	TYPE [TYPED_POINTER [NATURAL_16]]	is_deferred
+elks	TYPE [TYPED_POINTER [NATURAL_16]]	is_expanded
+elks	TYPE [TYPED_POINTER [NATURAL_16]]	is_strictly_conforming_to
+elks	TYPE [TYPED_POINTER [NATURAL_16]]	is_conforming_to
+elks	TYPE [TYPED_POINTER [NATURAL_16]]	adapt
+elks	TYPE [TYPED_POINTER [NATURAL_16]]	attempted
+elks	TYPE [TYPED_POINTER [NATURAL_16]]	attempt
+elks	TYPE [TYPED_POINTER [NATURAL_16]]	default_detachable_value
+elks	TYPE [TYPED_POINTER [NATURAL_16]]	out
+elks	TYPE [TYPED_POINTER [NATURAL_16]]	debug_output
+elks	TYPE [TYPED_POINTER [NATURAL_16]]	plus
+elks	TYPE [TYPED_POINTER [NATURAL_16]]	same_string
+elks	TYPE [TYPED_POINTER [NATURAL_16]]	is_case_insensitive_equal
+elks	TYPE [TYPED_POINTER [NATURAL_16]]	as_lower
+elks	TYPE [TYPED_POINTER [NATURAL_16]]	as_upper
+elks	TYPE [TYPED_POINTER [NATURAL_16]]	to_string_8
+elks	TYPE [TYPED_POINTER [NATURAL_16]]	to_string_32
+elks	TYPE [TYPED_POINTER [NATURAL_32]]	name
+elks	TYPE [TYPED_POINTER [NATURAL_32]]	generic_parameter_count
+elks	TYPE [TYPED_POINTER [NATURAL_32]]	has_default
+elks	TYPE [TYPED_POINTER [NATURAL_32]]	is_deferred
+elks	TYPE [TYPED_POINTER [NATURAL_32]]	is_expanded
+elks	TYPE [TYPED_POINTER [NATURAL_32]]	is_strictly_conforming_to
+elks	TYPE [TYPED_POINTER [NATURAL_32]]	is_conforming_to
+elks	TYPE [TYPED_POINTER [NATURAL_32]]	adapt
+elks	TYPE [TYPED_POINTER [NATURAL_32]]	attempted
+elks	TYPE [TYPED_POINTER [NATURAL_32]]	attempt
+elks	TYPE [TYPED_POINTER [NATURAL_32]]	default_detachable_value
+elks	TYPE [TYPED_POINTER [NATURAL_32]]	out
+elks	TYPE [TYPED_POINTER [NATURAL_32]]	debug_output
+elks	TYPE [TYPED_POINTER [NATURAL_32]]	plus
+elks	TYPE [TYPED_POINTER [NATURAL_32]]	same_string
+elks	TYPE [TYPED_POINTER [NATURAL_32]]	is_case_insensitive_equal
+elks	TYPE [TYPED_POINTER [NATURAL_32]]	as_lower
+elks	TYPE [TYPED_POINTER [NATURAL_32]]	as_upper
+elks	TYPE [TYPED_POINTER [NATURAL_32]]	to_string_8
+elks	TYPE [TYPED_POINTER [NATURAL_32]]	to_string_32
+elks	TYPE [TYPED_POINTER [REAL_64]]	name
+elks	TYPE [TYPED_POINTER [REAL_64]]	generic_parameter_count
+elks	TYPE [TYPED_POINTER [REAL_64]]	has_default
+elks	TYPE [TYPED_POINTER [REAL_64]]	is_deferred
+elks	TYPE [TYPED_POINTER [REAL_64]]	is_expanded
+elks	TYPE [TYPED_POINTER [REAL_64]]	is_strictly_conforming_to
+elks	TYPE [TYPED_POINTER [REAL_64]]	is_conforming_to
+elks	TYPE [TYPED_POINTER [REAL_64]]	adapt
+elks	TYPE [TYPED_POINTER [REAL_64]]	attempted
+elks	TYPE [TYPED_POINTER [REAL_64]]	attempt
+elks	TYPE [TYPED_POINTER [REAL_64]]	default_detachable_value
+elks	TYPE [TYPED_POINTER [REAL_64]]	out
+elks	TYPE [TYPED_POINTER [REAL_64]]	debug_output
+elks	TYPE [TYPED_POINTER [REAL_64]]	plus
+elks	TYPE [TYPED_POINTER [REAL_64]]	same_string
+elks	TYPE [TYPED_POINTER [REAL_64]]	is_case_insensitive_equal
+elks	TYPE [TYPED_POINTER [REAL_64]]	as_lower
+elks	TYPE [TYPED_POINTER [REAL_64]]	as_upper
+elks	TYPE [TYPED_POINTER [REAL_64]]	to_string_8
+elks	TYPE [TYPED_POINTER [REAL_64]]	to_string_32
+elks	TYPE [UTF_CONVERTER]	name
+elks	TYPE [UTF_CONVERTER]	generic_parameter_count
+elks	TYPE [UTF_CONVERTER]	has_default
+elks	TYPE [UTF_CONVERTER]	is_deferred
+elks	TYPE [UTF_CONVERTER]	is_expanded
+elks	TYPE [UTF_CONVERTER]	is_strictly_conforming_to
+elks	TYPE [UTF_CONVERTER]	is_conforming_to
+elks	TYPE [UTF_CONVERTER]	adapt
+elks	TYPE [UTF_CONVERTER]	attempted
+elks	TYPE [UTF_CONVERTER]	attempt
+elks	TYPE [UTF_CONVERTER]	default_detachable_value
+elks	TYPE [UTF_CONVERTER]	out
+elks	TYPE [UTF_CONVERTER]	debug_output
+elks	TYPE [UTF_CONVERTER]	plus
+elks	TYPE [UTF_CONVERTER]	same_string
+elks	TYPE [UTF_CONVERTER]	is_case_insensitive_equal
+elks	TYPE [UTF_CONVERTER]	as_lower
+elks	TYPE [UTF_CONVERTER]	as_upper
+elks	TYPE [UTF_CONVERTER]	to_string_8
+elks	TYPE [UTF_CONVERTER]	to_string_32
+elks	TYPE [TYPED_POINTER [CHARACTER_32]]	name
+elks	TYPE [TYPED_POINTER [CHARACTER_32]]	generic_parameter_count
+elks	TYPE [TYPED_POINTER [CHARACTER_32]]	has_default
+elks	TYPE [TYPED_POINTER [CHARACTER_32]]	is_deferred
+elks	TYPE [TYPED_POINTER [CHARACTER_32]]	is_expanded
+elks	TYPE [TYPED_POINTER [CHARACTER_32]]	is_strictly_conforming_to
+elks	TYPE [TYPED_POINTER [CHARACTER_32]]	is_conforming_to
+elks	TYPE [TYPED_POINTER [CHARACTER_32]]	adapt
+elks	TYPE [TYPED_POINTER [CHARACTER_32]]	attempted
+elks	TYPE [TYPED_POINTER [CHARACTER_32]]	attempt
+elks	TYPE [TYPED_POINTER [CHARACTER_32]]	default_detachable_value
+elks	TYPE [TYPED_POINTER [CHARACTER_32]]	out
+elks	TYPE [TYPED_POINTER [CHARACTER_32]]	debug_output
+elks	TYPE [TYPED_POINTER [CHARACTER_32]]	plus
+elks	TYPE [TYPED_POINTER [CHARACTER_32]]	same_string
+elks	TYPE [TYPED_POINTER [CHARACTER_32]]	is_case_insensitive_equal
+elks	TYPE [TYPED_POINTER [CHARACTER_32]]	as_lower
+elks	TYPE [TYPED_POINTER [CHARACTER_32]]	as_upper
+elks	TYPE [TYPED_POINTER [CHARACTER_32]]	to_string_8
+elks	TYPE [TYPED_POINTER [CHARACTER_32]]	to_string_32
+elks	TYPE [TYPED_POINTER [INTEGER_32]]	name
+elks	TYPE [TYPED_POINTER [INTEGER_32]]	generic_parameter_count
+elks	TYPE [TYPED_POINTER [INTEGER_32]]	has_default
+elks	TYPE [TYPED_POINTER [INTEGER_32]]	is_deferred
+elks	TYPE [TYPED_POINTER [INTEGER_32]]	is_expanded
+elks	TYPE [TYPED_POINTER [INTEGER_32]]	is_strictly_conforming_to
+elks	TYPE [TYPED_POINTER [INTEGER_32]]	is_conforming_to
+elks	TYPE [TYPED_POINTER [INTEGER_32]]	adapt
+elks	TYPE [TYPED_POINTER [INTEGER_32]]	attempted
+elks	TYPE [TYPED_POINTER [INTEGER_32]]	attempt
+elks	TYPE [TYPED_POINTER [INTEGER_32]]	default_detachable_value
+elks	TYPE [TYPED_POINTER [INTEGER_32]]	out
+elks	TYPE [TYPED_POINTER [INTEGER_32]]	debug_output
+elks	TYPE [TYPED_POINTER [INTEGER_32]]	plus
+elks	TYPE [TYPED_POINTER [INTEGER_32]]	same_string
+elks	TYPE [TYPED_POINTER [INTEGER_32]]	is_case_insensitive_equal
+elks	TYPE [TYPED_POINTER [INTEGER_32]]	as_lower
+elks	TYPE [TYPED_POINTER [INTEGER_32]]	as_upper
+elks	TYPE [TYPED_POINTER [INTEGER_32]]	to_string_8
+elks	TYPE [TYPED_POINTER [INTEGER_32]]	to_string_32
+elks	TYPE [TYPED_POINTER [INTEGER_8]]	name
+elks	TYPE [TYPED_POINTER [INTEGER_8]]	generic_parameter_count
+elks	TYPE [TYPED_POINTER [INTEGER_8]]	has_default
+elks	TYPE [TYPED_POINTER [INTEGER_8]]	is_deferred
+elks	TYPE [TYPED_POINTER [INTEGER_8]]	is_expanded
+elks	TYPE [TYPED_POINTER [INTEGER_8]]	is_strictly_conforming_to
+elks	TYPE [TYPED_POINTER [INTEGER_8]]	is_conforming_to
+elks	TYPE [TYPED_POINTER [INTEGER_8]]	adapt
+elks	TYPE [TYPED_POINTER [INTEGER_8]]	attempted
+elks	TYPE [TYPED_POINTER [INTEGER_8]]	attempt
+elks	TYPE [TYPED_POINTER [INTEGER_8]]	default_detachable_value
+elks	TYPE [TYPED_POINTER [INTEGER_8]]	out
+elks	TYPE [TYPED_POINTER [INTEGER_8]]	debug_output
+elks	TYPE [TYPED_POINTER [INTEGER_8]]	plus
+elks	TYPE [TYPED_POINTER [INTEGER_8]]	same_string
+elks	TYPE [TYPED_POINTER [INTEGER_8]]	is_case_insensitive_equal
+elks	TYPE [TYPED_POINTER [INTEGER_8]]	as_lower
+elks	TYPE [TYPED_POINTER [INTEGER_8]]	as_upper
+elks	TYPE [TYPED_POINTER [INTEGER_8]]	to_string_8
+elks	TYPE [TYPED_POINTER [INTEGER_8]]	to_string_32
+elks	TYPE [TYPED_POINTER [NATURAL_8]]	name
+elks	TYPE [TYPED_POINTER [NATURAL_8]]	generic_parameter_count
+elks	TYPE [TYPED_POINTER [NATURAL_8]]	has_default
+elks	TYPE [TYPED_POINTER [NATURAL_8]]	is_deferred
+elks	TYPE [TYPED_POINTER [NATURAL_8]]	is_expanded
+elks	TYPE [TYPED_POINTER [NATURAL_8]]	is_strictly_conforming_to
+elks	TYPE [TYPED_POINTER [NATURAL_8]]	is_conforming_to
+elks	TYPE [TYPED_POINTER [NATURAL_8]]	adapt
+elks	TYPE [TYPED_POINTER [NATURAL_8]]	attempted
+elks	TYPE [TYPED_POINTER [NATURAL_8]]	attempt
+elks	TYPE [TYPED_POINTER [NATURAL_8]]	default_detachable_value
+elks	TYPE [TYPED_POINTER [NATURAL_8]]	out
+elks	TYPE [TYPED_POINTER [NATURAL_8]]	debug_output
+elks	TYPE [TYPED_POINTER [NATURAL_8]]	plus
+elks	TYPE [TYPED_POINTER [NATURAL_8]]	same_string
+elks	TYPE [TYPED_POINTER [NATURAL_8]]	is_case_insensitive_equal
+elks	TYPE [TYPED_POINTER [NATURAL_8]]	as_lower
+elks	TYPE [TYPED_POINTER [NATURAL_8]]	as_upper
+elks	TYPE [TYPED_POINTER [NATURAL_8]]	to_string_8
+elks	TYPE [TYPED_POINTER [NATURAL_8]]	to_string_32
+elks	TYPE [TYPED_POINTER [POINTER]]	name
+elks	TYPE [TYPED_POINTER [POINTER]]	generic_parameter_count
+elks	TYPE [TYPED_POINTER [POINTER]]	has_default
+elks	TYPE [TYPED_POINTER [POINTER]]	is_deferred
+elks	TYPE [TYPED_POINTER [POINTER]]	is_expanded
+elks	TYPE [TYPED_POINTER [POINTER]]	is_strictly_conforming_to
+elks	TYPE [TYPED_POINTER [POINTER]]	is_conforming_to
+elks	TYPE [TYPED_POINTER [POINTER]]	adapt
+elks	TYPE [TYPED_POINTER [POINTER]]	attempted
+elks	TYPE [TYPED_POINTER [POINTER]]	attempt
+elks	TYPE [TYPED_POINTER [POINTER]]	default_detachable_value
+elks	TYPE [TYPED_POINTER [POINTER]]	out
+elks	TYPE [TYPED_POINTER [POINTER]]	debug_output
+elks	TYPE [TYPED_POINTER [POINTER]]	plus
+elks	TYPE [TYPED_POINTER [POINTER]]	same_string
+elks	TYPE [TYPED_POINTER [POINTER]]	is_case_insensitive_equal
+elks	TYPE [TYPED_POINTER [POINTER]]	as_lower
+elks	TYPE [TYPED_POINTER [POINTER]]	as_upper
+elks	TYPE [TYPED_POINTER [POINTER]]	to_string_8
+elks	TYPE [TYPED_POINTER [POINTER]]	to_string_32
+elks	TYPE [TYPED_POINTER [REAL_32]]	name
+elks	TYPE [TYPED_POINTER [REAL_32]]	generic_parameter_count
+elks	TYPE [TYPED_POINTER [REAL_32]]	has_default
+elks	TYPE [TYPED_POINTER [REAL_32]]	is_deferred
+elks	TYPE [TYPED_POINTER [REAL_32]]	is_expanded
+elks	TYPE [TYPED_POINTER [REAL_32]]	is_strictly_conforming_to
+elks	TYPE [TYPED_POINTER [REAL_32]]	is_conforming_to
+elks	TYPE [TYPED_POINTER [REAL_32]]	adapt
+elks	TYPE [TYPED_POINTER [REAL_32]]	attempted
+elks	TYPE [TYPED_POINTER [REAL_32]]	attempt
+elks	TYPE [TYPED_POINTER [REAL_32]]	default_detachable_value
+elks	TYPE [TYPED_POINTER [REAL_32]]	out
+elks	TYPE [TYPED_POINTER [REAL_32]]	debug_output
+elks	TYPE [TYPED_POINTER [REAL_32]]	plus
+elks	TYPE [TYPED_POINTER [REAL_32]]	same_string
+elks	TYPE [TYPED_POINTER [REAL_32]]	is_case_insensitive_equal
+elks	TYPE [TYPED_POINTER [REAL_32]]	as_lower
+elks	TYPE [TYPED_POINTER [REAL_32]]	as_upper
+elks	TYPE [TYPED_POINTER [REAL_32]]	to_string_8
+elks	TYPE [TYPED_POINTER [REAL_32]]	to_string_32
+elks	TYPE [TYPED_POINTER [BOOLEAN]]	name
+elks	TYPE [TYPED_POINTER [BOOLEAN]]	generic_parameter_count
+elks	TYPE [TYPED_POINTER [BOOLEAN]]	has_default
+elks	TYPE [TYPED_POINTER [BOOLEAN]]	is_deferred
+elks	TYPE [TYPED_POINTER [BOOLEAN]]	is_expanded
+elks	TYPE [TYPED_POINTER [BOOLEAN]]	is_strictly_conforming_to
+elks	TYPE [TYPED_POINTER [BOOLEAN]]	is_conforming_to
+elks	TYPE [TYPED_POINTER [BOOLEAN]]	adapt
+elks	TYPE [TYPED_POINTER [BOOLEAN]]	attempted
+elks	TYPE [TYPED_POINTER [BOOLEAN]]	attempt
+elks	TYPE [TYPED_POINTER [BOOLEAN]]	default_detachable_value
+elks	TYPE [TYPED_POINTER [BOOLEAN]]	out
+elks	TYPE [TYPED_POINTER [BOOLEAN]]	debug_output
+elks	TYPE [TYPED_POINTER [BOOLEAN]]	plus
+elks	TYPE [TYPED_POINTER [BOOLEAN]]	same_string
+elks	TYPE [TYPED_POINTER [BOOLEAN]]	is_case_insensitive_equal
+elks	TYPE [TYPED_POINTER [BOOLEAN]]	as_lower
+elks	TYPE [TYPED_POINTER [BOOLEAN]]	as_upper
+elks	TYPE [TYPED_POINTER [BOOLEAN]]	to_string_8
+elks	TYPE [TYPED_POINTER [BOOLEAN]]	to_string_32
+debug_implementation	RT_EXTENSION	(removed)
+elks	STRING_8	make_from_cil
+elks	STRING_8	from_c
+elks	STRING_8	from_c_substring
+elks	STRING_8	adapt
+elks	STRING_8	remake
+elks	STRING_8	item
+elks	STRING_8	at
+elks	STRING_8	item_code
+elks	STRING_8	extendible
+elks	STRING_8	changeable_comparison_criterion
+elks	STRING_8	set
+elks	STRING_8	subcopy
+elks	STRING_8	replace_substring
+elks	STRING_8	replace_substring_all
+elks	STRING_8	replace_blank
+elks	STRING_8	fill_blank
+elks	STRING_8	fill_with
+elks	STRING_8	replace_character
+elks	STRING_8	keep_head
+elks	STRING_8	keep_tail
+elks	STRING_8	left_adjust
+elks	STRING_8	right_adjust
+elks	STRING_8	share
+elks	STRING_8	precede
+elks	STRING_8	prepend_character
+elks	STRING_8	prepend_string_general
+elks	STRING_8	prepend
+elks	STRING_8	prepend_substring
+elks	STRING_8	prepend_boolean
+elks	STRING_8	prepend_double
+elks	STRING_8	prepend_integer
+elks	STRING_8	prepend_real
+elks	STRING_8	prepend_string
+elks	STRING_8	append_string_general
+elks	STRING_8	append_substring
+elks	STRING_8	append_string
+elks	STRING_8	append_integer
+elks	STRING_8	append_integer_8
+elks	STRING_8	append_integer_16
+elks	STRING_8	append_natural_8
+elks	STRING_8	append_natural_16
+elks	STRING_8	append_natural_64
+elks	STRING_8	append_real
+elks	STRING_8	append_double
+elks	STRING_8	append_boolean
+elks	STRING_8	insert
+elks	STRING_8	insert_string
+elks	STRING_8	insert_character
+elks	STRING_8	plus_general
+elks	STRING_8	remove
+elks	STRING_8	remove_head
+elks	STRING_8	remove_substring
+elks	STRING_8	remove_tail
+elks	STRING_8	prune
+elks	STRING_8	prune_all
+elks	STRING_8	prune_all_leading
+elks	STRING_8	prune_all_trailing
+elks	STRING_8	wipe_out
+elks	STRING_8	clear_all
+elks	STRING_8	adapt_size
+elks	STRING_8	trim
+elks	STRING_8	as_upper
+elks	STRING_8	left_justify
+elks	STRING_8	center_justify
+elks	STRING_8	right_justify
+elks	STRING_8	character_justify
+elks	STRING_8	to_upper
+elks	STRING_8	linear_representation
+elks	STRING_8	to_c
+elks	STRING_8	mirrored
+elks	STRING_8	mirror
+elks	STRING_8	multiply
+elks	STRING_8	empty_area
+elks	STRING_32	make_from_cil
+elks	STRING_32	from_c
+elks	STRING_32	from_c_substring
+elks	STRING_32	adapt
+elks	STRING_32	remake
+elks	STRING_32	at
+elks	STRING_32	item_code
+elks	STRING_32	extendible
+elks	STRING_32	changeable_comparison_criterion
+elks	STRING_32	set
+elks	STRING_32	subcopy
+elks	STRING_32	replace_substring
+elks	STRING_32	replace_substring_all
+elks	STRING_32	replace_blank
+elks	STRING_32	fill_blank
+elks	STRING_32	fill_with
+elks	STRING_32	replace_character
+elks	STRING_32	keep_head
+elks	STRING_32	keep_tail
+elks	STRING_32	left_adjust
+elks	STRING_32	right_adjust
+elks	STRING_32	share
+elks	STRING_32	put
+elks	STRING_32	prepend_string_general
+elks	STRING_32	precede
+elks	STRING_32	prepend_character
+elks	STRING_32	prepend
+elks	STRING_32	prepend_substring
+elks	STRING_32	prepend_boolean
+elks	STRING_32	prepend_double
+elks	STRING_32	prepend_integer
+elks	STRING_32	prepend_real
+elks	STRING_32	prepend_string
+elks	STRING_32	append_substring
+elks	STRING_32	append_string
+elks	STRING_32	append_integer
+elks	STRING_32	append_integer_8
+elks	STRING_32	append_integer_16
+elks	STRING_32	append_integer_64
+elks	STRING_32	append_natural_8
+elks	STRING_32	append_natural_16
+elks	STRING_32	append_natural_32
+elks	STRING_32	append_natural_64
+elks	STRING_32	append_real
+elks	STRING_32	append_double
+elks	STRING_32	append_character
+elks	STRING_32	append_boolean
+elks	STRING_32	insert
+elks	STRING_32	insert_string
+elks	STRING_32	insert_character
+elks	STRING_32	plus
+elks	STRING_32	plus_general
+elks	STRING_32	remove
+elks	STRING_32	remove_head
+elks	STRING_32	remove_substring
+elks	STRING_32	remove_tail
+elks	STRING_32	prune
+elks	STRING_32	prune_all
+elks	STRING_32	prune_all_leading
+elks	STRING_32	prune_all_trailing
+elks	STRING_32	wipe_out
+elks	STRING_32	clear_all
+elks	STRING_32	adapt_size
+elks	STRING_32	trim
+elks	STRING_32	as_lower
+elks	STRING_32	as_upper
+elks	STRING_32	left_justify
+elks	STRING_32	center_justify
+elks	STRING_32	right_justify
+elks	STRING_32	character_justify
+elks	STRING_32	to_lower
+elks	STRING_32	to_upper
+elks	STRING_32	linear_representation
+elks	STRING_32	to_c
+elks	STRING_32	mirrored
+elks	STRING_32	mirror
+elks	STRING_32	multiply
+elks	IMMUTABLE_STRING_8	make_from_cil
+elks	IMMUTABLE_STRING_8	item
+elks	IMMUTABLE_STRING_8	at
+elks	IMMUTABLE_STRING_8	item_code
+elks	IMMUTABLE_STRING_8	plus
+elks	IMMUTABLE_STRING_8	plus_general
+elks	IMMUTABLE_STRING_8	mirrored
+elks	IMMUTABLE_STRING_8	as_lower
+elks	IMMUTABLE_STRING_8	as_upper
+elks	IMMUTABLE_STRING_8	shared_substring
+elks	IMMUTABLE_STRING_8	linear_representation
+elks	IMMUTABLE_STRING_8	new_string
+elks	IMMUTABLE_STRING_32	make_from_cil
+elks	IMMUTABLE_STRING_32	at
+elks	IMMUTABLE_STRING_32	item_code
+elks	IMMUTABLE_STRING_32	plus
+elks	IMMUTABLE_STRING_32	plus_general
+elks	IMMUTABLE_STRING_32	mirrored
+elks	IMMUTABLE_STRING_32	as_lower
+elks	IMMUTABLE_STRING_32	as_upper
+elks	IMMUTABLE_STRING_32	shared_substring
+elks	IMMUTABLE_STRING_32	linear_representation
+elks	IMMUTABLE_STRING_32	new_string
+elks	reference REAL_64	is_nan
+elks	reference REAL_64	is_negative_infinity
+elks	reference REAL_64	is_positive_infinity
+elks	reference REAL_64	truncated_to_integer_64
+elks	reference REAL_64	truncated_to_real
+elks	reference REAL_64	ceiling_real_64
+elks	reference REAL_64	floor_real_64
+elks	reference REAL_64	power
+elks	reference REAL_64	identity
+elks	reference REAL_64	opposite
+elks	reference REAL_64	ieee_is_equal
+elks	reference REAL_64	ieee_is_greater
+elks	reference REAL_64	ieee_is_greater_equal
+elks	reference REAL_64	ieee_is_less
+elks	reference REAL_64	ieee_is_less_equal
+elks	reference REAL_64	ieee_maximum_number
+elks	reference REAL_64	ieee_minimum_number
+elks	reference REAL_64	out
+elks	REAL_64	is_nan
+elks	REAL_64	is_negative_infinity
+elks	REAL_64	is_positive_infinity
+elks	REAL_64	truncated_to_integer_64
+elks	REAL_64	truncated_to_real
+elks	REAL_64	ceiling_real_64
+elks	REAL_64	floor_real_64
+elks	REAL_64	power
+elks	REAL_64	identity
+elks	REAL_64	opposite
+elks	REAL_64	ieee_is_equal
+elks	REAL_64	ieee_is_greater
+elks	REAL_64	ieee_is_greater_equal
+elks	REAL_64	ieee_is_less
+elks	REAL_64	ieee_is_less_equal
+elks	REAL_64	ieee_maximum_number
+elks	REAL_64	ieee_minimum_number
+elks	REAL_64	out
+elks	reference REAL_32	is_nan
+elks	reference REAL_32	is_negative_infinity
+elks	reference REAL_32	is_positive_infinity
+elks	reference REAL_32	truncated_to_integer_64
+elks	reference REAL_32	to_double
+elks	reference REAL_32	ceiling_real_32
+elks	reference REAL_32	floor_real_32
+elks	reference REAL_32	plus
+elks	reference REAL_32	minus
+elks	reference REAL_32	product
+elks	reference REAL_32	quotient
+elks	reference REAL_32	power
+elks	reference REAL_32	identity
+elks	reference REAL_32	opposite
+elks	reference REAL_32	ieee_is_equal
+elks	reference REAL_32	ieee_is_greater
+elks	reference REAL_32	ieee_is_greater_equal
+elks	reference REAL_32	ieee_is_less
+elks	reference REAL_32	ieee_is_less_equal
+elks	reference REAL_32	ieee_maximum_number
+elks	reference REAL_32	ieee_minimum_number
+elks	reference REAL_32	out
+elks	REAL_32	is_nan
+elks	REAL_32	is_negative_infinity
+elks	REAL_32	is_positive_infinity
+elks	REAL_32	truncated_to_integer_64
+elks	REAL_32	to_double
+elks	REAL_32	ceiling_real_32
+elks	REAL_32	floor_real_32
+elks	REAL_32	plus
+elks	REAL_32	minus
+elks	REAL_32	product
+elks	REAL_32	quotient
+elks	REAL_32	power
+elks	REAL_32	identity
+elks	REAL_32	opposite
+elks	REAL_32	ieee_is_equal
+elks	REAL_32	ieee_is_greater
+elks	REAL_32	ieee_is_greater_equal
+elks	REAL_32	ieee_is_less
+elks	REAL_32	ieee_is_less_equal
+elks	REAL_32	ieee_maximum_number
+elks	REAL_32	ieee_minimum_number
+elks	REAL_32	out
+elks	reference NATURAL_8	plus
+elks	reference NATURAL_8	product
+elks	reference NATURAL_8	quotient
+elks	reference NATURAL_8	identity
+elks	reference NATURAL_8	power
+elks	reference NATURAL_8	as_natural_8
+elks	reference NATURAL_8	as_natural_16
+elks	reference NATURAL_8	as_integer_16
+elks	reference NATURAL_8	as_integer_64
+elks	reference NATURAL_8	to_real_32
+elks	reference NATURAL_8	to_real_64
+elks	reference NATURAL_8	to_character_32
+elks	reference NATURAL_8	bit_xor
+elks	reference NATURAL_8	bit_shift_right
+elks	NATURAL_8	plus
+elks	NATURAL_8	product
+elks	NATURAL_8	quotient
+elks	NATURAL_8	identity
+elks	NATURAL_8	power
+elks	NATURAL_8	as_natural_8
+elks	NATURAL_8	as_natural_16
+elks	NATURAL_8	as_integer_16
+elks	NATURAL_8	as_integer_64
+elks	NATURAL_8	to_real_32
+elks	NATURAL_8	to_real_64
+elks	NATURAL_8	to_character_32
+elks	NATURAL_8	bit_xor
+elks	NATURAL_8	bit_shift_right
+elks	reference NATURAL_16	plus
+elks	reference NATURAL_16	minus
+elks	reference NATURAL_16	product
+elks	reference NATURAL_16	quotient
+elks	reference NATURAL_16	identity
+elks	reference NATURAL_16	power
+elks	reference NATURAL_16	as_natural_8
+elks	reference NATURAL_16	as_natural_16
+elks	reference NATURAL_16	as_integer_8
+elks	reference NATURAL_16	as_integer_16
+elks	reference NATURAL_16	as_integer_64
+elks	reference NATURAL_16	to_real_32
+elks	reference NATURAL_16	to_real_64
+elks	reference NATURAL_16	to_character_8
+elks	reference NATURAL_16	bit_and
+elks	reference NATURAL_16	bit_or
+elks	reference NATURAL_16	bit_xor
+elks	reference NATURAL_16	bit_not
+elks	reference NATURAL_16	bit_shift_left
+elks	reference NATURAL_16	bit_shift_right
+elks	NATURAL_16	plus
+elks	NATURAL_16	minus
+elks	NATURAL_16	product
+elks	NATURAL_16	quotient
+elks	NATURAL_16	identity
+elks	NATURAL_16	power
+elks	NATURAL_16	as_natural_8
+elks	NATURAL_16	as_natural_16
+elks	NATURAL_16	as_integer_8
+elks	NATURAL_16	as_integer_16
+elks	NATURAL_16	as_integer_64
+elks	NATURAL_16	to_real_32
+elks	NATURAL_16	to_real_64
+elks	NATURAL_16	to_character_8
+elks	NATURAL_16	bit_and
+elks	NATURAL_16	bit_or
+elks	NATURAL_16	bit_xor
+elks	NATURAL_16	bit_not
+elks	NATURAL_16	bit_shift_left
+elks	NATURAL_16	bit_shift_right
+elks	reference NATURAL_32	product
+elks	reference NATURAL_32	quotient
+elks	reference NATURAL_32	identity
+elks	reference NATURAL_32	power
+elks	reference NATURAL_32	as_natural_32
+elks	reference NATURAL_32	as_integer_8
+elks	reference NATURAL_32	as_integer_16
+elks	reference NATURAL_32	to_real_32
+elks	reference NATURAL_32	to_real_64
+elks	reference NATURAL_32	bit_xor
+elks	reference NATURAL_32	bit_not
+elks	NATURAL_32	product
+elks	NATURAL_32	quotient
+elks	NATURAL_32	identity
+elks	NATURAL_32	power
+elks	NATURAL_32	as_natural_32
+elks	NATURAL_32	as_integer_8
+elks	NATURAL_32	as_integer_16
+elks	NATURAL_32	to_real_32
+elks	NATURAL_32	to_real_64
+elks	NATURAL_32	bit_xor
+elks	NATURAL_32	bit_not
+elks	reference NATURAL_64	minus
+elks	reference NATURAL_64	quotient
+elks	reference NATURAL_64	identity
+elks	reference NATURAL_64	power
+elks	reference NATURAL_64	as_natural_8
+elks	reference NATURAL_64	as_natural_16
+elks	reference NATURAL_64	as_natural_64
+elks	reference NATURAL_64	as_integer_8
+elks	reference NATURAL_64	as_integer_16
+elks	reference NATURAL_64	as_integer_64
+elks	reference NATURAL_64	to_real_32
+elks	reference NATURAL_64	to_real_64
+elks	reference NATURAL_64	to_character_8
+elks	reference NATURAL_64	to_character_32
+elks	reference NATURAL_64	bit_or
+elks	reference NATURAL_64	bit_xor
+elks	reference NATURAL_64	bit_not
+elks	reference NATURAL_64	bit_shift_left
+elks	reference NATURAL_64	bit_shift_right
+elks	NATURAL_64	minus
+elks	NATURAL_64	quotient
+elks	NATURAL_64	identity
+elks	NATURAL_64	power
+elks	NATURAL_64	as_natural_8
+elks	NATURAL_64	as_natural_16
+elks	NATURAL_64	as_natural_64
+elks	NATURAL_64	as_integer_8
+elks	NATURAL_64	as_integer_16
+elks	NATURAL_64	as_integer_64
+elks	NATURAL_64	to_real_32
+elks	NATURAL_64	to_real_64
+elks	NATURAL_64	to_character_8
+elks	NATURAL_64	to_character_32
+elks	NATURAL_64	bit_or
+elks	NATURAL_64	bit_xor
+elks	NATURAL_64	bit_not
+elks	NATURAL_64	bit_shift_left
+elks	NATURAL_64	bit_shift_right
+elks	reference INTEGER_8	plus
+elks	reference INTEGER_8	minus
+elks	reference INTEGER_8	product
+elks	reference INTEGER_8	quotient
+elks	reference INTEGER_8	identity
+elks	reference INTEGER_8	power
+elks	reference INTEGER_8	as_natural_16
+elks	reference INTEGER_8	as_natural_32
+elks	reference INTEGER_8	as_integer_8
+elks	reference INTEGER_8	as_integer_16
+elks	reference INTEGER_8	as_integer_64
+elks	reference INTEGER_8	to_real
+elks	reference INTEGER_8	to_double
+elks	reference INTEGER_8	to_character_8
+elks	reference INTEGER_8	to_character_32
+elks	reference INTEGER_8	bit_and
+elks	reference INTEGER_8	bit_or
+elks	reference INTEGER_8	bit_xor
+elks	reference INTEGER_8	bit_not
+elks	reference INTEGER_8	bit_shift_left
+elks	INTEGER_8	plus
+elks	INTEGER_8	minus
+elks	INTEGER_8	product
+elks	INTEGER_8	quotient
+elks	INTEGER_8	identity
+elks	INTEGER_8	power
+elks	INTEGER_8	as_natural_16
+elks	INTEGER_8	as_natural_32
+elks	INTEGER_8	as_integer_8
+elks	INTEGER_8	as_integer_16
+elks	INTEGER_8	as_integer_64
+elks	INTEGER_8	to_real
+elks	INTEGER_8	to_double
+elks	INTEGER_8	to_character_8
+elks	INTEGER_8	to_character_32
+elks	INTEGER_8	bit_and
+elks	INTEGER_8	bit_or
+elks	INTEGER_8	bit_xor
+elks	INTEGER_8	bit_not
+elks	INTEGER_8	bit_shift_left
+elks	reference INTEGER_16	plus
+elks	reference INTEGER_16	minus
+elks	reference INTEGER_16	product
+elks	reference INTEGER_16	quotient
+elks	reference INTEGER_16	identity
+elks	reference INTEGER_16	power
+elks	reference INTEGER_16	as_natural_8
+elks	reference INTEGER_16	as_natural_16
+elks	reference INTEGER_16	as_natural_32
+elks	reference INTEGER_16	as_integer_8
+elks	reference INTEGER_16	as_integer_16
+elks	reference INTEGER_16	as_integer_64
+elks	reference INTEGER_16	to_real
+elks	reference INTEGER_16	to_double
+elks	reference INTEGER_16	to_character_8
+elks	reference INTEGER_16	to_character_32
+elks	reference INTEGER_16	bit_and
+elks	reference INTEGER_16	bit_or
+elks	reference INTEGER_16	bit_xor
+elks	reference INTEGER_16	bit_not
+elks	reference INTEGER_16	bit_shift_left
+elks	reference INTEGER_16	bit_shift_right
+elks	INTEGER_16	plus
+elks	INTEGER_16	minus
+elks	INTEGER_16	product
+elks	INTEGER_16	quotient
+elks	INTEGER_16	identity
+elks	INTEGER_16	power
+elks	INTEGER_16	as_natural_8
+elks	INTEGER_16	as_natural_16
+elks	INTEGER_16	as_natural_32
+elks	INTEGER_16	as_integer_8
+elks	INTEGER_16	as_integer_16
+elks	INTEGER_16	as_integer_64
+elks	INTEGER_16	to_real
+elks	INTEGER_16	to_double
+elks	INTEGER_16	to_character_8
+elks	INTEGER_16	to_character_32
+elks	INTEGER_16	bit_and
+elks	INTEGER_16	bit_or
+elks	INTEGER_16	bit_xor
+elks	INTEGER_16	bit_not
+elks	INTEGER_16	bit_shift_left
+elks	INTEGER_16	bit_shift_right
+elks	reference INTEGER_32	identity
+elks	reference INTEGER_32	power
+elks	reference INTEGER_32	as_natural_16
+elks	reference INTEGER_32	as_integer_8
+elks	reference INTEGER_32	as_integer_16
+elks	reference INTEGER_32	as_integer_32
+elks	reference INTEGER_32	to_real
+elks	reference INTEGER_32	to_character_32
+elks	reference INTEGER_32	bit_xor
+elks	INTEGER_32	identity
+elks	INTEGER_32	power
+elks	INTEGER_32	as_natural_16
+elks	INTEGER_32	as_integer_8
+elks	INTEGER_32	as_integer_16
+elks	INTEGER_32	as_integer_32
+elks	INTEGER_32	to_real
+elks	INTEGER_32	to_character_32
+elks	INTEGER_32	bit_xor
+elks	reference INTEGER_64	product
+elks	reference INTEGER_64	quotient
+elks	reference INTEGER_64	identity
+elks	reference INTEGER_64	power
+elks	reference INTEGER_64	as_natural_8
+elks	reference INTEGER_64	as_natural_16
+elks	reference INTEGER_64	as_natural_32
+elks	reference INTEGER_64	as_integer_8
+elks	reference INTEGER_64	as_integer_16
+elks	reference INTEGER_64	as_integer_64
+elks	reference INTEGER_64	to_real
+elks	reference INTEGER_64	to_double
+elks	reference INTEGER_64	to_character_32
+elks	reference INTEGER_64	bit_or
+elks	reference INTEGER_64	bit_xor
+elks	reference INTEGER_64	bit_not
+elks	reference INTEGER_64	bit_shift_left
+elks	reference INTEGER_64	bit_shift_right
+elks	INTEGER_64	product
+elks	INTEGER_64	quotient
+elks	INTEGER_64	identity
+elks	INTEGER_64	power
+elks	INTEGER_64	as_natural_8
+elks	INTEGER_64	as_natural_16
+elks	INTEGER_64	as_natural_32
+elks	INTEGER_64	as_integer_8
+elks	INTEGER_64	as_integer_16
+elks	INTEGER_64	as_integer_64
+elks	INTEGER_64	to_real
+elks	INTEGER_64	to_double
+elks	INTEGER_64	to_character_32
+elks	INTEGER_64	bit_or
+elks	INTEGER_64	bit_xor
+elks	INTEGER_64	bit_not
+elks	INTEGER_64	bit_shift_left
+elks	INTEGER_64	bit_shift_right
+elks	reference BOOLEAN	implication
+elks	reference BOOLEAN	disjuncted_exclusive
+elks	BOOLEAN	implication
+elks	BOOLEAN	disjuncted_exclusive
+ise	ISE_EXCEPTION_MANAGER	ignore
+ise	ISE_EXCEPTION_MANAGER	catch
+ise	ISE_EXCEPTION_MANAGER	set_is_ignored
+ise	ISE_EXCEPTION_MANAGER	is_ignorable
+ise	ISE_EXCEPTION_MANAGER	is_raisable
+ise	ISE_EXCEPTION_MANAGER	is_caught
+elks	EXCEPTION	make_with_tag_and_trace
+elks	EXCEPTION	meaning
+elks	EXCEPTION	tag
+elks	EXCEPTION	message
+elks	EXCEPTION	description
+elks	EXCEPTION	exception_trace
+elks	EXCEPTION	trace
+elks	EXCEPTION	cause
+elks	EXCEPTION	trace_as_string
+elks	EXCEPTION	set_message
+elks	EXCEPTION	is_ignorable
+elks	EXCEPTION	is_raisable
+elks	EXCEPTION	is_caught
+elks	EXCEPTION	out
+elks	EXCEPTION	set_line_number
+elks	EXCEPTION	set_c_description
+elks	MANAGED_POINTER	make_from_array
+elks	MANAGED_POINTER	own_from_pointer
+elks	MANAGED_POINTER	read_natural_64
+elks	MANAGED_POINTER	read_integer_8
+elks	MANAGED_POINTER	read_integer_16
+elks	MANAGED_POINTER	read_integer_32
+elks	MANAGED_POINTER	read_integer_64
+elks	MANAGED_POINTER	read_pointer
+elks	MANAGED_POINTER	read_boolean
+elks	MANAGED_POINTER	read_character
+elks	MANAGED_POINTER	read_real
+elks	MANAGED_POINTER	read_real_32
+elks	MANAGED_POINTER	read_double
+elks	MANAGED_POINTER	read_real_64
+elks	MANAGED_POINTER	read_array
+elks	MANAGED_POINTER	read_special_natural_8
+elks	MANAGED_POINTER	read_special_character_8
+elks	MANAGED_POINTER	read_into_special_natural_8
+elks	MANAGED_POINTER	put_natural_32
+elks	MANAGED_POINTER	put_natural_64
+elks	MANAGED_POINTER	put_integer_8
+elks	MANAGED_POINTER	put_integer_16
+elks	MANAGED_POINTER	put_integer_32
+elks	MANAGED_POINTER	put_integer_64
+elks	MANAGED_POINTER	put_pointer
+elks	MANAGED_POINTER	put_boolean
+elks	MANAGED_POINTER	put_character
+elks	MANAGED_POINTER	put_real
+elks	MANAGED_POINTER	put_real_32
+elks	MANAGED_POINTER	put_double
+elks	MANAGED_POINTER	put_real_64
+elks	MANAGED_POINTER	put_array
+elks	MANAGED_POINTER	put_special_natural_8
+elks	MANAGED_POINTER	put_special_character_8
+elks	MANAGED_POINTER	read_natural_8_le
+elks	MANAGED_POINTER	read_natural_16_le
+elks	MANAGED_POINTER	read_natural_32_le
+elks	MANAGED_POINTER	read_natural_64_le
+elks	MANAGED_POINTER	read_integer_8_le
+elks	MANAGED_POINTER	read_integer_16_le
+elks	MANAGED_POINTER	read_integer_32_le
+elks	MANAGED_POINTER	read_integer_64_le
+elks	MANAGED_POINTER	read_real_32_le
+elks	MANAGED_POINTER	read_real_64_le
+elks	MANAGED_POINTER	put_natural_8_le
+elks	MANAGED_POINTER	put_natural_16_le
+elks	MANAGED_POINTER	put_natural_32_le
+elks	MANAGED_POINTER	put_natural_64_le
+elks	MANAGED_POINTER	put_integer_8_le
+elks	MANAGED_POINTER	put_integer_16_le
+elks	MANAGED_POINTER	put_integer_32_le
+elks	MANAGED_POINTER	put_integer_64_le
+elks	MANAGED_POINTER	put_real_32_le
+elks	MANAGED_POINTER	put_real_64_le
+elks	MANAGED_POINTER	read_natural_8_be
+elks	MANAGED_POINTER	read_natural_16_be
+elks	MANAGED_POINTER	read_natural_32_be
+elks	MANAGED_POINTER	read_natural_64_be
+elks	MANAGED_POINTER	read_integer_8_be
+elks	MANAGED_POINTER	read_integer_16_be
+elks	MANAGED_POINTER	read_integer_32_be
+elks	MANAGED_POINTER	read_integer_64_be
+elks	MANAGED_POINTER	read_real_32_be
+elks	MANAGED_POINTER	read_real_64_be
+elks	MANAGED_POINTER	put_natural_8_be
+elks	MANAGED_POINTER	put_natural_16_be
+elks	MANAGED_POINTER	put_natural_32_be
+elks	MANAGED_POINTER	put_natural_64_be
+elks	MANAGED_POINTER	put_integer_8_be
+elks	MANAGED_POINTER	put_integer_16_be
+elks	MANAGED_POINTER	put_integer_32_be
+elks	MANAGED_POINTER	put_integer_64_be
+elks	MANAGED_POINTER	put_real_32_be
+elks	MANAGED_POINTER	put_real_64_be
+elks	MANAGED_POINTER	append
+time	TIME	make_fine
+time	TIME	make_now_utc
+time	TIME	make_by_seconds
+time	TIME	make_by_fine_seconds
+time	TIME	make_from_string_default
+time	TIME	make_from_string
+time	TIME	make_by_compact_time
+time	TIME	origin
+time	TIME	duration
+time	TIME	seconds
+time	TIME	fine_seconds
+time	TIME	plus
+time	TIME	relative_duration
+time	TIME	second_add
+time	TIME	fine_second_add
+time	TIME	minute_add
+time	TIME	hour_add
+time	TIME	second_forth
+time	TIME	second_back
+time	TIME	minute_forth
+time	TIME	minute_back
+time	TIME	hour_forth
+time	TIME	hour_back
+time	TIME	debug_output
+time	TIME	out
+time	TIME	formatted_out
+elks	RAW_FILE	support_storable
+elks	RAW_FILE	put_integer
+elks	RAW_FILE	putint
+elks	RAW_FILE	put_integer_32
+elks	RAW_FILE	put_integer_8
+elks	RAW_FILE	put_integer_16
+elks	RAW_FILE	put_integer_64
+elks	RAW_FILE	put_natural_8
+elks	RAW_FILE	put_natural_16
+elks	RAW_FILE	put_natural
+elks	RAW_FILE	put_natural_32
+elks	RAW_FILE	put_natural_64
+elks	RAW_FILE	put_boolean
+elks	RAW_FILE	putbool
+elks	RAW_FILE	put_real
+elks	RAW_FILE	putreal
+elks	RAW_FILE	put_real_32
+elks	RAW_FILE	put_double
+elks	RAW_FILE	putdouble
+elks	RAW_FILE	put_real_64
+elks	RAW_FILE	put_data
+elks	RAW_FILE	read_integer
+elks	RAW_FILE	readint
+elks	RAW_FILE	read_integer_32
+elks	RAW_FILE	read_integer_8
+elks	RAW_FILE	read_integer_16
+elks	RAW_FILE	read_integer_64
+elks	RAW_FILE	read_natural_8
+elks	RAW_FILE	read_natural_16
+elks	RAW_FILE	read_natural
+elks	RAW_FILE	read_natural_32
+elks	RAW_FILE	read_natural_64
+elks	RAW_FILE	read_real
+elks	RAW_FILE	readreal
+elks	RAW_FILE	read_real_32
+elks	RAW_FILE	read_double
+elks	RAW_FILE	readdouble
+elks	RAW_FILE	read_real_64
+elks	RAW_FILE	read_data
+elks	RAW_FILE	read_to_managed_pointer
+elks	RAW_FILE	read_to_string
+elks	RAW_FILE	file_fread
+elks	RAW_FILE	integer_buffer
+elks	RAW_FILE	file_gib
+elks	RAW_FILE	file_grb
+elks	RAW_FILE	file_gdb
+elks	RAW_FILE	file_dopen
+elks	RAW_FILE	file_reopen
+elks	RAW_FILE	file_pib
+elks	RAW_FILE	file_prb
+elks	RAW_FILE	file_pdb
+elks	STD_FILES	input
+elks	STD_FILES	last_character
+elks	STD_FILES	lastchar
+elks	STD_FILES	last_integer
+elks	STD_FILES	lastint
+elks	STD_FILES	last_integer_32
+elks	STD_FILES	last_integer_8
+elks	STD_FILES	last_integer_16
+elks	STD_FILES	last_integer_64
+elks	STD_FILES	last_natural_8
+elks	STD_FILES	last_natural_16
+elks	STD_FILES	last_natural
+elks	STD_FILES	last_natural_32
+elks	STD_FILES	last_natural_64
+elks	STD_FILES	last_real
+elks	STD_FILES	lastreal
+elks	STD_FILES	last_real_32
+elks	STD_FILES	last_string
+elks	STD_FILES	laststring
+elks	STD_FILES	last_double
+elks	STD_FILES	lastdouble
+elks	STD_FILES	last_real_64
+elks	STD_FILES	set_error_default
+elks	STD_FILES	set_file_default
+elks	STD_FILES	put_character
+elks	STD_FILES	putchar
+elks	STD_FILES	put_string
+elks	STD_FILES	putstring
+elks	STD_FILES	put_string_32
+elks	STD_FILES	put_real
+elks	STD_FILES	putreal
+elks	STD_FILES	put_real_32
+elks	STD_FILES	put_double
+elks	STD_FILES	putdouble
+elks	STD_FILES	put_real_64
+elks	STD_FILES	put_integer
+elks	STD_FILES	putint
+elks	STD_FILES	put_integer_32
+elks	STD_FILES	put_integer_8
+elks	STD_FILES	put_integer_16
+elks	STD_FILES	put_natural_8
+elks	STD_FILES	put_natural_16
+elks	STD_FILES	put_natural
+elks	STD_FILES	put_natural_32
+elks	STD_FILES	put_natural_64
+elks	STD_FILES	put_boolean
+elks	STD_FILES	putbool
+elks	STD_FILES	new_line
+elks	STD_FILES	read_integer
+elks	STD_FILES	readint
+elks	STD_FILES	read_integer_32
+elks	STD_FILES	read_integer_8
+elks	STD_FILES	read_integer_16
+elks	STD_FILES	read_integer_64
+elks	STD_FILES	read_natural_8
+elks	STD_FILES	read_natural_16
+elks	STD_FILES	read_natural
+elks	STD_FILES	read_natural_32
+elks	STD_FILES	read_natural_64
+elks	STD_FILES	read_real
+elks	STD_FILES	readreal
+elks	STD_FILES	read_double
+elks	STD_FILES	readdouble
+elks	STD_FILES	read_line
+elks	STD_FILES	readline
+elks	STD_FILES	read_stream
+elks	STD_FILES	readstream
+elks	STD_FILES	read_word
+elks	STD_FILES	readword
+elks	STD_FILES	read_character
+elks	STD_FILES	readchar
+elks	STD_FILES	to_next_line
+elks	STD_FILES	next_line
+elks	READABLE_STRING_8	make_from_c_substring
+elks	READABLE_STRING_8	make_from_c_pointer
+elks	READABLE_STRING_8	make_from_separate
+elks	READABLE_STRING_8	shared_with
+elks	READABLE_STRING_8	index_of
+elks	READABLE_STRING_8	last_index_of
+elks	READABLE_STRING_8	substring_index_in_bounds
+elks	READABLE_STRING_8	string
+elks	READABLE_STRING_8	string_representation
+elks	READABLE_STRING_8	substring_index
+elks	READABLE_STRING_8	fuzzy_index
+elks	READABLE_STRING_8	new_cursor
+elks	READABLE_STRING_8	occurrences
+elks	READABLE_STRING_8	same_string
+elks	READABLE_STRING_8	same_characters
+elks	READABLE_STRING_8	is_substring_whitespace
+elks	READABLE_STRING_8	starts_with
+elks	READABLE_STRING_8	ends_with
+elks	READABLE_STRING_8	valid_code
+elks	READABLE_STRING_8	is_boolean
+elks	READABLE_STRING_8	out
+elks	READABLE_STRING_8	string_searcher
+elks	READABLE_STRING_8	to_upper_area
+elks	READABLE_STRING_8	mirror_area
+elks	READABLE_STRING_8	area_upper
+elks	READABLE_STRING_32	make_filled
+elks	READABLE_STRING_32	make_from_c
+elks	READABLE_STRING_32	make_from_c_pointer
+elks	READABLE_STRING_32	make_from_separate
+elks	READABLE_STRING_32	shared_with
+elks	READABLE_STRING_32	index_of
+elks	READABLE_STRING_32	last_index_of
+elks	READABLE_STRING_32	substring_index_in_bounds
+elks	READABLE_STRING_32	string
+elks	READABLE_STRING_32	string_representation
+elks	READABLE_STRING_32	substring_index
+elks	READABLE_STRING_32	fuzzy_index
+elks	READABLE_STRING_32	new_cursor
+elks	READABLE_STRING_32	occurrences
+elks	READABLE_STRING_32	is_case_insensitive_equal
+elks	READABLE_STRING_32	same_caseless_characters
+elks	READABLE_STRING_32	same_string
+elks	READABLE_STRING_32	same_characters
+elks	READABLE_STRING_32	is_substring_whitespace
+elks	READABLE_STRING_32	has
+elks	READABLE_STRING_32	starts_with
+elks	READABLE_STRING_32	ends_with
+elks	READABLE_STRING_32	valid_code
+elks	READABLE_STRING_32	is_boolean
+elks	READABLE_STRING_32	fill_character
+elks	READABLE_STRING_32	out
+elks	READABLE_STRING_32	string_searcher
+elks	READABLE_STRING_32	to_lower_area
+elks	READABLE_STRING_32	to_upper_area
+elks	READABLE_STRING_32	mirror_area
+elks	READABLE_STRING_32	area_upper
+elks	EXCEPTIONS	meaning
+elks	EXCEPTIONS	assertion_violation
+elks	EXCEPTIONS	is_developer_exception
+elks	EXCEPTIONS	is_developer_exception_of_name
+elks	EXCEPTIONS	developer_exception_name
+elks	EXCEPTIONS	is_signal
+elks	EXCEPTIONS	is_system_exception
+elks	EXCEPTIONS	tag_name
+elks	EXCEPTIONS	recipient_name
+elks	EXCEPTIONS	class_name
+elks	EXCEPTIONS	exception
+elks	EXCEPTIONS	exception_trace
+elks	EXCEPTIONS	original_tag_name
+elks	EXCEPTIONS	original_exception
+elks	EXCEPTIONS	original_recipient_name
+elks	EXCEPTIONS	original_class_name
+elks	EXCEPTIONS	catch
+elks	EXCEPTIONS	ignore
+elks	EXCEPTIONS	die
+elks	EXCEPTIONS	new_die
+elks	EXCEPTIONS	message_on_failure
+elks	EXCEPTIONS	no_message_on_failure
+elks	EXCEPTIONS	c_trace_exception
+elks	OPERATING_ENVIRONMENT	(removed)
+elks	NATIVE_ARRAY [G#1]	(removed)
+elks	NATIVE_ARRAY [INTEGER_32]	(removed)
+elks	NATIVE_ARRAY [POINTER]	(removed)
+elks	NATIVE_ARRAY [REAL_32]	(removed)
+elks	NATIVE_ARRAY [REAL_64]	(removed)
+elks	NATIVE_ARRAY [NATURAL_16]	(removed)
+elks	NATIVE_ARRAY [NATURAL_8]	(removed)
+elks	NATIVE_ARRAY [BOOLEAN]	(removed)
+elks	NATIVE_ARRAY [CHARACTER_32]	(removed)
+elks	NATIVE_ARRAY [NATURAL_64]	(removed)
+elks	NATIVE_ARRAY [NATURAL_32]	(removed)
+elks	NATIVE_ARRAY [CHARACTER_8]	(removed)
+elks	PLATFORM	is_thread_capable
+elks	PLATFORM	is_scoop_capable
+elks	PLATFORM	is_dotnet
+elks	PLATFORM	is_unix
+elks	PLATFORM	is_vms
+elks	PLATFORM	is_mac
+elks	PLATFORM	is_vxworks
+elks	PLATFORM	is_64_bits
+elks	PLATFORM	boolean_bytes
+elks	PLATFORM	pointer_bytes
+elks	PLATFORM	boolean_bits
+elks	PLATFORM	pointer_bits
+elks	PLATFORM	character_bytes
+elks	PLATFORM	wide_character_bytes
+elks	PLATFORM	integer_bytes
+elks	PLATFORM	real_bytes
+elks	PLATFORM	double_bytes
+elks	PLATFORM	character_bits
+elks	PLATFORM	integer_bits
+elks	PLATFORM	real_bits
+elks	PLATFORM	double_bits
+elks	PLATFORM	maximum_character_code
+elks	PLATFORM	maximum_integer
+elks	PLATFORM	minimum_character_code
+elks	PLATFORM	minimum_integer
+elks	SPECIAL_ITERATION_CURSOR [G#1]	(removed)
+elks	SPECIAL_ITERATION_CURSOR [INTEGER_32]	(removed)
+elks	SPECIAL_ITERATION_CURSOR [POINTER]	(removed)
+elks	SPECIAL_ITERATION_CURSOR [REAL_32]	(removed)
+elks	SPECIAL_ITERATION_CURSOR [REAL_64]	(removed)
+elks	SPECIAL_ITERATION_CURSOR [NATURAL_16]	(removed)
+elks	SPECIAL_ITERATION_CURSOR [NATURAL_8]	(removed)
+elks	SPECIAL_ITERATION_CURSOR [BOOLEAN]	(removed)
+elks	SPECIAL_ITERATION_CURSOR [CHARACTER_32]	(removed)
+elks	SPECIAL_ITERATION_CURSOR [NATURAL_64]	(removed)
+elks	SPECIAL_ITERATION_CURSOR [NATURAL_32]	(removed)
+elks	SPECIAL_ITERATION_CURSOR [CHARACTER_8]	(removed)
+elks	ABSTRACT_SPECIAL	(empty)
+elks	READABLE_INDEXABLE [G#1]	(empty)
+elks	READABLE_INDEXABLE [CHARACTER_32]	(empty)
+elks	READABLE_INDEXABLE [CHARACTER_8]	(empty)
+elks	READABLE_INDEXABLE [INTEGER_32]	(empty)
+elks	READABLE_INDEXABLE [POINTER]	(empty)
+elks	READABLE_INDEXABLE [REAL_32]	(empty)
+elks	READABLE_INDEXABLE [REAL_64]	(empty)
+elks	READABLE_INDEXABLE [NATURAL_16]	(empty)
+elks	READABLE_INDEXABLE [NATURAL_8]	(empty)
+elks	READABLE_INDEXABLE [BOOLEAN]	(empty)
+elks	READABLE_INDEXABLE [NATURAL_64]	(empty)
+elks	READABLE_INDEXABLE [NATURAL_32]	(empty)
+elks	POINTER_REF	is_hashable
+elks	POINTER_REF	is_default_pointer
+elks	POINTER_REF	make_from_reference
+elks	POINTER_REF	to_reference
+elks	POINTER_REF	to_integer_32
+elks	POINTER_REF	memory_move
+elks	POINTER_REF	out
+elks	POINTER_REF	c_memmove
+elks	ARRAYED_LIST [G#1]	(removed)
+elks	ARRAYED_LIST [INTEGER_32]	(removed)
+elks	ARRAYED_LIST [POINTER]	(removed)
+elks	ARRAYED_LIST [REAL_32]	(removed)
+elks	ARRAYED_LIST [REAL_64]	(removed)
+elks	ARRAYED_LIST [NATURAL_16]	(removed)
+elks	ARRAYED_LIST [NATURAL_8]	(removed)
+elks	ARRAYED_LIST [BOOLEAN]	(removed)
+elks	ARRAYED_LIST [CHARACTER_32]	(removed)
+elks	ARRAYED_LIST [NATURAL_64]	(removed)
+elks	ARRAYED_LIST [NATURAL_32]	(removed)
+elks	ARRAYED_LIST [CHARACTER_8]	(removed)
+elks	ITERABLE [G#1]	(empty)
+elks	ITERABLE [CHARACTER_32]	(empty)
+elks	ITERABLE [CHARACTER_8]	(empty)
+elks	ITERABLE [INTEGER_32]	(empty)
+elks	ITERABLE [POINTER]	(empty)
+elks	ITERABLE [REAL_32]	(empty)
+elks	ITERABLE [REAL_64]	(empty)
+elks	ITERABLE [NATURAL_16]	(empty)
+elks	ITERABLE [NATURAL_8]	(empty)
+elks	ITERABLE [BOOLEAN]	(empty)
+elks	ITERABLE [NATURAL_64]	(empty)
+elks	ITERABLE [NATURAL_32]	(empty)
+elks	ITERATION_CURSOR [G#1]	(empty)
+elks	ITERATION_CURSOR [CHARACTER_32]	(empty)
+elks	ITERATION_CURSOR [CHARACTER_8]	(empty)
+elks	ITERATION_CURSOR [INTEGER_32]	(empty)
+elks	ITERATION_CURSOR [POINTER]	(empty)
+elks	ITERATION_CURSOR [REAL_32]	(empty)
+elks	ITERATION_CURSOR [REAL_64]	(empty)
+elks	ITERATION_CURSOR [NATURAL_16]	(empty)
+elks	ITERATION_CURSOR [NATURAL_8]	(empty)
+elks	ITERATION_CURSOR [BOOLEAN]	(empty)
+elks	ITERATION_CURSOR [NATURAL_64]	(empty)
+elks	ITERATION_CURSOR [NATURAL_32]	(empty)
+elks	LINEAR [G#1]	(empty)
+elks	LINEAR [CHARACTER_32]	(empty)
+elks	LINEAR [CHARACTER_8]	(empty)
+elks	LINEAR [INTEGER_32]	(empty)
+elks	LINEAR [POINTER]	(empty)
+elks	LINEAR [REAL_32]	(empty)
+elks	LINEAR [REAL_64]	(empty)
+elks	LINEAR [NATURAL_16]	(empty)
+elks	LINEAR [NATURAL_8]	(empty)
+elks	LINEAR [BOOLEAN]	(empty)
+elks	LINEAR [NATURAL_64]	(empty)
+elks	LINEAR [NATURAL_32]	(empty)
+elks	ARRAY_ITERATION_CURSOR [G#1]	(removed)
+elks	ARRAY_ITERATION_CURSOR [INTEGER_32]	(removed)
+elks	ARRAY_ITERATION_CURSOR [POINTER]	(removed)
+elks	ARRAY_ITERATION_CURSOR [REAL_32]	(removed)
+elks	ARRAY_ITERATION_CURSOR [REAL_64]	(removed)
+elks	ARRAY_ITERATION_CURSOR [NATURAL_16]	(removed)
+elks	ARRAY_ITERATION_CURSOR [NATURAL_8]	(removed)
+elks	ARRAY_ITERATION_CURSOR [BOOLEAN]	(removed)
+elks	ARRAY_ITERATION_CURSOR [CHARACTER_32]	(removed)
+elks	ARRAY_ITERATION_CURSOR [NATURAL_64]	(removed)
+elks	ARRAY_ITERATION_CURSOR [NATURAL_32]	(removed)
+elks	ARRAY_ITERATION_CURSOR [CHARACTER_8]	(removed)
+elks	RESIZABLE [G#1]	resizable
+elks	RESIZABLE [G#1]	automatic_grow
+elks	RESIZABLE [CHARACTER_32]	resizable
+elks	RESIZABLE [CHARACTER_32]	automatic_grow
+elks	RESIZABLE [CHARACTER_8]	resizable
+elks	RESIZABLE [CHARACTER_8]	automatic_grow
+elks	RESIZABLE [INTEGER_32]	resizable
+elks	RESIZABLE [INTEGER_32]	automatic_grow
+elks	RESIZABLE [POINTER]	resizable
+elks	RESIZABLE [POINTER]	automatic_grow
+elks	RESIZABLE [REAL_32]	resizable
+elks	RESIZABLE [REAL_32]	automatic_grow
+elks	RESIZABLE [REAL_64]	resizable
+elks	RESIZABLE [REAL_64]	automatic_grow
+elks	RESIZABLE [NATURAL_16]	resizable
+elks	RESIZABLE [NATURAL_16]	automatic_grow
+elks	RESIZABLE [NATURAL_8]	resizable
+elks	RESIZABLE [NATURAL_8]	automatic_grow
+elks	RESIZABLE [BOOLEAN]	resizable
+elks	RESIZABLE [BOOLEAN]	automatic_grow
+elks	RESIZABLE [NATURAL_64]	resizable
+elks	RESIZABLE [NATURAL_64]	automatic_grow
+elks	RESIZABLE [NATURAL_32]	resizable
+elks	RESIZABLE [NATURAL_32]	automatic_grow
+elks	INDEXABLE [G#1, INTEGER_32]	(empty)
+elks	INDEXABLE [INTEGER_32, INTEGER_32]	(empty)
+elks	INDEXABLE [POINTER, INTEGER_32]	(empty)
+elks	INDEXABLE [REAL_32, INTEGER_32]	(empty)
+elks	INDEXABLE [REAL_64, INTEGER_32]	(empty)
+elks	INDEXABLE [NATURAL_16, INTEGER_32]	(empty)
+elks	INDEXABLE [NATURAL_8, INTEGER_32]	(empty)
+elks	INDEXABLE [BOOLEAN, INTEGER_32]	(empty)
+elks	INDEXABLE [CHARACTER_32, INTEGER_32]	(empty)
+elks	INDEXABLE [NATURAL_64, INTEGER_32]	(empty)
+elks	INDEXABLE [CHARACTER_8, INTEGER_32]	(empty)
+elks	INDEXABLE [NATURAL_32, INTEGER_32]	(empty)
+elks	TO_SPECIAL [G#1]	item
+elks	TO_SPECIAL [G#1]	at
+elks	TO_SPECIAL [G#1]	valid_index
+elks	TO_SPECIAL [G#1]	put
+elks	TO_SPECIAL [INTEGER_32]	item
+elks	TO_SPECIAL [INTEGER_32]	at
+elks	TO_SPECIAL [INTEGER_32]	valid_index
+elks	TO_SPECIAL [INTEGER_32]	put
+elks	TO_SPECIAL [POINTER]	item
+elks	TO_SPECIAL [POINTER]	at
+elks	TO_SPECIAL [POINTER]	valid_index
+elks	TO_SPECIAL [POINTER]	put
+elks	TO_SPECIAL [REAL_32]	item
+elks	TO_SPECIAL [REAL_32]	at
+elks	TO_SPECIAL [REAL_32]	valid_index
+elks	TO_SPECIAL [REAL_32]	put
+elks	TO_SPECIAL [REAL_64]	item
+elks	TO_SPECIAL [REAL_64]	at
+elks	TO_SPECIAL [REAL_64]	valid_index
+elks	TO_SPECIAL [REAL_64]	put
+elks	TO_SPECIAL [NATURAL_16]	item
+elks	TO_SPECIAL [NATURAL_16]	at
+elks	TO_SPECIAL [NATURAL_16]	valid_index
+elks	TO_SPECIAL [NATURAL_16]	put
+elks	TO_SPECIAL [NATURAL_8]	item
+elks	TO_SPECIAL [NATURAL_8]	at
+elks	TO_SPECIAL [NATURAL_8]	valid_index
+elks	TO_SPECIAL [NATURAL_8]	put
+elks	TO_SPECIAL [BOOLEAN]	item
+elks	TO_SPECIAL [BOOLEAN]	at
+elks	TO_SPECIAL [BOOLEAN]	valid_index
+elks	TO_SPECIAL [BOOLEAN]	put
+elks	TO_SPECIAL [CHARACTER_32]	item
+elks	TO_SPECIAL [CHARACTER_32]	at
+elks	TO_SPECIAL [CHARACTER_32]	valid_index
+elks	TO_SPECIAL [CHARACTER_32]	put
+elks	TO_SPECIAL [NATURAL_64]	item
+elks	TO_SPECIAL [NATURAL_64]	at
+elks	TO_SPECIAL [NATURAL_64]	valid_index
+elks	TO_SPECIAL [NATURAL_64]	put
+elks	TO_SPECIAL [NATURAL_32]	item
+elks	TO_SPECIAL [NATURAL_32]	at
+elks	TO_SPECIAL [NATURAL_32]	valid_index
+elks	TO_SPECIAL [NATURAL_32]	put
+elks	TO_SPECIAL [CHARACTER_8]	item
+elks	TO_SPECIAL [CHARACTER_8]	at
+elks	TO_SPECIAL [CHARACTER_8]	valid_index
+elks	TO_SPECIAL [CHARACTER_8]	put
+elks	REFLECTOR	type_conforms_to
+elks	REFLECTOR	dynamic_type_from_string
+elks	REFLECTOR	new_instance_of
+elks	REFLECTOR	new_special_any_instance
+elks	REFLECTOR	new_tuple_from_special
+elks	REFLECTOR	new_tuple_from_tuple
+elks	REFLECTOR	type_of_type
+elks	REFLECTOR	is_special_any_type
+elks	REFLECTOR	is_special_type
+elks	REFLECTOR	is_tuple_type
+elks	REFLECTOR	is_attached_type
+elks	REFLECTOR	is_field_transient_of_type
+elks	REFLECTOR	is_field_expanded_of_type
+elks	REFLECTOR	class_name_of_type
+elks	REFLECTOR	class_name_8_of_type
+elks	REFLECTOR	type_name_of_type
+elks	REFLECTOR	type_name_8_of_type
+elks	REFLECTOR	attached_type
+elks	REFLECTOR	detachable_type
+elks	REFLECTOR	generic_count_of_type
+elks	REFLECTOR	generic_dynamic_type_of_type
+elks	REFLECTOR	storable_version_of_type
+elks	REFLECTOR	field_name_of_type
+elks	REFLECTOR	field_name_8_of_type
+elks	REFLECTOR	field_type_of_type
+elks	REFLECTOR	field_static_type_of_type
+elks	REFLECTOR	compiler_version
+elks	REFLECTOR	field_count_of_type
+elks	REFLECTOR	persistent_field_count_of_type
+elks	REFLECTOR	internal_dynamic_type_string_table
+elks	REFLECTOR	id_to_storable_version
+elks	BOOLEAN_REF	make_from_reference
+elks	BOOLEAN_REF	to_reference
+elks	BOOLEAN_REF	to_integer
+elks	BOOLEAN_REF	implication
+elks	BOOLEAN_REF	disjuncted_exclusive
+elks	BOOLEAN_REF	out
+elks	CHARACTER_8_REF	code
+elks	CHARACTER_8_REF	difference
+elks	CHARACTER_8_REF	next
+elks	CHARACTER_8_REF	previous
+elks	CHARACTER_8_REF	out
+elks	CHARACTER_8_REF	make_from_reference
+elks	CHARACTER_8_REF	to_reference
+elks	CHARACTER_8_REF	to_character_8
+elks	CHARACTER_8_REF	as_upper
+elks	CHARACTER_8_REF	upper
+elks	CHARACTER_8_REF	is_alpha
+elks	CHARACTER_8_REF	is_upper
+elks	CHARACTER_8_REF	is_lower
+elks	CHARACTER_8_REF	is_space
+elks	CHARACTER_8_REF	is_punctuation
+elks	CHARACTER_8_REF	is_alpha_numeric
+elks	CHARACTER_8_REF	is_printable
+elks	CHARACTER_8_REF	is_graph
+elks	CHARACTER_8_REF	is_control
+elks	CHARACTER_8_REF	upper_value
+elks	CHARACTER_32_REF	code
+elks	CHARACTER_32_REF	minus
+elks	CHARACTER_32_REF	difference
+elks	CHARACTER_32_REF	next
+elks	CHARACTER_32_REF	previous
+elks	CHARACTER_32_REF	out
+elks	CHARACTER_32_REF	make_from_reference
+elks	CHARACTER_32_REF	to_reference
+elks	CHARACTER_32_REF	to_character_32
+elks	CHARACTER_32_REF	as_upper
+elks	CHARACTER_32_REF	upper
+elks	CHARACTER_32_REF	as_lower
+elks	CHARACTER_32_REF	lower
+elks	CHARACTER_32_REF	to_hexa_digit
+elks	CHARACTER_32_REF	is_alpha
+elks	CHARACTER_32_REF	is_upper
+elks	CHARACTER_32_REF	is_lower
+elks	CHARACTER_32_REF	is_digit
+elks	CHARACTER_32_REF	is_unicode_digit
+elks	CHARACTER_32_REF	is_hexa_digit
+elks	CHARACTER_32_REF	is_space
+elks	CHARACTER_32_REF	is_punctuation
+elks	CHARACTER_32_REF	is_alpha_numeric
+elks	CHARACTER_32_REF	is_control
+elks	CHARACTER_32_REF	properties
+elks	REAL_64_REF	sign
+elks	REAL_64_REF	one
+elks	REAL_64_REF	zero
+elks	REAL_64_REF	nan
+elks	REAL_64_REF	negative_infinity
+elks	REAL_64_REF	positive_infinity
+elks	REAL_64_REF	divisible
+elks	REAL_64_REF	exponentiable
+elks	REAL_64_REF	is_hashable
+elks	REAL_64_REF	is_nan
+elks	REAL_64_REF	is_negative_infinity
+elks	REAL_64_REF	is_positive_infinity
+elks	REAL_64_REF	make_from_reference
+elks	REAL_64_REF	to_reference
+elks	REAL_64_REF	truncated_to_integer_64
+elks	REAL_64_REF	truncated_to_real
+elks	REAL_64_REF	ceiling
+elks	REAL_64_REF	floor
+elks	REAL_64_REF	rounded
+elks	REAL_64_REF	ceiling_real_64
+elks	REAL_64_REF	floor_real_64
+elks	REAL_64_REF	rounded_real_64
+elks	REAL_64_REF	abs
+elks	REAL_64_REF	power
+elks	REAL_64_REF	identity
+elks	REAL_64_REF	opposite
+elks	REAL_64_REF	out
+elks	REAL_64_REF	abs_ref
+elks	REAL_32_REF	sign
+elks	REAL_32_REF	one
+elks	REAL_32_REF	zero
+elks	REAL_32_REF	nan
+elks	REAL_32_REF	negative_infinity
+elks	REAL_32_REF	positive_infinity
+elks	REAL_32_REF	divisible
+elks	REAL_32_REF	exponentiable
+elks	REAL_32_REF	is_hashable
+elks	REAL_32_REF	is_nan
+elks	REAL_32_REF	is_negative_infinity
+elks	REAL_32_REF	is_positive_infinity
+elks	REAL_32_REF	make_from_reference
+elks	REAL_32_REF	to_reference
+elks	REAL_32_REF	truncated_to_integer_64
+elks	REAL_32_REF	to_double
+elks	REAL_32_REF	ceiling
+elks	REAL_32_REF	floor
+elks	REAL_32_REF	rounded
+elks	REAL_32_REF	ceiling_real_32
+elks	REAL_32_REF	floor_real_32
+elks	REAL_32_REF	rounded_real_32
+elks	REAL_32_REF	abs
+elks	REAL_32_REF	plus
+elks	REAL_32_REF	minus
+elks	REAL_32_REF	product
+elks	REAL_32_REF	quotient
+elks	REAL_32_REF	power
+elks	REAL_32_REF	identity
+elks	REAL_32_REF	opposite
+elks	REAL_32_REF	out
+elks	REAL_32_REF	abs_ref
+elks	NATURAL_8_REF	sign
+elks	NATURAL_8_REF	one
+elks	NATURAL_8_REF	zero
+elks	NATURAL_8_REF	ascii_char
+elks	NATURAL_8_REF	divisible
+elks	NATURAL_8_REF	exponentiable
+elks	NATURAL_8_REF	is_hashable
+elks	NATURAL_8_REF	is_valid_character_code
+elks	NATURAL_8_REF	is_valid_character_8_code
+elks	NATURAL_8_REF	is_valid_character_32_code
+elks	NATURAL_8_REF	plus
+elks	NATURAL_8_REF	product
+elks	NATURAL_8_REF	quotient
+elks	NATURAL_8_REF	identity
+elks	NATURAL_8_REF	unapplicable_opposite
+elks	NATURAL_8_REF	power
+elks	NATURAL_8_REF	interval
+elks	NATURAL_8_REF	make_from_reference
+elks	NATURAL_8_REF	to_reference
+elks	NATURAL_8_REF	to_boolean
+elks	NATURAL_8_REF	as_natural_8
+elks	NATURAL_8_REF	as_natural_16
+elks	NATURAL_8_REF	as_integer_16
+elks	NATURAL_8_REF	as_integer_64
+elks	NATURAL_8_REF	to_natural_8
+elks	NATURAL_8_REF	to_natural_16
+elks	NATURAL_8_REF	to_integer_16
+elks	NATURAL_8_REF	to_integer_64
+elks	NATURAL_8_REF	to_real_32
+elks	NATURAL_8_REF	to_real_64
+elks	NATURAL_8_REF	to_binary_string
+elks	NATURAL_8_REF	to_binary_character
+elks	NATURAL_8_REF	to_octal_string
+elks	NATURAL_8_REF	to_octal_character
+elks	NATURAL_8_REF	to_hex_string
+elks	NATURAL_8_REF	to_hex_character
+elks	NATURAL_8_REF	to_character
+elks	NATURAL_8_REF	to_character_32
+elks	NATURAL_8_REF	bit_xor
+elks	NATURAL_8_REF	bit_shift
+elks	NATURAL_8_REF	bit_shift_right
+elks	NATURAL_8_REF	bit_test
+elks	NATURAL_8_REF	set_bit
+elks	NATURAL_8_REF	set_bit_with_mask
+elks	NATURAL_8_REF	out
+elks	NATURAL_16_REF	sign
+elks	NATURAL_16_REF	one
+elks	NATURAL_16_REF	zero
+elks	NATURAL_16_REF	ascii_char
+elks	NATURAL_16_REF	divisible
+elks	NATURAL_16_REF	exponentiable
+elks	NATURAL_16_REF	is_hashable
+elks	NATURAL_16_REF	is_valid_character_code
+elks	NATURAL_16_REF	is_valid_character_8_code
+elks	NATURAL_16_REF	is_valid_character_32_code
+elks	NATURAL_16_REF	plus
+elks	NATURAL_16_REF	minus
+elks	NATURAL_16_REF	product
+elks	NATURAL_16_REF	quotient
+elks	NATURAL_16_REF	identity
+elks	NATURAL_16_REF	unapplicable_opposite
+elks	NATURAL_16_REF	power
+elks	NATURAL_16_REF	interval
+elks	NATURAL_16_REF	make_from_reference
+elks	NATURAL_16_REF	to_reference
+elks	NATURAL_16_REF	to_boolean
+elks	NATURAL_16_REF	as_natural_8
+elks	NATURAL_16_REF	as_natural_16
+elks	NATURAL_16_REF	as_integer_8
+elks	NATURAL_16_REF	as_integer_16
+elks	NATURAL_16_REF	as_integer_64
+elks	NATURAL_16_REF	to_natural_8
+elks	NATURAL_16_REF	to_natural_16
+elks	NATURAL_16_REF	to_integer_8
+elks	NATURAL_16_REF	to_integer_16
+elks	NATURAL_16_REF	to_integer_64
+elks	NATURAL_16_REF	to_real_32
+elks	NATURAL_16_REF	to_real_64
+elks	NATURAL_16_REF	to_binary_string
+elks	NATURAL_16_REF	to_binary_character
+elks	NATURAL_16_REF	to_octal_string
+elks	NATURAL_16_REF	to_octal_character
+elks	NATURAL_16_REF	to_hex_string
+elks	NATURAL_16_REF	to_hex_character
+elks	NATURAL_16_REF	to_character
+elks	NATURAL_16_REF	to_character_8
+elks	NATURAL_16_REF	bit_and
+elks	NATURAL_16_REF	bit_or
+elks	NATURAL_16_REF	bit_xor
+elks	NATURAL_16_REF	bit_not
+elks	NATURAL_16_REF	bit_shift
+elks	NATURAL_16_REF	bit_shift_left
+elks	NATURAL_16_REF	bit_shift_right
+elks	NATURAL_16_REF	bit_test
+elks	NATURAL_16_REF	set_bit
+elks	NATURAL_16_REF	set_bit_with_mask
+elks	NATURAL_16_REF	out
+elks	NATURAL_32_REF	sign
+elks	NATURAL_32_REF	one
+elks	NATURAL_32_REF	zero
+elks	NATURAL_32_REF	ascii_char
+elks	NATURAL_32_REF	divisible
+elks	NATURAL_32_REF	exponentiable
+elks	NATURAL_32_REF	is_hashable
+elks	NATURAL_32_REF	is_valid_character_code
+elks	NATURAL_32_REF	is_valid_character_32_code
+elks	NATURAL_32_REF	product
+elks	NATURAL_32_REF	quotient
+elks	NATURAL_32_REF	identity
+elks	NATURAL_32_REF	unapplicable_opposite
+elks	NATURAL_32_REF	power
+elks	NATURAL_32_REF	make_from_reference
+elks	NATURAL_32_REF	to_reference
+elks	NATURAL_32_REF	to_boolean
+elks	NATURAL_32_REF	as_natural_32
+elks	NATURAL_32_REF	as_integer_8
+elks	NATURAL_32_REF	as_integer_16
+elks	NATURAL_32_REF	to_natural_32
+elks	NATURAL_32_REF	to_integer_8
+elks	NATURAL_32_REF	to_integer_16
+elks	NATURAL_32_REF	to_real_32
+elks	NATURAL_32_REF	to_real_64
+elks	NATURAL_32_REF	to_binary_string
+elks	NATURAL_32_REF	to_binary_character
+elks	NATURAL_32_REF	to_octal_string
+elks	NATURAL_32_REF	to_octal_character
+elks	NATURAL_32_REF	to_hex_string
+elks	NATURAL_32_REF	to_hex_character
+elks	NATURAL_32_REF	to_character
+elks	NATURAL_32_REF	bit_xor
+elks	NATURAL_32_REF	bit_not
+elks	NATURAL_32_REF	bit_shift
+elks	NATURAL_32_REF	bit_test
+elks	NATURAL_32_REF	set_bit
+elks	NATURAL_32_REF	set_bit_with_mask
+elks	NATURAL_32_REF	out
+elks	NATURAL_64_REF	sign
+elks	NATURAL_64_REF	one
+elks	NATURAL_64_REF	zero
+elks	NATURAL_64_REF	ascii_char
+elks	NATURAL_64_REF	divisible
+elks	NATURAL_64_REF	exponentiable
+elks	NATURAL_64_REF	is_hashable
+elks	NATURAL_64_REF	is_valid_character_code
+elks	NATURAL_64_REF	is_valid_character_8_code
+elks	NATURAL_64_REF	is_valid_character_32_code
+elks	NATURAL_64_REF	minus
+elks	NATURAL_64_REF	quotient
+elks	NATURAL_64_REF	identity
+elks	NATURAL_64_REF	unapplicable_opposite
+elks	NATURAL_64_REF	power
+elks	NATURAL_64_REF	make_from_reference
+elks	NATURAL_64_REF	to_reference
+elks	NATURAL_64_REF	to_boolean
+elks	NATURAL_64_REF	as_natural_8
+elks	NATURAL_64_REF	as_natural_16
+elks	NATURAL_64_REF	as_natural_64
+elks	NATURAL_64_REF	as_integer_8
+elks	NATURAL_64_REF	as_integer_16
+elks	NATURAL_64_REF	as_integer_64
+elks	NATURAL_64_REF	to_natural_8
+elks	NATURAL_64_REF	to_natural_16
+elks	NATURAL_64_REF	to_natural_32
+elks	NATURAL_64_REF	to_integer_8
+elks	NATURAL_64_REF	to_integer_16
+elks	NATURAL_64_REF	to_integer_64
+elks	NATURAL_64_REF	to_real_32
+elks	NATURAL_64_REF	to_real_64
+elks	NATURAL_64_REF	to_binary_string
+elks	NATURAL_64_REF	to_binary_character
+elks	NATURAL_64_REF	to_octal_string
+elks	NATURAL_64_REF	to_octal_character
+elks	NATURAL_64_REF	to_hex_string
+elks	NATURAL_64_REF	to_hex_character
+elks	NATURAL_64_REF	to_character
+elks	NATURAL_64_REF	to_character_8
+elks	NATURAL_64_REF	to_character_32
+elks	NATURAL_64_REF	bit_or
+elks	NATURAL_64_REF	bit_xor
+elks	NATURAL_64_REF	bit_not
+elks	NATURAL_64_REF	bit_shift
+elks	NATURAL_64_REF	bit_shift_left
+elks	NATURAL_64_REF	bit_shift_right
+elks	NATURAL_64_REF	bit_test
+elks	NATURAL_64_REF	set_bit
+elks	NATURAL_64_REF	set_bit_with_mask
+elks	NATURAL_64_REF	out
+elks	INTEGER_8_REF	sign
+elks	INTEGER_8_REF	one
+elks	INTEGER_8_REF	zero
+elks	INTEGER_8_REF	ascii_char
+elks	INTEGER_8_REF	divisible
+elks	INTEGER_8_REF	exponentiable
+elks	INTEGER_8_REF	is_hashable
+elks	INTEGER_8_REF	is_valid_character_code
+elks	INTEGER_8_REF	is_valid_character_8_code
+elks	INTEGER_8_REF	is_valid_character_32_code
+elks	INTEGER_8_REF	abs
+elks	INTEGER_8_REF	plus
+elks	INTEGER_8_REF	minus
+elks	INTEGER_8_REF	product
+elks	INTEGER_8_REF	quotient
+elks	INTEGER_8_REF	identity
+elks	INTEGER_8_REF	power
+elks	INTEGER_8_REF	interval
+elks	INTEGER_8_REF	make_from_reference
+elks	INTEGER_8_REF	to_reference
+elks	INTEGER_8_REF	to_boolean
+elks	INTEGER_8_REF	as_natural_16
+elks	INTEGER_8_REF	as_natural_32
+elks	INTEGER_8_REF	as_integer_8
+elks	INTEGER_8_REF	as_integer_16
+elks	INTEGER_8_REF	as_integer_64
+elks	INTEGER_8_REF	to_natural_16
+elks	INTEGER_8_REF	to_natural_32
+elks	INTEGER_8_REF	to_integer_8
+elks	INTEGER_8_REF	to_integer_16
+elks	INTEGER_8_REF	to_integer_32
+elks	INTEGER_8_REF	to_integer_64
+elks	INTEGER_8_REF	to_real
+elks	INTEGER_8_REF	to_double
+elks	INTEGER_8_REF	to_binary_string
+elks	INTEGER_8_REF	to_binary_character
+elks	INTEGER_8_REF	to_octal_string
+elks	INTEGER_8_REF	to_octal_character
+elks	INTEGER_8_REF	to_hex_string
+elks	INTEGER_8_REF	to_hex_character
+elks	INTEGER_8_REF	to_character
+elks	INTEGER_8_REF	to_character_8
+elks	INTEGER_8_REF	to_character_32
+elks	INTEGER_8_REF	bit_and
+elks	INTEGER_8_REF	bit_or
+elks	INTEGER_8_REF	bit_xor
+elks	INTEGER_8_REF	bit_not
+elks	INTEGER_8_REF	bit_shift
+elks	INTEGER_8_REF	bit_shift_left
+elks	INTEGER_8_REF	bit_test
+elks	INTEGER_8_REF	set_bit
+elks	INTEGER_8_REF	set_bit_with_mask
+elks	INTEGER_8_REF	out
+elks	INTEGER_8_REF	abs_ref
+elks	INTEGER_16_REF	sign
+elks	INTEGER_16_REF	one
+elks	INTEGER_16_REF	zero
+elks	INTEGER_16_REF	ascii_char
+elks	INTEGER_16_REF	divisible
+elks	INTEGER_16_REF	exponentiable
+elks	INTEGER_16_REF	is_hashable
+elks	INTEGER_16_REF	is_valid_character_code
+elks	INTEGER_16_REF	is_valid_character_8_code
+elks	INTEGER_16_REF	is_valid_character_32_code
+elks	INTEGER_16_REF	abs
+elks	INTEGER_16_REF	plus
+elks	INTEGER_16_REF	minus
+elks	INTEGER_16_REF	product
+elks	INTEGER_16_REF	quotient
+elks	INTEGER_16_REF	identity
+elks	INTEGER_16_REF	power
+elks	INTEGER_16_REF	interval
+elks	INTEGER_16_REF	make_from_reference
+elks	INTEGER_16_REF	to_reference
+elks	INTEGER_16_REF	to_boolean
+elks	INTEGER_16_REF	as_natural_8
+elks	INTEGER_16_REF	as_natural_16
+elks	INTEGER_16_REF	as_natural_32
+elks	INTEGER_16_REF	as_integer_8
+elks	INTEGER_16_REF	as_integer_16
+elks	INTEGER_16_REF	as_integer_64
+elks	INTEGER_16_REF	to_natural_8
+elks	INTEGER_16_REF	to_natural_16
+elks	INTEGER_16_REF	to_natural_32
+elks	INTEGER_16_REF	to_integer_8
+elks	INTEGER_16_REF	to_integer_32
+elks	INTEGER_16_REF	to_integer_16
+elks	INTEGER_16_REF	to_integer_64
+elks	INTEGER_16_REF	to_real
+elks	INTEGER_16_REF	to_double
+elks	INTEGER_16_REF	to_binary_string
+elks	INTEGER_16_REF	to_binary_character
+elks	INTEGER_16_REF	to_octal_string
+elks	INTEGER_16_REF	to_octal_character
+elks	INTEGER_16_REF	to_hex_string
+elks	INTEGER_16_REF	to_hex_character
+elks	INTEGER_16_REF	to_character
+elks	INTEGER_16_REF	to_character_8
+elks	INTEGER_16_REF	to_character_32
+elks	INTEGER_16_REF	bit_and
+elks	INTEGER_16_REF	bit_or
+elks	INTEGER_16_REF	bit_xor
+elks	INTEGER_16_REF	bit_not
+elks	INTEGER_16_REF	bit_shift
+elks	INTEGER_16_REF	bit_shift_left
+elks	INTEGER_16_REF	bit_shift_right
+elks	INTEGER_16_REF	bit_test
+elks	INTEGER_16_REF	set_bit
+elks	INTEGER_16_REF	set_bit_with_mask
+elks	INTEGER_16_REF	out
+elks	INTEGER_16_REF	abs_ref
+elks	INTEGER_32_REF	sign
+elks	INTEGER_32_REF	one
+elks	INTEGER_32_REF	zero
+elks	INTEGER_32_REF	ascii_char
+elks	INTEGER_32_REF	divisible
+elks	INTEGER_32_REF	exponentiable
+elks	INTEGER_32_REF	is_hashable
+elks	INTEGER_32_REF	is_valid_character_code
+elks	INTEGER_32_REF	is_valid_character_8_code
+elks	INTEGER_32_REF	is_valid_character_32_code
+elks	INTEGER_32_REF	abs
+elks	INTEGER_32_REF	identity
+elks	INTEGER_32_REF	power
+elks	INTEGER_32_REF	interval
+elks	INTEGER_32_REF	make_from_reference
+elks	INTEGER_32_REF	to_reference
+elks	INTEGER_32_REF	to_boolean
+elks	INTEGER_32_REF	as_natural_16
+elks	INTEGER_32_REF	as_integer_8
+elks	INTEGER_32_REF	as_integer_16
+elks	INTEGER_32_REF	as_integer_32
+elks	INTEGER_32_REF	to_natural_16
+elks	INTEGER_32_REF	to_integer_8
+elks	INTEGER_32_REF	to_integer_16
+elks	INTEGER_32_REF	to_integer
+elks	INTEGER_32_REF	to_integer_32
+elks	INTEGER_32_REF	to_real
+elks	INTEGER_32_REF	to_binary_string
+elks	INTEGER_32_REF	to_binary_character
+elks	INTEGER_32_REF	to_octal_string
+elks	INTEGER_32_REF	to_octal_character
+elks	INTEGER_32_REF	to_character
+elks	INTEGER_32_REF	to_character_32
+elks	INTEGER_32_REF	bit_xor
+elks	INTEGER_32_REF	bit_shift
+elks	INTEGER_32_REF	bit_test
+elks	INTEGER_32_REF	set_bit
+elks	INTEGER_32_REF	set_bit_with_mask
+elks	INTEGER_32_REF	out
+elks	INTEGER_32_REF	abs_ref
+elks	INTEGER_64_REF	sign
+elks	INTEGER_64_REF	one
+elks	INTEGER_64_REF	zero
+elks	INTEGER_64_REF	ascii_char
+elks	INTEGER_64_REF	divisible
+elks	INTEGER_64_REF	exponentiable
+elks	INTEGER_64_REF	is_hashable
+elks	INTEGER_64_REF	is_valid_character_code
+elks	INTEGER_64_REF	is_valid_character_8_code
+elks	INTEGER_64_REF	is_valid_character_32_code
+elks	INTEGER_64_REF	abs
+elks	INTEGER_64_REF	product
+elks	INTEGER_64_REF	quotient
+elks	INTEGER_64_REF	identity
+elks	INTEGER_64_REF	power
+elks	INTEGER_64_REF	make_from_reference
+elks	INTEGER_64_REF	to_reference
+elks	INTEGER_64_REF	to_boolean
+elks	INTEGER_64_REF	as_natural_8
+elks	INTEGER_64_REF	as_natural_16
+elks	INTEGER_64_REF	as_natural_32
+elks	INTEGER_64_REF	as_integer_8
+elks	INTEGER_64_REF	as_integer_16
+elks	INTEGER_64_REF	as_integer_64
+elks	INTEGER_64_REF	to_natural_8
+elks	INTEGER_64_REF	to_natural_16
+elks	INTEGER_64_REF	to_natural_32
+elks	INTEGER_64_REF	to_integer_8
+elks	INTEGER_64_REF	to_integer_16
+elks	INTEGER_64_REF	to_integer
+elks	INTEGER_64_REF	to_integer_64
+elks	INTEGER_64_REF	to_real
+elks	INTEGER_64_REF	to_double
+elks	INTEGER_64_REF	to_binary_string
+elks	INTEGER_64_REF	to_binary_character
+elks	INTEGER_64_REF	to_octal_string
+elks	INTEGER_64_REF	to_octal_character
+elks	INTEGER_64_REF	to_hex_string
+elks	INTEGER_64_REF	to_hex_character
+elks	INTEGER_64_REF	to_character
+elks	INTEGER_64_REF	to_character_32
+elks	INTEGER_64_REF	bit_or
+elks	INTEGER_64_REF	bit_xor
+elks	INTEGER_64_REF	bit_not
+elks	INTEGER_64_REF	bit_shift
+elks	INTEGER_64_REF	bit_shift_left
+elks	INTEGER_64_REF	bit_shift_right
+elks	INTEGER_64_REF	bit_test
+elks	INTEGER_64_REF	set_bit
+elks	INTEGER_64_REF	set_bit_with_mask
+elks	INTEGER_64_REF	abs_ref
+elks	ISE_RUNTIME	generator_of_type
+elks	ISE_RUNTIME	generator_8_of_type
+elks	ISE_RUNTIME	check_assert
+elks	ISE_RUNTIME	generating_type_of_type
+elks	ISE_RUNTIME	generating_type_8_of_type
+elks	ISE_RUNTIME	in_assertion
+elks	ISE_RUNTIME	once_objects
+elks	ISE_RUNTIME	type_id_from_name
+elks	ISE_RUNTIME	pre_ecma_mapping_status
+elks	ISE_RUNTIME	set_pre_ecma_mapping
+elks	ISE_RUNTIME	new_instance_of
+elks	ISE_RUNTIME	new_special_of_reference_instance_of
+elks	ISE_RUNTIME	new_tuple_instance_of
+elks	ISE_RUNTIME	new_type_instance_of
+elks	ISE_RUNTIME	is_attached_type
+elks	ISE_RUNTIME	attached_type
+elks	ISE_RUNTIME	is_field_transient_of_type
+elks	ISE_RUNTIME	is_field_expanded_of_type
+elks	ISE_RUNTIME	persistent_field_count_of_type
+elks	ISE_RUNTIME	storable_version_of_type
+elks	ISE_RUNTIME	compiler_version
+elks	ISE_RUNTIME	reference_field_at_offset
+elks	ISE_RUNTIME	raw_reference_field_at_offset
+elks	ISE_RUNTIME	dynamic_type_at_offset
+elks	ISE_RUNTIME	is_copy_semantics_field
+elks	ISE_RUNTIME	is_special_copy_semantics_item
+elks	ISE_RUNTIME	field_count_of_type
+elks	ISE_RUNTIME	field_offset_of_type
+elks	ISE_RUNTIME	object_size
+elks	ISE_RUNTIME	field_name_of_type
+elks	ISE_RUNTIME	field_type_of_type
+elks	ISE_RUNTIME	field_static_type_of_type
+elks	ISE_RUNTIME	reference_field
+elks	ISE_RUNTIME	character_8_field
+elks	ISE_RUNTIME	character_32_field
+elks	ISE_RUNTIME	boolean_field
+elks	ISE_RUNTIME	natural_8_field
+elks	ISE_RUNTIME	natural_16_field
+elks	ISE_RUNTIME	natural_32_field
+elks	ISE_RUNTIME	natural_64_field
+elks	ISE_RUNTIME	integer_8_field
+elks	ISE_RUNTIME	integer_16_field
+elks	ISE_RUNTIME	integer_32_field
+elks	ISE_RUNTIME	integer_64_field
+elks	ISE_RUNTIME	real_32_field
+elks	ISE_RUNTIME	pointer_field
+elks	ISE_RUNTIME	real_64_field
+elks	ISE_RUNTIME	reference_field_at
+elks	ISE_RUNTIME	raw_reference_field_at
+elks	ISE_RUNTIME	character_8_field_at
+elks	ISE_RUNTIME	character_32_field_at
+elks	ISE_RUNTIME	boolean_field_at
+elks	ISE_RUNTIME	natural_8_field_at
+elks	ISE_RUNTIME	natural_16_field_at
+elks	ISE_RUNTIME	natural_32_field_at
+elks	ISE_RUNTIME	natural_64_field_at
+elks	ISE_RUNTIME	integer_8_field_at
+elks	ISE_RUNTIME	integer_16_field_at
+elks	ISE_RUNTIME	integer_32_field_at
+elks	ISE_RUNTIME	integer_64_field_at
+elks	ISE_RUNTIME	real_32_field_at
+elks	ISE_RUNTIME	pointer_field_at
+elks	ISE_RUNTIME	real_64_field_at
+elks	ISE_RUNTIME	is_special
+elks	ISE_RUNTIME	is_special_of_expanded
+elks	ISE_RUNTIME	is_special_of_reference
+elks	ISE_RUNTIME	is_expanded
+elks	ISE_RUNTIME	is_tuple
+elks	ISE_RUNTIME	is_special_of_reference_type
+elks	ISE_RUNTIME	is_special_of_reference_or_basic_type
+elks	ISE_RUNTIME	is_tuple_type
+elks	ISE_RUNTIME	set_reference_field
+elks	ISE_RUNTIME	set_real_64_field
+elks	ISE_RUNTIME	set_character_8_field
+elks	ISE_RUNTIME	set_character_32_field
+elks	ISE_RUNTIME	set_boolean_field
+elks	ISE_RUNTIME	set_natural_8_field
+elks	ISE_RUNTIME	set_natural_16_field
+elks	ISE_RUNTIME	set_natural_32_field
+elks	ISE_RUNTIME	set_natural_64_field
+elks	ISE_RUNTIME	set_integer_8_field
+elks	ISE_RUNTIME	set_integer_16_field
+elks	ISE_RUNTIME	set_integer_32_field
+elks	ISE_RUNTIME	set_integer_64_field
+elks	ISE_RUNTIME	set_real_32_field
+elks	ISE_RUNTIME	set_pointer_field
+elks	ISE_RUNTIME	set_reference_field_at
+elks	ISE_RUNTIME	set_real_64_field_at
+elks	ISE_RUNTIME	set_character_8_field_at
+elks	ISE_RUNTIME	set_character_32_field_at
+elks	ISE_RUNTIME	set_boolean_field_at
+elks	ISE_RUNTIME	set_natural_8_field_at
+elks	ISE_RUNTIME	set_natural_16_field_at
+elks	ISE_RUNTIME	set_natural_32_field_at
+elks	ISE_RUNTIME	set_natural_64_field_at
+elks	ISE_RUNTIME	set_integer_8_field_at
+elks	ISE_RUNTIME	set_integer_16_field_at
+elks	ISE_RUNTIME	set_integer_32_field_at
+elks	ISE_RUNTIME	set_integer_64_field_at
+elks	ISE_RUNTIME	set_real_32_field_at
+elks	ISE_RUNTIME	set_pointer_field_at
+elks	ISE_RUNTIME	generic_parameter_count
+elks	ISE_RUNTIME	eif_gen_param_id
+elks	ISE_RUNTIME	lock_marking
+elks	ISE_RUNTIME	unlock_marking
+elks	ISE_RUNTIME	is_object_marked
+elks	ISE_RUNTIME	unmark_object
+elks	ISE_RUNTIME	mark_object
+elks	HASHABLE	(empty)
+elks	PRIMES	lower_prime
+elks	PRIMES	new_cursor
+elks	STRING_GENERAL	set_internal_hash_code
+elks	STRING_GENERAL	append_substring
+elks	STRING_GENERAL	prepend
+elks	STRING_GENERAL	prepend_substring
+elks	STRING_GENERAL	adjust
+elks	READABLE_STRING_GENERAL	index_of
+elks	READABLE_STRING_GENERAL	last_index_of
+elks	READABLE_STRING_GENERAL	index_of_code
+elks	READABLE_STRING_GENERAL	last_index_of_code
+elks	READABLE_STRING_GENERAL	false_constant
+elks	READABLE_STRING_GENERAL	true_constant
+elks	READABLE_STRING_GENERAL	is_immutable
+elks	READABLE_STRING_GENERAL	valid_index
+elks	READABLE_STRING_GENERAL	is_whitespace
+elks	READABLE_STRING_GENERAL	has
+elks	READABLE_STRING_GENERAL	has_code
+elks	READABLE_STRING_GENERAL	is_number_sequence
+elks	READABLE_STRING_GENERAL	is_real_sequence
+elks	READABLE_STRING_GENERAL	is_real
+elks	READABLE_STRING_GENERAL	is_real_32
+elks	READABLE_STRING_GENERAL	is_double
+elks	READABLE_STRING_GENERAL	is_real_64
+elks	READABLE_STRING_GENERAL	is_integer_8
+elks	READABLE_STRING_GENERAL	is_integer_16
+elks	READABLE_STRING_GENERAL	is_integer
+elks	READABLE_STRING_GENERAL	is_integer_32
+elks	READABLE_STRING_GENERAL	is_integer_64
+elks	READABLE_STRING_GENERAL	is_natural_8
+elks	READABLE_STRING_GENERAL	is_natural_16
+elks	READABLE_STRING_GENERAL	is_natural
+elks	READABLE_STRING_GENERAL	is_natural_32
+elks	READABLE_STRING_GENERAL	is_natural_64
+elks	READABLE_STRING_GENERAL	occurrences
+elks	READABLE_STRING_GENERAL	has_substring
+elks	READABLE_STRING_GENERAL	starts_with
+elks	READABLE_STRING_GENERAL	ends_with
+elks	READABLE_STRING_GENERAL	to_cil
+elks	READABLE_STRING_GENERAL	as_string_8_conversion
+elks	READABLE_STRING_GENERAL	as_readable_string_8
+elks	READABLE_STRING_GENERAL	as_string_8
+elks	READABLE_STRING_GENERAL	as_string_32_conversion
+elks	READABLE_STRING_GENERAL	as_readable_string_32
+elks	READABLE_STRING_GENERAL	to_integer_8
+elks	READABLE_STRING_GENERAL	to_integer_16
+elks	READABLE_STRING_GENERAL	to_integer_32
+elks	READABLE_STRING_GENERAL	to_integer_64
+elks	READABLE_STRING_GENERAL	to_natural_8
+elks	READABLE_STRING_GENERAL	to_natural_16
+elks	READABLE_STRING_GENERAL	to_natural
+elks	READABLE_STRING_GENERAL	to_natural_32
+elks	READABLE_STRING_GENERAL	to_natural_64
+elks	READABLE_STRING_GENERAL	to_real
+elks	READABLE_STRING_GENERAL	to_real_32
+elks	READABLE_STRING_GENERAL	to_double
+elks	READABLE_STRING_GENERAL	to_real_64
+elks	READABLE_STRING_GENERAL	to_boolean
+elks	READABLE_STRING_GENERAL	split
+elks	READABLE_STRING_GENERAL	head
+elks	READABLE_STRING_GENERAL	tail
+elks	READABLE_STRING_GENERAL	is_valid_integer_or_natural
+elks	READABLE_STRING_GENERAL	ctor_convertor
+elks	READABLE_STRING_GENERAL	dotnet_convertor
+elks	READABLE_STRING_GENERAL	new_character_32_cursor
+elks	reference UTF_CONVERTER	is_valid_utf_8_string_8
+elks	reference UTF_CONVERTER	is_valid_utf_16le_string_8
+elks	reference UTF_CONVERTER	is_valid_utf_16_subpointer
+elks	reference UTF_CONVERTER	is_valid_utf_16
+elks	reference UTF_CONVERTER	utf_16_characters_count_form_pointer
+elks	reference UTF_CONVERTER	utf_8_to_string_32_count
+elks	reference UTF_CONVERTER	string_32_into_utf_8_string_8
+elks	reference UTF_CONVERTER	escaped_utf_32_string_to_utf_8_string_8
+elks	reference UTF_CONVERTER	escaped_utf_32_string_into_utf_8_string_8
+elks	reference UTF_CONVERTER	string_32_into_utf_8_0_pointer
+elks	reference UTF_CONVERTER	utf_32_string_to_utf_8
+elks	reference UTF_CONVERTER	utf_32_string_to_utf_8_0
+elks	reference UTF_CONVERTER	utf_8_0_pointer_to_escaped_string_32
+elks	reference UTF_CONVERTER	utf_8_0_pointer_into_escaped_string_32
+elks	reference UTF_CONVERTER	utf_8_0_subpointer_to_escaped_string_32
+elks	reference UTF_CONVERTER	utf_8_0_subpointer_into_escaped_string_32
+elks	reference UTF_CONVERTER	utf_8_string_8_to_escaped_string_32
+elks	reference UTF_CONVERTER	utf_8_string_8_into_escaped_string_32
+elks	reference UTF_CONVERTER	string_32_to_utf_16
+elks	reference UTF_CONVERTER	utf_32_string_to_utf_16
+elks	reference UTF_CONVERTER	string_32_to_utf_16_0
+elks	reference UTF_CONVERTER	utf_32_string_to_utf_16_0
+elks	reference UTF_CONVERTER	string_32_into_utf_16_pointer
+elks	reference UTF_CONVERTER	string_32_into_utf_16_0_pointer
+elks	reference UTF_CONVERTER	utf_32_substring_into_utf_16_pointer
+elks	reference UTF_CONVERTER	utf_32_substring_into_utf_16_0_pointer
+elks	reference UTF_CONVERTER	utf_32_string_to_utf_16le_string_8
+elks	reference UTF_CONVERTER	utf_32_string_into_utf_16le_string_8
+elks	reference UTF_CONVERTER	escaped_utf_32_string_to_utf_16le_string_8
+elks	reference UTF_CONVERTER	escaped_utf_32_string_into_utf_16le_string_8
+elks	reference UTF_CONVERTER	utf_16_0_pointer_to_string_32
+elks	reference UTF_CONVERTER	utf_16_0_pointer_into_string_32
+elks	reference UTF_CONVERTER	utf_16_0_subpointer_to_string_32
+elks	reference UTF_CONVERTER	utf_16_0_subpointer_into_string_32
+elks	reference UTF_CONVERTER	utf_16_0_pointer_to_escaped_string_32
+elks	reference UTF_CONVERTER	utf_16_0_pointer_into_escaped_string_32
+elks	reference UTF_CONVERTER	utf_16_0_subpointer_to_escaped_string_32
+elks	reference UTF_CONVERTER	utf_16_0_subpointer_into_escaped_string_32
+elks	reference UTF_CONVERTER	utf_16_to_string_32
+elks	reference UTF_CONVERTER	utf_16_into_string_32
+elks	reference UTF_CONVERTER	utf_16le_string_8_to_string_32
+elks	reference UTF_CONVERTER	utf_16le_string_8_into_string_32
+elks	reference UTF_CONVERTER	utf_16le_string_8_to_escaped_string_32
+elks	reference UTF_CONVERTER	utf_16le_string_8_into_escaped_string_32
+elks	reference UTF_CONVERTER	utf_16_to_utf_8_string_8
+elks	reference UTF_CONVERTER	utf_16_into_utf_8_string_8
+elks	reference UTF_CONVERTER	utf_16le_string_8_to_utf_8_string_8
+elks	reference UTF_CONVERTER	utf_16le_string_8_into_utf_8_string_8
+elks	reference UTF_CONVERTER	utf_8_string_8_to_utf_16
+elks	reference UTF_CONVERTER	utf_8_string_8_to_utf_16_0
+elks	reference UTF_CONVERTER	utf_8_bom_to_string_8
+elks	reference UTF_CONVERTER	utf_16be_bom_to_string_8
+elks	reference UTF_CONVERTER	utf_16le_bom_to_string_8
+elks	reference UTF_CONVERTER	utf_32be_bom_to_string_8
+elks	reference UTF_CONVERTER	utf_32le_bom_to_string_8
+elks	reference UTF_CONVERTER	escape_code_into
+elks	UTF_CONVERTER	is_valid_utf_8_string_8
+elks	UTF_CONVERTER	is_valid_utf_16le_string_8
+elks	UTF_CONVERTER	is_valid_utf_16_subpointer
+elks	UTF_CONVERTER	is_valid_utf_16
+elks	UTF_CONVERTER	utf_16_characters_count_form_pointer
+elks	UTF_CONVERTER	utf_8_to_string_32_count
+elks	UTF_CONVERTER	string_32_into_utf_8_string_8
+elks	UTF_CONVERTER	escaped_utf_32_string_to_utf_8_string_8
+elks	UTF_CONVERTER	escaped_utf_32_string_into_utf_8_string_8
+elks	UTF_CONVERTER	string_32_into_utf_8_0_pointer
+elks	UTF_CONVERTER	utf_32_string_to_utf_8
+elks	UTF_CONVERTER	utf_32_string_to_utf_8_0
+elks	UTF_CONVERTER	utf_8_0_pointer_to_escaped_string_32
+elks	UTF_CONVERTER	utf_8_0_pointer_into_escaped_string_32
+elks	UTF_CONVERTER	utf_8_0_subpointer_to_escaped_string_32
+elks	UTF_CONVERTER	utf_8_0_subpointer_into_escaped_string_32
+elks	UTF_CONVERTER	utf_8_string_8_to_escaped_string_32
+elks	UTF_CONVERTER	utf_8_string_8_into_escaped_string_32
+elks	UTF_CONVERTER	string_32_to_utf_16
+elks	UTF_CONVERTER	utf_32_string_to_utf_16
+elks	UTF_CONVERTER	string_32_to_utf_16_0
+elks	UTF_CONVERTER	utf_32_string_to_utf_16_0
+elks	UTF_CONVERTER	string_32_into_utf_16_pointer
+elks	UTF_CONVERTER	string_32_into_utf_16_0_pointer
+elks	UTF_CONVERTER	utf_32_substring_into_utf_16_pointer
+elks	UTF_CONVERTER	utf_32_substring_into_utf_16_0_pointer
+elks	UTF_CONVERTER	utf_32_string_to_utf_16le_string_8
+elks	UTF_CONVERTER	utf_32_string_into_utf_16le_string_8
+elks	UTF_CONVERTER	escaped_utf_32_string_to_utf_16le_string_8
+elks	UTF_CONVERTER	escaped_utf_32_string_into_utf_16le_string_8
+elks	UTF_CONVERTER	utf_16_0_pointer_to_string_32
+elks	UTF_CONVERTER	utf_16_0_pointer_into_string_32
+elks	UTF_CONVERTER	utf_16_0_subpointer_to_string_32
+elks	UTF_CONVERTER	utf_16_0_subpointer_into_string_32
+elks	UTF_CONVERTER	utf_16_0_pointer_to_escaped_string_32
+elks	UTF_CONVERTER	utf_16_0_pointer_into_escaped_string_32
+elks	UTF_CONVERTER	utf_16_0_subpointer_to_escaped_string_32
+elks	UTF_CONVERTER	utf_16_0_subpointer_into_escaped_string_32
+elks	UTF_CONVERTER	utf_16_to_string_32
+elks	UTF_CONVERTER	utf_16_into_string_32
+elks	UTF_CONVERTER	utf_16le_string_8_to_string_32
+elks	UTF_CONVERTER	utf_16le_string_8_into_string_32
+elks	UTF_CONVERTER	utf_16le_string_8_to_escaped_string_32
+elks	UTF_CONVERTER	utf_16le_string_8_into_escaped_string_32
+elks	UTF_CONVERTER	utf_16_to_utf_8_string_8
+elks	UTF_CONVERTER	utf_16_into_utf_8_string_8
+elks	UTF_CONVERTER	utf_16le_string_8_to_utf_8_string_8
+elks	UTF_CONVERTER	utf_16le_string_8_into_utf_8_string_8
+elks	UTF_CONVERTER	utf_8_string_8_to_utf_16
+elks	UTF_CONVERTER	utf_8_string_8_to_utf_16_0
+elks	UTF_CONVERTER	utf_8_bom_to_string_8
+elks	UTF_CONVERTER	utf_16be_bom_to_string_8
+elks	UTF_CONVERTER	utf_16le_bom_to_string_8
+elks	UTF_CONVERTER	utf_32be_bom_to_string_8
+elks	UTF_CONVERTER	utf_32le_bom_to_string_8
+elks	UTF_CONVERTER	escape_code_into
+elks	DEBUG_OUTPUT	(empty)
+debug_implementation	RT_DBG_EXECUTION_PARAMETERS	(removed)
+elks	REFLECTED_REFERENCE_OBJECT	(removed)
+elks	CELL [G#1]	replace
+elks	CELL [INTEGER_32]	replace
+elks	CELL [NATURAL_64]	replace
+elks	CELL [CHARACTER_32]	replace
+debug_implementation	RT_DBG_EXECUTION_RECORDER	(removed)
+debug_implementation	RT_EXTENSION_GENERAL	(removed)
+elks	SYSTEM_STRING	(removed)
+elks	DYNAMIC_TABLE [G#1, G#2]	(empty)
+elks	DYNAMIC_TABLE [G#1, INTEGER_32]	(empty)
+elks	DYNAMIC_TABLE [INTEGER_32, G#2]	(empty)
+elks	DYNAMIC_TABLE [INTEGER_32, INTEGER_32]	(empty)
+elks	DYNAMIC_TABLE [POINTER, INTEGER_32]	(empty)
+elks	DYNAMIC_TABLE [REAL_32, INTEGER_32]	(empty)
+elks	DYNAMIC_TABLE [REAL_64, INTEGER_32]	(empty)
+elks	DYNAMIC_TABLE [NATURAL_16, INTEGER_32]	(empty)
+elks	DYNAMIC_TABLE [NATURAL_8, INTEGER_32]	(empty)
+elks	DYNAMIC_TABLE [BOOLEAN, INTEGER_32]	(empty)
+elks	DYNAMIC_TABLE [CHARACTER_32, INTEGER_32]	(empty)
+elks	DYNAMIC_TABLE [NATURAL_64, INTEGER_32]	(empty)
+elks	DYNAMIC_TABLE [NATURAL_32, INTEGER_32]	(empty)
+elks	DYNAMIC_TABLE [CHARACTER_8, INTEGER_32]	(empty)
+elks	IMMUTABLE_STRING_GENERAL	(empty)
+ise	IO_FAILURE	tag
+elks	OPERATING_SYSTEM_FAILURE	tag
+ise	MISMATCH_FAILURE	tag
+elks	DEVELOPER_EXCEPTION	tag
+ise	ADDRESS_APPLIED_TO_MELTED_FEATURE	tag
+elks	C_STRING	make_by_pointer
+elks	C_STRING	make_by_pointer_and_count
+elks	C_STRING	make_shared_from_pointer
+elks	C_STRING	own_from_pointer
+elks	C_STRING	own_from_pointer_and_count
+elks	C_STRING	share_from_pointer
+elks	C_STRING	share_from_pointer_and_count
+elks	C_STRING	substring
+elks	C_STRING	substring_8
+elks	C_STRING	string
+elks	C_STRING	string_8
+elks	C_STRING	copy_to_string
+elks	C_STRING	read_substring_into
+elks	C_STRING	read_string_into
+elks	C_STRING	read_substring_into_character_32_area
+elks	C_STRING	capacity
+elks	C_STRING	bytes_count
+elks	C_STRING	fill_blank
+elks	C_STRING	fill_value
+elks	COM_FAILURE	tag
+elks	COM_FAILURE	hresult_facility
+elks	COM_FAILURE	hresult_message
+elks	COM_FAILURE	trigger
+elks	COM_FAILURE	ccom_hresult_facility
+elks	COM_FAILURE	cwin_error_text
+elks	COM_FAILURE	c_strlen
+elks	COM_FAILURE	character_size
+elks	COM_FAILURE	cwin_local_free
+elks	COM_FAILURE	error_message
+elks	OLD_VIOLATION	tag
+elks	EXCEP_CONST	(empty)
+elks	VOID_TARGET	tag
+ise	NO_MORE_MEMORY	tag
+elks	PRECONDITION_VIOLATION	tag
+elks	POSTCONDITION_VIOLATION	tag
+elks	FLOATING_POINT_FAILURE	tag
+elks	INVARIANT_VIOLATION	tag
+elks	CHECK_VIOLATION	tag
+elks	ROUTINE_FAILURE	tag
+elks	BAD_INSPECT_VALUE	tag
+elks	VARIANT_VIOLATION	tag
+elks	HASH_TABLE [G#1, G#2]	make_equal
+elks	HASH_TABLE [G#1, G#2]	make_from_iterable_tuples
+elks	HASH_TABLE [G#1, G#2]	definite_item
+elks	HASH_TABLE [G#1, G#2]	at
+elks	HASH_TABLE [G#1, G#2]	has_key
+elks	HASH_TABLE [G#1, G#2]	has_item
+elks	HASH_TABLE [G#1, G#2]	current_keys
+elks	HASH_TABLE [G#1, G#2]	item_for_iteration
+elks	HASH_TABLE [G#1, G#2]	key_for_iteration
+elks	HASH_TABLE [G#1, G#2]	cursor
+elks	HASH_TABLE [G#1, G#2]	iteration_item
+elks	HASH_TABLE [G#1, G#2]	occurrences
+elks	HASH_TABLE [G#1, G#2]	disjoint
+elks	HASH_TABLE [G#1, G#2]	full
+elks	HASH_TABLE [G#1, G#2]	extendible
+elks	HASH_TABLE [G#1, G#2]	conflict
+elks	HASH_TABLE [G#1, G#2]	inserted
+elks	HASH_TABLE [G#1, G#2]	replaced
+elks	HASH_TABLE [G#1, G#2]	removed
+elks	HASH_TABLE [G#1, G#2]	after
+elks	HASH_TABLE [G#1, G#2]	off
+elks	HASH_TABLE [G#1, G#2]	valid_cursor
+elks	HASH_TABLE [G#1, G#2]	valid_key
+elks	HASH_TABLE [G#1, G#2]	valid_iteration_index
+elks	HASH_TABLE [G#1, G#2]	start
+elks	HASH_TABLE [G#1, G#2]	forth
+elks	HASH_TABLE [G#1, G#2]	go_to
+elks	HASH_TABLE [G#1, G#2]	search_item
+elks	HASH_TABLE [G#1, G#2]	extend
+elks	HASH_TABLE [G#1, G#2]	replace
+elks	HASH_TABLE [G#1, G#2]	replace_key
+elks	HASH_TABLE [G#1, G#2]	merge
+elks	HASH_TABLE [G#1, G#2]	remove
+elks	HASH_TABLE [G#1, G#2]	prune
+elks	HASH_TABLE [G#1, G#2]	clear_all
+elks	HASH_TABLE [G#1, G#2]	linear_representation
+elks	HASH_TABLE [G#1, G#2]	truly_occupied
+elks	HASH_TABLE [G#1, G#2]	is_off_position
+elks	HASH_TABLE [G#1, G#2]	deleted
+elks	HASH_TABLE [G#1, G#2]	default_key_value
+elks	HASH_TABLE [G#1, G#2]	computed_default_key
+elks	HASH_TABLE [G#1, G#2]	computed_default_value
+elks	HASH_TABLE [G#1, G#2]	search_for_insertion
+elks	HASH_TABLE [G#1, G#2]	key_at
+elks	HASH_TABLE [G#1, G#2]	initial_position
+elks	HASH_TABLE [G#1, G#2]	position_increment
+elks	HASH_TABLE [G#1, G#2]	set_found
+elks	HASH_TABLE [G#1, G#2]	set_inserted
+elks	HASH_TABLE [G#1, G#2]	set_not_found
+elks	HASH_TABLE [G#1, G#2]	set_no_status
+elks	HASH_TABLE [G#1, G#2]	set_removed
+elks	HASH_TABLE [G#1, G#2]	set_replaced
+elks	HASH_TABLE [G#1, G#2]	special_status
+elks	HASH_TABLE [G#1, G#2]	collection_extend
+elks	HASH_TABLE [G#1, INTEGER_32]	make_equal
+elks	HASH_TABLE [G#1, INTEGER_32]	make_from_iterable_tuples
+elks	HASH_TABLE [G#1, INTEGER_32]	definite_item
+elks	HASH_TABLE [G#1, INTEGER_32]	at
+elks	HASH_TABLE [G#1, INTEGER_32]	has_key
+elks	HASH_TABLE [G#1, INTEGER_32]	has_item
+elks	HASH_TABLE [G#1, INTEGER_32]	current_keys
+elks	HASH_TABLE [G#1, INTEGER_32]	item_for_iteration
+elks	HASH_TABLE [G#1, INTEGER_32]	key_for_iteration
+elks	HASH_TABLE [G#1, INTEGER_32]	cursor
+elks	HASH_TABLE [G#1, INTEGER_32]	iteration_item
+elks	HASH_TABLE [G#1, INTEGER_32]	occurrences
+elks	HASH_TABLE [G#1, INTEGER_32]	disjoint
+elks	HASH_TABLE [G#1, INTEGER_32]	full
+elks	HASH_TABLE [G#1, INTEGER_32]	extendible
+elks	HASH_TABLE [G#1, INTEGER_32]	conflict
+elks	HASH_TABLE [G#1, INTEGER_32]	inserted
+elks	HASH_TABLE [G#1, INTEGER_32]	replaced
+elks	HASH_TABLE [G#1, INTEGER_32]	removed
+elks	HASH_TABLE [G#1, INTEGER_32]	after
+elks	HASH_TABLE [G#1, INTEGER_32]	off
+elks	HASH_TABLE [G#1, INTEGER_32]	valid_cursor
+elks	HASH_TABLE [G#1, INTEGER_32]	valid_key
+elks	HASH_TABLE [G#1, INTEGER_32]	valid_iteration_index
+elks	HASH_TABLE [G#1, INTEGER_32]	start
+elks	HASH_TABLE [G#1, INTEGER_32]	forth
+elks	HASH_TABLE [G#1, INTEGER_32]	go_to
+elks	HASH_TABLE [G#1, INTEGER_32]	search_item
+elks	HASH_TABLE [G#1, INTEGER_32]	extend
+elks	HASH_TABLE [G#1, INTEGER_32]	replace
+elks	HASH_TABLE [G#1, INTEGER_32]	replace_key
+elks	HASH_TABLE [G#1, INTEGER_32]	merge
+elks	HASH_TABLE [G#1, INTEGER_32]	remove
+elks	HASH_TABLE [G#1, INTEGER_32]	prune
+elks	HASH_TABLE [G#1, INTEGER_32]	clear_all
+elks	HASH_TABLE [G#1, INTEGER_32]	linear_representation
+elks	HASH_TABLE [G#1, INTEGER_32]	truly_occupied
+elks	HASH_TABLE [G#1, INTEGER_32]	is_off_position
+elks	HASH_TABLE [G#1, INTEGER_32]	deleted
+elks	HASH_TABLE [G#1, INTEGER_32]	default_key_value
+elks	HASH_TABLE [G#1, INTEGER_32]	computed_default_key
+elks	HASH_TABLE [G#1, INTEGER_32]	computed_default_value
+elks	HASH_TABLE [G#1, INTEGER_32]	search_for_insertion
+elks	HASH_TABLE [G#1, INTEGER_32]	key_at
+elks	HASH_TABLE [G#1, INTEGER_32]	initial_position
+elks	HASH_TABLE [G#1, INTEGER_32]	position_increment
+elks	HASH_TABLE [G#1, INTEGER_32]	set_found
+elks	HASH_TABLE [G#1, INTEGER_32]	set_inserted
+elks	HASH_TABLE [G#1, INTEGER_32]	set_not_found
+elks	HASH_TABLE [G#1, INTEGER_32]	set_no_status
+elks	HASH_TABLE [G#1, INTEGER_32]	set_removed
+elks	HASH_TABLE [G#1, INTEGER_32]	set_replaced
+elks	HASH_TABLE [G#1, INTEGER_32]	special_status
+elks	HASH_TABLE [G#1, INTEGER_32]	collection_extend
+elks	HASH_TABLE [INTEGER_32, G#2]	make_equal
+elks	HASH_TABLE [INTEGER_32, G#2]	make_from_iterable_tuples
+elks	HASH_TABLE [INTEGER_32, G#2]	definite_item
+elks	HASH_TABLE [INTEGER_32, G#2]	at
+elks	HASH_TABLE [INTEGER_32, G#2]	has_key
+elks	HASH_TABLE [INTEGER_32, G#2]	has_item
+elks	HASH_TABLE [INTEGER_32, G#2]	current_keys
+elks	HASH_TABLE [INTEGER_32, G#2]	item_for_iteration
+elks	HASH_TABLE [INTEGER_32, G#2]	key_for_iteration
+elks	HASH_TABLE [INTEGER_32, G#2]	cursor
+elks	HASH_TABLE [INTEGER_32, G#2]	iteration_item
+elks	HASH_TABLE [INTEGER_32, G#2]	occurrences
+elks	HASH_TABLE [INTEGER_32, G#2]	disjoint
+elks	HASH_TABLE [INTEGER_32, G#2]	full
+elks	HASH_TABLE [INTEGER_32, G#2]	extendible
+elks	HASH_TABLE [INTEGER_32, G#2]	conflict
+elks	HASH_TABLE [INTEGER_32, G#2]	inserted
+elks	HASH_TABLE [INTEGER_32, G#2]	replaced
+elks	HASH_TABLE [INTEGER_32, G#2]	removed
+elks	HASH_TABLE [INTEGER_32, G#2]	after
+elks	HASH_TABLE [INTEGER_32, G#2]	off
+elks	HASH_TABLE [INTEGER_32, G#2]	valid_cursor
+elks	HASH_TABLE [INTEGER_32, G#2]	valid_key
+elks	HASH_TABLE [INTEGER_32, G#2]	valid_iteration_index
+elks	HASH_TABLE [INTEGER_32, G#2]	start
+elks	HASH_TABLE [INTEGER_32, G#2]	forth
+elks	HASH_TABLE [INTEGER_32, G#2]	go_to
+elks	HASH_TABLE [INTEGER_32, G#2]	search_item
+elks	HASH_TABLE [INTEGER_32, G#2]	extend
+elks	HASH_TABLE [INTEGER_32, G#2]	replace
+elks	HASH_TABLE [INTEGER_32, G#2]	replace_key
+elks	HASH_TABLE [INTEGER_32, G#2]	merge
+elks	HASH_TABLE [INTEGER_32, G#2]	remove
+elks	HASH_TABLE [INTEGER_32, G#2]	prune
+elks	HASH_TABLE [INTEGER_32, G#2]	clear_all
+elks	HASH_TABLE [INTEGER_32, G#2]	linear_representation
+elks	HASH_TABLE [INTEGER_32, G#2]	truly_occupied
+elks	HASH_TABLE [INTEGER_32, G#2]	is_off_position
+elks	HASH_TABLE [INTEGER_32, G#2]	deleted
+elks	HASH_TABLE [INTEGER_32, G#2]	default_key_value
+elks	HASH_TABLE [INTEGER_32, G#2]	computed_default_key
+elks	HASH_TABLE [INTEGER_32, G#2]	computed_default_value
+elks	HASH_TABLE [INTEGER_32, G#2]	search_for_insertion
+elks	HASH_TABLE [INTEGER_32, G#2]	key_at
+elks	HASH_TABLE [INTEGER_32, G#2]	initial_position
+elks	HASH_TABLE [INTEGER_32, G#2]	position_increment
+elks	HASH_TABLE [INTEGER_32, G#2]	set_found
+elks	HASH_TABLE [INTEGER_32, G#2]	set_inserted
+elks	HASH_TABLE [INTEGER_32, G#2]	set_not_found
+elks	HASH_TABLE [INTEGER_32, G#2]	set_no_status
+elks	HASH_TABLE [INTEGER_32, G#2]	set_removed
+elks	HASH_TABLE [INTEGER_32, G#2]	set_replaced
+elks	HASH_TABLE [INTEGER_32, G#2]	special_status
+elks	HASH_TABLE [INTEGER_32, G#2]	collection_extend
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	make_equal
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	make_from_iterable_tuples
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	definite_item
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	at
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	has_key
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	has_item
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	current_keys
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	item_for_iteration
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	key_for_iteration
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	cursor
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	iteration_item
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	occurrences
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	disjoint
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	full
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	extendible
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	conflict
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	inserted
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	replaced
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	removed
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	after
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	off
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	valid_cursor
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	valid_key
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	valid_iteration_index
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	start
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	forth
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	go_to
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	search_item
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	extend
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	replace
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	replace_key
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	merge
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	remove
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	prune
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	clear_all
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	linear_representation
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	truly_occupied
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	is_off_position
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	deleted
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	default_key_value
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	computed_default_key
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	computed_default_value
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	search_for_insertion
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	key_at
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	initial_position
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	position_increment
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	set_found
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	set_inserted
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	set_not_found
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	set_no_status
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	set_removed
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	set_replaced
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	special_status
+elks	HASH_TABLE [INTEGER_32, INTEGER_32]	collection_extend
+elks	LOOP_INVARIANT_VIOLATION	tag
+elks	OPERATING_SYSTEM_SIGNAL_FAILURE	tag
+ise	EIFFEL_RUNTIME_PANIC	tag
+ise	RESCUE_FAILURE	tag
+ise	SERIALIZATION_FAILURE	tag
+ise	RESUMPTION_FAILURE	tag
+ise	CREATE_ON_DEFERRED	tag
+ise	EXTERNAL_FAILURE	tag
+elks	VOID_ASSIGNED_TO_EXPANDED	tag
+ise	EXCEPTION_IN_SIGNAL_HANDLER_FAILURE	tag
+elks	EXCEPTION_MANAGER	(empty)
+elks	DISPOSABLE	(empty)
+time	C_DATE	make_utc
+time	C_DATE	year_now
+time	C_DATE	month_now
+time	C_DATE	day_now
+time	C_DATE	get_tm_year
+time	C_DATE	get_tm_mon
+time	C_DATE	get_tm_mday
+time	TIME_DURATION	(removed)
+time	DATE_TIME_CODE_STRING	(removed)
+time	ABSOLUTE	(empty)
+time	TIME_VALUE	fine_second
+time	TIME_VALUE	micro_second
+time	TIME_VALUE	nano_second
+time	TIME_VALUE	set_fine_second
+time	TIME_VALUE	set_fractionals
+time	TIME_VALIDITY_CHECKER	(empty)
+elks	FILE	make
+elks	FILE	make_with_path
+elks	FILE	make_open_read
+elks	FILE	make_open_append
+elks	FILE	make_open_read_write
+elks	FILE	make_create_read_write
+elks	FILE	make_open_read_append
+elks	FILE	make_open_temporary
+elks	FILE	make_open_temporary_with_prefix
+elks	FILE	path
+elks	FILE	name
+elks	FILE	item
+elks	FILE	position
+elks	FILE	descriptor
+elks	FILE	file_info
+elks	FILE	inode
+elks	FILE	links
+elks	FILE	user_id
+elks	FILE	group_id
+elks	FILE	protection
+elks	FILE	owner_name
+elks	FILE	date
+elks	FILE	access_date
+elks	FILE	retrieved
+elks	FILE	null_path
+elks	FILE	null_name
+elks	FILE	after
+elks	FILE	before
+elks	FILE	off
+elks	FILE	end_of_file
+elks	FILE	access_exists
+elks	FILE	path_exists
+elks	FILE	is_readable
+elks	FILE	is_writable
+elks	FILE	is_executable
+elks	FILE	is_creatable
+elks	FILE	is_plain
+elks	FILE	is_device
+elks	FILE	is_directory
+elks	FILE	is_symlink
+elks	FILE	is_fifo
+elks	FILE	is_socket
+elks	FILE	is_block
+elks	FILE	is_character
+elks	FILE	is_setuid
+elks	FILE	is_setgid
+elks	FILE	is_sticky
+elks	FILE	is_owner
+elks	FILE	is_access_readable
+elks	FILE	is_access_writable
+elks	FILE	is_access_executable
+elks	FILE	is_access_owner
+elks	FILE	file_readable
+elks	FILE	is_open_read
+elks	FILE	is_open_append
+elks	FILE	file_writable
+elks	FILE	extendible
+elks	FILE	replaceable
+elks	FILE	file_prunable
+elks	FILE	full
+elks	FILE	prunable
+elks	FILE	same_file
+elks	FILE	open_read
+elks	FILE	open_append
+elks	FILE	open_read_write
+elks	FILE	create_read_write
+elks	FILE	open_read_append
+elks	FILE	fd_open_read
+elks	FILE	fd_open_write
+elks	FILE	fd_open_append
+elks	FILE	fd_open_read_write
+elks	FILE	fd_open_read_append
+elks	FILE	reopen_read
+elks	FILE	reopen_write
+elks	FILE	reopen_append
+elks	FILE	reopen_read_write
+elks	FILE	recreate_read_write
+elks	FILE	reopen_read_append
+elks	FILE	start
+elks	FILE	finish
+elks	FILE	forth
+elks	FILE	back
+elks	FILE	move
+elks	FILE	go
+elks	FILE	recede
+elks	FILE	next_line
+elks	FILE	new_cursor
+elks	FILE	extend
+elks	FILE	link
+elks	FILE	append
+elks	FILE	put_string
+elks	FILE	putstring
+elks	FILE	put_character
+elks	FILE	putchar
+elks	FILE	put_new_line
+elks	FILE	new_line
+elks	FILE	stamp
+elks	FILE	set_access
+elks	FILE	set_date
+elks	FILE	change_name
+elks	FILE	rename_file
+elks	FILE	rename_path
+elks	FILE	add_permission
+elks	FILE	remove_permission
+elks	FILE	change_mode
+elks	FILE	change_owner
+elks	FILE	change_group
+elks	FILE	change_date
+elks	FILE	touch
+elks	FILE	basic_store
+elks	FILE	general_store
+elks	FILE	independent_store
+elks	FILE	wipe_out
+elks	FILE	delete
+elks	FILE	reset
+elks	FILE	reset_path
+elks	FILE	read_character
+elks	FILE	readchar
+elks	FILE	read_line
+elks	FILE	readline
+elks	FILE	read_line_thread_aware
+elks	FILE	read_stream
+elks	FILE	readstream
+elks	FILE	read_stream_thread_aware
+elks	FILE	read_to_managed_pointer
+elks	FILE	read_word
+elks	FILE	readword
+elks	FILE	read_word_thread_aware
+elks	FILE	copy_to
+elks	FILE	set_path
+elks	FILE	create_last_string
+elks	FILE	true_string
+elks	FILE	false_string
+elks	FILE	read_data_buffer
+elks	FILE	file_link
+elks	FILE	file_unlink
+elks	FILE	file_dopen
+elks	FILE	file_reopen
+elks	FILE	file_fd
+elks	FILE	file_gc
+elks	FILE	file_gs
+elks	FILE	file_gss
+elks	FILE	file_gw
+elks	FILE	file_gs_ta
+elks	FILE	file_gss_ta
+elks	FILE	file_gw_ta
+elks	FILE	file_lh
+elks	FILE	file_tnil
+elks	FILE	file_tell
+elks	FILE	file_touch
+elks	FILE	file_rename
+elks	FILE	file_perm
+elks	FILE	file_chmod
+elks	FILE	file_chown
+elks	FILE	file_chgrp
+elks	FILE	file_utime
+elks	FILE	file_tnwl
+elks	FILE	file_append
+elks	FILE	file_pc
+elks	FILE	file_go
+elks	FILE	file_recede
+elks	FILE	file_move
+elks	FILE	file_feof
+elks	FILE	file_path_exists
+elks	FILE	file_access
+elks	FILE	file_creatable
+elks	FILE	c_retrieved
+elks	FILE	c_basic_store
+elks	FILE	c_general_store
+elks	FILE	c_independent_store
+elks	FILE	eif_file_date
+elks	FILE	eif_file_access_date
+elks	FILE	eif_temp_file
+elks	FILE	go_to
+elks	FILE	replace
+elks	FILE	remove
+elks	FILE	prune
+elks	FILE	set_read_mode
+elks	PLAIN_TEXT_FILE	make_with_path
+elks	PLAIN_TEXT_FILE	is_plain_text
+elks	PLAIN_TEXT_FILE	support_storable
+elks	PLAIN_TEXT_FILE	put_integer
+elks	PLAIN_TEXT_FILE	putint
+elks	PLAIN_TEXT_FILE	put_integer_32
+elks	PLAIN_TEXT_FILE	put_integer_16
+elks	PLAIN_TEXT_FILE	put_integer_8
+elks	PLAIN_TEXT_FILE	put_natural_64
+elks	PLAIN_TEXT_FILE	put_natural
+elks	PLAIN_TEXT_FILE	put_natural_32
+elks	PLAIN_TEXT_FILE	put_natural_16
+elks	PLAIN_TEXT_FILE	put_natural_8
+elks	PLAIN_TEXT_FILE	put_boolean
+elks	PLAIN_TEXT_FILE	putbool
+elks	PLAIN_TEXT_FILE	put_real
+elks	PLAIN_TEXT_FILE	putreal
+elks	PLAIN_TEXT_FILE	put_real_32
+elks	PLAIN_TEXT_FILE	put_double
+elks	PLAIN_TEXT_FILE	putdouble
+elks	PLAIN_TEXT_FILE	put_real_64
+elks	PLAIN_TEXT_FILE	put_string_32
+elks	PLAIN_TEXT_FILE	read_integer_64
+elks	PLAIN_TEXT_FILE	read_integer
+elks	PLAIN_TEXT_FILE	readint
+elks	PLAIN_TEXT_FILE	read_integer_32
+elks	PLAIN_TEXT_FILE	read_integer_16
+elks	PLAIN_TEXT_FILE	read_integer_8
+elks	PLAIN_TEXT_FILE	read_natural_64
+elks	PLAIN_TEXT_FILE	read_natural
+elks	PLAIN_TEXT_FILE	read_natural_32
+elks	PLAIN_TEXT_FILE	read_natural_16
+elks	PLAIN_TEXT_FILE	read_natural_8
+elks	PLAIN_TEXT_FILE	read_real
+elks	PLAIN_TEXT_FILE	readreal
+elks	PLAIN_TEXT_FILE	read_real_32
+elks	PLAIN_TEXT_FILE	read_double
+elks	PLAIN_TEXT_FILE	readdouble
+elks	PLAIN_TEXT_FILE	read_real_64
+elks	PLAIN_TEXT_FILE	read_to_string
+elks	PLAIN_TEXT_FILE	read_unicode_line
+elks	PLAIN_TEXT_FILE	default_encoding
+elks	PLAIN_TEXT_FILE	set_encoding
+elks	PLAIN_TEXT_FILE	set_utf8_encoding
+elks	PLAIN_TEXT_FILE	detect_encoding
+elks	PLAIN_TEXT_FILE	put_encoding_bom
+elks	PLAIN_TEXT_FILE	ctoi_convertor
+elks	PLAIN_TEXT_FILE	internal_leading_separators
+elks	PLAIN_TEXT_FILE	read_number_sequence
+elks	PLAIN_TEXT_FILE	read_integer_with_no_type
+elks	PLAIN_TEXT_FILE	return_characters
+elks	PLAIN_TEXT_FILE	file_gi
+elks	PLAIN_TEXT_FILE	file_gr
+elks	PLAIN_TEXT_FILE	file_gd
+elks	PLAIN_TEXT_FILE	file_pi
+elks	PLAIN_TEXT_FILE	file_pr
+elks	PLAIN_TEXT_FILE	file_pd
+elks	CONSOLE	make_open_stdin
+elks	CONSOLE	detect_encoding
+elks	CONSOLE	end_of_file
+elks	CONSOLE	back
+elks	CONSOLE	new_cursor
+elks	CONSOLE	read_real
+elks	CONSOLE	readreal
+elks	CONSOLE	read_double
+elks	CONSOLE	readdouble
+elks	CONSOLE	read_line
+elks	CONSOLE	readline
+elks	CONSOLE	read_line_thread_aware
+elks	CONSOLE	read_stream
+elks	CONSOLE	readstream
+elks	CONSOLE	read_stream_thread_aware
+elks	CONSOLE	read_word
+elks	CONSOLE	readword
+elks	CONSOLE	read_word_thread_aware
+elks	CONSOLE	read_character
+elks	CONSOLE	readchar
+elks	CONSOLE	next_line
+elks	CONSOLE	put_character
+elks	CONSOLE	putchar
+elks	CONSOLE	putstring
+elks	CONSOLE	put_real
+elks	CONSOLE	putreal
+elks	CONSOLE	put_double
+elks	CONSOLE	putdouble
+elks	CONSOLE	put_boolean
+elks	CONSOLE	putbool
+elks	CONSOLE	new_line
+elks	CONSOLE	is_empty
+elks	CONSOLE	ctoi_convertor
+elks	CONSOLE	read_integer_with_no_type
+elks	CONSOLE	consume_characters
+elks	CONSOLE	read_to_string
+elks	CONSOLE	console_eof
+elks	CONSOLE	console_separator
+elks	CONSOLE	console_pr
+elks	CONSOLE	console_pc
+elks	CONSOLE	console_pd
+elks	CONSOLE	console_pi
+elks	CONSOLE	console_readreal
+elks	CONSOLE	console_readchar
+elks	CONSOLE	console_readint
+elks	CONSOLE	console_readdouble
+elks	CONSOLE	console_readword
+elks	CONSOLE	console_readline
+elks	CONSOLE	console_next_line
+elks	CONSOLE	console_readstream
+elks	STRING_8_ITERATION_CURSOR	(removed)
+elks	STRING_8_SEARCHER	(removed)
+elks	STRING_32_SEARCHER	(removed)
+elks	STRING_32_ITERATION_CURSOR	(removed)
+elks	ASSERTION_VIOLATION	(empty)
+elks	MISMATCH_INFORMATION	class_name
+elks	MISMATCH_INFORMATION	type_name_key
+elks	MISMATCH_INFORMATION	is_version_mismatched
+elks	MISMATCH_INFORMATION	set_versions
+elks	MISMATCH_INFORMATION	out
+elks	GENERAL_SPECIAL_ITERATION_CURSOR [G#1, G#2]	(removed)
+elks	GENERAL_SPECIAL_ITERATION_CURSOR [INTEGER_32, G#2]	(removed)
+elks	GENERAL_SPECIAL_ITERATION_CURSOR [POINTER, G#2]	(removed)
+elks	GENERAL_SPECIAL_ITERATION_CURSOR [REAL_32, G#2]	(removed)
+elks	GENERAL_SPECIAL_ITERATION_CURSOR [REAL_64, G#2]	(removed)
+elks	GENERAL_SPECIAL_ITERATION_CURSOR [NATURAL_16, G#2]	(removed)
+elks	GENERAL_SPECIAL_ITERATION_CURSOR [NATURAL_8, G#2]	(removed)
+elks	GENERAL_SPECIAL_ITERATION_CURSOR [BOOLEAN, G#2]	(removed)
+elks	GENERAL_SPECIAL_ITERATION_CURSOR [CHARACTER_32, G#2]	(removed)
+elks	GENERAL_SPECIAL_ITERATION_CURSOR [NATURAL_64, G#2]	(removed)
+elks	GENERAL_SPECIAL_ITERATION_CURSOR [NATURAL_32, G#2]	(removed)
+elks	GENERAL_SPECIAL_ITERATION_CURSOR [CHARACTER_8, G#2]	(removed)
+elks	INDEXABLE_ITERATION_CURSOR [G#1]	(empty)
+elks	INDEXABLE_ITERATION_CURSOR [CHARACTER_32]	(empty)
+elks	INDEXABLE_ITERATION_CURSOR [CHARACTER_8]	(empty)
+elks	INDEXABLE_ITERATION_CURSOR [INTEGER_32]	(empty)
+elks	INDEXABLE_ITERATION_CURSOR [POINTER]	(empty)
+elks	INDEXABLE_ITERATION_CURSOR [REAL_32]	(empty)
+elks	INDEXABLE_ITERATION_CURSOR [REAL_64]	(empty)
+elks	INDEXABLE_ITERATION_CURSOR [NATURAL_16]	(empty)
+elks	INDEXABLE_ITERATION_CURSOR [NATURAL_8]	(empty)
+elks	INDEXABLE_ITERATION_CURSOR [BOOLEAN]	(empty)
+elks	INDEXABLE_ITERATION_CURSOR [NATURAL_64]	(empty)
+elks	INDEXABLE_ITERATION_CURSOR [NATURAL_32]	(empty)
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [G#1]	cursor_index
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [G#1]	new_cursor
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [G#1]	reversed
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [G#1]	incremented
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [G#1]	decremented
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [G#1]	with_step
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [G#1]	after
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [G#1]	is_first
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [G#1]	is_last
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [G#1]	reverse
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [G#1]	set_step
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [G#1]	forth
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [CHARACTER_32]	cursor_index
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [CHARACTER_32]	new_cursor
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [CHARACTER_32]	reversed
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [CHARACTER_32]	incremented
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [CHARACTER_32]	decremented
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [CHARACTER_32]	with_step
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [CHARACTER_32]	after
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [CHARACTER_32]	is_first
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [CHARACTER_32]	is_last
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [CHARACTER_32]	reverse
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [CHARACTER_32]	set_step
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [CHARACTER_32]	forth
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [CHARACTER_8]	cursor_index
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [CHARACTER_8]	new_cursor
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [CHARACTER_8]	reversed
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [CHARACTER_8]	incremented
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [CHARACTER_8]	decremented
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [CHARACTER_8]	with_step
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [CHARACTER_8]	after
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [CHARACTER_8]	is_first
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [CHARACTER_8]	is_last
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [CHARACTER_8]	reverse
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [CHARACTER_8]	set_step
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [CHARACTER_8]	forth
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [INTEGER_32]	cursor_index
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [INTEGER_32]	new_cursor
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [INTEGER_32]	reversed
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [INTEGER_32]	incremented
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [INTEGER_32]	decremented
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [INTEGER_32]	with_step
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [INTEGER_32]	after
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [INTEGER_32]	is_first
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [INTEGER_32]	is_last
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [INTEGER_32]	reverse
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [INTEGER_32]	set_step
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [INTEGER_32]	forth
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [POINTER]	cursor_index
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [POINTER]	new_cursor
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [POINTER]	reversed
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [POINTER]	incremented
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [POINTER]	decremented
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [POINTER]	with_step
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [POINTER]	after
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [POINTER]	is_first
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [POINTER]	is_last
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [POINTER]	reverse
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [POINTER]	set_step
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [POINTER]	forth
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [REAL_32]	cursor_index
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [REAL_32]	new_cursor
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [REAL_32]	reversed
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [REAL_32]	incremented
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [REAL_32]	decremented
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [REAL_32]	with_step
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [REAL_32]	after
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [REAL_32]	is_first
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [REAL_32]	is_last
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [REAL_32]	reverse
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [REAL_32]	set_step
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [REAL_32]	forth
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [REAL_64]	cursor_index
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [REAL_64]	new_cursor
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [REAL_64]	reversed
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [REAL_64]	incremented
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [REAL_64]	decremented
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [REAL_64]	with_step
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [REAL_64]	after
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [REAL_64]	is_first
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [REAL_64]	is_last
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [REAL_64]	reverse
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [REAL_64]	set_step
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [REAL_64]	forth
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_16]	cursor_index
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_16]	new_cursor
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_16]	reversed
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_16]	incremented
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_16]	decremented
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_16]	with_step
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_16]	after
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_16]	is_first
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_16]	is_last
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_16]	reverse
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_16]	set_step
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_16]	forth
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_8]	cursor_index
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_8]	new_cursor
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_8]	reversed
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_8]	incremented
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_8]	decremented
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_8]	with_step
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_8]	after
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_8]	is_first
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_8]	is_last
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_8]	reverse
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_8]	set_step
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_8]	forth
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [BOOLEAN]	cursor_index
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [BOOLEAN]	new_cursor
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [BOOLEAN]	reversed
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [BOOLEAN]	incremented
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [BOOLEAN]	decremented
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [BOOLEAN]	with_step
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [BOOLEAN]	after
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [BOOLEAN]	is_first
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [BOOLEAN]	is_last
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [BOOLEAN]	reverse
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [BOOLEAN]	set_step
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [BOOLEAN]	forth
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_64]	cursor_index
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_64]	new_cursor
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_64]	reversed
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_64]	incremented
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_64]	decremented
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_64]	with_step
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_64]	after
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_64]	is_first
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_64]	is_last
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_64]	reverse
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_64]	set_step
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_64]	forth
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_32]	cursor_index
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_32]	new_cursor
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_32]	reversed
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_32]	incremented
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_32]	decremented
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_32]	with_step
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_32]	after
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_32]	is_first
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_32]	is_last
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_32]	reverse
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_32]	set_step
+elks	READABLE_INDEXABLE_ITERATION_CURSOR [NATURAL_32]	forth
+elks	INTEGER_INTERVAL	(removed)
+elks	REFACTORING_HELPER	(empty)
+elks	CURSOR	(removed)
+elks	ARRAYED_LIST_CURSOR	(removed)
+elks	ARRAYED_LIST_ITERATION_CURSOR [G#1]	(removed)
+elks	ARRAYED_LIST_ITERATION_CURSOR [INTEGER_32]	(removed)
+elks	ARRAYED_LIST_ITERATION_CURSOR [POINTER]	(removed)
+elks	ARRAYED_LIST_ITERATION_CURSOR [REAL_32]	(removed)
+elks	ARRAYED_LIST_ITERATION_CURSOR [REAL_64]	(removed)
+elks	ARRAYED_LIST_ITERATION_CURSOR [NATURAL_16]	(removed)
+elks	ARRAYED_LIST_ITERATION_CURSOR [NATURAL_8]	(removed)
+elks	ARRAYED_LIST_ITERATION_CURSOR [BOOLEAN]	(removed)
+elks	ARRAYED_LIST_ITERATION_CURSOR [CHARACTER_32]	(removed)
+elks	ARRAYED_LIST_ITERATION_CURSOR [NATURAL_64]	(removed)
+elks	ARRAYED_LIST_ITERATION_CURSOR [NATURAL_32]	(removed)
+elks	ARRAYED_LIST_ITERATION_CURSOR [CHARACTER_8]	(removed)
+elks	SEQUENCE [G#1]	(empty)
+elks	SEQUENCE [INTEGER_32]	(empty)
+elks	SEQUENCE [POINTER]	(empty)
+elks	SEQUENCE [REAL_32]	(empty)
+elks	SEQUENCE [REAL_64]	(empty)
+elks	SEQUENCE [NATURAL_16]	(empty)
+elks	SEQUENCE [NATURAL_8]	(empty)
+elks	SEQUENCE [BOOLEAN]	(empty)
+elks	SEQUENCE [CHARACTER_32]	(empty)
+elks	SEQUENCE [NATURAL_64]	(empty)
+elks	SEQUENCE [CHARACTER_8]	(empty)
+elks	SEQUENCE [NATURAL_32]	(empty)
+elks	DYNAMIC_LIST [G#1]	(removed)
+elks	DYNAMIC_LIST [INTEGER_32]	(removed)
+elks	DYNAMIC_LIST [POINTER]	(removed)
+elks	DYNAMIC_LIST [REAL_32]	(removed)
+elks	DYNAMIC_LIST [REAL_64]	(removed)
+elks	DYNAMIC_LIST [NATURAL_16]	(removed)
+elks	DYNAMIC_LIST [NATURAL_8]	(removed)
+elks	DYNAMIC_LIST [BOOLEAN]	(removed)
+elks	DYNAMIC_LIST [CHARACTER_32]	(removed)
+elks	DYNAMIC_LIST [NATURAL_64]	(removed)
+elks	DYNAMIC_LIST [NATURAL_32]	(removed)
+elks	DYNAMIC_LIST [CHARACTER_8]	(removed)
+elks	CURSOR_STRUCTURE [G#1]	(removed)
+elks	CURSOR_STRUCTURE [CHARACTER_32]	(removed)
+elks	CURSOR_STRUCTURE [CHARACTER_8]	(removed)
+elks	CURSOR_STRUCTURE [INTEGER_32]	(removed)
+elks	CURSOR_STRUCTURE [POINTER]	(removed)
+elks	CURSOR_STRUCTURE [REAL_32]	(removed)
+elks	CURSOR_STRUCTURE [REAL_64]	(removed)
+elks	CURSOR_STRUCTURE [NATURAL_16]	(removed)
+elks	CURSOR_STRUCTURE [NATURAL_8]	(removed)
+elks	CURSOR_STRUCTURE [BOOLEAN]	(removed)
+elks	CURSOR_STRUCTURE [NATURAL_64]	(removed)
+elks	CURSOR_STRUCTURE [NATURAL_32]	(removed)
+elks	TRAVERSABLE [G#1]	(empty)
+elks	TRAVERSABLE [CHARACTER_32]	(empty)
+elks	TRAVERSABLE [CHARACTER_8]	(empty)
+elks	TRAVERSABLE [INTEGER_32]	(empty)
+elks	TRAVERSABLE [POINTER]	(empty)
+elks	TRAVERSABLE [REAL_32]	(empty)
+elks	TRAVERSABLE [REAL_64]	(empty)
+elks	TRAVERSABLE [NATURAL_16]	(empty)
+elks	TRAVERSABLE [NATURAL_8]	(empty)
+elks	TRAVERSABLE [BOOLEAN]	(empty)
+elks	TRAVERSABLE [NATURAL_64]	(empty)
+elks	TRAVERSABLE [NATURAL_32]	(empty)
+elks	BOUNDED [G#1]	(empty)
+elks	BOUNDED [CHARACTER_32]	(empty)
+elks	BOUNDED [CHARACTER_8]	(empty)
+elks	BOUNDED [INTEGER_32]	(empty)
+elks	BOUNDED [POINTER]	(empty)
+elks	BOUNDED [REAL_32]	(empty)
+elks	BOUNDED [REAL_64]	(empty)
+elks	BOUNDED [NATURAL_16]	(empty)
+elks	BOUNDED [NATURAL_8]	(empty)
+elks	BOUNDED [BOOLEAN]	(empty)
+elks	BOUNDED [NATURAL_64]	(empty)
+elks	BOUNDED [NATURAL_32]	(empty)
+elks	TABLE [G#1, G#2]	(empty)
+elks	TABLE [G#1, INTEGER_32]	(empty)
+elks	TABLE [INTEGER_32, G#2]	(empty)
+elks	TABLE [INTEGER_32, INTEGER_32]	(empty)
+elks	TABLE [POINTER, INTEGER_32]	(empty)
+elks	TABLE [REAL_32, INTEGER_32]	(empty)
+elks	TABLE [REAL_64, INTEGER_32]	(empty)
+elks	TABLE [NATURAL_16, INTEGER_32]	(empty)
+elks	TABLE [NATURAL_8, INTEGER_32]	(empty)
+elks	TABLE [BOOLEAN, INTEGER_32]	(empty)
+elks	TABLE [CHARACTER_32, INTEGER_32]	(empty)
+elks	TABLE [NATURAL_64, INTEGER_32]	(empty)
+elks	TABLE [CHARACTER_8, INTEGER_32]	(empty)
+elks	TABLE [NATURAL_32, INTEGER_32]	(empty)
+elks	STRING_TABLE [G#1]	make_equal_caseless
+elks	STRING_TABLE [INTEGER_32]	make_equal_caseless
+elks	REFLECTOR_HELPER	(empty)
+elks	REFLECTOR_CONSTANTS	(empty)
+elks	COMPARABLE	three_way_comparison
+elks	CHARACTER_PROPERTY	is_alpha
+elks	CHARACTER_PROPERTY	is_lower
+elks	CHARACTER_PROPERTY	is_upper
+elks	CHARACTER_PROPERTY	is_title
+elks	CHARACTER_PROPERTY	is_digit
+elks	CHARACTER_PROPERTY	is_punctuation
+elks	CHARACTER_PROPERTY	is_control
+elks	CHARACTER_PROPERTY	is_hexa_digit
+elks	CHARACTER_PROPERTY	is_space
+elks	CHARACTER_PROPERTY	to_upper
+elks	CHARACTER_PROPERTY	to_title
+elks	CHARACTER_PROPERTY	property
+elks	CHARACTER_PROPERTY	to_upper_table_1
+elks	CHARACTER_PROPERTY	to_upper_table_2
+elks	CHARACTER_PROPERTY	to_upper_table_3
+elks	CHARACTER_PROPERTY	to_upper_table_4
+elks	CHARACTER_PROPERTY	to_upper_table_5
+elks	CHARACTER_PROPERTY	to_upper_table_6
+elks	CHARACTER_PROPERTY	to_upper_table_7
+elks	CHARACTER_PROPERTY	to_upper_table_8
+elks	CHARACTER_PROPERTY	to_upper_table_9
+elks	CHARACTER_PROPERTY	to_upper_table_10
+elks	CHARACTER_PROPERTY	to_upper_table_11
+elks	CHARACTER_PROPERTY	to_upper_table_12
+elks	CHARACTER_PROPERTY	to_upper_table_13
+elks	CHARACTER_PROPERTY	to_upper_table_14
+elks	CHARACTER_PROPERTY	to_upper_table_15
+elks	CHARACTER_PROPERTY	to_upper_table_16
+elks	CHARACTER_PROPERTY	to_upper_table_17
+elks	CHARACTER_PROPERTY	to_title_table_1
+elks	CHARACTER_PROPERTY	to_title_table_2
+elks	CHARACTER_PROPERTY	to_title_table_3
+elks	CHARACTER_PROPERTY	to_title_table_4
+elks	CHARACTER_PROPERTY	to_title_table_5
+elks	CHARACTER_PROPERTY	to_title_table_6
+elks	CHARACTER_PROPERTY	to_title_table_7
+elks	CHARACTER_PROPERTY	to_title_table_8
+elks	CHARACTER_PROPERTY	to_title_table_9
+elks	CHARACTER_PROPERTY	to_title_table_10
+elks	CHARACTER_PROPERTY	to_title_table_11
+elks	CHARACTER_PROPERTY	to_title_table_12
+elks	CHARACTER_PROPERTY	to_title_table_13
+elks	CHARACTER_PROPERTY	to_title_table_14
+elks	CHARACTER_PROPERTY	to_title_table_15
+elks	CHARACTER_PROPERTY	to_title_table_16
+elks	CHARACTER_PROPERTY	to_title_table_17
+elks	CHARACTER_PROPERTY	to_title_table_18
+elks	CHARACTER_PROPERTY	property_table_1
+elks	CHARACTER_PROPERTY	property_table_2
+elks	CHARACTER_PROPERTY	property_table_3
+elks	CHARACTER_PROPERTY	property_table_4
+elks	CHARACTER_PROPERTY	property_table_5
+elks	CHARACTER_PROPERTY	property_table_6
+elks	CHARACTER_PROPERTY	property_table_7
+elks	CHARACTER_PROPERTY	property_table_8
+elks	CHARACTER_PROPERTY	property_table_9
+elks	CHARACTER_PROPERTY	property_table_10
+elks	CHARACTER_PROPERTY	property_table_11
+elks	CHARACTER_PROPERTY	property_table_12
+elks	CHARACTER_PROPERTY	property_table_13
+elks	CHARACTER_PROPERTY	property_table_14
+elks	CHARACTER_PROPERTY	property_table_15
+elks	CHARACTER_PROPERTY	property_table_16
+elks	CHARACTER_PROPERTY	property_table_17
+elks	CHARACTER_PROPERTY	property_table_18
+elks	CHARACTER_PROPERTY	property_table_19
+elks	CHARACTER_PROPERTY	property_table_20
+elks	CHARACTER_PROPERTY	property_table_21
+elks	CHARACTER_PROPERTY	property_table_22
+elks	CHARACTER_PROPERTY	property_table_23
+elks	CHARACTER_PROPERTY	property_table_24
+elks	CHARACTER_PROPERTY	property_table_25
+elks	CHARACTER_PROPERTY	property_table_26
+elks	CHARACTER_PROPERTY	property_table_27
+elks	CHARACTER_PROPERTY	property_table_28
+elks	CHARACTER_PROPERTY	property_table_29
+elks	CHARACTER_PROPERTY	property_table_30
+elks	CHARACTER_PROPERTY	property_table_31
+elks	CHARACTER_PROPERTY	property_table_32
+elks	CHARACTER_PROPERTY	property_table_33
+elks	CHARACTER_PROPERTY	property_table_34
+elks	CHARACTER_PROPERTY	property_table_35
+elks	CHARACTER_PROPERTY	property_table_36
+elks	CHARACTER_PROPERTY	property_table_37
+elks	CHARACTER_PROPERTY	property_table_38
+elks	CHARACTER_PROPERTY	property_table_39
+elks	CHARACTER_PROPERTY	property_table_40
+elks	CHARACTER_PROPERTY	property_table_41
+elks	CHARACTER_PROPERTY	property_table_42
+elks	CHARACTER_PROPERTY	property_table_43
+elks	CHARACTER_PROPERTY	property_table_44
+elks	CHARACTER_PROPERTY	property_table_45
+elks	CHARACTER_PROPERTY	property_table_46
+elks	CHARACTER_PROPERTY	property_table_47
+elks	CHARACTER_PROPERTY	property_table_48
+elks	CHARACTER_PROPERTY	property_table_49
+elks	CHARACTER_PROPERTY	property_table_50
+elks	CHARACTER_PROPERTY	property_table_51
+elks	CHARACTER_PROPERTY	property_table_52
+elks	CHARACTER_PROPERTY	property_table_53
+elks	CHARACTER_PROPERTY	property_table_54
+elks	CHARACTER_PROPERTY	property_table_55
+elks	CHARACTER_PROPERTY	property_table_56
+elks	CHARACTER_PROPERTY	property_table_57
+elks	CHARACTER_PROPERTY	property_table_58
+elks	CHARACTER_PROPERTY	property_table_59
+elks	NUMERIC	(empty)
+elks	DOUBLE_MATH	log_2
+elks	DOUBLE_MATH	cosine
+elks	DOUBLE_MATH	arc_cosine
+elks	DOUBLE_MATH	sine
+elks	DOUBLE_MATH	arc_sine
+elks	DOUBLE_MATH	tangent
+elks	DOUBLE_MATH	arc_tangent
+elks	DOUBLE_MATH	sqrt
+elks	DOUBLE_MATH	exp
+elks	DOUBLE_MATH	log10
+elks	DOUBLE_MATH	floor
+elks	DOUBLE_MATH	ceiling
+elks	DOUBLE_MATH	dabs
+elks	COUNTABLE_SEQUENCE [INTEGER_32]	item
+elks	COUNTABLE_SEQUENCE [INTEGER_32]	extendible
+elks	COUNTABLE_SEQUENCE [INTEGER_32]	prunable
+elks	COUNTABLE_SEQUENCE [INTEGER_32]	readable
+elks	COUNTABLE_SEQUENCE [INTEGER_32]	writable
+elks	COUNTABLE_SEQUENCE [INTEGER_32]	replaceable
+elks	COUNTABLE_SEQUENCE [INTEGER_32]	start
+elks	COUNTABLE_SEQUENCE [INTEGER_32]	extend
+elks	COUNTABLE_SEQUENCE [INTEGER_32]	finish
+elks	COUNTABLE_SEQUENCE [INTEGER_32]	linear_representation
+elks	COUNTABLE_SEQUENCE [INTEGER_32]	prune
+elks	COUNTABLE_SEQUENCE [INTEGER_32]	put
+elks	COUNTABLE_SEQUENCE [INTEGER_32]	remove
+elks	COUNTABLE_SEQUENCE [INTEGER_32]	replace
+elks	COUNTABLE_SEQUENCE [INTEGER_32]	wipe_out
+elks	SYSTEM_STRING_FACTORY	(removed)
+elks	STRING_ITERATION_CURSOR	(removed)
+elks	STRING_TO_REAL_CONVERTOR	(removed)
+elks	LIST [G#1]	(removed)
+elks	LIST [INTEGER_32]	(removed)
+elks	LIST [POINTER]	(removed)
+elks	LIST [REAL_32]	(removed)
+elks	LIST [REAL_64]	(removed)
+elks	LIST [NATURAL_16]	(removed)
+elks	LIST [NATURAL_8]	(removed)
+elks	LIST [BOOLEAN]	(removed)
+elks	LIST [CHARACTER_32]	(removed)
+elks	LIST [NATURAL_64]	(removed)
+elks	LIST [NATURAL_32]	(removed)
+elks	LIST [CHARACTER_8]	(removed)
+elks	NUMERIC_INFORMATION	max_integer_type
+elks	NUMERIC_INFORMATION	integer_type_valid
+elks	NUMERIC_INFORMATION	natural_type_valid
+elks	NUMERIC_INFORMATION	integer_natural_type_valid
+elks	NUMERIC_INFORMATION	real_double_type_valid
+elks	NUMERIC_INFORMATION	real_type_valid
+elks	NUMERIC_INFORMATION	double_type_valid
+elks	STRING_TO_INTEGER_CONVERTOR	separators_valid
+elks	STRING_TO_INTEGER_CONVERTOR	underflowed
+elks	STRING_TO_INTEGER_CONVERTOR	parse_successful
+elks	STRING_TO_INTEGER_CONVERTOR	conversion_type_valid
+elks	STRING_TO_INTEGER_CONVERTOR	is_part_of_integer
+elks	STRING_TO_INTEGER_CONVERTOR	is_integral_integer
+elks	STRING_TO_INTEGER_CONVERTOR	parsed_integer_8
+elks	STRING_TO_INTEGER_CONVERTOR	parsed_integer_16
+elks	STRING_TO_INTEGER_CONVERTOR	parsed_integer_32
+elks	STRING_TO_INTEGER_CONVERTOR	parsed_integer_64
+elks	STRING_TO_INTEGER_CONVERTOR	parsed_natural_8
+elks	STRING_TO_INTEGER_CONVERTOR	parsed_natural_16
+elks	STRING_TO_INTEGER_CONVERTOR	parsed_natural_32
+elks	STRING_TO_INTEGER_CONVERTOR	parsed_natural
+elks	STRING_TO_INTEGER_CONVERTOR	parsed_natural_64
+elks	STRING_SEARCHER	(removed)
+elks	STRING_HANDLER	(empty)
+elks	HEXADECIMAL_STRING_TO_INTEGER_CONVERTER	separators_valid
+elks	HEXADECIMAL_STRING_TO_INTEGER_CONVERTER	underflowed
+elks	HEXADECIMAL_STRING_TO_INTEGER_CONVERTER	parse_successful
+elks	HEXADECIMAL_STRING_TO_INTEGER_CONVERTER	conversion_type_valid
+elks	HEXADECIMAL_STRING_TO_INTEGER_CONVERTER	is_part_of_integer
+elks	HEXADECIMAL_STRING_TO_INTEGER_CONVERTER	parsed_integer_8
+elks	HEXADECIMAL_STRING_TO_INTEGER_CONVERTER	parsed_integer_16
+elks	HEXADECIMAL_STRING_TO_INTEGER_CONVERTER	parsed_integer_32
+elks	HEXADECIMAL_STRING_TO_INTEGER_CONVERTER	parsed_integer
+elks	HEXADECIMAL_STRING_TO_INTEGER_CONVERTER	parsed_integer_64
+elks	HEXADECIMAL_STRING_TO_INTEGER_CONVERTER	parsed_natural_8
+elks	HEXADECIMAL_STRING_TO_INTEGER_CONVERTER	parsed_natural_16
+elks	HEXADECIMAL_STRING_TO_INTEGER_CONVERTER	parsed_natural
+elks	HEXADECIMAL_STRING_TO_INTEGER_CONVERTER	parsed_natural_64
+elks	REFLECTED_COPY_SEMANTICS_OBJECT	(removed)
+elks	REFLECTED_OBJECT	(removed)
+debug_implementation	RT_DBG_CALL_RECORD	(removed)
+debug_implementation	RT_DBG_VALUE_RECORD	(removed)
+elks	LINKED_LIST [G#1]	(removed)
+elks	LINKED_LIST [INTEGER_32]	(removed)
+debug_implementation	RT_DBG_COMMON	(removed)
+debug_implementation	RT_DBG_INTERNAL	(removed)
+elks	INTERNAL	(removed)
+debug_implementation	RT_EXTENSION_COMMON	(removed)
+ise	DATA_EXCEPTION	(empty)
+elks	OPERATING_SYSTEM_EXCEPTION	(empty)
+ise	EIFFELSTUDIO_SPECIFIC_LANGUAGE_EXCEPTION	(empty)
+elks	SYS_EXCEPTION	(empty)
+elks	LANGUAGE_EXCEPTION	(empty)
+elks	EIFFEL_RUNTIME_EXCEPTION	(empty)
+elks	HARDWARE_EXCEPTION	(empty)
+elks	HASH_TABLE_CURSOR	(removed)
+elks	HASH_TABLE_ITERATION_CURSOR [G#1, G#2]	cursor_index
+elks	HASH_TABLE_ITERATION_CURSOR [G#1, INTEGER_32]	cursor_index
+elks	HASH_TABLE_ITERATION_CURSOR [INTEGER_32, G#2]	cursor_index
+elks	HASH_TABLE_ITERATION_CURSOR [INTEGER_32, INTEGER_32]	cursor_index
+elks	UNBOUNDED [G#1]	(empty)
+elks	UNBOUNDED [INTEGER_32]	(empty)
+elks	UNBOUNDED [POINTER]	(empty)
+elks	UNBOUNDED [REAL_32]	(empty)
+elks	UNBOUNDED [REAL_64]	(empty)
+elks	UNBOUNDED [NATURAL_16]	(empty)
+elks	UNBOUNDED [NATURAL_8]	(empty)
+elks	UNBOUNDED [BOOLEAN]	(empty)
+elks	UNBOUNDED [CHARACTER_32]	(empty)
+elks	UNBOUNDED [NATURAL_64]	(empty)
+elks	UNBOUNDED [NATURAL_32]	(empty)
+elks	UNBOUNDED [CHARACTER_8]	(empty)
+elks	TABLE_ITERABLE [G#1, G#2]	(empty)
+elks	TABLE_ITERABLE [G#1, INTEGER_32]	(empty)
+elks	TABLE_ITERABLE [INTEGER_32, G#2]	(empty)
+elks	TABLE_ITERABLE [INTEGER_32, INTEGER_32]	(empty)
+elks	OBSOLETE_EXCEPTION	(empty)
+time	DURATION	(removed)
+time	TIME_MEASUREMENT	(empty)
+time	DATE	(removed)
+time	DATE_TIME_CODE	(removed)
+time	DATE_TIME	(removed)
+time	DATE_TIME_PARSER	(removed)
+time	DATE_CONSTANTS	(removed)
+time	FIND_SEPARATOR_FACILITY	(removed)
+time	INTERVAL [G#1]	(removed)
+time	TIME_CONSTANTS	(empty)
+elks	PATH	(removed)
+elks	FILE_ITERATION_CURSOR	(removed)
+elks	FILE_INFO	protection
+elks	FILE_INFO	type
+elks	FILE_INFO	inode
+elks	FILE_INFO	user_id
+elks	FILE_INFO	group_id
+elks	FILE_INFO	date
+elks	FILE_INFO	access_date
+elks	FILE_INFO	change_date
+elks	FILE_INFO	device
+elks	FILE_INFO	device_type
+elks	FILE_INFO	links
+elks	FILE_INFO	owner_name
+elks	FILE_INFO	group_name
+elks	FILE_INFO	file_name
+elks	FILE_INFO	file_entry
+elks	FILE_INFO	pointer_to_file_name_32
+elks	FILE_INFO	pointer_to_file_name_8
+elks	FILE_INFO	is_ready
+elks	FILE_INFO	is_plain
+elks	FILE_INFO	is_device
+elks	FILE_INFO	is_directory
+elks	FILE_INFO	is_symlink
+elks	FILE_INFO	is_fifo
+elks	FILE_INFO	is_socket
+elks	FILE_INFO	is_block
+elks	FILE_INFO	is_character
+elks	FILE_INFO	is_readable
+elks	FILE_INFO	is_writable
+elks	FILE_INFO	is_executable
+elks	FILE_INFO	is_setuid
+elks	FILE_INFO	is_setgid
+elks	FILE_INFO	is_sticky
+elks	FILE_INFO	is_owner
+elks	FILE_INFO	is_access_owner
+elks	FILE_INFO	is_access_readable
+elks	FILE_INFO	is_access_writable
+elks	FILE_INFO	is_access_executable
+elks	FILE_INFO	to_unix_file_info
+elks	FILE_INFO	update
+elks	FILE_INFO	set_is_following_symlinks
+elks	FILE_INFO	file_access
+elks	FILE_INFO	file_eaccess
+elks	FILE_INFO	file_owner
+elks	FILE_INFO	file_group
+elks	FILE_INFO	utf_16_to_multi_byte
+elks	IO_MEDIUM	is_plain_text
+elks	IO_MEDIUM	last_integer_32
+elks	IO_MEDIUM	last_natural_32
+elks	IO_MEDIUM	last_real_32
+elks	IO_MEDIUM	last_real_64
+elks	IO_MEDIUM	read_stream_thread_aware
+elks	IO_MEDIUM	read_line_thread_aware
+elks	IO_MEDIUM	lastchar
+elks	IO_MEDIUM	laststring
+elks	IO_MEDIUM	lastint
+elks	IO_MEDIUM	lastreal
+elks	IO_MEDIUM	lastdouble
+elks	NATIVE_STRING_HANDLER	(empty)
+encoding	ENCODING	last_converted_string_32
+encoding	ENCODING	last_converted_string
+encoding	ENCODING	last_conversion_lost_data
+encoding	SYSTEM_ENCODINGS	system_encoding
+encoding	SYSTEM_ENCODINGS	utf16
+encoding	SYSTEM_ENCODINGS	iso_8859_1
+elks	TYPED_INDEXABLE_ITERATION_CURSOR [G#1, G#2]	(empty)
+elks	TYPED_INDEXABLE_ITERATION_CURSOR [CHARACTER_32, G#2]	(empty)
+elks	TYPED_INDEXABLE_ITERATION_CURSOR [CHARACTER_8, G#2]	(empty)
+elks	TYPED_INDEXABLE_ITERATION_CURSOR [INTEGER_32, G#2]	(empty)
+elks	TYPED_INDEXABLE_ITERATION_CURSOR [POINTER, G#2]	(empty)
+elks	TYPED_INDEXABLE_ITERATION_CURSOR [REAL_32, G#2]	(empty)
+elks	TYPED_INDEXABLE_ITERATION_CURSOR [REAL_64, G#2]	(empty)
+elks	TYPED_INDEXABLE_ITERATION_CURSOR [NATURAL_16, G#2]	(empty)
+elks	TYPED_INDEXABLE_ITERATION_CURSOR [NATURAL_8, G#2]	(empty)
+elks	TYPED_INDEXABLE_ITERATION_CURSOR [BOOLEAN, G#2]	(empty)
+elks	TYPED_INDEXABLE_ITERATION_CURSOR [NATURAL_64, G#2]	(empty)
+elks	TYPED_INDEXABLE_ITERATION_CURSOR [NATURAL_32, G#2]	(empty)
+elks	SET [INTEGER_32]	(removed)
+elks	ACTIVE [G#1]	(empty)
+elks	ACTIVE [CHARACTER_32]	(empty)
+elks	ACTIVE [CHARACTER_8]	(empty)
+elks	ACTIVE [INTEGER_32]	(empty)
+elks	ACTIVE [POINTER]	(empty)
+elks	ACTIVE [REAL_32]	(empty)
+elks	ACTIVE [REAL_64]	(empty)
+elks	ACTIVE [NATURAL_16]	(empty)
+elks	ACTIVE [NATURAL_8]	(empty)
+elks	ACTIVE [BOOLEAN]	(empty)
+elks	ACTIVE [NATURAL_64]	(empty)
+elks	ACTIVE [NATURAL_32]	(empty)
+elks	BILINEAR [G#1]	(empty)
+elks	BILINEAR [INTEGER_32]	(empty)
+elks	BILINEAR [POINTER]	(empty)
+elks	BILINEAR [REAL_32]	(empty)
+elks	BILINEAR [REAL_64]	(empty)
+elks	BILINEAR [NATURAL_16]	(empty)
+elks	BILINEAR [NATURAL_8]	(empty)
+elks	BILINEAR [BOOLEAN]	(empty)
+elks	BILINEAR [CHARACTER_32]	(empty)
+elks	BILINEAR [NATURAL_64]	(empty)
+elks	BILINEAR [CHARACTER_8]	(empty)
+elks	BILINEAR [NATURAL_32]	(empty)
+elks	DYNAMIC_CHAIN [G#1]	(removed)
+elks	DYNAMIC_CHAIN [INTEGER_32]	(removed)
+elks	DYNAMIC_CHAIN [POINTER]	(removed)
+elks	DYNAMIC_CHAIN [REAL_32]	(removed)
+elks	DYNAMIC_CHAIN [REAL_64]	(removed)
+elks	DYNAMIC_CHAIN [NATURAL_16]	(removed)
+elks	DYNAMIC_CHAIN [NATURAL_8]	(removed)
+elks	DYNAMIC_CHAIN [BOOLEAN]	(removed)
+elks	DYNAMIC_CHAIN [CHARACTER_32]	(removed)
+elks	DYNAMIC_CHAIN [NATURAL_64]	(removed)
+elks	DYNAMIC_CHAIN [NATURAL_32]	(removed)
+elks	DYNAMIC_CHAIN [CHARACTER_8]	(removed)
+elks	CONTAINER [G#1]	empty
+elks	CONTAINER [G#1]	changeable_comparison_criterion
+elks	CONTAINER [G#1]	compare_references
+elks	CONTAINER [G#1]	estimated_count_of
+elks	CONTAINER [CHARACTER_32]	empty
+elks	CONTAINER [CHARACTER_32]	changeable_comparison_criterion
+elks	CONTAINER [CHARACTER_32]	compare_references
+elks	CONTAINER [CHARACTER_32]	estimated_count_of
+elks	CONTAINER [CHARACTER_8]	empty
+elks	CONTAINER [CHARACTER_8]	changeable_comparison_criterion
+elks	CONTAINER [CHARACTER_8]	compare_references
+elks	CONTAINER [CHARACTER_8]	estimated_count_of
+elks	CONTAINER [INTEGER_32]	empty
+elks	CONTAINER [INTEGER_32]	changeable_comparison_criterion
+elks	CONTAINER [INTEGER_32]	compare_references
+elks	CONTAINER [INTEGER_32]	estimated_count_of
+elks	CONTAINER [POINTER]	empty
+elks	CONTAINER [POINTER]	changeable_comparison_criterion
+elks	CONTAINER [POINTER]	compare_references
+elks	CONTAINER [POINTER]	estimated_count_of
+elks	CONTAINER [REAL_32]	empty
+elks	CONTAINER [REAL_32]	changeable_comparison_criterion
+elks	CONTAINER [REAL_32]	compare_references
+elks	CONTAINER [REAL_32]	estimated_count_of
+elks	CONTAINER [REAL_64]	empty
+elks	CONTAINER [REAL_64]	changeable_comparison_criterion
+elks	CONTAINER [REAL_64]	compare_references
+elks	CONTAINER [REAL_64]	estimated_count_of
+elks	CONTAINER [NATURAL_16]	empty
+elks	CONTAINER [NATURAL_16]	changeable_comparison_criterion
+elks	CONTAINER [NATURAL_16]	compare_references
+elks	CONTAINER [NATURAL_16]	estimated_count_of
+elks	CONTAINER [NATURAL_8]	empty
+elks	CONTAINER [NATURAL_8]	changeable_comparison_criterion
+elks	CONTAINER [NATURAL_8]	compare_references
+elks	CONTAINER [NATURAL_8]	estimated_count_of
+elks	CONTAINER [BOOLEAN]	empty
+elks	CONTAINER [BOOLEAN]	changeable_comparison_criterion
+elks	CONTAINER [BOOLEAN]	compare_references
+elks	CONTAINER [BOOLEAN]	estimated_count_of
+elks	CONTAINER [NATURAL_64]	empty
+elks	CONTAINER [NATURAL_64]	changeable_comparison_criterion
+elks	CONTAINER [NATURAL_64]	compare_references
+elks	CONTAINER [NATURAL_64]	estimated_count_of
+elks	CONTAINER [NATURAL_32]	empty
+elks	CONTAINER [NATURAL_32]	changeable_comparison_criterion
+elks	CONTAINER [NATURAL_32]	compare_references
+elks	CONTAINER [NATURAL_32]	estimated_count_of
+elks	BAG [G#1]	(empty)
+elks	BAG [CHARACTER_32]	(empty)
+elks	BAG [CHARACTER_8]	(empty)
+elks	BAG [INTEGER_32]	(empty)
+elks	BAG [POINTER]	(empty)
+elks	BAG [REAL_32]	(empty)
+elks	BAG [REAL_64]	(empty)
+elks	BAG [NATURAL_16]	(empty)
+elks	BAG [NATURAL_8]	(empty)
+elks	BAG [BOOLEAN]	(empty)
+elks	BAG [NATURAL_64]	(empty)
+elks	BAG [NATURAL_32]	(empty)
+elks	PART_COMPARABLE	(empty)
+elks	MATH_CONST	(empty)
+elks	COUNTABLE [INTEGER_32]	(empty)
+elks	CHAIN [G#1]	(removed)
+elks	CHAIN [INTEGER_32]	(removed)
+elks	CHAIN [POINTER]	(removed)
+elks	CHAIN [REAL_32]	(removed)
+elks	CHAIN [REAL_64]	(removed)
+elks	CHAIN [NATURAL_16]	(removed)
+elks	CHAIN [NATURAL_8]	(removed)
+elks	CHAIN [BOOLEAN]	(removed)
+elks	CHAIN [CHARACTER_32]	(removed)
+elks	CHAIN [NATURAL_64]	(removed)
+elks	CHAIN [NATURAL_32]	(removed)
+elks	CHAIN [CHARACTER_8]	(removed)
+elks	OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE	(removed)
+elks	LINKABLE [G#1]	(removed)
+elks	LINKABLE [INTEGER_32]	(removed)
+elks	LINKED_LIST_CURSOR [G#1]	(removed)
+elks	LINKED_LIST_CURSOR [INTEGER_32]	(removed)
+elks	LINKED_LIST_ITERATION_CURSOR [G#1]	(removed)
+elks	LINKED_LIST_ITERATION_CURSOR [INTEGER_32]	(removed)
+debug_implementation	RT_DBG_ATTRIBUTE_RECORD [G#1]	(removed)
+debug_implementation	RT_DBG_ATTRIBUTE_RECORD [NATURAL_64]	(removed)
+debug_implementation	RT_DBG_ATTRIBUTE_RECORD [NATURAL_32]	(removed)
+debug_implementation	RT_DBG_ATTRIBUTE_RECORD [REAL_64]	(removed)
+debug_implementation	RT_DBG_ATTRIBUTE_RECORD [CHARACTER_32]	(removed)
+debug_implementation	RT_DBG_ATTRIBUTE_RECORD [CHARACTER_8]	(removed)
+debug_implementation	RT_DBG_ATTRIBUTE_RECORD [BOOLEAN]	(removed)
+debug_implementation	RT_DBG_ATTRIBUTE_RECORD [INTEGER_16]	(removed)
+debug_implementation	RT_DBG_ATTRIBUTE_RECORD [INTEGER_8]	(removed)
+debug_implementation	RT_DBG_ATTRIBUTE_RECORD [INTEGER_64]	(removed)
+debug_implementation	RT_DBG_ATTRIBUTE_RECORD [INTEGER_32]	(removed)
+debug_implementation	RT_DBG_ATTRIBUTE_RECORD [NATURAL_16]	(removed)
+debug_implementation	RT_DBG_ATTRIBUTE_RECORD [NATURAL_8]	(removed)
+debug_implementation	RT_DBG_ATTRIBUTE_RECORD [REAL_32]	(removed)
+debug_implementation	RT_DBG_ATTRIBUTE_RECORD [POINTER]	(removed)
+debug_implementation	RT_DBG_FIELD_RECORD [G#1]	(removed)
+debug_implementation	RT_DBG_FIELD_RECORD [INTEGER_64]	(removed)
+debug_implementation	RT_DBG_FIELD_RECORD [NATURAL_64]	(removed)
+debug_implementation	RT_DBG_FIELD_RECORD [NATURAL_16]	(removed)
+debug_implementation	RT_DBG_FIELD_RECORD [REAL_64]	(removed)
+debug_implementation	RT_DBG_FIELD_RECORD [CHARACTER_32]	(removed)
+debug_implementation	RT_DBG_FIELD_RECORD [INTEGER_32]	(removed)
+debug_implementation	RT_DBG_FIELD_RECORD [INTEGER_8]	(removed)
+debug_implementation	RT_DBG_FIELD_RECORD [INTEGER_16]	(removed)
+debug_implementation	RT_DBG_FIELD_RECORD [NATURAL_8]	(removed)
+debug_implementation	RT_DBG_FIELD_RECORD [BOOLEAN]	(removed)
+debug_implementation	RT_DBG_FIELD_RECORD [CHARACTER_8]	(removed)
+debug_implementation	RT_DBG_FIELD_RECORD [NATURAL_32]	(removed)
+debug_implementation	RT_DBG_FIELD_RECORD [POINTER]	(removed)
+debug_implementation	RT_DBG_FIELD_RECORD [REAL_32]	(removed)
+debug_implementation	RT_DBG_LOCAL_RECORD [G#1]	(removed)
+debug_implementation	RT_DBG_LOCAL_RECORD [CHARACTER_8]	(removed)
+debug_implementation	RT_DBG_LOCAL_RECORD [INTEGER_16]	(removed)
+debug_implementation	RT_DBG_LOCAL_RECORD [NATURAL_16]	(removed)
+debug_implementation	RT_DBG_LOCAL_RECORD [POINTER]	(removed)
+debug_implementation	RT_DBG_LOCAL_RECORD [BOOLEAN]	(removed)
+debug_implementation	RT_DBG_LOCAL_RECORD [CHARACTER_32]	(removed)
+debug_implementation	RT_DBG_LOCAL_RECORD [INTEGER_64]	(removed)
+debug_implementation	RT_DBG_LOCAL_RECORD [INTEGER_32]	(removed)
+debug_implementation	RT_DBG_LOCAL_RECORD [INTEGER_8]	(removed)
+debug_implementation	RT_DBG_LOCAL_RECORD [NATURAL_64]	(removed)
+debug_implementation	RT_DBG_LOCAL_RECORD [NATURAL_32]	(removed)
+debug_implementation	RT_DBG_LOCAL_RECORD [NATURAL_8]	(removed)
+debug_implementation	RT_DBG_LOCAL_RECORD [REAL_32]	(removed)
+debug_implementation	RT_DBG_LOCAL_RECORD [REAL_64]	(removed)
+elks	OBJECT_GRAPH_MARKER	(removed)
+elks	MACHINE_EXCEPTION	(empty)
+elks	EIF_EXCEPTION	(empty)
+elks	BOX [G#1]	(empty)
+elks	BOX [CHARACTER_32]	(empty)
+elks	BOX [CHARACTER_8]	(empty)
+elks	BOX [INTEGER_32]	(empty)
+elks	BOX [POINTER]	(empty)
+elks	BOX [REAL_32]	(empty)
+elks	BOX [REAL_64]	(empty)
+elks	BOX [NATURAL_16]	(empty)
+elks	BOX [NATURAL_8]	(empty)
+elks	BOX [BOOLEAN]	(empty)
+elks	BOX [NATURAL_64]	(empty)
+elks	BOX [NATURAL_32]	(empty)
+elks	TABLE_ITERATION_CURSOR [G#1, G#2]	(empty)
+elks	TABLE_ITERATION_CURSOR [G#1, INTEGER_32]	(empty)
+elks	TABLE_ITERATION_CURSOR [INTEGER_32, G#2]	(empty)
+elks	TABLE_ITERATION_CURSOR [INTEGER_32, INTEGER_32]	(empty)
+time	GROUP_ELEMENT	(removed)
+time	DATE_DURATION	(removed)
+time	DATE_VALUE	(removed)
+time	DATE_VALIDITY_CHECKER	(removed)
+time	CODE_VALIDITY_CHECKER	(removed)
+time	DATE_TIME_DURATION	(removed)
+time	DATE_TIME_VALUE	(removed)
+time	DATE_TIME_VALIDITY_CHECKER	(removed)
+time	TIME_UTILITY	(empty)
+elks	NATIVE_STRING	(removed)
+elks	EXECUTION_ENVIRONMENT	(removed)
+elks	UNIX_FILE_INFO	(removed)
+implementation	ENCODING_I	last_converted_string_8
+implementation	ENCODING_I	is_code_page_convertable
+encoding	UNICODE_CONVERSION	last_conversion_lost_data
+encoding	UNICODE_CONVERSION	is_valid_utf8
+encoding	UNICODE_CONVERSION	is_valid_as_string_16
+encoding	UNICODE_CONVERSION	append_code_point_to_utf8
+encoding	UNICODE_CONVERSION	read_character_from_utf8
+windows	SYSTEM_ENCODINGS_IMP	system_code_page
+windows	SYSTEM_ENCODINGS_IMP	iso_8859_1_code_page
+windows	SYSTEM_ENCODINGS_IMP	set_console_input_code_page
+windows	SYSTEM_ENCODINGS_IMP	set_console_output_code_page
+windows	SYSTEM_ENCODINGS_IMP	ansi_code_page
+windows	SYSTEM_ENCODINGS_IMP	extract_locale_string
+windows	SYSTEM_ENCODINGS_IMP	c_extract_locale_string
+windows	SYSTEM_ENCODINGS_IMP	c_tchar_length
+windows	SYSTEM_ENCODINGS_IMP	system_locale
+windows	SYSTEM_ENCODINGS_IMP	user_locale
+implementation	SYSTEM_ENCODINGS_I	(empty)
+elks	COLLECTION [G#1]	(empty)
+elks	COLLECTION [CHARACTER_32]	(empty)
+elks	COLLECTION [CHARACTER_8]	(empty)
+elks	COLLECTION [INTEGER_32]	(empty)
+elks	COLLECTION [POINTER]	(empty)
+elks	COLLECTION [REAL_32]	(empty)
+elks	COLLECTION [REAL_64]	(empty)
+elks	COLLECTION [NATURAL_16]	(empty)
+elks	COLLECTION [NATURAL_8]	(empty)
+elks	COLLECTION [BOOLEAN]	(empty)
+elks	COLLECTION [NATURAL_64]	(empty)
+elks	COLLECTION [NATURAL_32]	(empty)
+elks	INFINITE [INTEGER_32]	(empty)
+elks	ARRAYED_QUEUE [G#1]	(removed)
+elks	OBJECT_GRAPH_TRAVERSABLE	(removed)
+time	DATE_MEASUREMENT	(removed)
+time	DATE_TIME_MEASUREMENT	(removed)
+time	DATE_TIME_TOOLS	(removed)
+elks	ARGUMENTS_32	(removed)
+elks	ARGUMENTS	(removed)
+encoding	ENCODING_HELPER	pointer_to_string_32
+encoding	ENCODING_HELPER	string_8_to_wide_string
+elks	ARRAYED_QUEUE_ITERATION_CURSOR [G#1]	(removed)
+elks	QUEUE [G#1]	(removed)
+elks	DISPENSER [G#1]	(removed)
+time	DATE_TIME_LANGUAGE_CONSTANTS	(removed)

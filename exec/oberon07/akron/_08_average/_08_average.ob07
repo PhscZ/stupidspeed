@@ -1,0 +1,77 @@
+(* task 08 average — expected output: 0.498046875 *)
+(* build: Compiler.exe _08_average.ob07 win64con -out prog.exe    run: prog.exe *)
+(* note: Oberon-07 does not mix INTEGER and REAL in one expression, so the reading is *)
+(*       FLT(i MOD 256) / 256.0. REAL is an IEEE 64 bit double here, and every reading is a *)
+(*       multiple of 1/256, so the sum is exact and the answer does not depend on the order *)
+(*       of the additions. *)
+(* note: Out.FixReal(x, width, precision) is printf("%*.*f"), so width 1 and precision 9 *)
+(*       give the nine digits after the point that the task wants. Out.Real would print *)
+(*       exponential form. *)
+(* note: Compiler.exe is C:\stupidspeed\tools\oberon07\oberon-07-compiler-master\Compiler.exe, *)
+(*       which has no optimisation switch; the build line above is the whole story. *)
+(* note: the line is ended with Out.Char(0AX) and not Out.Ln. Out.Ln prints CR LF, and msvcrt *)
+(*       text mode then translates that LF a second time, so the pipe receives CR CR LF; a *)
+(*       lone LF from Out.Char goes through the same translation as one CR LF, the normal *)
+(*       Windows line ending. Nothing else in the output is affected. *)
+
+(* timing: GetSystemTimePreciseAsFileTime is the Windows 100-nanosecond clock, declared
+   here with the same [windows-, "kernel32.dll", ""] foreign form the shipped library
+   uses for its own kernel32 imports (QueryPerformanceCounter is not importable from
+   this toolchain's win64con link, which is why it is not used); TIME_MS is written to
+   stderr with WriteFile on GetStdHandle(-12), so stdout is unchanged. *)
+MODULE _08_average;
+IMPORT Out, SYSTEM;
+
+VAR
+  ssT0: INTEGER;
+  total: REAL;
+  i: INTEGER;
+
+PROCEDURE [windows-, "kernel32.dll", ""] GetStdHandle (nStdHandle: INTEGER): INTEGER;
+PROCEDURE [windows-, "kernel32.dll", ""] WriteFile (hFile, Buffer, nBytes, written, overlapped: INTEGER): INTEGER;
+PROCEDURE [windows-, "kernel32.dll", ""] GetSystemTimePreciseAsFileTime (t: INTEGER): INTEGER;
+
+PROCEDURE ssNow (): INTEGER;
+  VAR a: ARRAY 1 OF INTEGER;
+      r: INTEGER;
+BEGIN
+  a[0] := 0;
+  r := GetSystemTimePreciseAsFileTime(SYSTEM.ADR(a));
+RETURN a[0] DIV 10000   (* the FILETIME tick is 100 ns, so 10 000 of them make a millisecond *)
+END ssNow;
+
+PROCEDURE ssReport (t0: INTEGER);
+  VAR ms, n, i, h, r: INTEGER;
+      buf: ARRAY 32 OF CHAR;
+      d: ARRAY 32 OF CHAR;
+BEGIN
+  ms := ssNow() - t0;
+  buf[0] := "T"; buf[1] := "I"; buf[2] := "M"; buf[3] := "E";
+  buf[4] := "_"; buf[5] := "M"; buf[6] := "S"; buf[7] := "=";
+  n := 0;
+  IF ms <= 0 THEN
+    d[0] := "0"; n := 1
+  ELSE
+    WHILE ms > 0 DO
+      d[n] := CHR(ms MOD 10 + ORD("0")); ms := ms DIV 10; INC(n)
+    END
+  END;
+  i := 0;
+  WHILE i < n DO
+    buf[8 + i] := d[n - 1 - i]; INC(i)
+  END;
+  buf[8 + n] := 0AX;
+  h := GetStdHandle(-12);   (* STD_ERROR_HANDLE *)
+  r := WriteFile(h, SYSTEM.ADR(buf), 9 + n, 0, 0)
+END ssReport;
+
+BEGIN
+  ssT0 := ssNow();
+  total := 0.0;
+  FOR i := 0 TO 99999999 DO
+    total := total + FLT(i MOD 256) / 256.0
+  END;
+
+  ssReport(ssT0);
+  Out.FixReal(total / 100000000.0, 1, 9); Out.Char(0AX)
+END _08_average.

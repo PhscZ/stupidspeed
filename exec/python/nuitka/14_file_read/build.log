@@ -1,0 +1,13 @@
+Nuitka-Options: Used command line options:
+Nuitka-Options:   --standalone --assume-yes-for-downloads 14_file_read.py
+Nuitka: Starting Python compilation with:
+Nuitka:   Version '4.0.8' on Python 3.13 (flavor 'CPython Official') commercial grade 'not installed'.
+Nuitka: Completed Python level compilation and optimization.
+Nuitka: Generating source code for C backend compiler.
+Nuitka: Running data composer tool for optimal constant value handling.
+Nuitka: Running C compilation via Scons.
+Nuitka-Scons: Mismatch between Python binary ('C:\Users\pz020\AppData\Local\Programs\Python\Python313\python.exe' -> 'pei-x86-64') and C compiler ('C:\stupidspeed\tools\fpc\bin\i386-Win32\gcc.exe' -> 'pei-i386') arches, that compiler is ignored!
+Nuitka-Scons: Backend C compiler: ~\AppData\Local\Nuitka\Nuitka\Cache\DOWNLO~1\pip\private-90a699a3\Lib\site-packages\ziglang\zig.exe (zig.exe 0.16.0).
+Nuitka-Scons: Backend C linking with 7 files (no progress information available for this stage).
+Nuitka: Keeping build directory '14_file_read.build'.
+Nuitka: Successfully created 'C:\stupidspeed\exec\python\nuitka\14_file_read\14_file_read.dist\14_file_read.exe'.

@@ -1,5 +1,5 @@
 # Installed toolchains. Local only; BUILD.md lists what to install.
-# ~28 GB per BUILD.md, so it never belongs in the repository.
+# ~28 GB of third-party compilers and runtimes, not part of the benchmark's own output.
 tools/
 
 # Scratch: build outputs, test fixtures, probes, investigation notes.
@@ -9,29 +9,3 @@ temp/
 # Python bytecode from the helper scripts.
 __pycache__/
 *.pyc
-
-# Build outputs from exec/*/build_all.bat and the per-row verify.py scripts.
-#
-# The row scripts themselves ARE tracked -- each row's build_all.bat / run_all.bat and
-# its verify.py are the record of how that row is built and checked, and they are small
-# (233 files, 0.5 MB). Everything the scripts produce is not: measured, exec/ holds
-# 23.2 GB in 34 758 files, and 17.5 GB of that is 359 copies of the 50 MiB fixture
-# (215 x data.bin, 144 x out.bin) that tasks 14 and 15 stage per row. Those are what
-# exec/stage_fixtures.py hard-links away, and it is tracked.
-#
-# So: ignore everything under exec/, then re-include the row-level scripts. Git cannot
-# re-include a file whose parent directory is excluded, hence the !exec/*/ line, which
-# keeps the row directories walkable; anything deeper than one level stays ignored, which
-# is what excludes the vendored trees (python-wasm's CPython 3.12 stdlib, swift's 328 MB
-# Windows SDK header tree, scala-native's .scala-build, .NET obj/bin, gleam's build/).
-exec/**
-!exec/*/
-!exec/*.py
-!exec/*/*.py
-!exec/*/*.bat
-!exec/*/*.cmd
-!exec/*/*.sh
-# ...but not the staged copies of the task sources. jython and ironpython build in place,
-# so exec/<row>/<task>.py are byte-identical copies of sources/<row>/<task>.py; tracking
-# them would duplicate 30 files for no information.
-exec/*/[0-9][0-9]_*.py

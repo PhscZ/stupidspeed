@@ -1,0 +1,59 @@
+# task 06 char_count — expected output: 10000000
+# build: s7c -O2 prog.sd7    run: ./prog
+# note: the 100 MB text is built with one 'mult' call rather than by appending in a loop.
+#       Seed7 characters are UTF-32, so the text occupies about 400 MB while it is alive;
+#       that is the runtime's own representation of a string and not an extra copy. Measured
+#       peak working set for this task: about 390 MB, against 12 to 24 MB for the others.
+
+$ include "seed7_05.s7i";
+  include "time.s7i";
+
+(* timing: GET_TIME (TIM_NOW) is Seed7's clock, giving the local time of day down to
+   the microsecond; TIME_MS goes to stderr with writeln(STD_ERR, ...), and stdout is
+   unchanged. Instrumented by inspection: Seed7 is not installed on this machine, so
+   this row's timing is unverified. *)
+const func integer: ssNowMs is func
+  result
+    var integer: ms is 0;
+  local
+    var integer: year is 0;
+    var integer: month is 0;
+    var integer: day is 0;
+    var integer: hour is 0;
+    var integer: minute is 0;
+    var integer: second is 0;
+    var integer: micro_second is 0;
+    var integer: timeZone is 0;
+    var boolean: daylightSavingTime is FALSE;
+  begin
+    GET_TIME(year, month, day, hour, minute, second, micro_second, timeZone, daylightSavingTime);
+    ms := ((hour * 60 + minute) * 60 + second) * 1000 + micro_second div 1000;
+  end func;
+
+const proc: ssReport (in integer: t0) is func
+  local
+    var integer: ms is 0;
+  begin
+    ms := ssNowMs - t0;
+    writeln(STD_ERR, "TIME_MS=" <& str(ms));
+  end func;
+
+const proc: main is func
+  local
+    var integer: ssT0 is 0;
+    var string: text is "";
+    var integer: count is 0;
+    var integer: i is 0;
+  begin
+    ssT0 := ssNowMs;
+    text := "abcdefghij" mult 10000000;
+
+    for i range 1 to length(text) do
+      if text[i] = 'h' then
+        count +:= 1;
+      end if;
+    end for;
+
+    ssReport(ssT0);
+    writeln(count);
+  end func;

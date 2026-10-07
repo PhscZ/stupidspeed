@@ -1,0 +1,1 @@
+no build step: cscript //nologo 02_switch_case.vbs interprets the source on every run 

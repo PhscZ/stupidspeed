@@ -1,0 +1,25 @@
+
+#ifndef _C3_mi143_
+#define _C3_mi143_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern void F607_3099(EIF_REFERENCE);
+extern void F607_3107(EIF_REFERENCE, EIF_REFERENCE, EIF_POINTER);
+extern void F607_3108(EIF_REFERENCE, EIF_POINTER, EIF_POINTER);
+static void F607_3109_body(EIF_REFERENCE);
+extern void F607_3109(EIF_REFERENCE);
+extern void F607_3110(EIF_REFERENCE, EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER);
+extern void EIF_Minit143(void);
+extern void F601_2980(EIF_REFERENCE, EIF_INTEGER_32);
+extern void F785_4789(EIF_REFERENCE, EIF_POINTER);
+extern void F601_3026(EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE);
+extern EIF_BOOLEAN F786_4855(EIF_REFERENCE);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

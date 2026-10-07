@@ -1,0 +1,6 @@
+Free Pascal Compiler version 3.2.2 [2021/05/15] for x86_64
+Copyright (c) 1993-2021 by Florian Klaempfl and others
+Target OS: Win64 for x64
+Compiling 12_matrix_add.pas
+Linking program
+48 lines compiled, 0.3 sec, 73408 bytes code, 5268 bytes data

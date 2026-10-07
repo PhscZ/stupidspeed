@@ -1,0 +1,25 @@
+Building builtin -> C:\stupidspeed\tools\ponyc\packages\builtin
+Building 15_file_write -> C:\stupidspeed\exec\pony\ponyc\15_file_write
+Building time -> C:\stupidspeed\tools\ponyc\packages\time
+Building collections -> C:\stupidspeed\tools\ponyc\packages\collections
+Building pony_test -> C:\stupidspeed\tools\ponyc\packages\pony_test
+Building random -> C:\stupidspeed\tools\ponyc\packages\random
+Building files -> C:\stupidspeed\tools\ponyc\packages\files
+Building buffered -> C:\stupidspeed\tools\ponyc\packages\buffered
+Building term -> C:\stupidspeed\tools\ponyc\packages\term
+Building promises -> C:\stupidspeed\tools\ponyc\packages\promises
+Building strings -> C:\stupidspeed\tools\ponyc\packages\strings
+Building signals -> C:\stupidspeed\tools\ponyc\packages\signals
+Building capsicum -> C:\stupidspeed\tools\ponyc\packages\capsicum
+Generating
+ Reachability
+ Selector painting
+ Data prototypes
+ Data types
+ Function prototypes
+ Functions
+ Descriptors
+Verifying
+Writing 15_file_write\15_file_write.obj
+O sistema não pode encontrar o caminho especificado.
+Linking 15_file_write\15_file_write.exe

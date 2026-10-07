@@ -1,0 +1,19 @@
+-- task 03 func_sum — expected output: 100000000
+-- build: none (interpreted)    run: lua 03_func_sum.lua (PUC Lua 5.4)    also runs on LuaJIT: luajit 03_func_sum.lua
+-- build (wasm): lua.wasm is the wasm32-wasip1 build of this same interpreter (see BUILD.md); run: wasmtime -W exceptions=y --dir . lua.wasm <task>.lua
+-- PUC Lua always interprets the call. LuaJIT may trace and inline add_one away, which is
+-- a property of the JIT, not of this source; there is no no-inline directive in Lua.
+
+local __t0 = os.clock()
+local function add_one(n)
+    return n + 1
+end
+
+local value = 0
+for _ = 1, 100000000 do
+    value = add_one(value)
+end
+
+local __t1 = os.clock()
+io.stderr:write(string.format("TIME_MS=%.3f\n", (__t1 - __t0) * 1000.0))
+print(value)

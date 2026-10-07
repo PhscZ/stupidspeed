@@ -1,0 +1,24 @@
+[90mCompiling project (Scala 3.9.0, Scala Native 0.5.12)[0m
+[90mCompiled project (Scala 3.9.0, Scala Native 0.5.12)[0m
+[E] Exiting BSP server with Connection reset
+Bloop 'bsp' command exited with code 1. Something may be wrong with the current configuration.
+Running the [1mclean[0m sub-command to clear the working directory and remove caches might help.
+If the error persists, please report the issue as a bug and attach a log with increased verbosity by passing [1m-v -v -v[0m.
+[info] Linking (multithreadingEnabled=detect) (4898 ms)
+[info] Discovered 898 classes and 5481 methods after classloading
+[info] Checking intermediate code (quick) (340 ms)
+[info] Multithreading was not explicitly enabled - initial class loading has not detected any usage of system threads. Multithreading support will be disabled to improve performance.
+[info] Linking (multithreadingEnabled=false) (4622 ms)
+[info] Discovered 726 classes and 4141 methods after classloading
+[info] Checking intermediate code (quick) (93 ms)
+[info] Discovered 598 classes and 2086 methods after optimization
+[info] Optimizing (release-fast mode) (10744 ms)
+[info] Produced 8 LLVM IR files
+[info] Generating intermediate code (6338 ms)
+[info] Compiling to native code (77094 ms)
+[info] Linking with [dbghelp, kernel32, userenv, advapi32]
+[info] Linking native code (immix gc, none lto) (26776 ms)
+[info] Postprocessing (0 ms)
+[info] Total (131385 ms)
+Wrote C:\stupidspeed\exec\scala-native\scala-native\08_average\prog.exe, run it with
+  .\prog.exe

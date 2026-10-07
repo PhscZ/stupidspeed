@@ -1,0 +1,18 @@
+Building builtin -> C:\stupidspeed\tools\ponyc\packages\builtin
+Building 04_array_sum -> C:\stupidspeed\exec\pony\ponyc\04_array_sum
+Building time -> C:\stupidspeed\tools\ponyc\packages\time
+Building collections -> C:\stupidspeed\tools\ponyc\packages\collections
+Building pony_test -> C:\stupidspeed\tools\ponyc\packages\pony_test
+Building random -> C:\stupidspeed\tools\ponyc\packages\random
+Generating
+ Reachability
+ Selector painting
+ Data prototypes
+ Data types
+ Function prototypes
+ Functions
+ Descriptors
+Verifying
+Writing 04_array_sum\04_array_sum.obj
+O sistema não pode encontrar o caminho especificado.
+Linking 04_array_sum\04_array_sum.exe

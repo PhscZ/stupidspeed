@@ -1,0 +1,7 @@
+;;; Loading #P"C:/stupidspeed/tools/ecl/cmp.fas"
+;;;
+;;; Compiling 06_char_count.lisp.
+;;; OPTIMIZE levels: Safety=2, Space=0, Speed=3, Debug=0
+;;;
+;;; Finished compiling 06_char_count.lisp.
+;;;

@@ -1,0 +1,16 @@
+# task 08 average — expected output: 0.498046875
+# build: unicon -s 08_average.icn    run: 08_average.exe
+# Unicon's `real` is a C double. Every reading is an exact multiple of 1/256 and the total
+# stays under 2^53, so the sum is exact and the printed digits do not depend on the order of
+# addition. `write` prints a real with enough digits to round-trip here.
+# timing: &time is Unicon's wall clock in milliseconds since midnight, and &errout is
+#         the standard error stream, so TIME_MS goes to stderr and stdout is unchanged.
+
+procedure main()
+    ssT0 := &time
+    total := 0.0
+    every i := 0 to 99999999 do
+        total +:= (i % 256) / 256.0
+    write(&errout, "TIME_MS=", &time - ssT0)
+    write(total / 100000000)
+end

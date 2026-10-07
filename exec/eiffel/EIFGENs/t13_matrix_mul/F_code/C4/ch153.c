@@ -1,0 +1,711 @@
+/*
+ * Code for class CHARACTER_8_REF
+ */
+
+#include "eif_eiffel.h"
+#include "../E1/estructure.h"
+#include "../E1/eoffsets.h"
+
+#include "ch153.h"
+#include "eif_misc.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+#ifdef __cplusplus
+}
+#endif
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* {CHARACTER_8_REF}.natural_32_code */
+EIF_NATURAL_32 F740_3608 (EIF_REFERENCE Current)
+{
+	GTCX
+	EIF_INTEGER_32 ti4_1;
+	EIF_CHARACTER_8 tc1;
+	EIF_NATURAL_32 Result = ((EIF_NATURAL_32) 0);
+	
+	RTLD;
+	
+	RTLI(1);
+	RTLR(0,Current);
+	RTLIU(1);
+	
+	RTGC;
+	tc1 = *(EIF_CHARACTER_8 *)(Current+ _CHROFF_0_0_);
+	ti4_1 = (EIF_INTEGER_32) (tc1);
+	Result = (EIF_NATURAL_32) ti4_1;
+	RTLE;
+	return Result;
+}
+
+/* {CHARACTER_8_REF}.hash_code */
+EIF_INTEGER_32 F740_3609 (EIF_REFERENCE Current)
+{
+	GTCX
+	EIF_INTEGER_32 Result = ((EIF_INTEGER_32) 0);
+	
+	RTLD;
+	
+	RTLI(1);
+	RTLR(0,Current);
+	RTLIU(1);
+	
+	RTGC;
+	Result = (EIF_INTEGER_32) (0x7FFFFFFF & (EIF_INTEGER_32) ((rt_int_ptr) (F740_3608(Current))));
+	RTLE;
+	return Result;
+}
+
+/* {CHARACTER_8_REF}.is_less */
+EIF_BOOLEAN F740_3613 (EIF_REFERENCE Current, EIF_REFERENCE arg1)
+{
+	GTCX
+	EIF_NATURAL_32 tu4_1;
+	EIF_NATURAL_32 tu4_2;
+	EIF_BOOLEAN Result = ((EIF_BOOLEAN) 0);
+	
+	RTLD;
+	
+	RTLI(2);
+	RTLR(0,Current);
+	RTLR(1,arg1);
+	RTLIU(2);
+	
+	RTGC;
+	tu4_1 = F740_3608(Current);
+	tu4_2 = F740_3608(RTCW(arg1));
+	Result = (EIF_BOOLEAN) (EIF_BOOLEAN) (tu4_1 < tu4_2);
+	RTLE;
+	return Result;
+}
+
+/* {CHARACTER_8_REF}.is_equal */
+EIF_BOOLEAN F740_3614 (EIF_REFERENCE Current, EIF_REFERENCE arg1)
+{
+	GTCX
+	EIF_CHARACTER_8 tc1;
+	EIF_CHARACTER_8 tc2;
+	EIF_BOOLEAN Result = ((EIF_BOOLEAN) 0);
+	
+	RTLD;
+	
+	RTLI(2);
+	RTLR(0,arg1);
+	RTLR(1,Current);
+	RTLIU(2);
+	
+	RTGC;
+	tc1 = *(EIF_CHARACTER_8 *)(RTCW(arg1)+ _CHROFF_0_0_);
+	tc2 = *(EIF_CHARACTER_8 *)(Current+ _CHROFF_0_0_);
+	Result = (EIF_BOOLEAN) (EIF_BOOLEAN)(tc1 == tc2);
+	RTLE;
+	return Result;
+}
+
+/* {CHARACTER_8_REF}.plus */
+EIF_CHARACTER_8 F740_3615 (EIF_REFERENCE Current, EIF_INTEGER_32 arg1)
+{
+	GTCX
+	EIF_INTEGER_32 ti4_1;
+	EIF_CHARACTER_8 tc1;
+	EIF_CHARACTER_8 Result = ((EIF_CHARACTER_8) 0);
+	
+	RTLD;
+	
+	RTLI(1);
+	RTLR(0,Current);
+	RTLIU(1);
+	
+	RTGC;
+	tc1 = *(EIF_CHARACTER_8 *)(Current+ _CHROFF_0_0_);
+	ti4_1 = (EIF_INTEGER_32) (tc1);
+	Result = (EIF_CHARACTER_8) (EIF_INTEGER_32) (ti4_1 + arg1);
+	RTLE;
+	return Result;
+}
+
+/* {CHARACTER_8_REF}.minus */
+EIF_CHARACTER_8 F740_3616 (EIF_REFERENCE Current, EIF_INTEGER_32 arg1)
+{
+	GTCX
+	EIF_INTEGER_32 ti4_1;
+	EIF_CHARACTER_8 tc1;
+	EIF_CHARACTER_8 Result = ((EIF_CHARACTER_8) 0);
+	
+	RTLD;
+	
+	RTLI(1);
+	RTLR(0,Current);
+	RTLIU(1);
+	
+	RTGC;
+	tc1 = *(EIF_CHARACTER_8 *)(Current+ _CHROFF_0_0_);
+	ti4_1 = (EIF_INTEGER_32) (tc1);
+	Result = (EIF_CHARACTER_8) (EIF_INTEGER_32) (ti4_1 - arg1);
+	RTLE;
+	return Result;
+}
+
+/* {CHARACTER_8_REF}.set_item */
+void F740_3620 (EIF_REFERENCE Current, EIF_CHARACTER_8 arg1)
+{
+	GTCX
+	
+	
+	*(EIF_CHARACTER_8 *)(Current+ _CHROFF_0_0_) = (EIF_CHARACTER_8) arg1;
+}
+
+/* {CHARACTER_8_REF}.to_character_32 */
+EIF_CHARACTER_32 F740_3625 (EIF_REFERENCE Current)
+{
+	GTCX
+	EIF_CHARACTER_8 tc1;
+	EIF_CHARACTER_32 Result = ((EIF_CHARACTER_32) 0);
+	
+	RTLD;
+	
+	RTLI(1);
+	RTLR(0,Current);
+	RTLIU(1);
+	
+	RTGC;
+	tc1 = *(EIF_CHARACTER_8 *)(Current+ _CHROFF_0_0_);
+	Result = (EIF_CHARACTER_32) tc1;
+	RTLE;
+	return Result;
+}
+
+/* {CHARACTER_8_REF}.as_lower */
+EIF_CHARACTER_8 F740_3628 (EIF_REFERENCE Current)
+{
+	GTCX
+	EIF_REFERENCE tr1 = NULL;
+	EIF_INTEGER_32 ti4_1;
+	EIF_CHARACTER_8 tc1;
+	EIF_CHARACTER_8 tc2;
+	EIF_CHARACTER_8 Result = ((EIF_CHARACTER_8) 0);
+	
+	RTLD;
+	
+	RTLI(2);
+	RTLR(0,Current);
+	RTLR(1,tr1);
+	RTLIU(2);
+	
+	RTGC;
+	tr1 = RTOSCF(3644,F740_3644, (Current));
+	ti4_1 = (EIF_INTEGER_32) F740_3608(Current);
+	/* INLINED CODE (SPECIAL.item) */
+	tc2 = *((EIF_CHARACTER_8 *)RTCW(tr1) + (ti4_1));
+	/* END INLINED CODE */
+	Result = tc2;
+	RTLE;
+	return Result;
+}
+
+/* {CHARACTER_8_REF}.lower */
+EIF_CHARACTER_8 F740_3629 (EIF_REFERENCE Current)
+{
+	GTCX
+	EIF_REFERENCE tr1 = NULL;
+	EIF_INTEGER_32 ti4_1;
+	EIF_CHARACTER_8 tc1;
+	EIF_CHARACTER_8 tc2;
+	EIF_CHARACTER_8 Result = ((EIF_CHARACTER_8) 0);
+	
+	RTLD;
+	
+	RTLI(2);
+	RTLR(0,Current);
+	RTLR(1,tr1);
+	RTLIU(2);
+	
+	RTGC;
+	tr1 = RTOSCF(3644,F740_3644, (Current));
+	ti4_1 = (EIF_INTEGER_32) F740_3608(Current);
+	/* INLINED CODE (SPECIAL.item) */
+	tc2 = *((EIF_CHARACTER_8 *)RTCW(tr1) + (ti4_1));
+	/* END INLINED CODE */
+	Result = tc2;
+	RTLE;
+	return Result;
+}
+
+/* {CHARACTER_8_REF}.to_hexa_digit */
+EIF_NATURAL_8 F740_3630 (EIF_REFERENCE Current)
+{
+	GTCX
+	EIF_NATURAL_8 loc1 = (EIF_NATURAL_8) 0;
+	EIF_INTEGER_8 ti1_1;
+	EIF_NATURAL_8 tu1_1;
+	EIF_NATURAL_8 tu1_2;
+	EIF_NATURAL_8 Result = ((EIF_NATURAL_8) 0);
+	
+	RTLD;
+	
+	RTLI(1);
+	RTLR(0,Current);
+	RTLIU(1);
+	
+	RTGC;
+	tu1_1 = (EIF_NATURAL_8) F740_3608(Current);
+	Result = eif_bit_and(tu1_1,(EIF_NATURAL_8) ((EIF_INTEGER_32) 79L));
+	tu1_1 = eif_bit_shift_left(Result,((EIF_INTEGER_32) 1L));
+	ti1_1 = (EIF_INTEGER_8) tu1_1;
+	ti1_1 = eif_bit_shift_right(ti1_1,((EIF_INTEGER_32) 7L));
+	loc1 = (EIF_NATURAL_8) ti1_1;
+	tu1_1 = eif_bit_not(loc1);
+	tu1_1 = eif_bit_and(Result,tu1_1);
+	tu1_2 = eif_bit_and(((EIF_NATURAL_8) (Result - (EIF_NATURAL_8) ((EIF_INTEGER_32) 55L))),loc1);
+	tu1_1 = eif_bit_or(tu1_1,tu1_2);
+	Result = (EIF_NATURAL_8) tu1_1;
+	RTLE;
+	return Result;
+}
+
+/* {CHARACTER_8_REF}.is_digit */
+EIF_BOOLEAN F740_3634 (EIF_REFERENCE Current)
+{
+	GTCX
+	EIF_INTEGER_32 ti4_1;
+	EIF_NATURAL_8 tu1_1;
+	EIF_CHARACTER_8 tc1;
+	EIF_BOOLEAN Result = ((EIF_BOOLEAN) 0);
+	
+	RTLD;
+	
+	RTLI(1);
+	RTLR(0,Current);
+	RTLIU(1);
+	
+	RTGC;
+	tc1 = *(EIF_CHARACTER_8 *)(Current+ _CHROFF_0_0_);
+	ti4_1 = (EIF_INTEGER_32) (tc1);
+	tu1_1 = F740_3642(Current, ti4_1);
+	tu1_1 = eif_bit_and(tu1_1,((EIF_NATURAL_8) 4U));
+	Result = (EIF_BOOLEAN) (EIF_BOOLEAN) (tu1_1 > (EIF_NATURAL_8) ((EIF_INTEGER_32) 0L));
+	RTLE;
+	return Result;
+}
+
+/* {CHARACTER_8_REF}.is_hexa_digit */
+EIF_BOOLEAN F740_3635 (EIF_REFERENCE Current)
+{
+	GTCX
+	EIF_INTEGER_32 ti4_1;
+	EIF_NATURAL_8 tu1_1;
+	EIF_NATURAL_8 tu1_2;
+	EIF_CHARACTER_8 tc1;
+	EIF_BOOLEAN Result = ((EIF_BOOLEAN) 0);
+	
+	RTLD;
+	
+	RTLI(1);
+	RTLR(0,Current);
+	RTLIU(1);
+	
+	RTGC;
+	tc1 = *(EIF_CHARACTER_8 *)(Current+ _CHROFF_0_0_);
+	ti4_1 = (EIF_INTEGER_32) (tc1);
+	tu1_1 = F740_3642(Current, ti4_1);
+	tu1_2 = eif_bit_or(((EIF_NATURAL_8) 64U),((EIF_NATURAL_8) 4U));
+	tu1_1 = eif_bit_and(tu1_1,tu1_2);
+	Result = (EIF_BOOLEAN) (EIF_BOOLEAN) (tu1_1 > (EIF_NATURAL_8) ((EIF_INTEGER_32) 0L));
+	RTLE;
+	return Result;
+}
+
+/* {CHARACTER_8_REF}.character_types */
+EIF_NATURAL_8 F740_3642 (EIF_REFERENCE Current, EIF_INTEGER_32 arg1)
+{
+	GTCX
+	EIF_REFERENCE tr1 = NULL;
+	EIF_NATURAL_8 tu1_1;
+	EIF_NATURAL_8 tu1_2;
+	EIF_NATURAL_8 Result = ((EIF_NATURAL_8) 0);
+	
+	RTLD;
+	
+	RTLI(2);
+	RTLR(0,Current);
+	RTLR(1,tr1);
+	RTLIU(2);
+	
+	RTGC;
+	if ((EIF_BOOLEAN) (arg1 < ((EIF_INTEGER_32) 256L))) {
+		tr1 = RTOSCF(3643,F740_3643, (Current));
+		/* INLINED CODE (SPECIAL.item) */
+		tu1_2 = *((EIF_NATURAL_8 *)RTCW(tr1) + (arg1));
+		/* END INLINED CODE */
+		Result = tu1_2;
+	}
+	RTLE;
+	return Result;
+}
+
+/* {CHARACTER_8_REF}.internal_character_types */
+static EIF_REFERENCE F740_3643_body (EIF_REFERENCE Current)
+{
+	GTCX
+	RTEX;
+	EIF_REFERENCE tr1 = NULL;
+	EIF_NATURAL_8 tu1_1;
+	RTLD;
+	
+
+	RTLI(2);
+	RTLR(0,Current);
+	RTLR(1,tr1);
+	RTLIU(2);
+	
+	RTEV;
+	RTGC;
+	RTOSP (3643);
+#define Result RTOSR(3643)
+	RTOC_NEW(Result);
+	{
+		static EIF_TYPE_INDEX typarr0[] = {0xFF01,642,768,0xFFFF};
+		EIF_TYPE typres0;
+		static EIF_TYPE typcache0 = {INVALID_DTYPE, 0};
+		
+		typres0 = (typcache0.id != INVALID_DTYPE ? typcache0 : (typcache0 = eif_compound_id(Dftype(Current), typarr0)));
+		tr1 = RTLNSP2(typres0.id,0,((EIF_INTEGER_32) 256L),sizeof(EIF_NATURAL_8), EIF_TRUE);
+		RT_SPECIAL_COUNT(tr1) = 0;
+	}
+	Result = (EIF_REFERENCE) tr1;
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	tu1_1 = eif_bit_or(((EIF_NATURAL_8) 32U),((EIF_NATURAL_8) 8U));
+	F643_3174(RTCW(Result), tu1_1);
+	tu1_1 = eif_bit_or(((EIF_NATURAL_8) 32U),((EIF_NATURAL_8) 8U));
+	F643_3174(RTCW(Result), tu1_1);
+	tu1_1 = eif_bit_or(((EIF_NATURAL_8) 32U),((EIF_NATURAL_8) 8U));
+	F643_3174(RTCW(Result), tu1_1);
+	tu1_1 = eif_bit_or(((EIF_NATURAL_8) 32U),((EIF_NATURAL_8) 8U));
+	F643_3174(RTCW(Result), tu1_1);
+	tu1_1 = eif_bit_or(((EIF_NATURAL_8) 32U),((EIF_NATURAL_8) 8U));
+	F643_3174(RTCW(Result), tu1_1);
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	tu1_1 = eif_bit_or(((EIF_NATURAL_8) 32U),((EIF_NATURAL_8) 8U));
+	F643_3174(RTCW(Result), tu1_1);
+	tu1_1 = eif_bit_or(((EIF_NATURAL_8) 32U),((EIF_NATURAL_8) 8U));
+	F643_3174(RTCW(Result), tu1_1);
+	tu1_1 = eif_bit_or(((EIF_NATURAL_8) 32U),((EIF_NATURAL_8) 8U));
+	F643_3174(RTCW(Result), tu1_1);
+	tu1_1 = eif_bit_or(((EIF_NATURAL_8) 32U),((EIF_NATURAL_8) 8U));
+	F643_3174(RTCW(Result), tu1_1);
+	tu1_1 = eif_bit_or(((EIF_NATURAL_8) 128U),((EIF_NATURAL_8) 8U));
+	F643_3174(RTCW(Result), tu1_1);
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 4U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 4U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 4U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 4U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 4U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 4U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 4U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 4U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 4U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 4U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	tu1_1 = eif_bit_or(((EIF_NATURAL_8) 1U),((EIF_NATURAL_8) 64U));
+	F643_3174(RTCW(Result), tu1_1);
+	tu1_1 = eif_bit_or(((EIF_NATURAL_8) 1U),((EIF_NATURAL_8) 64U));
+	F643_3174(RTCW(Result), tu1_1);
+	tu1_1 = eif_bit_or(((EIF_NATURAL_8) 1U),((EIF_NATURAL_8) 64U));
+	F643_3174(RTCW(Result), tu1_1);
+	tu1_1 = eif_bit_or(((EIF_NATURAL_8) 1U),((EIF_NATURAL_8) 64U));
+	F643_3174(RTCW(Result), tu1_1);
+	tu1_1 = eif_bit_or(((EIF_NATURAL_8) 1U),((EIF_NATURAL_8) 64U));
+	F643_3174(RTCW(Result), tu1_1);
+	tu1_1 = eif_bit_or(((EIF_NATURAL_8) 1U),((EIF_NATURAL_8) 64U));
+	F643_3174(RTCW(Result), tu1_1);
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	tu1_1 = eif_bit_or(((EIF_NATURAL_8) 2U),((EIF_NATURAL_8) 64U));
+	F643_3174(RTCW(Result), tu1_1);
+	tu1_1 = eif_bit_or(((EIF_NATURAL_8) 2U),((EIF_NATURAL_8) 64U));
+	F643_3174(RTCW(Result), tu1_1);
+	tu1_1 = eif_bit_or(((EIF_NATURAL_8) 2U),((EIF_NATURAL_8) 64U));
+	F643_3174(RTCW(Result), tu1_1);
+	tu1_1 = eif_bit_or(((EIF_NATURAL_8) 2U),((EIF_NATURAL_8) 64U));
+	F643_3174(RTCW(Result), tu1_1);
+	tu1_1 = eif_bit_or(((EIF_NATURAL_8) 2U),((EIF_NATURAL_8) 64U));
+	F643_3174(RTCW(Result), tu1_1);
+	tu1_1 = eif_bit_or(((EIF_NATURAL_8) 2U),((EIF_NATURAL_8) 64U));
+	F643_3174(RTCW(Result), tu1_1);
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	tu1_1 = eif_bit_or(((EIF_NATURAL_8) 32U),((EIF_NATURAL_8) 128U));
+	tu1_1 = eif_bit_or(tu1_1,((EIF_NATURAL_8) 8U));
+	F643_3174(RTCW(Result), tu1_1);
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 32U));
+	tu1_1 = eif_bit_or(((EIF_NATURAL_8) 128U),((EIF_NATURAL_8) 8U));
+	F643_3174(RTCW(Result), tu1_1);
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), (EIF_NATURAL_8) ((EIF_INTEGER_32) 0L));
+	F643_3174(RTCW(Result), (EIF_NATURAL_8) ((EIF_INTEGER_32) 0L));
+	F643_3174(RTCW(Result), (EIF_NATURAL_8) ((EIF_INTEGER_32) 0L));
+	F643_3174(RTCW(Result), (EIF_NATURAL_8) ((EIF_INTEGER_32) 0L));
+	F643_3174(RTCW(Result), (EIF_NATURAL_8) ((EIF_INTEGER_32) 0L));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), (EIF_NATURAL_8) ((EIF_INTEGER_32) 0L));
+	F643_3174(RTCW(Result), (EIF_NATURAL_8) ((EIF_INTEGER_32) 0L));
+	F643_3174(RTCW(Result), (EIF_NATURAL_8) ((EIF_INTEGER_32) 0L));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), (EIF_NATURAL_8) ((EIF_INTEGER_32) 0L));
+	F643_3174(RTCW(Result), (EIF_NATURAL_8) ((EIF_INTEGER_32) 0L));
+	F643_3174(RTCW(Result), (EIF_NATURAL_8) ((EIF_INTEGER_32) 0L));
+	F643_3174(RTCW(Result), (EIF_NATURAL_8) ((EIF_INTEGER_32) 0L));
+	F643_3174(RTCW(Result), (EIF_NATURAL_8) ((EIF_INTEGER_32) 0L));
+	F643_3174(RTCW(Result), (EIF_NATURAL_8) ((EIF_INTEGER_32) 0L));
+	F643_3174(RTCW(Result), (EIF_NATURAL_8) ((EIF_INTEGER_32) 0L));
+	F643_3174(RTCW(Result), (EIF_NATURAL_8) ((EIF_INTEGER_32) 0L));
+	F643_3174(RTCW(Result), (EIF_NATURAL_8) ((EIF_INTEGER_32) 0L));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), (EIF_NATURAL_8) ((EIF_INTEGER_32) 0L));
+	F643_3174(RTCW(Result), (EIF_NATURAL_8) ((EIF_INTEGER_32) 0L));
+	F643_3174(RTCW(Result), (EIF_NATURAL_8) ((EIF_INTEGER_32) 0L));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), (EIF_NATURAL_8) ((EIF_INTEGER_32) 0L));
+	F643_3174(RTCW(Result), (EIF_NATURAL_8) ((EIF_INTEGER_32) 0L));
+	F643_3174(RTCW(Result), (EIF_NATURAL_8) ((EIF_INTEGER_32) 0L));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 16U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), (EIF_NATURAL_8) ((EIF_INTEGER_32) 0L));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 1U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), (EIF_NATURAL_8) ((EIF_INTEGER_32) 0L));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	F643_3174(RTCW(Result), ((EIF_NATURAL_8) 2U));
+	RTOSE (3643);
+	RTLE;
+	RTEE;
+	return Result;
+#undef Result
+}
+
+EIF_REFERENCE F740_3643 (EIF_REFERENCE Current)
+{
+	GTCX
+	return RTOSCF(3643,F740_3643_body,(Current));
+}
+
+/* {CHARACTER_8_REF}.lower_value */
+static EIF_REFERENCE F740_3644_body (EIF_REFERENCE Current)
+{
+	GTCX
+	RTEX;
+	
+
+	
+	RTEV;
+	RTGC;
+	RTOSP (3644);
+#define Result RTOSR(3644)
+	RTOC_NEW(Result);
+	Result = *(EIF_REFERENCE *)(RTMS_EX_H("\000\001\002\003\004\005\006\007\010\011\012\013\014\015\016\017\020\021\022\023\024\025\026\027\030\031\032\033\034\035\036\037 !\"#$%&\'()*+,-./0123456789:;<=>\?@abcdefghijklmnopqrstuvwxyz[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\200\201\202\203\204\205\206\207\210\211\212\213\214\215\216\217\220\221\222\223\224\225\226\227\230\231\232\233\234\235\236\237\240\241\242\243\244\245\246\247\250\251\252\253\254\255\256\257\260\261\262\263\264\265\266\267\270\271\272\273\274\275\276\277\340\341\342\343\344\345\346\347\350\351\352\353\354\355\356\357\360\361\362\363\364\365\366\327\370\371\372\373\374\375\376\337\340\341\342\343\344\345\346\347\350\351\352\353\354\355\356\357\360\361\362\363\364\365\366\367\370\371\372\373\374\375\376\377",256,531798015));
+	RTOSE (3644);
+	RTEE;
+	return Result;
+#undef Result
+}
+
+EIF_REFERENCE F740_3644 (EIF_REFERENCE Current)
+{
+	GTCX
+	return RTOSCF(3644,F740_3644_body,(Current));
+}
+
+void EIF_Minit153 (void)
+{
+	GTCX
+}
+
+
+#ifdef __cplusplus
+}
+#endif

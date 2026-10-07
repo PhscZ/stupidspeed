@@ -1,0 +1,30 @@
+# task 06 char_count — expected output: 10000000
+# build: Rscript 06_char_count.R    run: Rscript 06_char_count.R
+#
+# The 100 MB text is built once by strrep, before the scan, never by appending.
+# R has no character type: substr(text, i, i) is the per-character step, which
+# makes a hundred million one-character strings. This task is expected to be
+# very slow; that is a legitimate result, not a bug.
+
+char_count <- function() {
+  t0 <- proc.time()[["elapsed"]]
+  text <- strrep("abcdefghij", 10000000)
+  n <- nchar(text)
+  count <- 0
+  i <- 1
+  while (i <= n) {
+    ch <- substr(text, i, i)
+    if (ch == "a") {
+      # skip
+    } else if (ch == "e") {
+      # skip
+    } else if (ch == "h") {
+      count <- count + 1
+    }
+    i <- i + 1
+  }
+  cat(sprintf("TIME_MS=%.3f\n", (proc.time()[["elapsed"]] - t0) * 1000), file = stderr())
+  cat(sprintf("%.0f\n", count))
+}
+
+char_count()

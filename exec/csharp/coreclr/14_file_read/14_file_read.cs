@@ -1,0 +1,29 @@
+// task 14 file_read — expected output: 2389704704
+// build: coreclr: dotnet build -c Release | nativeaot: dotnet publish -c Release -p:PublishAot=true | mono: mcs -optimize+ 14_file_read.cs    run: coreclr: dotnet run -c Release (or bin/Release/net8.0/14_file_read.exe) | nativeaot: bin/Release/net8.0/publish/14_file_read.exe | mono: mono 14_file_read.exe
+using System;
+using System.IO;
+
+class Program
+{
+    static void Main()
+    {
+        System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
+        const int ChunkSize = 1048576;
+        byte[] buffer = new byte[ChunkSize];
+        long total = 0;
+        using (FileStream fs = new FileStream("data.bin", FileMode.Open, FileAccess.Read))
+        {
+            int read;
+            while ((read = fs.Read(buffer, 0, buffer.Length)) > 0)
+            {
+                for (int i = 0; i < read; i++)
+                {
+                    total += buffer[i];
+                }
+            }
+        }
+        sw.Stop();
+        Console.Error.WriteLine("TIME_MS=" + sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture));
+        Console.WriteLine(total % 4294967296L);
+    }
+}

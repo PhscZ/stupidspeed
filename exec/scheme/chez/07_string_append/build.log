@@ -1,0 +1,1 @@
+no build step: scheme --optimize-level 3 --script 07_string_append.ss compiles the script on every run 

@@ -1,0 +1,20 @@
+[90mCompiling project (Scala 3.9.0, Scala Native 0.5.12)[0m
+[90mCompiled project (Scala 3.9.0, Scala Native 0.5.12)[0m
+[info] Linking (multithreadingEnabled=detect) (4497 ms)
+[info] Discovered 908 classes and 5519 methods after classloading
+[info] Checking intermediate code (quick) (656 ms)
+[info] Discovered 763 classes and 2818 methods after optimization
+[info] Optimizing (release-fast mode) (15495 ms)
+[info] Produced 8 LLVM IR files
+[info] Generating intermediate code (10011 ms)
+[error] C:/stupidspeed/exec/scala-native/scala-native/11_parallel_sum/.scala-build/11_parallel_sum_db87727628-2eb3113205/native/native/dependencies/nativelib_native0.5_3-0.5.12-4/scala-native/gc/immix/Synchronizer.c:117:13: warning: label followed by a declaration is a C23 extension [-Wc23-extensions]
+[error]   117 |             ULONG_PTR addr = ex->ExceptionRecord->ExceptionInformation[1];
+[error]       |             ^
+[error] 1 warning generated.
+[info] Compiling to native code (83460 ms)
+[info] Linking with [dbghelp, kernel32, userenv, advapi32]
+[info] Linking native code (immix gc, none lto) (19230 ms)
+[info] Postprocessing (0 ms)
+[info] Total (130456 ms)
+Wrote C:\stupidspeed\exec\scala-native\scala-native\11_parallel_sum\prog.exe, run it with
+  .\prog.exe

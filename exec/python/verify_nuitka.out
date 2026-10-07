@@ -1,0 +1,16 @@
+01_branches OK TIME_MS=17257.230
+02_switch_case OK TIME_MS=17084.185
+03_func_sum OK TIME_MS=15915.911
+04_array_sum OK TIME_MS=214.298
+05_alloc_churn OK TIME_MS=5427.950
+06_char_count OK TIME_MS=8382.130
+07_string_append OK TIME_MS=60.791
+08_average OK TIME_MS=16190.709
+09_fib_recursive OK TIME_MS=27119.913
+10_pi OK TIME_MS=124.275
+11_parallel_sum OK TIME_MS=12766.867
+12_matrix_add OK TIME_MS=1216.984
+13_matrix_mul OK TIME_MS=49299.929
+14_file_read OK TIME_MS=3737.507
+15_file_write OK TIME_MS=292.719
+python-nuitka PASS 15/15

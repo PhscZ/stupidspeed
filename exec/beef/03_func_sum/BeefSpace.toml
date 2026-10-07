@@ -1,0 +1,5 @@
+FileVersion = 1
+Projects = {03_func_sum = {Path = "."}}
+
+[Workspace]
+StartupProject = "03_func_sum"

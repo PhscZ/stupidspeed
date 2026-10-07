@@ -1,0 +1,1 @@
+no build step: wasmtime run 08_average.wat parses the text form on every run 

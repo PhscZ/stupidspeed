@@ -1,0 +1,6 @@
+Free Pascal Compiler version 3.2.2 [2021/05/15] for x86_64
+Copyright (c) 1993-2021 by Florian Klaempfl and others
+Target OS: Win64 for x64
+Compiling 08_average.pas
+Linking program
+34 lines compiled, 0.5 sec, 79120 bytes code, 5252 bytes data

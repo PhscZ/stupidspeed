@@ -1,0 +1,5 @@
+  Determinando os projetos a serem restaurados...
+  C:\stupidspeed\exec\csharp\nativeaot\10_pi\10_pi.csproj restaurado (em 539 ms).
+  10_pi -> C:\stupidspeed\exec\csharp\nativeaot\10_pi\bin\Release\net8.0\win-x64\10_pi.dll
+  Generating native code
+  10_pi -> C:\stupidspeed\exec\csharp\nativeaot\10_pi\bin\Release\net8.0\win-x64\publish\

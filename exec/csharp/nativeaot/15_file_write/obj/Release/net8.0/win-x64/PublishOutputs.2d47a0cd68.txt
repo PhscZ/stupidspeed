@@ -1,0 +1,2 @@
+C:\stupidspeed\exec\csharp\nativeaot\15_file_write\bin\Release\net8.0\win-x64\publish\15_file_write.exe
+C:\stupidspeed\exec\csharp\nativeaot\15_file_write\bin\Release\net8.0\win-x64\publish\15_file_write.pdb

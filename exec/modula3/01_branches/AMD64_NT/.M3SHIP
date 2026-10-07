@@ -1,0 +1,8 @@
+make_dir("C:/stupidspeed/tools/cm3/cm3-all-AMD64_NT-d5.10.0-VC2019-20210221/pkg/01_branches/AMD64_NT")
+install_file(".M3EXPORTS", "C:/stupidspeed/tools/cm3/cm3-all-AMD64_NT-d5.10.0-VC2019-20210221/pkg/01_branches/AMD64_NT", "0644")
+make_dir("C:/stupidspeed/tools/cm3/cm3-all-AMD64_NT-d5.10.0-VC2019-20210221/bin")
+install_file("prog.pdb", "C:/stupidspeed/tools/cm3/cm3-all-AMD64_NT-d5.10.0-VC2019-20210221/bin", "0755")
+install_file(".M3WEB", "C:/stupidspeed/tools/cm3/cm3-all-AMD64_NT-d5.10.0-VC2019-20210221/pkg/01_branches/AMD64_NT", "0644")
+make_dir("C:/stupidspeed/tools/cm3/cm3-all-AMD64_NT-d5.10.0-VC2019-20210221/pkg/01_branches")
+install_file("../Main.m3", "C:/stupidspeed/tools/cm3/cm3-all-AMD64_NT-d5.10.0-VC2019-20210221/pkg/01_branches", "0644")
+install_file("prog.exe", "C:/stupidspeed/tools/cm3/cm3-all-AMD64_NT-d5.10.0-VC2019-20210221/pkg/01_branches/AMD64_NT", "0644")

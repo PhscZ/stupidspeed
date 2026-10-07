@@ -1,0 +1,1 @@
+no build step: wasmtime run 03_func_sum.wat parses the text form on every run 

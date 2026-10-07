@@ -1,0 +1,2 @@
+C:\stupidspeed\exec\csharp\nativeaot\08_average\bin\Release\net8.0\win-x64\publish\08_average.exe
+C:\stupidspeed\exec\csharp\nativeaot\08_average\bin\Release\net8.0\win-x64\publish\08_average.pdb

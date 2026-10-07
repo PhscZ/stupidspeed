@@ -1,0 +1,5 @@
+  Determinando os projetos a serem restaurados...
+  C:\stupidspeed\exec\csharp\nativeaot\03_func_sum\03_func_sum.csproj restaurado (em 559 ms).
+  03_func_sum -> C:\stupidspeed\exec\csharp\nativeaot\03_func_sum\bin\Release\net8.0\win-x64\03_func_sum.dll
+  Generating native code
+  03_func_sum -> C:\stupidspeed\exec\csharp\nativeaot\03_func_sum\bin\Release\net8.0\win-x64\publish\

@@ -1,0 +1,2 @@
+C:\stupidspeed\exec\csharp\nativeaot\06_char_count\bin\Release\net8.0\win-x64\publish\06_char_count.exe
+C:\stupidspeed\exec\csharp\nativeaot\06_char_count\bin\Release\net8.0\win-x64\publish\06_char_count.pdb

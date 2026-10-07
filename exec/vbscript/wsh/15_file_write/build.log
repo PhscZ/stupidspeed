@@ -1,0 +1,1 @@
+no build step: cscript //nologo 15_file_write.vbs interprets the source on every run 

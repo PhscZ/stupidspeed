@@ -1,0 +1,65 @@
+========================================================================================================================
+GraalVM Native Image: Generating '_11_parallel_sum.exe' (executable)...
+========================================================================================================================
+For detailed information and explanations on the build output, visit:
+https://github.com/oracle/graal/blob/master/docs/reference-manual/native-image/BuildOutput.md
+------------------------------------------------------------------------------------------------------------------------
+Warning: The host machine does not support all features of 'x86-64-v3'. Falling back to '-march=compatibility' for best compatibility.
+[1/8] Initializing...                                                                                  (15,9s @ 0,15GiB)
+ Builder configuration:
+ - Java version: 25.0.4.1.1+1, vendor version: GraalVM CE 25.4.4.1.1+1.1
+ - Graal compiler: optimization level: 2, target machine: compatibility
+ - C compiler: cl.exe (microsoft, x64, 19.44.35229)
+ - Assertions: disabled, system assertions: disabled
+ Image configuration:
+ - Garbage collector: Serial GC (max heap size: 80% of RAM)
+ - Assertions: disabled (class-specific config may apply), system assertions: disabled
+------------------------------------------------------------------------------------------------------------------------
+Build resources:
+ - 10.20GiB of memory (85% of system memory because $CI set to 'true')
+ - 8 thread(s) (100,0% of 8 available processor(s), determined at start)
+[2/8] Performing analysis...  [*****]                                                                  (18,2s @ 0,28GiB)
+    2.232 types,   2.022 fields, and   9.065 methods found reachable
+       80 types,      35 fields, and     197 methods registered for reflection
+       53 types,      30 fields, and      48 methods registered for JNI access
+       52 resource accesses registered with 107B total size
+        1 native library: version
+[3/8] Building universe...                                                                              (2,8s @ 0,32GiB)
+[4/8] Parsing methods...      [*]                                                                       (1,7s @ 0,33GiB)
+[5/8] Inlining methods...     [***]                                                                     (1,4s @ 0,34GiB)
+[6/8] Compiling methods...    [****]                                                                   (19,9s @ 0,30GiB)
+[7/8] Laying out methods...   [**]                                                                      (2,2s @ 0,32GiB)
+[8/8] Creating image...       [**]                                                                      (2,8s @ 0,35GiB)
+   2,05MiB (42,00%) for code area:     4.686 compilation units
+   2,63MiB (53,89%) for image heap:   43.371 objects and 1 resource
+ 205,19KiB ( 4,11%) for other data
+   4,87MiB in total image size, 4,87MiB in total file size
+------------------------------------------------------------------------------------------------------------------------
+Top 10 origins of code area:                                Top 10 object types in image heap:
+ 252,37KiB o.g.n.runtime/com.oracle.svm.core.code            619,66KiB byte[] for string data
+ 224,41KiB java.base/java.util                               478,54KiB byte[] for code metadata
+ 218,84KiB java.base/java.lang                               309,30KiB java.base/java.lang.String
+ 183,31KiB o.g.n.runtime/com.oracle.svm.core.genscavenge     236,42KiB java.base/java.lang.Class
+  96,95KiB java.base/java.util.concurrent                    226,69KiB o.g.n.runtime/c.o.s.core.hub.DynamicHubCompanion
+  54,74KiB o.g.n.runtime/com.oracle.svm.core                 138,98KiB java.base/java.lang.Object[]
+  45,96KiB java.base/java.util.stream                        115,53KiB java.base/char[]
+  37,24KiB o.g.n.runtime/com.oracle.svm.core.jni              80,20KiB byte[] for general heap data
+  33,25KiB o.g.n.runtime/com.oracle.svm.core.thread           65,39KiB heap alignment
+  32,64KiB java.base/sun.nio.cs                               49,09KiB byte[] for reflection metadata
+ 915,11KiB for 120 more packages                             368,20KiB for 636 more object types
+Warning: The host machine does not support all features of 'x86-64-v3'. Falling back to '-march=compatibility' for best compatibility.
+------------------------------------------------------------------------------------------------------------------------
+Recommendations:
+ FUTR: Use '--future-defaults=all' to prepare for future releases.
+ HEAP: Set max heap for improved and more predictable memory usage.
+ CPU:  Enable more CPU features with '-march=native' for improved performance.
+------------------------------------------------------------------------------------------------------------------------
+                      3,3s (4,7% of total time) in 323 GCs | Peak RSS: 873,16MiB | CPU load: 4,45
+------------------------------------------------------------------------------------------------------------------------
+Build artifacts:
+ C:\stupidspeed\exec\java-graalvm-native\11_parallel_sum\_11_parallel_sum.exe (executable, 4,87MiB)
+========================================================================================================================
+Finished generating '_11_parallel_sum' in 1m 7s.
+
+The build process encountered 2 warnings.
+

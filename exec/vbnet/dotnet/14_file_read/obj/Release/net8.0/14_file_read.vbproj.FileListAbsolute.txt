@@ -1,0 +1,15 @@
+C:\stupidspeed\exec\vbnet\dotnet\14_file_read\bin\Release\net8.0\14_file_read.exe
+C:\stupidspeed\exec\vbnet\dotnet\14_file_read\bin\Release\net8.0\14_file_read.deps.json
+C:\stupidspeed\exec\vbnet\dotnet\14_file_read\bin\Release\net8.0\14_file_read.runtimeconfig.json
+C:\stupidspeed\exec\vbnet\dotnet\14_file_read\bin\Release\net8.0\14_file_read.dll
+C:\stupidspeed\exec\vbnet\dotnet\14_file_read\bin\Release\net8.0\14_file_read.pdb
+C:\stupidspeed\exec\vbnet\dotnet\14_file_read\obj\Release\net8.0\14_file_read.GeneratedMSBuildEditorConfig.editorconfig
+C:\stupidspeed\exec\vbnet\dotnet\14_file_read\obj\Release\net8.0\14_file_read.AssemblyInfoInputs.cache
+C:\stupidspeed\exec\vbnet\dotnet\14_file_read\obj\Release\net8.0\14_file_read.AssemblyInfo.vb
+C:\stupidspeed\exec\vbnet\dotnet\14_file_read\obj\Release\net8.0\14_file_read.vbproj.CoreCompileInputs.cache
+C:\stupidspeed\exec\vbnet\dotnet\14_file_read\obj\Release\net8.0\14_file_read.sourcelink.json
+C:\stupidspeed\exec\vbnet\dotnet\14_file_read\obj\Release\net8.0\14_file_read.dll
+C:\stupidspeed\exec\vbnet\dotnet\14_file_read\obj\Release\net8.0\refint\14_file_read.dll
+C:\stupidspeed\exec\vbnet\dotnet\14_file_read\obj\Release\net8.0\14_file_read.pdb
+C:\stupidspeed\exec\vbnet\dotnet\14_file_read\obj\Release\net8.0\14_file_read.genruntimeconfig.cache
+C:\stupidspeed\exec\vbnet\dotnet\14_file_read\obj\Release\net8.0\ref\14_file_read.dll

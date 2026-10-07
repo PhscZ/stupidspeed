@@ -1,0 +1,1 @@
+no build step: janet.exe compiles the script to bytecode on every run 

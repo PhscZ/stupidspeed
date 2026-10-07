@@ -1,0 +1,6 @@
+Free Pascal Compiler version 3.2.2 [2021/05/15] for x86_64
+Copyright (c) 1993-2021 by Florian Klaempfl and others
+Target OS: Win64 for x64
+Compiling 14_file_read.pas
+Linking program
+41 lines compiled, 0.4 sec, 167824 bytes code, 9508 bytes data

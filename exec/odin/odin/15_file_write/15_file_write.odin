@@ -1,0 +1,37 @@
+// task 15 file_write — expected output: 52428800
+// build: odin build 15_file_write.odin -o:speed -out:prog    run: ./prog
+// fsync is os.flush in core:os (FlushFileBuffers on Windows, fsync on Unix), and
+// core:os has no os.create, so the file is opened with O_WRONLY|O_CREATE|O_TRUNC.
+package main
+
+import "core:fmt"
+import "core:os"
+import "core:time"
+
+main :: proc() {
+	t0 := time.now()
+	buf := make([]u8, 1 << 20)
+	defer delete(buf)
+	for i in 0 ..< len(buf) {
+		buf[i] = u8(i % 256)
+	}
+
+	f, err := os.open("out.bin", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, os.perm_number(0o666))
+	if err != nil {
+		os.exit(1)
+	}
+
+	written: i64
+	for _ in 0 ..< 50 {
+		n, werr := os.write(f, buf)
+		written += i64(n)
+		if werr != nil {
+			break
+		}
+	}
+
+	os.flush(f)
+	os.close(f)
+	fmt.eprintfln("TIME_MS=%.3f", time.duration_milliseconds(time.since(t0)))
+	fmt.println(written)
+}

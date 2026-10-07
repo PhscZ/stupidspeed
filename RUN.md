@@ -625,10 +625,13 @@ tree drops by 10.5 GB. It has to be the same volume, which it is inside one chec
 script verifies the root fixture's sha256 before and after, so a run that damaged it is
 caught rather than propagated into 200 more directories.
 
-`--prune` removes two kinds of file, both regenerable and both gitignored. `data.bin` inside
+`--prune` removes two kinds of file, both regenerable. `data.bin` inside
 a `*15_file_write*` directory: no task-15 program reads it, because task 15 writes `out.bin`
 and nothing else, so those 67 copies are pure waste. And `out.bin` anywhere, which task 15
-overwrites on every run.
+overwrites on every run. Neither is worth committing: the fixture itself is already at the
+repository root, and `out.bin` is a result, not an input. `exec/` is tracked — the built
+programs and their row scripts both — so `--prune` is what keeps a checkout from carrying
+359 copies of a file that exists once.
 
 The verifiers tolerate either state: each one copies the fixture only when the destination is
 missing or is not already the same file, so a hard-linked tree and a freshly built tree both

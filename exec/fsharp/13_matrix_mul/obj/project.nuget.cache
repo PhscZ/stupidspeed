@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "n0jiRyLXSWY=",
+  "success": true,
+  "projectFilePath": "C:\\stupidspeed\\exec\\fsharp\\13_matrix_mul\\13_matrix_mul.fsproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\pz020\\.nuget\\packages\\fsharp.core\\8.0.403\\fsharp.core.8.0.403.nupkg.sha512"
+  ],
+  "logs": []
+}

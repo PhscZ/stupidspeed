@@ -1,0 +1,1 @@
+no build step: wasmtime run 09_fib_recursive.wat parses the text form on every run 

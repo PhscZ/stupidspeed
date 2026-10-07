@@ -1,0 +1,31 @@
+# task 05 alloc_churn — expected output: 1274991808 #
+# build: none (interpreter)    run: a68g 05_alloc_churn.a68 #
+# note: ten million 64-byte buffers taken from the heap. Storing each one in slots #
+# note: keeps it reachable and drops the buffer it replaces, which is what gives the #
+# note: collector something to do; a compiled row needs that line or -O2 deletes the #
+# note: allocation. #
+# timing: clock is a68g's processor-time clock, in seconds, as a REAL; for this #
+# note: single-threaded interpreter that is the program's own work, which is what the #
+# note: contract brackets. TIME_MS is written to stand error as a whole number of #
+# note: milliseconds, and stdout is unchanged. #
+
+REAL tim0 = clock;
+
+[1:256] REF [] CHAR slots;
+
+FOR i TO 256 DO
+  slots[i] := NIL
+OD;
+
+INT total := 0;
+
+FOR i FROM 0 TO 9999999 DO
+  REF [] CHAR buf = HEAP [1:64] CHAR;
+  buf[1] := REPR (i MOD 256);
+  total +:= ABS buf[1];
+  slots[(i MOD 256) + 1] := buf
+OD;
+
+INT tms = ENTIER(1000.0 * (clock - tim0) + 0.5);
+putf(stand error, ($g$, "TIME_MS=" + whole(tms, 0), $l$));
+print((whole(total, 0), newline))

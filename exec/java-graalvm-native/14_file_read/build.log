@@ -1,0 +1,65 @@
+========================================================================================================================
+GraalVM Native Image: Generating '_14_file_read.exe' (executable)...
+========================================================================================================================
+For detailed information and explanations on the build output, visit:
+https://github.com/oracle/graal/blob/master/docs/reference-manual/native-image/BuildOutput.md
+------------------------------------------------------------------------------------------------------------------------
+Warning: The host machine does not support all features of 'x86-64-v3'. Falling back to '-march=compatibility' for best compatibility.
+[1/8] Initializing...                                                                                  (13,1s @ 0,14GiB)
+ Builder configuration:
+ - Java version: 25.0.4.1.1+1, vendor version: GraalVM CE 25.4.4.1.1+1.1
+ - Graal compiler: optimization level: 2, target machine: compatibility
+ - C compiler: cl.exe (microsoft, x64, 19.44.35229)
+ - Assertions: disabled, system assertions: disabled
+ Image configuration:
+ - Garbage collector: Serial GC (max heap size: 80% of RAM)
+ - Assertions: disabled (class-specific config may apply), system assertions: disabled
+------------------------------------------------------------------------------------------------------------------------
+Build resources:
+ - 10.20GiB of memory (85% of system memory because $CI set to 'true')
+ - 8 thread(s) (100,0% of 8 available processor(s), determined at start)
+[2/8] Performing analysis...  [*****]                                                                  (16,0s @ 0,28GiB)
+    2.243 types,   2.045 fields, and   9.115 methods found reachable
+       80 types,      35 fields, and     194 methods registered for reflection
+       53 types,      30 fields, and      48 methods registered for JNI access
+       52 resource accesses registered with 107B total size
+        1 native library: version
+[3/8] Building universe...                                                                              (2,6s @ 0,32GiB)
+[4/8] Parsing methods...      [*]                                                                       (1,8s @ 0,32GiB)
+[5/8] Inlining methods...     [***]                                                                     (1,3s @ 0,35GiB)
+[6/8] Compiling methods...    [****]                                                                   (17,4s @ 0,32GiB)
+[7/8] Laying out methods...   [**]                                                                      (3,3s @ 0,30GiB)
+[8/8] Creating image...       [**]                                                                      (3,4s @ 0,33GiB)
+   2,07MiB (42,22%) for code area:     4.718 compilation units
+   2,63MiB (53,67%) for image heap:   43.505 objects and 1 resource
+ 205,44KiB ( 4,10%) for other data
+   4,89MiB in total image size, 4,89MiB in total file size
+------------------------------------------------------------------------------------------------------------------------
+Top 10 origins of code area:                                Top 10 object types in image heap:
+ 252,37KiB o.g.n.runtime/com.oracle.svm.core.code            620,98KiB byte[] for string data
+ 224,40KiB java.base/java.util                               482,52KiB byte[] for code metadata
+ 218,62KiB java.base/java.lang                               310,15KiB java.base/java.lang.String
+ 183,31KiB o.g.n.runtime/com.oracle.svm.core.genscavenge     237,95KiB java.base/java.lang.Class
+  96,95KiB java.base/java.util.concurrent                    227,80KiB o.g.n.runtime/c.o.s.core.hub.DynamicHubCompanion
+  54,74KiB o.g.n.runtime/com.oracle.svm.core                 139,09KiB java.base/java.lang.Object[]
+  45,96KiB java.base/java.util.stream                        115,53KiB java.base/char[]
+  37,24KiB o.g.n.runtime/com.oracle.svm.core.jni              80,70KiB byte[] for general heap data
+  34,71KiB java.base/sun.nio.cs                               49,30KiB byte[] for reflection metadata
+  34,39KiB java.base/java.io                                  39,88KiB java.base/java.util.HashMap$Node
+ 931,87KiB for 120 more packages                             384,09KiB for 641 more object types
+Warning: The host machine does not support all features of 'x86-64-v3'. Falling back to '-march=compatibility' for best compatibility.
+------------------------------------------------------------------------------------------------------------------------
+Recommendations:
+ FUTR: Use '--future-defaults=all' to prepare for future releases.
+ HEAP: Set max heap for improved and more predictable memory usage.
+ CPU:  Enable more CPU features with '-march=native' for improved performance.
+------------------------------------------------------------------------------------------------------------------------
+                      3,0s (4,8% of total time) in 292 GCs | Peak RSS: 866,24MiB | CPU load: 4,72
+------------------------------------------------------------------------------------------------------------------------
+Build artifacts:
+ C:\stupidspeed\exec\java-graalvm-native\14_file_read\_14_file_read.exe (executable, 4,89MiB)
+========================================================================================================================
+Finished generating '_14_file_read' in 1m 0s.
+
+The build process encountered 2 warnings.
+

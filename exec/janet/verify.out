@@ -1,0 +1,16 @@
+janet janet 01_branches OK TIME_MS=38373.197
+janet janet 02_switch_case OK TIME_MS=37982.187
+janet janet 03_func_sum OK TIME_MS=25786.109
+janet janet 04_array_sum OK TIME_MS=442.161
+janet janet 05_alloc_churn OK TIME_MS=13029.142
+janet janet 06_char_count OK TIME_MS=17132.693
+janet janet 07_string_append OK TIME_MS=112809.336
+janet janet 08_average OK TIME_MS=32507.737
+janet janet 09_fib_recursive OK TIME_MS=84765.010
+janet janet 10_pi OK TIME_MS=48283.989
+janet janet 11_parallel_sum OK TIME_MS=9035.200
+janet janet 12_matrix_add OK TIME_MS=1475.729
+janet janet 13_matrix_mul OK TIME_MS=45708.250
+janet janet 14_file_read OK TIME_MS=12006.731
+janet janet 15_file_write OK TIME_MS=787.004
+janet janet PASS 15/15

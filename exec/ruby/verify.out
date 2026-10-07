@@ -1,0 +1,39 @@
+########## cruby-yjit
+### cruby-yjit: ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [x64-mingw-ucrt]
+### cruby-yjit: YJIT enabled? NO_YJIT
+### cruby-yjit: BLOCKED as a YJIT row - this Ruby has no YJIT (upstream supports it only on macOS/Linux/BSD). The 15/15 below is PLAIN CRuby and must NOT be recorded as the cruby+yjit cell.
+01_branches OK TIME_MS=22702.305
+02_switch_case OK TIME_MS=30122.674
+03_func_sum OK TIME_MS=11354.348
+04_array_sum OK TIME_MS=311.895
+05_alloc_churn OK TIME_MS=8713.308
+06_char_count OK TIME_MS=63997.267
+07_string_append OK TIME_MS=25351.087
+08_average OK TIME_MS=17466.074
+09_fib_recursive OK TIME_MS=25876.717
+10_pi OK TIME_MS=320.991
+11_parallel_sum OK TIME_MS=30044.080
+12_matrix_add OK TIME_MS=442.932
+13_matrix_mul OK TIME_MS=16663.667
+14_file_read OK TIME_MS=16323.956
+15_file_write OK TIME_MS=402.393
+ruby cruby-yjit PASS 15/15
+ruby cruby-yjit NOTE: YJIT NOT ENABLED - the number above is plain CRuby, a fallback, not the cruby+yjit row
+########## jruby
+### jruby: jruby 10.0.7.0 (3.4.5) 2026-09-21 06989ab73b OpenJDK 64-Bit Server VM 25.0.4.1.1+1-jvmci-25.4-b23 on 25.0.4.1.1+1-jvmci-25.4-b23 +indy +jit [x86_64-mswin32]
+01_branches OK TIME_MS=351059.306
+02_switch_case OK TIME_MS=233806.902
+03_func_sum OK TIME_MS=127149.448
+04_array_sum OK TIME_MS=4561.667
+05_alloc_churn OK TIME_MS=69189.629
+06_char_count OK TIME_MS=16218.655
+07_string_append OK TIME_MS=11661.269
+08_average OK TIME_MS=228874.647
+09_fib_recursive OK TIME_MS=10603.709
+10_pi OK TIME_MS=599.903
+11_parallel_sum OK TIME_MS=3855.024
+12_matrix_add OK TIME_MS=21021.739
+13_matrix_mul OK TIME_MS=714586.646
+14_file_read OK TIME_MS=7061.019
+15_file_write OK TIME_MS=194.122
+ruby jruby PASS 15/15

@@ -1,0 +1,6 @@
+Free Pascal Compiler version 3.2.2 [2021/05/15] for x86_64
+Copyright (c) 1993-2021 by Florian Klaempfl and others
+Target OS: Win64 for x64
+Compiling 06_char_count.pas
+Linking program
+38 lines compiled, 0.3 sec, 73120 bytes code, 5284 bytes data

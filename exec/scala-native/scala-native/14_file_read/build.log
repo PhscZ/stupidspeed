@@ -1,0 +1,20 @@
+[90mCompiling project (Scala 3.9.0, Scala Native 0.5.12)[0m
+[90mCompiled project (Scala 3.9.0, Scala Native 0.5.12)[0m
+[info] Linking (multithreadingEnabled=detect) (5589 ms)
+[info] Discovered 1277 classes and 9047 methods after classloading
+[info] Checking intermediate code (quick) (208 ms)
+[info] Multithreading was not explicitly enabled - initial class loading has not detected any usage of system threads. Multithreading support will be disabled to improve performance.
+[info] Linking (multithreadingEnabled=false) (5438 ms)
+[info] Discovered 1107 classes and 7637 methods after classloading
+[info] Checking intermediate code (quick) (120 ms)
+[info] Discovered 946 classes and 3719 methods after optimization
+[info] Optimizing (release-fast mode) (20366 ms)
+[info] Produced 8 LLVM IR files
+[info] Generating intermediate code (7274 ms)
+[info] Compiling to native code (65927 ms)
+[info] Linking with [dbghelp, kernel32, userenv, advapi32]
+[info] Linking native code (immix gc, none lto) (3700 ms)
+[info] Postprocessing (0 ms)
+[info] Total (108720 ms)
+Wrote C:\stupidspeed\exec\scala-native\scala-native\14_file_read\prog.exe, run it with
+  .\prog.exe

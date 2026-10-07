@@ -1,0 +1,13 @@
+In 03_func_sum.cr:8:11
+
+ 8 | t0 = Time.monotonic
+               ^--------
+Warning: Deprecated Time.monotonic. Use `Time.instant` instead.
+
+In 03_func_sum.cr:13:36
+
+ 13 | STDERR.puts "TIME_MS=%.3f" % (Time.monotonic - t0).total_milliseconds
+                                         ^--------
+Warning: Deprecated Time.monotonic. Use `Time.instant` instead.
+
+A total of 2 warnings were found.

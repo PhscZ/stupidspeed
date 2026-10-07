@@ -1,0 +1,2 @@
+C:\stupidspeed\exec\csharp\nativeaot\09_fib_recursive\bin\Release\net8.0\win-x64\publish\09_fib_recursive.exe
+C:\stupidspeed\exec\csharp\nativeaot\09_fib_recursive\bin\Release\net8.0\win-x64\publish\09_fib_recursive.pdb

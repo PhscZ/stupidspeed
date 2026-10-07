@@ -1,0 +1,26 @@
+
+#ifndef _C3_mi138_
+#define _C3_mi138_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern void F636_3062(EIF_REFERENCE);
+extern void F636_3070(EIF_REFERENCE, EIF_REFERENCE, EIF_POINTER);
+extern void F636_3071(EIF_REFERENCE, EIF_POINTER, EIF_POINTER);
+RTOSHP (3072)
+static void F636_3072_body(EIF_REFERENCE);
+extern void F636_3072(EIF_REFERENCE);
+extern void F636_3073(EIF_REFERENCE, EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER);
+extern void EIF_Minit138(void);
+extern void F630_2989(EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE);
+extern EIF_BOOLEAN F816_4818(EIF_REFERENCE);
+extern void F815_4752(EIF_REFERENCE, EIF_POINTER);
+extern void F630_2943(EIF_REFERENCE, EIF_INTEGER_32);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

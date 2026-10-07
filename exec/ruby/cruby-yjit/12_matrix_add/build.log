@@ -1,0 +1,2 @@
+C:\stupidspeed\exec\ruby\..\..\tools\ruby\bin\ruby.exe: warning: Ruby was built without YJIT support. You may need to install rustc to build Ruby with YJIT.
+Syntax OK

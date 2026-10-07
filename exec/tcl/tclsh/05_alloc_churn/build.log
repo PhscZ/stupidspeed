@@ -1,0 +1,1 @@
+no build step: tclsh parses and executes the script on every run 

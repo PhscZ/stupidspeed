@@ -1,0 +1,20 @@
+# task 07 string_append — expected output: 250000
+# build: unicon -s 07_string_append.icn    run: 07_string_append.exe
+# `text := text || "x"` is the spec's own form, but it is *not* the quadratic cell the task
+# is designed to measure here: measured 31-47 ms for the 250000 appends, and linear in the
+# append count — 47 / 94 / 172 ms at 250000 / 500000 / 1000000, and still linear with the
+# accumulator declared `global` or the append moved into a procedure. Unicon's concatenation
+# therefore extends the accumulator in place rather than copying it, so the cell measures an
+# amortised extend. The deviation is recorded in RUN.md, the same one the AutoHotkey, Dyalog,
+# Lobster, Raku, Erlang and Elixir rows carry.
+# timing: &time is Unicon's wall clock in milliseconds since midnight, and &errout is
+#         the standard error stream, so TIME_MS goes to stderr and stdout is unchanged.
+
+procedure main()
+    ssT0 := &time
+    text := ""
+    every i := 1 to 250000 do
+        text := text || "x"
+    write(&errout, "TIME_MS=", &time - ssT0)
+    write(*text)
+end

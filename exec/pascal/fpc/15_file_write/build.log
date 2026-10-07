@@ -1,0 +1,6 @@
+Free Pascal Compiler version 3.2.2 [2021/05/15] for x86_64
+Copyright (c) 1993-2021 by Florian Klaempfl and others
+Target OS: Win64 for x64
+Compiling 15_file_write.pas
+Linking program
+46 lines compiled, 0.5 sec, 167808 bytes code, 9508 bytes data

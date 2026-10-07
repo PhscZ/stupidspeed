@@ -1,0 +1,12 @@
+<!-- task 08 average — expected output: 0.498046875 -->
+<!-- build: coreclr: dotnet build -c Release | nativeaot: dotnet publish -c Release -p:PublishAot=true | mono: mcs -optimize+ 08_average.cs    run: coreclr: dotnet run -c Release (or bin/Release/net8.0/08_average.exe) | nativeaot: bin/Release/net8.0/publish/08_average.exe | mono: mono 08_average.exe -->
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <Optimize>true</Optimize>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+</Project>

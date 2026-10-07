@@ -1,0 +1,25 @@
+// task 07 string_append — expected output: 250000
+// build: odin build 07_string_append.odin -o:speed -out:prog    run: ./prog
+// Odin strings are immutable, so `text = text + "x"` allocates a fresh string, copies the
+// old one and drops it; that is what make/copy/delete below does each iteration.
+package main
+
+import "core:fmt"
+import "core:time"
+
+main :: proc() {
+	t0 := time.now()
+	text: []u8 = nil
+	for _ in 0 ..< 250_000 {
+		n := len(text)
+		next := make([]u8, n + 1)
+		copy(next, text)
+		next[n] = u8('x')
+		if text != nil {
+			delete(text)
+		}
+		text = next
+	}
+	fmt.eprintfln("TIME_MS=%.3f", time.duration_milliseconds(time.since(t0)))
+	fmt.println(len(text))
+}

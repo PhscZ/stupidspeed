@@ -1,0 +1,15 @@
+C:\stupidspeed\exec\csharp\coreclr\04_array_sum\bin\Release\net8.0\04_array_sum.exe
+C:\stupidspeed\exec\csharp\coreclr\04_array_sum\bin\Release\net8.0\04_array_sum.deps.json
+C:\stupidspeed\exec\csharp\coreclr\04_array_sum\bin\Release\net8.0\04_array_sum.runtimeconfig.json
+C:\stupidspeed\exec\csharp\coreclr\04_array_sum\bin\Release\net8.0\04_array_sum.dll
+C:\stupidspeed\exec\csharp\coreclr\04_array_sum\bin\Release\net8.0\04_array_sum.pdb
+C:\stupidspeed\exec\csharp\coreclr\04_array_sum\obj\Release\net8.0\04_array_sum.GeneratedMSBuildEditorConfig.editorconfig
+C:\stupidspeed\exec\csharp\coreclr\04_array_sum\obj\Release\net8.0\04_array_sum.AssemblyInfoInputs.cache
+C:\stupidspeed\exec\csharp\coreclr\04_array_sum\obj\Release\net8.0\04_array_sum.AssemblyInfo.cs
+C:\stupidspeed\exec\csharp\coreclr\04_array_sum\obj\Release\net8.0\04_array_sum.csproj.CoreCompileInputs.cache
+C:\stupidspeed\exec\csharp\coreclr\04_array_sum\obj\Release\net8.0\04_array_sum.sourcelink.json
+C:\stupidspeed\exec\csharp\coreclr\04_array_sum\obj\Release\net8.0\04_array_sum.dll
+C:\stupidspeed\exec\csharp\coreclr\04_array_sum\obj\Release\net8.0\refint\04_array_sum.dll
+C:\stupidspeed\exec\csharp\coreclr\04_array_sum\obj\Release\net8.0\04_array_sum.pdb
+C:\stupidspeed\exec\csharp\coreclr\04_array_sum\obj\Release\net8.0\04_array_sum.genruntimeconfig.cache
+C:\stupidspeed\exec\csharp\coreclr\04_array_sum\obj\Release\net8.0\ref\04_array_sum.dll

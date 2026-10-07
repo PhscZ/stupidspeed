@@ -1,0 +1,6 @@
+Free Pascal Compiler version 3.2.2 [2021/05/15] for x86_64
+Copyright (c) 1993-2021 by Florian Klaempfl and others
+Target OS: Win64 for x64
+Compiling 07_string_append.pas
+Linking program
+28 lines compiled, 0.3 sec, 73072 bytes code, 5268 bytes data

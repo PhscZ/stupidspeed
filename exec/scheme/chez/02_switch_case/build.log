@@ -1,0 +1,1 @@
+no build step: scheme --optimize-level 3 --script 02_switch_case.ss compiles the script on every run 

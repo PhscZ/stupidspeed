@@ -1,0 +1,23 @@
+{application, stupidspeed_gleam, [
+    {vsn, "1.0.0"},
+    {applications, [gleam_erlang,
+                    gleam_stdlib]},
+    {description, "StUpIdSpEeD benchmark row for Gleam, compiled to Erlang and run on the BEAM"},
+    {modules, [t01_branches,
+               t02_switch_case,
+               t03_add_one,
+               t03_func_sum,
+               t04_array_sum,
+               t05_alloc_churn,
+               t06_char_count,
+               t07_string_append,
+               t08_average,
+               t09_fib_recursive,
+               t10_pi,
+               t11_parallel_sum,
+               t12_matrix_add,
+               t13_matrix_mul,
+               t14_file_read,
+               t15_file_write]},
+    {registered, []}
+]}.

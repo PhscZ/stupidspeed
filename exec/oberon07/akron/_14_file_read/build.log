@@ -1,0 +1,12 @@
+
+Akron Oberon Compiler v1.69 (64-bit) 06-jun-2025
+Copyright (c) 2018-2025, Anton Krotov
+------------------------------------------------
+compiling (1) API (SYSTEM)
+compiling (2) RTL (SYSTEM)
+compiling (3) Out (SYSTEM)
+compiling (4) WINAPI (SYSTEM)
+compiling (5) File (SYSTEM)
+compiling (6) _14_file_read (SYSTEM)
+------------------------------------------------
+1247 lines, 0.03 sec, 8704 bytes

@@ -1,0 +1,290 @@
+-- task 10 pi — expected output: 4470
+-- build: cmd.exe /c "..\..\tools\nelua\nelua.bat" -r -o 10_pi.exe 10_pi.nelua
+-- run: ./10_pi.exe
+-- measured: 0.2596 s wall clock (min of 3 runs), against 0.2416 s for the spigot as
+--       timed inside the program.
+-- note: Nelua has no arbitrary-precision integer in its standard library, so this is
+--       the hand-rolled route the README describes: sign-magnitude, little-endian
+--       base-1e9 limbs, the same state machine as sources/c/10_pi.c and
+--       sources/janet/10_pi.janet. Only the operations the spigot needs are here: add,
+--       subtract, multiply by a small integer, and a quotient, which is always one
+--       decimal digit and so comes out of repeated subtraction. The digits themselves
+--       are never printed, only their sum.
+-- note: why every intermediate is exact in 64-bit limbs. A limb is < 1e9. The only
+--       multipliers that are not small decimal digits are `7k + 2` and `l`, and both are
+--       bounded: instrumenting a copy of this file at 1000 digits shows k reaching 3314
+--       and l reaching 3 + 2*3314 = 6631, so the largest multiplier is 7*3314 + 2 =
+--       23200. The largest product formed is therefore limb * 23200 <=
+--       999999999 * 23200 ~= 2.32e13, and the carry added to it is carry = p / 1e9 <=
+--       23200. 2.32e13 is more than five orders of magnitude inside int64's 9.22e18, and
+--       the same bound covers every fixed multiplier (2, 3, 4, 10). Nothing in the loop
+--       can overflow, and every limb stays a plain decimal residue, so `p % BASE` and
+--       `p // BASE` are exact.
+-- note: the state is six preallocated limb arrays in a module-level pool, so nothing is
+--       allocated inside the loop and the collector is never involved. The same
+--       instrumented run shows the largest limb count actually reached at 1000 digits is
+--       1248 of the 4096 available — 3.3x headroom, 11232 decimal digits of capacity
+--       against the 1000 this task needs.
+-- note: `//` and `%` are Nelua's floor division and floor remainder, and `%` on signed
+--       operands goes through the compiler's inline floor-mod helper. The spigot's state
+--       really does go negative (r = 10(r - n*t) with r < n*t on the second iteration),
+--       so the limbs carry a sign exactly like the C reference's `neg` field, and floor
+--       semantics are what make the limb arithmetic agree with it.
+-- note: measured on this host, built with -r: 1000 digits in 0.2416 s, digit sum 4470.
+--       Cross-checks against independently computed values: 10 digits -> 39,
+--       100 digits -> 471, 200 digits -> 897, 400 digits -> 1753. The 100-digit value
+--       agrees with the mpmath value the Octave row's reduced table records, and the
+--       limb arithmetic itself was checked separately: limb*limb = 999999998000000001
+--       fits in int64, 2^1000's digit sum is 1366 as expected, and a multiply-then-divide
+--       round trip returns the original value.
+require 'io'
+require 'os'
+require 'string'
+-- timing: os.now is Nelua's monotonic clock in seconds (nanosecond resolution on
+--         Windows, via QueryPerformanceCounter); TIME_MS goes to stderr through
+--         io.stderr and stdout is unchanged.
+local ssT0 = os.now()
+local function ss_report()
+  io.stderr:write(string.format('TIME_MS=%.3f\n', (os.now() - ssT0) * 1000))
+end
+
+local BASE: int64 = 1000000000
+
+local Big = @record{ limb: *[4096]int64, n: usize, neg: boolean }
+
+local big_pool: [6][4096]int64
+local bigs: [6]Big
+
+local function big_init(): void
+  for i = 0, 5 do
+    bigs[i] = (@Big){limb = &big_pool[i], n = 0, neg = false}
+  end
+end
+
+local function big_trim(x: *Big): void
+  while x.n > 0 and x.limb[x.n - 1] == 0 do
+    x.n = x.n - 1
+  end
+  if x.n == 0 then
+    x.neg = false
+  end
+end
+
+local function big_set(x: *Big, v: int64): void
+  x.n = 0
+  x.neg = false
+  while v > 0 do
+    x.limb[x.n] = v % BASE
+    x.n = x.n + 1
+    v = v // BASE
+  end
+end
+
+local function big_copy(dst: *Big, src: *Big): void
+  for i = 0, src.n - 1 do
+    dst.limb[i] = src.limb[i]
+  end
+  dst.n = src.n
+  dst.neg = src.neg
+end
+
+local function big_cmp_mag(a: *Big, b: *Big): integer
+  if a.n ~= b.n then
+    return a.n < b.n and -1 or 1
+  end
+  local i: integer = a.n - 1
+  while i >= 0 do
+    if a.limb[i] ~= b.limb[i] then
+      return a.limb[i] < b.limb[i] and -1 or 1
+    end
+    i = i - 1
+  end
+  return 0
+end
+
+local function big_cmp(a: *Big, b: *Big): integer
+  if a.neg ~= b.neg then
+    return a.neg and -1 or 1
+  end
+  local c: integer = big_cmp_mag(a, b)
+  return a.neg and -c or c
+end
+
+local function big_add_mag(r: *Big, a: *Big, b: *Big): void
+  local n: integer = a.n > b.n and a.n or b.n
+  local carry: int64 = 0
+  for i = 0, n - 1 do
+    local s: int64 = carry
+    if i < a.n then
+      s = s + a.limb[i]
+    end
+    if i < b.n then
+      s = s + b.limb[i]
+    end
+    if s >= BASE then
+      s = s - BASE
+      carry = 1
+    else
+      carry = 0
+    end
+    r.limb[i] = s
+  end
+  r.limb[n] = carry
+  r.n = n + (carry ~= 0 and 1 or 0)
+  r.neg = false
+end
+
+-- requires a >= b >= 0
+local function big_sub_mag(r: *Big, a: *Big, b: *Big): void
+  local borrow: int64 = 0
+  for i = 0, a.n - 1 do
+    local bi: int64 = (i < b.n and b.limb[i] or 0) + borrow
+    if a.limb[i] >= bi then
+      r.limb[i] = a.limb[i] - bi
+      borrow = 0
+    else
+      r.limb[i] = a.limb[i] + BASE - bi
+      borrow = 1
+    end
+  end
+  r.n = a.n
+  r.neg = false
+  big_trim(r)
+end
+
+local function big_add(r: *Big, a: *Big, b: *Big): void
+  if a.neg == b.neg then
+    big_add_mag(r, a, b)
+    r.neg = a.neg
+  elseif big_cmp_mag(a, b) >= 0 then
+    big_sub_mag(r, a, b)
+    r.neg = a.neg
+  else
+    big_sub_mag(r, b, a)
+    r.neg = b.neg
+  end
+  big_trim(r)
+end
+
+-- r = a - b
+local function big_sub(r: *Big, a: *Big, b: *Big): void
+  if a.neg ~= b.neg then
+    big_add_mag(r, a, b)
+    r.neg = a.neg
+  elseif big_cmp_mag(a, b) >= 0 then
+    big_sub_mag(r, a, b)
+    r.neg = a.neg
+  else
+    big_sub_mag(r, b, a)
+    r.neg = not a.neg
+  end
+  big_trim(r)
+end
+
+local function big_mul_small(r: *Big, a: *Big, m: int64): void
+  if m == 0 or a.n == 0 then
+    r.n = 0
+    r.neg = false
+    return
+  end
+  local carry: int64 = 0
+  for i = 0, a.n - 1 do
+    local p: int64 = a.limb[i] * m + carry
+    r.limb[i] = p % BASE
+    carry = p // BASE
+  end
+  local n: integer = a.n
+  while carry > 0 do
+    r.limb[n] = carry % BASE
+    carry = carry // BASE
+    n = n + 1
+  end
+  r.n = n
+  r.neg = a.neg
+  big_trim(r)
+end
+
+-- floor(a / b) for a >= 0 and b > 0. The spigot only ever asks for a quotient of one
+-- decimal digit, so counting how many times b fits into a is enough.
+local function big_quot(a: *Big, b: *Big, work: *Big): int64
+  local q: int64 = 0
+  if a.neg or b.neg or b.n == 0 then
+    return 0
+  end
+  big_copy(work, b)
+  while big_cmp(a, work) >= 0 do
+    q = q + 1
+    big_add_mag(work, work, b)
+  end
+  return q
+end
+
+local function run(ndigits: integer): integer
+  big_init()
+  local q: *Big = &bigs[0]
+  local r: *Big = &bigs[1]
+  local t: *Big = &bigs[2]
+  local u: *Big = &bigs[3]
+  local v: *Big = &bigs[4]
+  local w: *Big = &bigs[5]
+
+  big_set(q, 1)
+  big_set(r, 0)
+  big_set(t, 1)
+
+  local k: int64 = 1
+  local l: int64 = 3
+  local n: int64 = 3
+  local sum: integer = 0
+  local produced: integer = 0
+
+  while produced < ndigits do
+    big_mul_small(u, q, 4)
+    big_add(u, u, r)             -- u = 4q + r
+    big_mul_small(v, t, n + 1)   -- v = (n + 1)t
+
+    if big_cmp(u, v) < 0 then
+      -- the digit n is settled
+      sum = sum + (@integer)(n)
+      produced = produced + 1
+
+      big_mul_small(u, q, 3)
+      big_add(u, u, r)
+      big_mul_small(u, u, 10)    -- u = 10(3q + r)
+      local next: int64 = big_quot(u, t, w) - 10 * n
+
+      big_mul_small(v, t, n)     -- v = n t
+      big_sub(v, r, v)           -- v = r - n t
+      big_mul_small(r, v, 10)    -- r = 10(r - n t)
+      big_mul_small(q, q, 10)    -- q = 10q, t is unchanged
+
+      n = next
+    else
+      -- not settled yet: widen the state by one more term
+      big_mul_small(u, q, 7 * k + 2)
+      big_mul_small(v, r, l)
+      big_add(u, u, v)           -- u = q(7k + 2) + r l
+      big_mul_small(v, t, l)     -- v = t l
+      local next: int64 = big_quot(u, v, w)
+
+      big_mul_small(u, q, 2)
+      big_add(u, u, r)
+      big_mul_small(u, u, l)     -- u = (2q + r) l
+      big_copy(r, u)
+      big_mul_small(q, q, k)
+      big_mul_small(t, t, l)
+
+      k = k + 1
+      l = l + 2
+      n = next
+    end
+  end
+
+  return sum
+end
+
+-- the work is evaluated into a variable first: computing it inside the print
+-- argument list would place the whole task after the timer stops.
+local ssR = run(1000)
+ss_report()
+print(ssR)

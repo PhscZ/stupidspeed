@@ -1,0 +1,2 @@
+:- module m07_string_append.
+:- interface.

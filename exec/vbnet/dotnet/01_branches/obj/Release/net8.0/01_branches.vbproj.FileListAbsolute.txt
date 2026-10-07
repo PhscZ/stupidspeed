@@ -1,0 +1,15 @@
+C:\stupidspeed\exec\vbnet\dotnet\01_branches\bin\Release\net8.0\01_branches.exe
+C:\stupidspeed\exec\vbnet\dotnet\01_branches\bin\Release\net8.0\01_branches.deps.json
+C:\stupidspeed\exec\vbnet\dotnet\01_branches\bin\Release\net8.0\01_branches.runtimeconfig.json
+C:\stupidspeed\exec\vbnet\dotnet\01_branches\bin\Release\net8.0\01_branches.dll
+C:\stupidspeed\exec\vbnet\dotnet\01_branches\bin\Release\net8.0\01_branches.pdb
+C:\stupidspeed\exec\vbnet\dotnet\01_branches\obj\Release\net8.0\01_branches.GeneratedMSBuildEditorConfig.editorconfig
+C:\stupidspeed\exec\vbnet\dotnet\01_branches\obj\Release\net8.0\01_branches.AssemblyInfoInputs.cache
+C:\stupidspeed\exec\vbnet\dotnet\01_branches\obj\Release\net8.0\01_branches.AssemblyInfo.vb
+C:\stupidspeed\exec\vbnet\dotnet\01_branches\obj\Release\net8.0\01_branches.vbproj.CoreCompileInputs.cache
+C:\stupidspeed\exec\vbnet\dotnet\01_branches\obj\Release\net8.0\01_branches.sourcelink.json
+C:\stupidspeed\exec\vbnet\dotnet\01_branches\obj\Release\net8.0\01_branches.dll
+C:\stupidspeed\exec\vbnet\dotnet\01_branches\obj\Release\net8.0\refint\01_branches.dll
+C:\stupidspeed\exec\vbnet\dotnet\01_branches\obj\Release\net8.0\01_branches.pdb
+C:\stupidspeed\exec\vbnet\dotnet\01_branches\obj\Release\net8.0\01_branches.genruntimeconfig.cache
+C:\stupidspeed\exec\vbnet\dotnet\01_branches\obj\Release\net8.0\ref\01_branches.dll

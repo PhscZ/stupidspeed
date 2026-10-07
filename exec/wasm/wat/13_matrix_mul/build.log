@@ -1,0 +1,1 @@
+no build step: wasmtime run 13_matrix_mul.wat parses the text form on every run 

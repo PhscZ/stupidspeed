@@ -1,0 +1,39 @@
+-- task 02 switch_case — expected output: 7500000075000000
+-- build: cmd.exe /c "..\..\tools\nelua\nelua.bat" -r -o 02_switch_case.exe 02_switch_case.nelua
+-- run: ./02_switch_case.exe
+-- measured: 0.0455 s wall clock (min of 3 runs), against 0.0273 s for the loop itself as
+--       timed inside the program. Task 11 is compared against this number.
+-- note: `-r` is this compiler's `-O2` equivalent (gcc `-O2 -DNDEBUG` plus the
+--       compiler's `nochecks` pragma); see 01_branches.nelua.
+-- note: Nelua's `switch` lowers to a C `switch`, so this is a real four-way jump
+--       table rather than a chain of equality tests. The generated C is
+--       `switch(nelua_imod_nlint64(i, 4)) { case 0: ... case 1: ... }`.
+-- note: the accumulator is a signed 64-bit `integer` and the total 7500000075000000
+--       is below 2^63, so it is exact. `i % 4` uses the same inline floor-mod helper
+--       as task 01, which gcc folds to a bare `%` for a non-negative counter.
+-- note: the value is a multiple of 4 for every iteration's i, so floor and truncating
+--       modulo agree; nothing here depends on which one the compiler picks.
+require 'io'
+require 'os'
+require 'string'
+-- timing: os.now is Nelua's monotonic clock in seconds (nanosecond resolution on
+--         Windows, via QueryPerformanceCounter); TIME_MS goes to stderr through
+--         io.stderr and stdout is unchanged.
+local ssT0 = os.now()
+local function ss_report()
+  io.stderr:write(string.format('TIME_MS=%.3f\n', (os.now() - ssT0) * 1000))
+end
+
+local acc: integer = 0
+
+for i = 0, 99999999 do
+  switch i % 4 do
+    case 0 then acc = acc + 1
+    case 1 then acc = acc + i
+    case 2 then acc = acc + 2 * i
+    case 3 then acc = acc + 3 * i
+  end
+end
+
+ss_report()
+print(acc)

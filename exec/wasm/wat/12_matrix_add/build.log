@@ -1,0 +1,1 @@
+no build step: wasmtime run 12_matrix_add.wat parses the text form on every run 

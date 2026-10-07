@@ -1,0 +1,1 @@
+no build step: cscript //nologo 11_parallel_sum.vbs interprets the source on every run 

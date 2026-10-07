@@ -1,0 +1,1 @@
+no build step: cscript //nologo 08_average.vbs interprets the source on every run 

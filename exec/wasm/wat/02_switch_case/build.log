@@ -1,0 +1,1 @@
+no build step: wasmtime run 02_switch_case.wat parses the text form on every run 

@@ -1,0 +1,40 @@
+-- task 09 fib_recursive — expected output: 102334155
+-- build: cmd.exe /c "..\..\tools\nelua\nelua.bat" -r -o 09_fib_recursive.exe 09_fib_recursive.nelua
+-- run: ./09_fib_recursive.exe
+-- measured: 0.1486 s wall clock (min of 3 runs), against 0.1070 s for fib(40) as timed
+--       inside the program.
+-- note: `-r` is this compiler's `-O2` equivalent (gcc `-O2 -DNDEBUG` plus the
+--       compiler's `nochecks` pragma); see 01_branches.nelua.
+-- note: the plain double recursion, exactly as specified. fib(40) is 102334155, well
+--       below 2^63, so the int64 result is exact.
+-- note: measured on this host, built with -r: 0.1070 s. The nominal call count is
+--       331160281, which would be 0.32 ns per call — too fast for a real call, and the
+--       reason is the C compiler, not Nelua. The generated C really is the double
+--       recursion (`return fib(n - 1) + fib(n - 2);`), but gcc 16.1.0 at -O2 partially
+--       expands it, and the built function is 267 instructions with one self-call
+--       instead of two. The control is a plain C `fib(40)` built by the same gcc with
+--       the same flags: 102334155 in 0.1155 s and 0.1188 s. Nelua and C are the same
+--       speed here, so this cell measures what the C row measures.
+require 'io'
+require 'os'
+require 'string'
+local function fib(n: integer): integer
+  if n < 2 then
+    return n
+  end
+  return fib(n - 1) + fib(n - 2)
+end
+
+-- timing: os.now is Nelua's monotonic clock in seconds (nanosecond resolution on
+--         Windows, via QueryPerformanceCounter); TIME_MS goes to stderr through
+--         io.stderr and stdout is unchanged.
+local ssT0 = os.now()
+local function ss_report()
+  io.stderr:write(string.format('TIME_MS=%.3f\n', (os.now() - ssT0) * 1000))
+end
+
+-- the work is evaluated into a variable first: computing it inside the print
+-- argument list would place the whole task after the timer stops.
+local ssR = fib(40)
+ss_report()
+print(ssR)

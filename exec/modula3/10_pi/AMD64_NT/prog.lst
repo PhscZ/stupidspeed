@@ -1,0 +1,48 @@
+Microsoft (R) Incremental Linker Version 14.44.35229.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+-out:prog.exe 
+-subsystem:console 
+-entry:mainCRTStartup 
+-nodefaultlib 
+-debug 
+-incremental:no 
+-opt:ref 
+-delayload:wsock32.dll 
+-delayload:advapi32.dll 
+-delayload:gdi32.dll 
+-delayload:netapi32.dll 
+-delayload:user32.dll 
+-delayload:comctl32.dll 
+-delayload:rpcrt4.dll 
+-delayload:iphlpapid.dll 
+delayimp.lib 
+_m3main.obj 
+Main.mo 
+C:\stupidspeed\tools\cm3\cm3-all-AMD64_NT-d5.10.0-VC2019-20210221\pkg\arithmetic\AMD64_NT\arithmetic.lib 
+C:\stupidspeed\tools\cm3\cm3-all-AMD64_NT-d5.10.0-VC2019-20210221\pkg\libm3\AMD64_NT\m3.lib 
+C:\stupidspeed\tools\cm3\cm3-all-AMD64_NT-d5.10.0-VC2019-20210221\pkg\m3core\AMD64_NT\m3core.lib 
+rpcrt4.lib 
+winspool.lib 
+comctl32.lib 
+wsock32.lib 
+comdlg32.lib 
+netapi32.lib 
+gdi32.lib 
+user32.lib 
+advapi32.lib 
+kernel32.lib 
+libcmt.lib 
+libvcruntime.lib 
+libucrt.lib 
+C:\stupidspeed\tools\cm3\cm3-all-AMD64_NT-d5.10.0-VC2019-20210221\bin\..\lib\hand.obj 
+C:\stupidspeed\tools\cm3\cm3-all-AMD64_NT-d5.10.0-VC2019-20210221\bin\..\lib\WinConstants.obj 
+C:\stupidspeed\tools\cm3\cm3-all-AMD64_NT-d5.10.0-VC2019-20210221\bin\..\lib\Uconstants.obj 
+LINK : warning LNK4199: /DELAYLOAD:wsock32.dll ignored; no imports found from wsock32.dll
+LINK : warning LNK4199: /DELAYLOAD:advapi32.dll ignored; no imports found from advapi32.dll
+LINK : warning LNK4199: /DELAYLOAD:gdi32.dll ignored; no imports found from gdi32.dll
+LINK : warning LNK4199: /DELAYLOAD:netapi32.dll ignored; no imports found from netapi32.dll
+LINK : warning LNK4199: /DELAYLOAD:user32.dll ignored; no imports found from user32.dll
+LINK : warning LNK4199: /DELAYLOAD:comctl32.dll ignored; no imports found from comctl32.dll
+LINK : warning LNK4199: /DELAYLOAD:rpcrt4.dll ignored; no imports found from rpcrt4.dll
+LINK : warning LNK4199: /DELAYLOAD:iphlpapid.dll ignored; no imports found from iphlpapid.dll

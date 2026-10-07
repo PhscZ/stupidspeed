@@ -1,0 +1,1 @@
+no build step: wasmtime run 11_parallel_sum.wat parses the text form on every run 

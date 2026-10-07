@@ -1,0 +1,40 @@
+# task 10 pi — expected output: 4470
+# build: unicon -s 10_pi.icn    run: 10_pi.exe
+# Unicon has arbitrary-precision integers in the language itself — `2^100` and a 39-digit
+# product are both exact — so this is a built-in-bignum cell, not a hand-rolled-limb one.
+# The algorithm is Gibbons' unbounded spigot, the same loop every other row runs.
+# timing: &time is Unicon's wall clock in milliseconds since midnight, and &errout is
+#         the standard error stream, so TIME_MS goes to stderr and stdout is unchanged.
+
+procedure main()
+    ssT0 := &time
+    ssR := pisum(1000)
+    write(&errout, "TIME_MS=", &time - ssT0)
+    write(ssR)
+
+end
+
+procedure pisum(n)
+    q := 1; r := 0; t := 1; k := 1; nn := 3; l := 3
+    sum := 0
+    count := 0
+    while count < n do {
+        if 4 * q + r - t < nn * t then {
+            sum +:= nn
+            count +:= 1
+            q2 := 10 * q
+            r2 := 10 * (r - nn * t)
+            nn2 := (10 * (3 * q + r)) / t - 10 * nn
+            q := q2; r := r2; nn := nn2
+        } else {
+            q2 := q * k
+            r2 := (2 * q + r) * l
+            t2 := t * l
+            nn2 := (q * (7 * k + 2) + r * l) / (t * l)
+            l2 := l + 2
+            k2 := k + 1
+            q := q2; r := r2; t := t2; nn := nn2; l := l2; k := k2
+        }
+    }
+    return sum
+end

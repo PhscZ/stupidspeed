@@ -1,0 +1,25 @@
+# task 14 file_read — expected output: 2389704704
+# build: godot --headless --script 14_file_read.gd    run: godot --headless --script 14_file_read.gd
+# note: data.bin is read from the project directory in 1 MiB chunks; the byte loop is
+#       100 M iterations and is slow in GDScript.
+
+extends SceneTree
+
+func _initialize() -> void:
+	var t0 := Time.get_ticks_msec()
+	var f := FileAccess.open("data.bin", FileAccess.READ)
+	if f == null:
+		quit(1)
+		return
+	var total := 0
+	while not f.eof_reached():
+		var buf := f.get_buffer(1048576)
+		var count := buf.size()
+		if count == 0:
+			break
+		for i in count:
+			total += buf[i]
+	f.close()
+	printerr("TIME_MS=%d" % (Time.get_ticks_msec() - t0))
+	print(total % 4294967296)
+	quit()

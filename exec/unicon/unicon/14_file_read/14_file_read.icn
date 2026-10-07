@@ -1,0 +1,20 @@
+# task 14 file_read — expected output: 2389704704
+# build: unicon -s 14_file_read.icn    run: 14_file_read.exe
+# The file is opened in UNTRANSLATED mode, "u". Unicon's default buffered mode is a text
+# stream, and on Windows it stops at the first 0x1A — data.bin has one at offset 26 — so the
+# default mode reads 26 bytes and prints a tiny wrong number. "u" delivers the raw bytes,
+# which is the same 0x1A trap the Standard ML row documents. Read in 1 MiB chunks.
+# timing: &time is Unicon's wall clock in milliseconds since midnight, and &errout is
+#         the standard error stream, so TIME_MS goes to stderr and stdout is unchanged.
+
+procedure main()
+    ssT0 := &time
+    f := open("data.bin", "u") | stop("cannot open data.bin")
+    total := 0
+    while chunk := reads(f, 1048576) do
+        every c := !chunk do
+            total := (total + ord(c)) % 4294967296
+    close(f)
+    write(&errout, "TIME_MS=", &time - ssT0)
+    write(total)
+end

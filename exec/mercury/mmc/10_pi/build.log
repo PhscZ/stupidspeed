@@ -1,0 +1,6 @@
+mercury_compile --make m10_pi --grade hlc.gc.pregen 
+Making Mercury\int3s\m10_pi.int3
+Making Mercury\ints\m10_pi.int
+Making Mercury\cs\m10_pi.c
+Making Mercury\os\m10_pi.o
+Making m10_pi.exe

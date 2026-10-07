@@ -1,0 +1,14 @@
+module(2, "08_average.m",
+	m08_average,
+	{},
+	{builtin, io, private_builtin},
+	{float, int, list, string, time, (string.format), (string.parse_util)},
+	{},
+	{},
+	{},
+	{},
+	{},
+	no_foreign_export,
+	no_main,
+	{}
+).

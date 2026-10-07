@@ -1,0 +1,1 @@
+no build step: wasmtime run 14_file_read.wat parses the text form on every run 

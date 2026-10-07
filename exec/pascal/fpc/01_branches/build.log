@@ -1,0 +1,6 @@
+Free Pascal Compiler version 3.2.2 [2021/05/15] for x86_64
+Copyright (c) 1993-2021 by Florian Klaempfl and others
+Target OS: Win64 for x64
+Compiling 01_branches.pas
+Linking program
+39 lines compiled, 0.4 sec, 73200 bytes code, 5252 bytes data

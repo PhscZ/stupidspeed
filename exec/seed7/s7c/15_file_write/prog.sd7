@@ -1,0 +1,69 @@
+# task 15 file_write — expected output: 52428800
+# build: s7c -O2 prog.sd7    run: ./prog
+# note: the 1 MiB buffer is the byte cycle 0..255 repeated 4096 times, built with one
+#       'mult' call, and it is written 50 times to out.bin in binary mode ("w", not "wt").
+# note: Seed7 has flush() but no fsync: the runtime implements filFlush as fflush() and
+#       nothing else, with no fsync or FlushFileBuffers anywhere. The deviation is
+#       therefore flush + close, no fsync, the same one the Tcl, D, Julia, Nim, Dart,
+#       Pascal, COBOL and Dolphin rows note.
+# note: write(file, string) returns nothing in the standard library, so the byte count is
+#       accumulated from length(buf), as the Tcl row does.
+
+$ include "seed7_05.s7i";
+  include "time.s7i";
+
+(* timing: GET_TIME (TIM_NOW) is Seed7's clock, giving the local time of day down to
+   the microsecond; TIME_MS goes to stderr with writeln(STD_ERR, ...), and stdout is
+   unchanged. Instrumented by inspection: Seed7 is not installed on this machine, so
+   this row's timing is unverified. *)
+const func integer: ssNowMs is func
+  result
+    var integer: ms is 0;
+  local
+    var integer: year is 0;
+    var integer: month is 0;
+    var integer: day is 0;
+    var integer: hour is 0;
+    var integer: minute is 0;
+    var integer: second is 0;
+    var integer: micro_second is 0;
+    var integer: timeZone is 0;
+    var boolean: daylightSavingTime is FALSE;
+  begin
+    GET_TIME(year, month, day, hour, minute, second, micro_second, timeZone, daylightSavingTime);
+    ms := ((hour * 60 + minute) * 60 + second) * 1000 + micro_second div 1000;
+  end func;
+
+const proc: ssReport (in integer: t0) is func
+  local
+    var integer: ms is 0;
+  begin
+    ms := ssNowMs - t0;
+    writeln(STD_ERR, "TIME_MS=" <& str(ms));
+  end func;
+
+const proc: main is func
+  local
+    var integer: ssT0 is 0;
+    var string: buf is "";
+    var file: f is STD_NULL;
+    var integer: i is 0;
+    var integer: written is 0;
+  begin
+    ssT0 := ssNowMs;
+    for i range 0 to 255 do
+      buf &:= chr(i);
+    end for;
+    buf := buf mult 4096;
+
+    f := open("out.bin", "w");
+    for i range 1 to 50 do
+      write(f, buf);
+      written +:= length(buf);
+    end for;
+    flush(f);
+    close(f);
+
+    ssReport(ssT0);
+    writeln(written);
+  end func;

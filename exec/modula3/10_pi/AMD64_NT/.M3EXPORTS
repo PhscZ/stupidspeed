@@ -1,0 +1,7 @@
+% exports of 10_pi
+_define_pgm("prog")
+import_version("m3core", "AMD64_NT")
+import_version("arithmetic", "AMD64_NT")
+import_version("libm3", "AMD64_NT")
+_map_add_module("Main.m3", "10_pi", ".", "hidden")
+import_sys_lib("TCP")

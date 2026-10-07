@@ -1,0 +1,1 @@
+no build step: scheme --optimize-level 3 --script 11_parallel_sum.ss compiles the script on every run 

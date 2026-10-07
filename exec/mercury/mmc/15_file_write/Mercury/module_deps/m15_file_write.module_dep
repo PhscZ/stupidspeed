@@ -1,0 +1,14 @@
+module(2, "15_file_write.m",
+	m15_file_write,
+	{},
+	{builtin, io, private_builtin},
+	{int, list, string, time, (string.format), (string.parse_util)},
+	{},
+	{},
+	{},
+	{},
+	{},
+	no_foreign_export,
+	no_main,
+	{}
+).

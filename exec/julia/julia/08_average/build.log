@@ -1,0 +1,1 @@
+no build step: 08_average.jl is staged; Julia parses and JIT-compiles it inside the measured run. 

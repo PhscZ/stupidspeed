@@ -1,0 +1,17 @@
+# task 06 char_count — expected output: 10000000
+# build: godot --headless --script 06_char_count.gd    run: godot --headless --script 06_char_count.gd
+# note: the 100 MB text is built once by repeat(), then scanned by index; the scan is
+#       100 M iterations and is slow in GDScript.
+
+extends SceneTree
+
+func _initialize() -> void:
+	var t0 := Time.get_ticks_msec()
+	var text := "abcdefghij".repeat(10000000)
+	var count := 0
+	for i in text.length():
+		if text[i] == "h":
+			count += 1
+	printerr("TIME_MS=%d" % (Time.get_ticks_msec() - t0))
+	print(count)
+	quit()
