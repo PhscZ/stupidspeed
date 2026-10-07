@@ -2,9 +2,9 @@
 // build: swiftc -O -o prog 01_branches.swift    run: ./prog
 // timing: Date() is Foundation's wall clock in seconds since the reference date, and
 //         timeIntervalSinceDate gives the elapsed time in seconds as a Double; TIME_MS goes
-//         to stderr with FileHandle.standardError and stdout is unchanged. Instrumented by
-//         inspection: the installed Swift toolchain cannot compile on this machine (missing
-//         _complex and ucrt Swift modules), so this row's timing is unverified.
+//         to stderr with FileHandle.standardError and stdout is unchanged. Verified on this
+//         machine with Swift 6.4: all fifteen tasks print the expected line and the TIME_MS
+//         line, once the build passes the -windows-sdk-root flags BUILD.md documents.
 import Foundation
 
 func ssReport(_ t0: Date) {

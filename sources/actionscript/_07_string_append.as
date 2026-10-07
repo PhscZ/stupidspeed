@@ -8,9 +8,13 @@
 //       everything after that offset. System.output() writes to stdout but adds no
 //       newline, so every line ends with an explicit \n, and the program calls
 //       NativeApplication.exit(0) because an AIR app otherwise stays alive.
-// note: AS3 String is immutable, so text + "x" allocates a new string and copies the
-//       old one, which is the same quadratic copy the C row's realloc plus strcat does.
-//       Left at 250000 for that reason.
+// note: `text = text + "x"` is the spec's own form, but it is *not* the quadratic cell the
+//       task is designed to measure: the AVM2 extends the accumulator in place when the
+//       value is unshared, so the 250000 appends are amortised. Measured: 52 ms, and linear
+//       in the append count — 49 / 101 / 200 ms at 250000 / 500000 / 1000000, an exact
+//       doubling per doubling, against the ~7.8 GB a real quadratic copy would move at the
+//       row's own loop count. The deviation is recorded in RUN.md, the same one the Tcl,
+//       Unicon, AutoHotkey, Dyalog, Lobster, Raku, Erlang and Elixir rows carry.
 // timing: getTimer() is the AVM2 clock, whole milliseconds since the VM started. AIR has
 //       no stderr, so the contract's fallback applies: TIME_MS goes to time.txt in
 //       File.applicationStorageDirectory -- %APPDATA%\stupidspeed.actionscript\Local Store\,

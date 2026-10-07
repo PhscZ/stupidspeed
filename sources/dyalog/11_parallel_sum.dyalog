@@ -26,8 +26,8 @@
 ⍝         stream handle for stderr, so the contract's fallback applies: TIME_MS is
 ⍝         written to time.txt in the working directory with ⎕NPUT, and stdout is
 ⍝         unchanged. The counter is read on the master thread around the spawn and
-⍝         the ⎕TSYNC join. Instrumented by inspection: Dyalog is not installed on
-⍝         this machine, so this row's timing is unverified.
+⍝         the ⎕TSYNC join. Verified on this machine with Dyalog 20.0: all fifteen
+⍝         tasks print the expected line and write time.txt.
 ⎕IO←0
 ⎕PP←17
 

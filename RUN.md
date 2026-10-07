@@ -39,7 +39,7 @@ Languages compiled to a static native binary need nothing. The rest need the fol
 | Assembly | x86-64 fasm | none | freestanding PE, `kernel32.dll` only |
 | Dolphin Smalltalk | Dolphin 8 | MSVC x86 runtime (`vcruntime140.dll` + `msvcp140.dll`) | the VM is 32-bit, so it needs the x86 runtime, not the x64 one |
 | Groovy | groovy | JRE 17 or newer | the distribution ships its own `groovy.bat` launcher |
-| Tcl | tclsh | none | task 11 also needs the `Thread` extension, see `BUILD.md` |
+| Tcl | tclsh | none | task 11 also needs the `Thread` extension; MSYS2's `mingw-w64-ucrt-x86_64-tcl` bundles it (`ucrt64/lib/thread2.8.13/`), see `BUILD.md` |
 | Java | openjdk | JRE 17 or newer | |
 | Java | openj9 | the Semeru JDK's own JRE (`tools/openj9/`) | Eclipse OpenJ9 21; the same class files as `openjdk`, no JVM flags, and `java.lang.Thread` maps to OS threads so task 11 is a real four-thread pass |
 | Java | graalvm jit | the GraalVM JDK itself, 21 or newer | no JVM flags needed: GraalVM's `java` has `UseJVMCICompiler` on by default, so it compiles the bytecode with the Graal compiler instead of HotSpot's C2 |
@@ -65,7 +65,7 @@ Languages compiled to a static native binary need nothing. The rest need the fol
 | Python | cython | the interpreter's `python3xx.dll` | the built `.exe` is **not** standalone: it imports the CPython DLL, so the matching CPython installation has to be beside it or on `PATH`. That DLL is the interpreter the program embeds, not a runtime for the compiled code — the loops are native. |
 | Python | nuitka | none | standalone binary |
 | Ruby | jruby | JRE + JRuby | needs Java 25 |
-| Lua | puc-lua, luajit | the interpreter | task 11 also needs the Lanes extension, see below. A Windows Lua distribution that ships `luarocks.exe` (the 5.4.6 build used here) installs it with one command, `luarocks install lanes`, given a MinGW `gcc` on `PATH`; the rock lands outside the interpreter tree, so `LUA_PATH`/`LUA_CPATH` must point at it or `require("lanes")` fails with `module 'lanes' not found`. |
+| Lua | puc-lua, luajit | the interpreter | No build step: `tools/lua/lua54.exe <task>.lua`, run from `exec/lua/`. **The binary is `lua54.exe`, not `lua.exe`** — there is no `bin\` subdirectory and no unversioned name in the Windows distribution this row uses. Task 11 also needs the Lanes extension, see below. A Windows Lua distribution that ships `luarocks.exe` (the 5.4.6 build used here) installs it with one command, `luarocks install lanes`, given a MinGW `gcc` on `PATH`; the rock lands outside the interpreter tree, so `LUA_PATH`/`LUA_CPATH` must point at it or `require("lanes")` fails with `module 'lanes' not found`. This repo's convention is `luarocks --tree tools/lua-rocks install lanes`; the verifier searches that tree first, then `%APPDATA%\luarocks` (where a plain `luarocks install` lands), and `LUA_ROCKS` overrides both. When no tree has Lanes the verifier reports task 11 as the only skipped cell instead of failing with a nil-index error from inside the task. |
 | Luau | luau, lute | the interpreter, and Lute for tasks 11, 14 and 15 | the plain Luau CLI has no file I/O and no process API at all — no `io`, no `os.execute`, no `package` — so those three tasks need Lute, the Luau team's own runtime. |
 | Pony | ponyc | none | a static binary. **0.65.0 specifically**: 0.66.0 raised the Windows floor to 11 / Server 2022, see `BUILD.md`. |
 | Lean 4 | lean | none | the compiled binary is standalone; the `leanc` linker driver links against the toolchain's own tree at build time only. |
@@ -135,7 +135,7 @@ Languages compiled to a static native binary need nothing. The rest need the fol
 | Ring | ring | none — the extracted tree is the runtime | No build step; the tree has to stay intact, because `load` resolves `ring/bin` and `ring/bin/load` relative to the executable rather than to the working directory. Task 11 also needs `bin\ring_threads.dll` beside `ring.exe`, which the light release does not ship; see `BUILD.md`. |
 | JScript | cscript | none — `cscript.exe` ships with Windows | Windows Script Host's Active Scripting JScript engine, which is not the `JavaScript` row's node/bun/deno. The `.js` extension is mapped to it; `//E:JScript` is passed explicitly. On Windows 11 24H2 and later the engine is JScript9Legacy, which reports 11.0.16384, rather than classic JScript 5.8. Task 03 needs `03_func_sum_add_one.js` beside it; tasks 14 and 15 need the working directory to hold `data.bin` and to be writable for `out.bin`. |
 | AutoHotkey | v2 | none — the extracted ZIP is the runtime (Windows-only) | No build step. `AutoHotkey64.exe /ErrorStdOut <task>.ahk`; the interpreter prints nothing on start-up, so the row's stdout is exactly the one expected line. Task 11 needs no extra install: the four workers are four child processes. |
-| Standard ML | Poly/ML | `PolyLib.dll` must be beside the executable | No build step at run time: the `.obj` the compiler exports contains the whole heap image, and the stub's `WinMain` loads it. Without `PolyLib.dll` next to the `.exe` the program dies before `main` with `STATUS_DLL_NOT_FOUND` and prints nothing. An exported program has no banner and no prompt — the top-level loop never starts — so the row's stdout is exactly the one expected line. Start-up floor about 65 ms. Tasks 14 and 15 run from `sources/standardml/` so that `data.bin`/`out.bin` resolve; task 14 reads in 65536-byte chunks. |
+| Standard ML | Poly/ML | `PolyLib.dll` must be beside the executable | No build step at run time: the `.obj` the compiler exports contains the whole heap image, and the stub's `WinMain` loads it. Without `PolyLib.dll` next to the `.exe` the program dies before `main` with `STATUS_DLL_NOT_FOUND` and prints nothing. An exported program has no banner and no prompt — the top-level loop never starts — so the row's stdout is exactly the one expected line. Start-up floor about 65 ms. Tasks 14 and 15 run from `sources/standardml/` so that `data.bin`/`out.bin` resolve; task 14 reads in 65536-byte chunks. **The run line passes `-H 256`** — Poly/ML's initial heap size, in megabytes — and it is required rather than a tuning knob: an exported image starts on the run-time system's default heap and grows it on demand, and when that growth fails under memory pressure the process dies with `Run out of store - interrupting threads` and no output. Measured on this machine: task 12 failed in about half of six runs, and task 06 died silently once, both with the default heap; neither failed in ten runs with `-H 256`. Reserving the heap up front also removes the growth steps, so the same cells measure about half the time — task 12 is about 25 ms against about 55 ms. |
 | Terra | terra | none, but the interpreter needs `VCINSTALLDIR` set and `INCLUDE` pointing at a C sysroot | No build step: `terra.exe <task>.t` compiles and JITs on every run, so that compile is inside the measured number, and an empty program still costs 36-50 ms. **`VCINSTALLDIR` must be non-nil or the interpreter aborts before opening the file** with `Can't find windows SDK version 8.1 or 10!` — it is a switch, the path is never read. `INCLUDE` is needed only by task 11, which includes `windows.h`; on this host it points at `tools/llvm-mingw/include`. Nothing is linked, so no MSVC and no Windows SDK are required. Task 15 syncs through `_commit`, so this row is not in the flush-and-close group. Tasks 14 and 15 run from `sources/terra/` so that `data.bin`/`out.bin` resolve. |
 | Dyalog APL | dyalog | the extracted interpreter tree | No build step: `dyascript.exe -script <task>.dyalog`, run from `sources/dyalog/`. **`dyascript.exe` is the console build**; `dyalog.exe`, `dyalogrt.exe` and `dyaedit.exe` are GUI-subsystem programs whose output never reaches a console. `-script` is mandatory — without it the interpreter starts a Session instead of running the file. `⎕IO←0` and `⎕PP←17` are required in every source: the default `⎕PP` of 10 prints task 02's total as `7.500000075E15`, which is `WRONG`. Runs unregistered, with nothing on stdout or stderr at start-up; the `UNREGISTERED` banner is interactive-mode-only and goes to stderr. Start-up floor about 0.2-0.25 s. Task 03 loads `AddOne.dyalog` with `2 ⎕FIX`; tasks 14 and 15 use the working directory for `data.bin`/`out.bin`. |
 | Nelua | nelua | none — native static binary | The compiled executable is self-contained and needs nothing at run time; only the compile needs the toolchain tree and a C compiler. `nelua.bat` has to be invoked through `cmd.exe`, and the build must run from `sources/nelua/` because `require` resolves against the working directory. Task 03's helper is a second module with `<noinline>`. Task 15 syncs through `_commit`, so this row is not in the flush-and-close group either. Tasks 14 and 15 run from `sources/nelua/` so that `data.bin`/`out.bin` resolve. |
@@ -608,7 +608,57 @@ writes `out.bin`.
 Put both in a RAM disk when you can. On a real disk, task 14 will be measuring the disk
 rather than the language, which is a different and less interesting result.
 
+**Staging, and why it is hard links.** Tasks 14 and 15 run from a working directory of their
+own, so each row needs the fixture beside its program. Doing that with copies is what made
+`exec/` 23.2 GB, of which 17.5 GB was 359 copies of this one 50 MiB file — 215 `data.bin`
+plus 144 `out.bin`. `exec/stage_fixtures.py` is the alternative:
+
+```
+python exec\stage_fixtures.py            # replace every data.bin copy with a hard link
+python exec\stage_fixtures.py --prune    # also delete the copies nothing reads
+python exec\stage_fixtures.py --check    # report only, change nothing
+```
+
+A hard link is a second name for the same file — the bytes exist once, every program that
+opens `"data.bin"` relative to its working directory still sees an ordinary file, and the
+tree drops by 10.5 GB. It has to be the same volume, which it is inside one checkout. The
+script verifies the root fixture's sha256 before and after, so a run that damaged it is
+caught rather than propagated into 200 more directories.
+
+`--prune` removes two kinds of file, both regenerable and both gitignored. `data.bin` inside
+a `*15_file_write*` directory: no task-15 program reads it, because task 15 writes `out.bin`
+and nothing else, so those 67 copies are pure waste. And `out.bin` anywhere, which task 15
+overwrites on every run.
+
+The verifiers tolerate either state: each one copies the fixture only when the destination is
+missing or is not already the same file, so a hard-linked tree and a freshly built tree both
+verify. `build_all.bat` for a row still copies `data.bin` the ordinary way, so a row can be
+rebuilt from scratch and re-verified without staging first.
+
 ## Measurement tooling
+
+Every row has a **row verifier** at `exec/<row>/verify.py`, and it is what decides whether a
+row passes: run one command, compare one line of stdout, read the timing line, check the file
+side effect. It is not the timer — the program times itself under the contract below — it is
+the pass/fail check that keeps a row honest while its cells are being filled in.
+
+A verifier checks three things per task, and nothing else:
+
+1. **stdout** equals the task's `expected output:` line, read from the row's own source header
+   rather than from a copy, so a source edit cannot leave the check behind;
+2. a **`TIME_MS`** value is present, on stderr or in `time.txt` for the rows whose language has
+   no reachable stderr;
+3. **task 15 left `out.bin`** behind, at 52428800 bytes, and task 14 read the fixture.
+
+Rows whose task 15 writes somewhere other than the working directory say so in the verifier:
+`actionscript` writes `out.bin` and `time.txt` into AIR's application-storage directory, and
+those are deleted before each run because all fifteen of its tasks share that one directory.
+
+Run one with `python exec\<row>\verify.py`; it prints one line per task and a final
+`<ROW> PASS n/15`. `exec/python/verify.py` is a thin entry point over the only row that needs
+two verifiers — `verify_interpreters.py` for cpython/pypy/graalpy and `verify_compilers.py`
+for nuitka — because its four toolchains are two interpreters and two compilers with
+different run recipes.
 
 | Need | Linux | Windows |
 |---|---|---|
@@ -698,13 +748,11 @@ row's own `timing:` comment as well.
   measured wall time is that boot. A harness reading stderr for `arc` has to take the last
   line rather than the only one, the way it takes the last 2354 bytes of stdout for
   `actionscript`.
-- **Absent toolchains.** The J row (`j9.7`), `swipl` and `sqlite` are not
-  installed on the machine the rows were instrumented on, so their timing code was written by
-  inspection and their cells stay unverified until the toolchain is present. The same applies to
-  `ring`, `seed7` and `swift`, whose own `timing:` comments say so.
-  `ats`, `basic`, `beef`, `cobol`, `dolphin`, `dyalog`, `eiffel`, `babashka`, `boo`, `groovy`,
-  `modula2`, `modula3` and `qb64` were absent when the rows were instrumented but have since been
-  installed here and verified end to end (15/15 each), so their cells are no longer
+- **Absent toolchains.** The J row (`j9.7`), `swipl`, `sqlite`, `ring`, `seed7` and `swift`, and
+  also `ats`, `basic`, `beef`, `cobol`, `dolphin`, `dyalog`, `eiffel`, `babashka`, `boo`, `groovy`,
+  `modula2`, `modula3` and `qb64`, were all absent when their rows were instrumented, so their
+  timing code was written by inspection first. Every one of those toolchains is installed here now
+  and every one of those rows has been verified end to end (15/15 each), so no cell is
   inspection-only. ADW and CM3 both installed portably — an Inno Setup unpack and a prebuilt zip —
   with no admin rights.
 
@@ -727,11 +775,21 @@ Every task runs six times, in 137 toolchains.
     Task 06's per-character `substr` scan is the other slow cell.
   - **Erlang and Elixir** are the reverse: both are fast, and their per-run start-up (about
     520 ms for Erlang, 800 ms for Elixir) is the main fixed cost, charged to every cell.
-  - **VBScript** is the slowest row overall. Task 14 is about **46 s** (91 s measured at 100 MiB,
-    so about 46 s at 50 MiB, at roughly 1.1 us per byte through the text-mode stream), and task 06
-    about 35 s. Task 10
-    is the worst cell in the matrix after `a68g`'s. Measured scaling at 100/200/400/800/1600
-    digits is 1.19 s, 3.24 s, 10.4 s, 46.1 s and 205.5 s, an exponent of about 2.16 in the digit
+  - **Tcl** is slow per operation and, unlike the rows around it here, it is slow in *every*
+    100-million-iteration task rather than in one cell: measured task 06 210.0 s, task 01
+    201.3 s, task 03 185.8 s, task 08 185.5 s, task 02 165.7 s, task 13 155.6 s and task 09
+    143.5 s, about 1.4-2.1 us per iteration through Tcl's bytecode. That shape — cost spread
+    across the whole row instead of concentrated in one cell — is the same one Dyalog's cost
+    has, and it is why Tcl is one of the slowest rows in the matrix. Task 07 is *not* slow
+    (0.28 s): `append` extends a uniquely-referenced value in place, so those appends are
+    amortised — see the task-07 note below. Everything else is small, except task 14's 36 s
+    read of the 50 MiB fixture and task 11's 7.9 s four-thread pass.
+  - **VBScript** concentrates its cost instead: task 09 is 222.0 s, task 13 83.5 s, task 03
+    80.3 s, task 10 74.8 s, task 06 38.4 s and task 14 about **46 s** (91 s measured at
+    100 MiB, so about 46 s at 50 MiB, at roughly 1.1 us per byte through the text-mode
+    stream). Its task 10 is the slowest 1000-digit spigot cell in the matrix after `a68g`'s.
+    Measured scaling at 100/200/400/800/1600 digits is 1.19 s, 3.24 s, 10.4 s, 46.1 s and
+    205.5 s, an exponent of about 2.16 in the digit
     count, which puts the 1000-digit run at roughly **1.4 minutes**. The digit sums at those
     scales are 471, 897, 1753, 3588 and 7269, each matching an independently computed value.
   - **OCaml** task 10 is about **4 s** at 1000 digits (405 s measured at 10000, scaled
@@ -826,6 +884,20 @@ Every task runs six times, in 137 toolchains.
     and task 10 about 1.2 minutes (73.4 s at 1000 digits); its four 100-million-iteration loops
     are 30 to 50 seconds each. Task 07 is *not* slow and that is the point: the expression
     compiler gives `text .= "x"` an in-place path, so the 250000 appends are amortised.
+  - **Tcl, Unicon and ActionScript** are three more rows where task 07 is *not* slow, for the
+    same reason AutoHotkey's and Dyalog's are not. Tcl's `append` extends a uniquely-referenced
+    value in place — measured 0.28 s, and linear in the append count (321 / 567 / 1179 ms at
+    250000 / 500000 / 1000000) — while the spec's copy form `set text $text"x"` is the
+    superlinear one and is 27x slower at the row's own loop count (8890 ms at 250000, 145548 ms
+    at 500000), which is why the row keeps the idiomatic form and records the deviation.
+    Unicon's `text := text || "x"` is linear too (47 / 94 / 172 ms at 250000 / 500000 /
+    1000000, and still linear with the accumulator declared `global` or the append moved into
+    a procedure), so its concatenation extends the accumulator in place rather than copying
+    it. ActionScript's `text = text + "x"` is linear as well — 49 / 101 / 200 ms at 250000 /
+    500000 / 1000000, an exact doubling per doubling — because the AVM2 extends the string in
+    place when the value is unshared, where a real quadratic copy would move about 7.8 GB at
+    the row's own loop count. All three rows keep the language's own spelling and record the
+    deviation, the same way the Raku, Erlang, Elixir and Lobster rows do.
   - The compiled rows (C3, Vala) are in the normal range, with C3's task 07 the outlier
     because appending to a string 250000 times is quadratic by design.
   - **Standard ML** is a fast row with one slow cell, like the other native compilers: every cell
@@ -919,7 +991,7 @@ discovering halfway through a run.
 | fasm | no | no | yes (freestanding PE, flat assembler emits it directly with no link step; Windows x64 only) |
 | dolphin smalltalk | no | no | yes (Windows-only VM) |
 | groovy | yes | yes | yes |
-| tcl | yes | yes | yes (task 11 needs a distribution that bundles the `Thread` package) |
+| tcl | yes | yes | yes (task 11 needs a distribution that bundles the `Thread` package; MSYS2's `ucrt64` one does) |
 | unicon | untested | untested | yes, the 64-bit Windows installer unpacked with `innoextract`; **13.3 only** for task 11, because 13.2 ships without concurrent threads. Verified on Windows x64 only |
 | c3 (c3c) | yes | yes | yes, but needs the MSVC SDK to link; `lld-link` has no MinGW mode |
 | vala (valac) | yes | yes | yes, via MSYS2 `ucrt64` (about 2.2 GB of GLib dependency chain) |

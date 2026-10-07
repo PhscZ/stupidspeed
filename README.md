@@ -730,3 +730,9 @@ make it expensive. It is therefore being measured separately rather than dropped
   language and there is no overall score.
 
 Numbers depend on the machine. Compare rows within one run, not across machines.
+
+## License
+
+MIT — see `LICENSE`. The task sources, the build and run scripts and the row verifiers are
+all covered; the toolchains themselves are not part of the repository and carry their own
+licences.

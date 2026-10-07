@@ -169,11 +169,18 @@ same line to a file `time.txt` in the working directory instead, exactly as `RUN
 C's `stderr`, which `terralib.includec` does not expose; for `euphoria` both `printf(2, …)`
 and `puts(2, …)` write nothing when stderr is redirected.
 
-**Instrumented but unverified.** These rows carry the timing code but have not been run here:
-`ats`, `basic`, `cobol`, `dolphin`, `dyalog`, `eiffel`, `modula2`, `ring`, `seed7` and `swift`
-say so in their own `timing:` comment, and the toolchain for the J row (`j9.7`), `beef`,
-`swipl` and `sqlite` is not installed on this machine at all. This is a statement
-about this machine, not about the rows.
+**No row is inspection-only any more.** Ten rows — `ats`, `basic`, `cobol`, `dolphin`, `dyalog`,
+`eiffel`, `modula2`, `ring`, `seed7` and `swift` — were instrumented by inspection, because their
+toolchains were absent at the time, and the same was true of the J row (`j9.7`), `beef`, `swipl`
+and `sqlite`. All fourteen toolchains are installed on this machine now, and every one of those
+rows has been verified end to end (15/15 each). This is a statement about this machine, not about
+the rows.
+
+Every row also has a **row verifier** at `exec/<row>/verify.py` that runs the fifteen tasks and
+checks the answer, the timing line and task 15's file — the convention is described in
+`RUN.md`'s Measurement tooling section. The seven rows that had none (`actionscript`, `ada`,
+`algol68`, `arc`, `assembly`, `assemblyscript`, `autohotkey`) have one now, so no row is checked
+by hand.
 
 ## Host
 
@@ -470,7 +477,7 @@ together.
 | Go | tinygo | 0.42 | tinygo.org, `tinygo0.42.0.windows-amd64.zip` (178 MB) extracted into `tools/tinygo/` — no installer, no admin | `tinygo build -o prog.exe <task>.go`, run from `sources/tinygo/`, which holds all fifteen tasks. TinyGo bundles its own LLVM 22.1 and emits a standalone executable, but it still **shells out to `go`** for `go list` and `go env`, so the Go SDK must be on `PATH` or every build dies with `could not find 'go' command`. The default target is the host (`windows/amd64` here); there is no `windows` target name in `tinygo targets` to pass explicitly. Fourteen of the fifteen files are byte-identical to `sources/go/`'s; task 15 differs because TinyGo's Windows target implements no fsync. |
 | D | dmd | 2.100 | dlang.org/install.sh | `dmd -O -release -of=prog _<task>.d` |
 | D | ldc2 | 1.30 | dlang.org/install.sh | `ldc2 -O3 -release -of=prog _<task>.d` |
-| Swift | swiftc | 5.8 | swift.org/install | `swiftc -O -o prog <task>.swift`. Windows needs `-sdk <swift>/Platforms/6.4.0/Windows.platform/Developer/SDKs/Windows.sdk`, and MSVC on PATH for the link step. |
+| Swift | swiftc | 5.8 (6.4.0 measured) | swift.org/install; the Windows distribution is a WiX burn bundle, so `tools/get_swift.py` decompiles it and administrative-extracts the MSIs (see below) — no admin | `swiftc -O -sdk <swift>/Platforms/6.4.0/Windows.platform/Developer/SDKs/Windows.sdk -windows-sdk-root <winsdk> -windows-sdk-version 10.0.26100.0 -o prog.exe <task>.swift`, with the MSVC environment on `PATH`/`INCLUDE`/`LIB` for the link step. Two Windows SDK flags are load bearing: without `-windows-sdk-root`/`-windows-sdk-version` the clang importer never injects `ucrt.modulemap` and `winsdk_*.modulemap`, and every `import Foundation` dies with `missing required modules: '_complex', 'ucrt'`. The root has to be a complete header tree — the reassembled MSVC layout's `um` set is missing `CommCtrl.h`, `ShlObj.h` and `DbgHelp.h` — so this row points them at the `Microsoft.Windows.SDK.CPP 10.0.26100.1742` headers from nuget.org, with `Lib` junctioned to the MSVC tree's libraries. |
 | Fortran | gfortran | 9 | distro package | `gfortran -O3 -o prog <task>.f90`. Task 03 also compiles `03_func_sum_add_one.f90`; task 11 needs `-fopenmp`. |
 | Fortran | flang | LLVM 17 | MSYS2 `ucrt64` on Windows, distro or LLVM release elsewhere | `flang -O3 -o prog <task>.f90` (older LLVM: `flang-new`). Same two extras as gfortran: the second file for task 03 and `-fopenmp` for task 11. The official LLVM Windows tarball has no `flang.exe`; MSYS2's `mingw-w64-ucrt-x86_64-flang` plus `-flang-rt` is the working Windows route, and it pulls in the runtime libraries as well. Task 11 additionally needs `mingw-w64-ucrt-x86_64-llvm-openmp`: without it the link stops with `cannot find -lomp`, which is the only task-11 gap — flang installs the rest of its runtime with the compiler package. |
 | Ada | gnat | 12 | alire.ada.dev | `gnatmake -O3 t<task>.adb` |
@@ -687,9 +694,12 @@ which the installer ships as `vc_redist.x86.exe`. The installer is Inno Setup an
 elevation, so `innoextract -e -d <dir> Dolphin8Setup.exe` unpacks it without admin, which is
 how this row was verified. Scripts must write to stdout through `SessionManager current stdout`
 and end with `SessionManager current quit: 0`. **Tcl** needs the `Thread` package for task 11,
-which is not in the core distribution and is not in MSYS2's `mingw-w64-ucrt-x86_64-tcl`
-either, so it comes from a distribution that bundles it (Magicsplat's Windows installer) or
-from building `tcltk/thread` against the local Tcl. Task 03 also sources
+which is not in the core distribution. MSYS2's `mingw-w64-ucrt-x86_64-tcl` **does** bundle it —
+`ucrt64/lib/thread2.8.13/thread2813.dll` plus its `pkgIndex.tcl`, so `package require Thread`
+resolves with no extra install and the row runs on the same `ucrt64/bin/tclsh.exe` as every
+other task. A Tcl from a source build without `--enable-threads` (or a distribution that omits
+the extension) still needs a distribution that bundles it, such as Magicsplat's Windows
+installer, or `tcltk/thread` built against the local Tcl. Task 03 also sources
 `03_func_sum_add_one.tcl`.
 
 **Algol 68 Genie** is `a68g <task>.a68`, and it is a compiler-interpreter: no build step, but

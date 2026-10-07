@@ -3,10 +3,18 @@
             (writes 11_parallel_sum.obj into this directory)
         gcc -Wl,-u,WinMain -mconsole -o 11_parallel_sum.exe 11_parallel_sum.obj \
             tools/polyml/polystub.obj -Ltools/polyml -lpolyml *)
-(* run:   ./11_parallel_sum.exe   (run from this directory) *)
+(* run:   ./11_parallel_sum.exe -H 256   (run from this directory) *)
 (* note: PolyLib.dll must be beside the produced .exe — copy it once with
          `cp tools/polyml/PolyLib.dll .`. Without it the process dies before
          main with Windows status 0xC0000135 and prints nothing. *)
+(* note: -H 256 is Poly/ML's initial heap size in megabytes, and it is required, not a
+        tuning knob. An exported image starts on the run-time system's default heap and
+        grows it on demand; under memory pressure that growth fails and the process dies
+        with "Run out of store - interrupting threads" and no output (measured: task 12
+        failed in about half of six runs with the default heap, task 06 died silently
+        once, and no run failed with -H 256). Reserving the heap up front also removes
+        the growth steps, which is why task 12 measures about 25 ms with the flag
+        against about 55 ms without it. *)
 (* note: the threads are Poly/ML's own `Thread` structure, which ships with
         the distribution, so nothing extra is installed and no flag is
         needed. *)
