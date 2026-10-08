@@ -35,6 +35,8 @@ program-size tables below, in the same shape as the results table).
 python exec/harness.py --runs 5              # the whole matrix, five timed runs a cell
 python exec/harness.py --runs 1              # one pass, for a quick look
 python exec/harness.py --rows c,rust --tasks 01,07
+python exec/harness.py --rows actionscript   # one row, by its folder under exec/
+python exec/harness.py --language C++        # every row of one language
 python exec/harness.py --start 1 --end 200   # items 1-200, by position in --list
 python exec/harness.py --rows 1-30           # the first thirty languages
 python exec/harness.py --check               # one run each: pass/fail, no timing
@@ -45,6 +47,14 @@ Every cell has a number — its position in `--list` order, row then toolchain t
 `--start`/`--end` take a slice of the matrix by that number, which is how a full sweep is run
 in chunks. `--rows` also takes numbers and ranges, so `--rows 1-30` is the first thirty
 languages and `--rows 1-114` is all of them.
+
+A single language is run by naming its folder: `--rows actionscript` is that row's fifteen
+cells, in any case and as a path (`--rows exec/ada`, `--rows sources\ada`). A language the
+results table splits across rows is run with `--language` and the name that table gives it —
+`--language C++` is the `cpp` and `cpp-wasm` rows, `--language Python` is `python`,
+`python-cython`, `python-wasm` and `jython`. The two are unioned, and a name that matches no
+row is an error rather than an empty run: since results are merged, a run that selected
+nothing would otherwise look like a run that measured nothing.
 
 **Results are additive.** Each run merges into `exec/results.json` instead of replacing it: a
 cell measured again replaces its own older row, a cell not run this time keeps the number it
@@ -423,11 +433,35 @@ difference is what makes this the one task whose cost varies by orders of magnit
 matrix.
 
 ```
-compute 1000 digits of pi with the unbounded spigot algorithm
-print the sum of the digits
+q = 1; r = 0; t = 1
+k = 1; n = 3; l = 3
+sum = 0; produced = 0
+
+while produced < 1000:
+    if 4*q + r - t < n*t:
+        sum = sum + n
+        produced = produced + 1
+        next = (10*(3*q + r)) div t - 10*n
+        r = 10*(r - n*t)
+        q = 10*q
+        n = next
+    else:
+        next = (q*(7*k + 2) + r*l) div (t*l)
+        r = (2*q + r)*l
+        q = q*k
+        t = t*l
+        n = next
+        k = k + 1
+        l = l + 2
+print sum
 ```
 
 Output: `4470`
+
+`div` is integer division, and every update reads the values the loop had at its start: `next`
+is computed from the old `q`, `r`, `t`, `k` and `l`, before any of them is overwritten. The
+first digit the loop emits is the leading `3` of pi, so `produced` counts the integer part as
+one of the 1000.
 
 Print the sum of the digits instead of the digits themselves, so the check is one number.
 

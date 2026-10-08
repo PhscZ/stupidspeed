@@ -40,6 +40,8 @@ Usage
     python exec/harness.py                        # every cell, 5 timed runs
     python exec/harness.py --runs 1                # one pass over the matrix
     python exec/harness.py --runs 3 --rows c,rust  # just those rows
+    python exec/harness.py --rows ada              # one row, by folder
+    python exec/harness.py --language C++          # every row of a language
     python exec/harness.py --tasks 01,07           # just those tasks
     python exec/harness.py --start 1 --end 200     # items 1-200, by position
     python exec/harness.py --rows 1-30             # the first thirty languages
@@ -53,6 +55,7 @@ into `exec/results.html`, the interactive chart.
 """
 import argparse
 import ctypes
+import difflib
 import json
 import os
 import re
@@ -1199,29 +1202,81 @@ def task_selected(task, wants):
     return False
 
 
-def row_wanted(row, wants, row_index):
-    """Does `--rows` name this row?
+def row_folder(token):
+    """The row folder a `--rows` token names.
 
-    A row can be named (`rust`), numbered (`7`) or given as a range of numbers
-    (`1-30`), which is how a chunk of the matrix is asked for by position rather
-    than by name.  Numbers are the 1-based positions in `--list`, so `--rows 1-30`
-    is the first thirty languages and `--rows 1-114` is all of them.
+    `ada`, `Ada`, `exec/ada`, `sources\\ada` and `./exec/ada/` are the same row:
+    a path is taken by its last component, because that is the folder under
+    `exec/` the row is built in, and case is folded because the folder names are
+    lowercase while the results table spells the language `Ada`.
     """
-    if row in wants:
+    t = token.strip().replace("\\", "/").rstrip("/")
+    if "/" in t:
+        t = t.rsplit("/", 1)[-1]
+    return t.casefold()
+
+def near_miss(name, choices, display=None):
+    """` (did you mean x, y?)` for a name that matched nothing, or ""."""
+    hits = difflib.get_close_matches(name, list(choices), n=3, cutoff=0.6)
+    if display is not None:
+        hits = [display[h] for h in hits]
+    return " (did you mean %s?)" % ", ".join(hits) if hits else ""
+
+def select_rows(rows, names, languages):
+    """Which rows `--rows` and `--language` select: a set of names and number ranges.
+
+    `--rows` names a row by its folder (`ada`, `exec/ada`, in any case) or by the
+    numbers and ranges `--list` prints (`7`, `1-30`).  `--language` names a whole
+    language from the results table's Language column (`C++`, `Prolog (SWI)`),
+    which several rows can share, so `--language C++` is the `cpp` and `cpp-wasm`
+    rows together.  The two are unioned, so `--language C --rows rust` is both.
+
+    A name that matches nothing is an error rather than an empty selection,
+    because results are merged: a run that selected no cells would leave the file
+    untouched and look like a run that measured nothing.
+    """
+    named = set()
+    ranges = []
+    for token in names:
+        if token.isdigit():
+            ranges.append((int(token), int(token), token))
+            continue
+        lo, sep, hi = token.partition("-")
+        if sep and lo.strip().isdigit() and hi.strip().isdigit():
+            ranges.append((int(lo), int(hi), token))
+            continue
+        folder = row_folder(token)
+        match = [r for r in rows if r.casefold() == folder]
+        if not match:
+            raise SystemExit("--rows %s: no such row%s" % (token, near_miss(folder, rows)))
+        named.update(match)
+    for lo, hi, token in ranges:
+        if lo < 1 or lo > hi or hi > len(rows):
+            raise SystemExit("--rows %s: rows are numbered 1-%d, as `--list` prints them"
+                             % (token, len(rows)))
+    for token in languages:
+        want = token.strip().casefold()
+        match = [r for r in rows if rows[r].get("language", r).casefold() == want]
+        if not match:
+            langs = {rows[r].get("language", r) for r in rows}
+            folded = {l.casefold(): l for l in langs}
+            raise SystemExit("--language %s: no such language%s"
+                             % (token, near_miss(want, folded, folded)))
+        named.update(match)
+    return named, ranges
+
+def row_wanted(row, named, ranges, row_index):
+    """Is this row selected?  A named row is a direct hit; a number or a range of
+    numbers is a position in `--list` order, which is how a chunk of the matrix is
+    asked for by position rather than by name.  `--rows 1-30` is the first thirty
+    rows and `--rows 1-114` is all of them.
+    """
+    if row in named:
         return True
     n = row_index.get(row)
     if n is None:
         return False
-    for want in wants:
-        if want.isdigit():
-            if int(want) == n:
-                return True
-            continue
-        lo, sep, hi = want.partition("-")
-        if sep and lo.strip().isdigit() and hi.strip().isdigit():
-            if int(lo) <= n <= int(hi):
-                return True
-    return False
+    return any(lo <= n <= hi for lo, hi, _token in ranges)
 
 
 def item_range(selected, start, end):
@@ -1256,6 +1311,13 @@ def main():
             "  python exec/harness.py --rows 1-30            # the first 30 languages\n"
             "  python exec/harness.py --start 1500            # 1500 to the end\n"
             "\n"
+            "A single row is run by its folder under exec/, in any case and as a\n"
+            "path, and a whole language by the name the results table gives it:\n"
+            "\n"
+            "  python exec/harness.py --rows actionscript    # one row, 15 cells\n"
+            "  python exec/harness.py --rows exec\\ada        # same, as a path\n"
+            "  python exec/harness.py --language C++         # cpp and cpp-wasm\n"
+            "\n"
             "Results are additive: every run merges into exec/results.json, so the\n"
             "chunks above build one complete matrix between them and an interrupted\n"
             "run is continued rather than repeated.  A cell measured again replaces\n"
@@ -1266,8 +1328,14 @@ def main():
                          "suite once, --runs 3 three times.  Every run counts: there "
                          "is no discarded warmup")
     ap.add_argument("--rows", default="",
-                    help="rows to run: names, 1-based numbers, or ranges of numbers "
-                         "(`c,rust`, `7`, `1-30`); default all")
+                    help="rows to run: names or folder paths (`ada`, `Actionscript`, "
+                         "`exec/ada`, `sources\\ada`), 1-based numbers, or ranges of "
+                         "numbers (`c,rust`, `7`, `1-30`); default all")
+    ap.add_argument("--language", default="",
+                    help="languages to run, named as the results table spells them "
+                         "(`C++`, `Prolog (SWI)`): every row of that language, so "
+                         "`--language C++` is the cpp and cpp-wasm rows; unioned with "
+                         "`--rows`")
     ap.add_argument("--tasks", default="", help="comma-separated task numbers or names")
     ap.add_argument("--start", type=int, default=None,
                     help="first item to run, 1-based (see `--list`); default the first")
@@ -1306,11 +1374,13 @@ def main():
     row_names = sorted(rows)
     row_index = {r: i + 1 for i, r in enumerate(row_names)}
     want_rows = [r.strip() for r in args.rows.split(",") if r.strip()]
+    want_langs = [l.strip() for l in args.language.split(",") if l.strip()]
     want_tasks = [t.strip() for t in args.tasks.split(",") if t.strip()]
+    named, ranges = select_rows(rows, want_rows, want_langs)
     selected = []
     for cell in all_cells:
         row, tc, task, _e, _lang = cell
-        if want_rows and not row_wanted(row, want_rows, row_index):
+        if (named or ranges) and not row_wanted(row, named, ranges, row_index):
             continue
         # `--tasks 01`, `--tasks 1` and `--tasks branches` all select 01_branches.
         if want_tasks and not task_selected(task, want_tasks):

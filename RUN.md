@@ -673,6 +673,8 @@ program in `exec/`, not just one row's, and it is the tool the results table com
 python exec/harness.py                    # every cell, 5 timed runs (the default)
 python exec/harness.py --runs 1           # one pass over the matrix
 python exec/harness.py --runs 3 --rows c,rust --tasks 01,07,10
+python exec/harness.py --rows ada         # one row, by its folder under exec/
+python exec/harness.py --language C++     # every row of one language
 python exec/harness.py --start 1 --end 200    # items 1-200 of the matrix
 python exec/harness.py --start 201 --end 400  # the next chunk
 python exec/harness.py --rows 1-30        # the first thirty languages, by number
@@ -701,6 +703,34 @@ is the first two hundred cells of the matrix.
 
 `--rows` itself takes names, numbers and ranges: `--rows c,rust`, `--rows 7`, `--rows 1-30`,
 `--rows 1-114` (everything). Both together are how a long sweep is broken up.
+
+#### Running one language
+
+A row is named by its folder under `exec/`, so `--rows ada` is Ada's fifteen cells. The name
+is case-insensitive and may be given as a path — `--rows exec/ada`, `--rows sources\ada`,
+`--rows ./exec/ada/` are all the same row — which is convenient when the name comes from a
+listing or a shell completion rather than from memory.
+
+A language the results table splits across several rows is run with `--language` and the name
+that table gives it:
+
+```
+python exec/harness.py --rows actionscript       # one row: its fifteen cells
+python exec/harness.py --language C++            # cpp and cpp-wasm, sixty cells
+python exec/harness.py --language Python         # python, python-cython, python-wasm, jython
+python exec/harness.py --language "Prolog (SWI)" # the one row, named as the table spells it
+python exec/harness.py --language C --rows rust  # the two are unioned
+```
+
+Both are merged into `exec/results.json` like any other run, so re-measuring one language
+leaves every other language's numbers alone: `--rows ada` after a full sweep rewrites Ada's
+fifteen cells and nothing else. A name that matches no row and no language is an error, not an
+empty run — with a merged file, a run that selected nothing would look like a run that
+measured nothing, so the harness stops and suggests the nearest names instead.
+
+`--language` matches the Language column of the results table exactly (apart from case), so
+`--language C` is the `c` and `c-wasm` rows and `--language C++` is `cpp` and `cpp-wasm`;
+quoting is needed for the names with spaces, as usual for a shell.
 
 #### Results are additive
 
