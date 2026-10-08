@@ -673,14 +673,61 @@ program in `exec/`, not just one row's, and it is the tool the results table com
 python exec/harness.py                    # every cell, 5 timed runs (the default)
 python exec/harness.py --runs 1           # one pass over the matrix
 python exec/harness.py --runs 3 --rows c,rust --tasks 01,07,10
-python exec/harness.py --check            # warmup only: pass/fail, no timing
+python exec/harness.py --start 1 --end 200    # items 1-200 of the matrix
+python exec/harness.py --start 201 --end 400  # the next chunk
+python exec/harness.py --rows 1-30        # the first thirty languages, by number
+python exec/harness.py --check            # one run each: pass/fail, no timing
 python exec/harness.py --validate         # check the registry without running anything
 python exec/harness.py --list             # print the cells that would run
+python exec/plot.py --open                # results.json -> the interactive results.html
 ```
 
 `--runs N` is the whole-suite repetition count: `--runs 1` runs the entire suite once,
-`--runs 5` (the default) five times, `--runs 3` three times. Each cell gets one warmup run
-first, whose number is discarded, exactly as the Method section describes.
+`--runs 5` (the default) five times, `--runs 3` three times. Every run counts — there is no
+discarded warmup, so the median is taken over all of them — and the first run is also where
+the answer is checked, which is why a cell that answers wrongly is reported as `WRONG`
+instead of being measured.
+
+`--check` runs each cell once and reports pass/fail without timing. It is the fast way to
+ask "does every row still work on this machine?" without paying for five runs a cell.
+
+#### Running part of the matrix
+
+`--list` numbers every cell — row first, then toolchain, then task — and `--start`/`--end`
+select an inclusive range of those numbers. `--start` alone runs from there to the end,
+`--end` alone runs from the beginning to there. Numbers are positions in the *selected* list,
+so `--rows rust --start 1 --end 15` is the whole Rust row, while a bare `--start 1 --end 200`
+is the first two hundred cells of the matrix.
+
+`--rows` itself takes names, numbers and ranges: `--rows c,rust`, `--rows 7`, `--rows 1-30`,
+`--rows 1-114` (everything). Both together are how a long sweep is broken up.
+
+#### Results are additive
+
+`exec/results.json` is merged, not replaced. A cell measured again replaces its own older row;
+a cell that was not run keeps the number it already had; `--replace` starts the file over.
+So
+
+```
+python exec/harness.py --start 1 --end 500
+python exec/harness.py --start 501 --end 1000
+```
+
+leaves a file holding all thousand cells, and a sweep killed half-way is continued with
+`--start` rather than repeated. Because the file can then hold cells measured by different
+invocations, each cell carries its own `runs`, `pinned_cpu` and `measured` fields, and the
+header reports the spread (`"runs": "1-5 (mixed)"`) rather than one number that would be true
+of only some rows.
+
+The file is written atomically — a temporary file then a rename — and flushed every
+`--flush-every` cells (25 by default, `0` to write only at the end), so a run cut off mid-way
+keeps everything but the last few cells rather than losing the whole sweep. `Ctrl+C` writes
+what was measured and prints the `--start` to continue from.
+
+A `--check` cell never replaces a timed one. It carries no number — one run has no median —
+so letting it overwrite a measured cell would quietly throw the measurement away and leave a
+row that looks measured but has nothing in it. Checking a cell that was never timed still
+adds it, and such a cell is marked `"check": true` in the JSON so a reader can tell.
 
 Per cell the harness records
 
@@ -689,18 +736,28 @@ Per cell the harness records
 | Speed | the program's own `TIME_MS`, plus the harness's end-to-end wall clock beside it |
 | Memory | `PeakWorkingSetSize` from `GetProcessMemoryInfo` on the child's handle |
 | File size | the built program — or, for an interpreted row, the script that was executed |
-| Correctness | stdout against the task's expected line, on the warmup run |
+| Correctness | stdout against the task's expected line, judged on the first run |
 
-and reports the median, minimum, maximum and standard deviation of the timed runs. Results go
+and reports the median, minimum, maximum and standard deviation of the runs. Results go
 to `exec/results.json`, every sample, and `exec/results.md`, the three tables — speed, peak
 memory and program size — in the same Language/Toolchain/task shape as the results table in
 `README.md`, so a run can be pasted straight into it.
+
+`exec/plot.py` reads that file and writes `exec/results.html`, a single self-contained page —
+the measurements are embedded in it, so it opens from the filesystem with no server and no
+network. It draws one line per toolchain across the fifteen tasks on a log or linear axis,
+with wheel zoom, drag to pan, click to isolate a toolchain, hover for the full cell record,
+and a search box; below it, a ranked bar chart of any single task, every toolchain sorted.
+The metric is switchable between the program's own `TIME_MS`, the wall clock, peak memory and
+program size. Cells that failed are drawn as hollow markers rather than dropped, because a
+row missing from a chart reads as "not measured", which is a different fact from "measured and
+broken". It adds no dependencies: the page is plain SVG and JavaScript.
 
 A cell ends in one of four states, and the difference matters:
 
 | State | Meaning |
 |---|---|
-| measured | the warmup printed the expected answer and the timed runs produced numbers |
+| measured | the first run printed the expected answer and the runs produced numbers |
 | measured `!` | as above, but something about how it ran is worth knowing — see below |
 | skipped | the cell cannot run on this machine: the toolchain is not installed, or a runtime it needs is not (a `0xC0000135` or `0xC0000142` load failure with no output) |
 | failed | `WRONG` — the program ran and printed a different answer; or `ERROR` — it timed out, died without producing anything, or failed to load for some other reason |
@@ -710,7 +767,7 @@ value, and task 15's 52428800-byte `out.bin`. **The exit code is not part of it.
 die in teardown after printing both numbers — `hxcpp` does, with a heap-corruption code — and
 the contract brackets only the work up to the final output statement, so that measurement
 stands. Such a cell is measured and marked `!`, with the code recorded; the same applies to a
-timed run that produced no number at all, which is dropped from the statistics rather than
+run that produced no number at all, which is dropped from the statistics rather than
 counted as a zero. A cell with no `TIME_MS` line anywhere — the twelve `luau.exe` cells, whose
 CLI has no stderr — is measured by wall clock and marked `*` in the speed table.
 
@@ -728,6 +785,19 @@ verifier changes first and the registry follows. Placeholders `{root}`, `{task}`
 names the tasks it covers, `["*"]` covers the rest, and `except` carves out the tasks a
 different toolchain of the same row runs instead.
 
+Two optional keys say where a row keeps files outside its working directory, and both are
+needed because the harness can only look where it is told:
+
+- **`time_file`** — where the `TIME_MS` fallback lands. Only the AIR row needs it: its bundle
+  is read-only, so `time.txt` goes to the application-storage directory
+  (`%APPDATA%\stupidspeed.actionscript\Local Store\time.txt`). Without the key the harness
+  reads `<cwd>/time.txt`, finds nothing, and reports all fifteen AIR cells as wall-clock
+  timings (`*`) — the number would be right but it would be the wrong number, start-up
+  included, and the row's real `TIME_MS` would be discarded.
+- **`out_file`** — where a task-15 program writes `out.bin`, when that is not the working
+  directory. Again AIR, for the same reason. Without it the cell measures fine but is marked
+  `!` with "task 15 left no out.bin", because the harness looked in the wrong place.
+
 The harness stages the fixture and clears residue the way the verifiers do — `data.bin`
 put into a cell's directory for task 14 (task 15 never reads it), `out.bin` and any
 `time.txt` deleted before *every* run, not once per cell, because several task-15 programs
@@ -735,17 +805,36 @@ fail outright if `out.bin` is already there and a stale `time.txt` would be read
 number. Everything it deletes is put back when the cell finishes — whether it measured, was
 skipped or failed — so a run leaves `exec/` exactly as it found it.
 
+That delete is retried rather than attempted once. Windows refuses to remove a file while
+another handle still holds it mapped — error 1224, "the requested operation cannot be
+performed on a file with a user-mapped section open" — and a task-15 program that has just
+written and fsync'd 50 MiB keeps that mapping for a few milliseconds while its runtime tears
+down. Losing that race left the old `out.bin` in place, the next program failed to open it,
+and the cell was reported as producing no measurement at all: an artifact of the harness
+reported as a fact about the language. The retry is bounded, and a file that is genuinely
+stuck is recorded as a `!` note instead of being swallowed.
+
 Three rules from the sections above are built in rather than left to the operator:
 
-- **Nothing goes to a terminal.** The child's stdout is the null device, or a file on the
-  warmup run that has to be compared; its stderr is a file, so a chatty runtime cannot fill
-  a pipe and deadlock the run.
+- **Nothing goes to a terminal.** The child's stdout goes to a file, which is also what the
+  answer is read from; its stderr is a file, so a chatty runtime cannot fill a pipe and
+  deadlock the run. Every run writes to the same kind of sink, so no sample in a cell is
+  measured under different conditions from the others.
 - **One cell at a time, pinned.** Cells run in sequence, and each one is confined to a
   single logical CPU — CPU 3 by default, `start /affinity 8` — except task 11, which gets
   four. The mask is set on the harness process before the child starts and restored after,
   so the child is pinned from its first instruction instead of from whenever the scheduler
   was told. `--cpu N` moves the core and `--cpu -1` turns pinning off; `--cores N` changes
   what task 11 gets.
+
+  The pin is only real if the Win32 calls are prototyped. `GetCurrentProcess` returns a
+  pseudo-handle that does not survive ctypes' default `int` return type — it comes back as
+  `-1`, `SetProcessAffinityMask` rejects it, and the call fails. That failure is invisible
+  unless it is looked for: the run continues unpinned while the header still says which CPU
+  it intended to use. The harness declares the prototypes, checks that the machine will
+  accept the mask before the sweep starts, and records the CPUs each child actually ran on
+  in every sample, so a silently unpinned run is a warning on stderr and `"cpus": null` in
+  `results.json` rather than a plausible-looking number.
 - **A tool this checkout keeps elsewhere still runs.** The registry records the path the
   row's verifier uses. If that file is not where the registry says, the harness looks for it
   under `tools/` and `exec/` by name and accepts only a single candidate that keeps the
@@ -770,8 +859,8 @@ Two things that will corrupt the results if you get them wrong:
 
 ## Method
 
-Per cell: one warmup run, then five timed runs, and the median is reported alongside the
-minimum, maximum and standard deviation.
+Per cell: five timed runs, and the median is reported alongside the minimum, maximum and
+standard deviation.
 
 Peak process startup on the development machine is around **20 ms** and varies by 10 ms run
 to run. That is why the loop counts are in the hundreds of millions: at a million iterations
@@ -851,7 +940,7 @@ row's own `timing:` comment as well.
 
 ## Expected cost
 
-Every task runs six times, in 137 toolchains.
+Every task runs five times, in 137 toolchains.
 
 - Fast compiled languages: under a second per run, so about **1.5 hours** for the matrix.
 - The 100-million-iteration tasks take 10 to 15 seconds in CPython.
@@ -942,7 +1031,7 @@ Every task runs six times, in 137 toolchains.
 
     The cost grows faster than the square of the digit count (exponent about 2.3 over the last
     two points), so those extrapolate to roughly **7.5 minutes** for the 1000-digit run, and the
-    cell's warm-up plus five timed runs is about two and a half hours. The cause is not the
+    cell's five runs are about two hours. The cause is not the
     program: the C reference does the identical work in **0.6 s** on this machine, so a68g is
     about 900x slower
     per limb operation because it walks the tree instead of compiling. Its `-O2` (compile units,
@@ -1051,7 +1140,7 @@ Every task runs six times, in 137 toolchains.
   quadratic append, and its slow cell.
 - **Nothing is cut off, so a pass has no upper bound.** The compiled rows are all under a
   second per run, but one of the slow cells above can outweigh the entire rest of the matrix,
-  and it runs six times. Budget from the slowest cells, not from the average.
+  and it runs five times. Budget from the slowest cells, not from the average.
 
 `WRONG` is a result, not a failure. So is `SKIPPED`, which is what a cell reports when the
 toolchain is missing or the language cannot do the task at all.

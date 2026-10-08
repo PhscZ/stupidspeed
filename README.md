@@ -16,6 +16,7 @@ them is in `RUN.md`.
 | `exec/<row>/` | the same rows built: each task's compiled program or staged script, plus that row's `build_all.bat`/`run_all.bat` and `verify.py` |
 | `exec/harness.py` | the test harness: runs every built program in `exec/`, N times each, and records speed, peak memory and program size |
 | `exec/cells.json` | the harness's registry: how to run each of the 2025 cells, transcribed from the row verifiers |
+| `exec/plot.py` | turns `results.json` into `results.html`, the interactive chart of the whole matrix |
 | `data.bin` | the 50 MiB fixture tasks 14 and 15 use, committed once at the root |
 | `BUILD.md`, `RUN.md` | how each row is built, and how it is run |
 
@@ -26,21 +27,45 @@ task sources and of the fixture, and git stores one blob per distinct content.
 
 `exec/harness.py` runs all of them and measures them. It reads the cell registry at
 `exec/cells.json` — how to invoke each of the 2025 cells, transcribed from the row verifiers,
-which stay the authority on how a row is built and run — runs each cell once as a warmup and
-then `--runs` times, and writes `exec/results.json` (every sample) and `exec/results.md` (the
-speed, peak-memory and program-size tables below, in the same shape as the results table).
+which stay the authority on how a row is built and run — runs each cell `--runs` times, and
+writes `exec/results.json` (every sample) and `exec/results.md` (the speed, peak-memory and
+program-size tables below, in the same shape as the results table).
 
 ```
 python exec/harness.py --runs 5              # the whole matrix, five timed runs a cell
 python exec/harness.py --runs 1              # one pass, for a quick look
 python exec/harness.py --rows c,rust --tasks 01,07
-python exec/harness.py --check               # warmup only: pass/fail, no timing
+python exec/harness.py --start 1 --end 200   # items 1-200, by position in --list
+python exec/harness.py --rows 1-30           # the first thirty languages
+python exec/harness.py --check               # one run each: pass/fail, no timing
 python exec/harness.py --list --rows zig     # what would run, without running it
 ```
 
-For each cell it records the program's own `TIME_MS` line — the contract's number, which
-excludes start-up — beside the harness's end-to-end wall clock, the child's peak working set,
-and the size of the built program. A cell with no `TIME_MS` line is reported with its wall
+Every cell has a number — its position in `--list` order, row then toolchain then task — and
+`--start`/`--end` take a slice of the matrix by that number, which is how a full sweep is run
+in chunks. `--rows` also takes numbers and ranges, so `--rows 1-30` is the first thirty
+languages and `--rows 1-114` is all of them.
+
+**Results are additive.** Each run merges into `exec/results.json` instead of replacing it: a
+cell measured again replaces its own older row, a cell not run this time keeps the number it
+already had, and `--replace` is there for starting over. So the chunks above build one
+complete matrix between them, and a sweep that is interrupted — or killed — is continued with
+`--start` rather than repeated. The file is also written atomically and flushed every
+`--flush-every` cells (25 by default), so a run cut off mid-way keeps everything it measured
+except the last few, instead of losing the lot.
+
+`exec/plot.py` turns that file into `exec/results.html`: one self-contained page, no server
+and no network, with a zoomable chart of every toolchain across the fifteen tasks, a ranked
+bar chart per task, and the metric switchable between `TIME_MS`, wall clock, memory and
+program size.
+
+```
+python exec/plot.py --open                   # results.json -> results.html, and open it
+```
+
+For each cell the harness records the program's own `TIME_MS` line — the contract's number,
+which excludes start-up — beside the harness's end-to-end wall clock, the child's peak working
+set, and the size of the built program. A cell with no `TIME_MS` line is reported with its wall
 clock instead, marked `*`; a cell that cannot run on this machine — toolchain absent, or a
 runtime it needs not installed — is reported as skipped rather than failed, and one that ran
 but crashed after printing its answer is measured with a `!` note. Cells run one at a time,
@@ -750,7 +775,7 @@ make it expensive. It is therefore being measured separately rather than dropped
   the languages here have no compile step to begin with.
 - Start-up is not measured either: each program times only its own work, so the process and
   VM or interpreter start-up before the first line of the program is outside the number.
-- One warmup run, then 5 timed runs. The median is reported, with min, max and stddev kept alongside it.
+- 5 timed runs. The median is reported, with min, max and stddev kept alongside it.
 - Peak memory recorded per run.
 - No timeout. Every run goes to completion however long it takes, and the time reported is
   the real time. The slow rows are the ones to watch: the call-heavy and

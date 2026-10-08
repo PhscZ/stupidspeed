@@ -31,6 +31,8 @@
      "cwd": "{root}/exec/actionscript/{task}",
      "artifact": "{root}/exec/actionscript/{task}/out/prog.exe",
      "timeout": 1800,
+     "time_file": "{env:APPDATA}/stupidspeed.actionscript/Local Store/time.txt",
+     "out_file": "{env:APPDATA}/stupidspeed.actionscript/Local Store/out.bin",
      "clean": [
       "{env:APPDATA}/stupidspeed.actionscript/Local Store/time.txt"
      ]
