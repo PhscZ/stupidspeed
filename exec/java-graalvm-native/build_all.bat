@@ -41,8 +41,16 @@ copy /y "%SRC%\_%1.java" "%EXEC%\%1\" >nul
 pushd "%EXEC%\%1"
 del /q _%1.exe _%1.class build.log javac.log out.bin 2>nul
 "%JAVAC%" -d . _%1.java >javac.log 2>&1
+rem Task 03 is the one task whose loop native-image folds away: addOne is inlined
+rem and the hundred-million-iteration loop with a constant bound and a constant
+rem start becomes the constant 100000000, so the cell measured nothing (TIME_MS
+rem 0.0001 against 31 ms at -O0). -H:NeverInline is native-image's own no-inline
+rem lever, the counterpart of the C row's __attribute__((noinline)); the pattern
+rem is the one method, so the flag is set for that task alone.
+set "NIFLAG="
+if "%1"=="03_func_sum" set "NIFLAG=-H:NeverInline=_03_func_sum.addOne"
 if exist _%1.class (
-  call "%NATIVEIMAGE%" -O2 _%1 >build.log 2>&1
+  call "%NATIVEIMAGE%" -O2 %NIFLAG% _%1 >build.log 2>&1
 )
 if exist _%1.exe ( echo OK %1 ) else ( echo JAVA-GRAALVM-NATIVE-FAIL %1 )
 popd

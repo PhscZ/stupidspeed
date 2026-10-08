@@ -38,8 +38,17 @@ procedure T09_Fib_Recursive is
          return Fib (N - 1) + Fib (N - 2);
       end if;
    end Fib;
+
+   Answer : Long_Long_Integer;
 begin
+   --  The call is a statement of its own, not the argument to Put.  Written as
+   --  `LL_IO.Put (Item => Fib (40), ...)` with Emit_Time first, the timing line
+   --  brackets nothing at all: the argument is evaluated after Emit_Time has run,
+   --  and the cell reports the microseconds between the clock being read and the
+   --  program reaching the Put.
+   Answer := Fib (40);
+
    Emit_Time;
-   LL_IO.Put (Item => Fib (40), Width => 1);
+   LL_IO.Put (Item => Answer, Width => 1);
    New_Line;
 end T09_Fib_Recursive;

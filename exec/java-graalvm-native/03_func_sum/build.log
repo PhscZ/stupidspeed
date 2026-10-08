@@ -1,65 +1,71 @@
+Warning: The option '-H:NeverInline=_03_func_sum.addOne' is experimental and must be enabled via '-H:+UnlockExperimentalVMOptions' in the future.
+Warning: Please re-evaluate whether any experimental option is required, and either remove or unlock it. The build output lists all active experimental options, including where they come from and possible alternatives. If you think an experimental option should be considered as stable, please file an issue.
 ========================================================================================================================
 GraalVM Native Image: Generating '_03_func_sum.exe' (executable)...
 ========================================================================================================================
 For detailed information and explanations on the build output, visit:
 https://github.com/oracle/graal/blob/master/docs/reference-manual/native-image/BuildOutput.md
 ------------------------------------------------------------------------------------------------------------------------
-Warning: The host machine does not support all features of 'x86-64-v3'. Falling back to '-march=compatibility' for best compatibility.
-[1/8] Initializing...                                                                                  (17,3s @ 0,14GiB)
- Builder configuration:
- - Java version: 25.0.4.1.1+1, vendor version: GraalVM CE 25.4.4.1.1+1.1
- - Graal compiler: optimization level: 2, target machine: compatibility
- - C compiler: cl.exe (microsoft, x64, 19.44.35229)
- - Assertions: disabled, system assertions: disabled
- Image configuration:
- - Garbage collector: Serial GC (max heap size: 80% of RAM)
- - Assertions: disabled (class-specific config may apply), system assertions: disabled
+[1/8] Initializing...                                                                                    (7,2s @ 0,13GB)
+ Java version: 25.0.4+7-LTS, vendor version: Oracle GraalVM 25.0.4+7.1
+ Graal compiler: optimization level: 2, target machine: x86-64-v3, PGO: ML-inferred
+ C compiler: cl.exe (microsoft, x64, 19.44.35229)
+ Garbage collector: Serial GC (max heap size: 80% of RAM)
+ 1 user-specific feature(s):
+ - com.oracle.svm.thirdparty.gson.GsonFeature
+------------------------------------------------------------------------------------------------------------------------
+ 1 experimental option(s) unlocked:
+ - '-H:NeverInline' (origin(s): command line)
 ------------------------------------------------------------------------------------------------------------------------
 Build resources:
- - 10.20GiB of memory (85% of system memory because $CI set to 'true')
- - 8 thread(s) (100,0% of 8 available processor(s), determined at start)
-[2/8] Performing analysis...  [*****]                                                                  (21,7s @ 0,28GiB)
-    2.230 types,   2.020 fields, and   9.060 methods found reachable
-       80 types,      35 fields, and     196 methods registered for reflection
+ - 6,27GB of memory (75,6% of system memory, $CI set to 'true')
+ - 20 thread(s) (100,0% of 20 available processor(s), determined at start)
+[2/8] Performing analysis...  [*****]                                                                    (3,4s @ 0,26GB)
+    2.061 types,   1.894 fields, and   8.862 methods found reachable
+      742 types,      35 fields, and     284 methods registered for reflection
        53 types,      30 fields, and      48 methods registered for JNI access
-       52 resource accesses registered with 107B total size
+        0 downcalls and 0 upcalls registered for foreign access
         1 native library: version
-[3/8] Building universe...                                                                              (3,5s @ 0,31GiB)
-[4/8] Parsing methods...      [*]                                                                       (1,9s @ 0,34GiB)
-[5/8] Inlining methods...     [***]                                                                     (1,4s @ 0,33GiB)
-[6/8] Compiling methods...    [*****]                                                                  (23,5s @ 0,31GiB)
-[7/8] Laying out methods...   [**]                                                                      (3,2s @ 0,33GiB)
-[8/8] Creating image...       [**]                                                                      (3,6s @ 0,36GiB)
-   2,04MiB (41,96%) for code area:     4.684 compilation units
-   2,63MiB (53,89%) for image heap:   43.353 objects and 1 resource
- 207,09KiB ( 4,15%) for other data
-   4,87MiB in total image size, 4,87MiB in total file size
+[3/8] Building universe...                                                                               (0,8s @ 0,30GB)
+[4/8] Parsing methods...      [*]                                                                        (0,8s @ 0,31GB)
+[5/8] Inlining methods...     [***]                                                                      (0,3s @ 0,38GB)
+[6/8] Compiling methods...    [***]                                                                      (7,6s @ 0,58GB)
+[7/8] Laying out methods...   [*]                                                                        (0,8s @ 0,62GB)
+[8/8] Creating image...       [*]                                                                        (1,0s @ 0,65GB)
+   2,77MB (43,33%) for code area:     4.003 compilation units
+   3,41MB (53,23%) for image heap:   59.867 objects and 52 resources
+ 220,22kB ( 3,44%) for other data
+   6,40MB in total image size, 6,40MB in total file size
 ------------------------------------------------------------------------------------------------------------------------
 Top 10 origins of code area:                                Top 10 object types in image heap:
- 252,37KiB o.g.n.runtime/com.oracle.svm.core.code            619,44KiB byte[] for string data
- 224,40KiB java.base/java.util                               477,77KiB byte[] for code metadata
- 218,62KiB java.base/java.lang                               309,16KiB java.base/java.lang.String
- 183,31KiB o.g.n.runtime/com.oracle.svm.core.genscavenge     236,17KiB java.base/java.lang.Class
-  96,95KiB java.base/java.util.concurrent                    226,48KiB o.g.n.runtime/c.o.s.core.hub.DynamicHubCompanion
-  54,74KiB o.g.n.runtime/com.oracle.svm.core                 139,02KiB java.base/java.lang.Object[]
-  45,96KiB java.base/java.util.stream                        115,53KiB java.base/char[]
-  37,24KiB o.g.n.runtime/com.oracle.svm.core.jni              80,19KiB byte[] for general heap data
-  33,25KiB o.g.n.runtime/com.oracle.svm.core.thread           67,05KiB heap alignment
-  32,64KiB java.base/sun.nio.cs                               49,09KiB byte[] for reflection metadata
- 913,43KiB for 120 more packages                             368,09KiB for 635 more object types
-Warning: The host machine does not support all features of 'x86-64-v3'. Falling back to '-march=compatibility' for best compatibility.
+   1,25MB java.base                                          697,23kB byte[] for code metadata
+   1,22MB svm.jar (Native Image)                             640,70kB byte[] for java.lang.String
+  40,21kB com.oracle.svm.svm_enterprise                      328,25kB java.lang.String
+  39,98kB org.graalvm.nativeimage.configure                  224,22kB java.lang.Class
+  39,00kB jdk.graal.compiler                                 197,86kB com.oracle.svm.core.hub.DynamicHubCompanion
+  31,03kB org.graalvm.nativeimage.base                       173,76kB java.util.HashMap$Node
+  21,40kB jdk.internal.vm.ci                                 118,30kB char[]
+  20,45kB org.graalvm.collections                            110,24kB jdk.internal.util.SoftReferenceKey
+  20,42kB jdk.proxy2                                          99,36kB java.lang.Object[]
+  17,00kB jdk.proxy1                                          90,75kB java.util.concurrent.ConcurrentHashMap$Node
+   6,93kB for 6 more packages                                727,19kB for 568 more object types
+                            Use '--emit build-report' to create a report with more details.
+------------------------------------------------------------------------------------------------------------------------
+Security report:
+ - Binary includes Java deserialization.
+ - CycloneDX SBOM with 5 component(s) is embedded in binary (416B). 1 type(s) could not be associated to a component.
+ - Advanced obfuscation not enabled; enable with '-H:AdvancedObfuscation=""' (experimental support).
 ------------------------------------------------------------------------------------------------------------------------
 Recommendations:
+ PGO:  Use Profile-Guided Optimizations ('--pgo') for improved throughput.
  FUTR: Use '--future-defaults=all' to prepare for future releases.
  HEAP: Set max heap for improved and more predictable memory usage.
  CPU:  Enable more CPU features with '-march=native' for improved performance.
+ QBM:  Use the quick build mode ('-Ob') to speed up builds during development.
 ------------------------------------------------------------------------------------------------------------------------
-                      3,0s (3,7% of total time) in 293 GCs | Peak RSS: 878,22MiB | CPU load: 3,94
+                        1,7s (7,1% of total time) in 362 GCs | Peak RSS: 1,49GB | CPU load: 9,81
 ------------------------------------------------------------------------------------------------------------------------
 Build artifacts:
- C:\stupidspeed\exec\java-graalvm-native\03_func_sum\_03_func_sum.exe (executable, 4,87MiB)
+ D:\Users\pedro.cardoso\stupidspeed\exec\java-graalvm-native\03_func_sum\_03_func_sum.exe (executable)
 ========================================================================================================================
-Finished generating '_03_func_sum' in 1m 18s.
-
-The build process encountered 2 warnings.
-
+Finished generating '_03_func_sum' in 22,8s.
