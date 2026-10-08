@@ -8,7 +8,7 @@ exp = {"01_branches":"33333334 13333333 7619048 45714285","02_switch_case":"7500
  "06_char_count":"10000000","07_string_append":"250000","08_average":"0.498046875",
  "09_fib_recursive":"102334155","10_pi":"4470","11_parallel_sum":"7500000075000000",
  "12_matrix_add":"999000000","13_matrix_mul":"599995000","14_file_read":"2389704704","15_file_write":"52428800"}
-for tc in ["dmd","ldc2","gdc"]:
+for tc in ["dmd","ldc2"]:
     ok=0; bad=[]
     for t in tasks:
         d=os.path.join(D,tc,t)

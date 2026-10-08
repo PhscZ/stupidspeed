@@ -1,5 +1,5 @@
 // task 05 alloc_churn — expected output: 1274991808
-// build: none    run: node 05_alloc_churn.js | bun 05_alloc_churn.js | deno run 05_alloc_churn.js
+// build: none    run: bun 05_alloc_churn.js | deno run 05_alloc_churn.js
 
 const __t0 = performance.now();
 

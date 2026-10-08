@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Verifier for the javascript row.
 
-Toolchains: node, bun, deno.  No build step: each task directory holds the source
+Toolchains: bun, deno.  No build step: each task directory holds the source
 staged by build_all.bat (plus data.bin for tasks 14/15).
 
 Checks per task:
@@ -23,12 +23,11 @@ SRC = os.path.join(REPO, "sources", "javascript")
 DATA = os.path.join(REPO, "data.bin")
 ROW = "javascript"
 
-TOOLCHAINS = ["node", "bun", "deno"]
+TOOLCHAINS = ["bun", "deno"]
 
 # Exact executables (the assignment names these rather than trusting PATH).  The deno
 # entry is an npm .cmd shim, which CreateProcess runs directly.
 EXE = {
-    "node": r"C:\Program Files\nodejs\node.exe",
     "bun": r"C:\Users\pz020\.bun\bin\bun.exe",
     "deno": r"C:\Users\pz020\AppData\Roaming\npm\deno.cmd",
 }
@@ -53,8 +52,6 @@ def expected(task):
 
 
 def command(tool, task, script):
-    if tool == "node":
-        return [EXE["node"], script]
     if tool == "bun":
         return [EXE["bun"], script]
     if tool == "deno":

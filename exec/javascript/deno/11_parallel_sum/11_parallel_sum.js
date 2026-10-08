@@ -1,5 +1,5 @@
 // task 11 parallel_sum — expected output: 7500000075000000
-// build: none    run: node 11_parallel_sum.js | bun 11_parallel_sum.js | deno run 11_parallel_sum.js
+// build: none    run: bun 11_parallel_sum.js | deno run 11_parallel_sum.js
 // note: four worker_threads, one heap each; the partials are doubles and the total is under 2^53.
 
 const __t0 = performance.now();

@@ -68,8 +68,8 @@ code needs a file called `main.swift` only applies when several files are passed
 invocation, where `swiftc` has to pick which one holds `main`; with a single file there is
 nothing to pick, so the name is free.
 
-Java, D, Ada, Haxe and Oberon-07 prefix the name
-(`_01_branches.java`, `_01_branches.d`, `t01_branches.adb`,
+Java, D, Nim, Ada, Haxe and Oberon-07 prefix the name
+(`_01_branches.java`, `_01_branches.d`, `_01_branches.nim`, `t01_branches.adb`,
 `T01_branches.hx`, `_01_branches.ob07`), because those
 languages tie the file name to an identifier and a digit cannot start one — in Haxe's case the
 identifier must additionally start with an uppercase letter, which is why its prefix is `T` and
@@ -78,7 +78,7 @@ not `_`. In Oberon-07 the compiler enforces the tie — the
 conventional.
 
 Most toolchain rows share their language's main source directory — `sources/c/` is built by
-`gcc`, `clang`, `msvc` and `tcc`, `sources/d/` by `dmd`, `ldc2` and `gdc`, and so on. A row
+`gcc`, `clang`, `msvc` and `tcc`, `sources/d/` by `dmd` and `ldc2`, and so on. A row
 whose source cannot be shared gets a directory of its own, holding **all fifteen tasks** and
 duplicating the files it has in common with the main row. Nineteen rows are in that position:
 
@@ -88,7 +88,6 @@ duplicating the files it has in common with the main row. Nineteen rows are in t
 | Java openj9 | `sources/java-openj9/` | nothing — same fifteen files, a different VM executes them |
 | Java graalvm jit | `sources/java-graalvm-jit/` | nothing — same fifteen files, GraalVM's JIT compiles them |
 | Java graalvm native-image | `sources/java-graalvm-native/` | nothing — same fifteen files, compiled ahead of time |
-| Java loom | `sources/java-loom/` | task 11: `Thread.ofVirtual()` replaces `new Thread(...)` |
 | Scala native | `sources/scala-native/` | nothing — same fifteen files, built to LLVM IR by Scala Native |
 | Common Lisp ecl | `sources/commonlisp-ecl/` | the bodies, not just the header: ECL is a different implementation, so the declarations are `fixnum` where SBCL's are `(signed-byte 64)`, the case clauses end in `t` where SBCL's end in `otherwise`, tasks 11 and 14 use ECL's own thread and stream forms, and task 03 uses `(declaim (notinline add-one))` instead of the separate `03_func_sum_add_one.lisp` the SBCL row needs |
 | Go tinygo | `sources/tinygo/` | task 15: flushes by closing, because TinyGo's Windows target implements no fsync |
@@ -129,16 +128,16 @@ each is recorded in the source's own `timing:` comment:
   time and elapsed time are the same quantity there.
 - **Time-of-day clocks** — readings of the system clock, which a time sync can move:
   `unicon` (`&time`, ms since midnight), `vbscript` (`Timer()`, seconds since midnight),
-  `freebasic` (same), `modula3` (`Time.Now`, seconds since the epoch as a REAL),
-  `hashlink` (`Sys.time()`), `sqlite` (`julianday('now')`), `duckdb` (`epoch_ms(now())`),
+  `freebasic` (same), `cobol` (`ACCEPT ... FROM TIME`, `hhmmsscc`), `modula3` (`Time.Now`, seconds since the epoch as a REAL),
+  `hashlink` (`Sys.time()`),
   `haskell` (`getPOSIXTime`), `ocaml` (`Unix.gettimeofday`), `swift` (`Date()`),
   `jscript` (`new Date().getTime()`, the Windows system timer).
-- **VM-relative counters** — `dyalog` (`3⊃⎕AI`, the session's elapsed-time counter), `dolphin`
+- **VM-relative counters** — `dolphin`
   (the VM's millisecond clock) and `actionscript` (`getTimer()`, ms since the VM started).
   These do not move with the system clock, but they are not monotonic clocks either.
 
-**Coarse clocks.** Five rows cannot resolve better than the work they bracket: `vbscript`
-(16 ms, centiseconds), `autohotkey` and `jscript` (15 ms — both read
+**Coarse clocks.** Six rows cannot resolve better than the work they bracket: `vbscript`
+(16 ms, centiseconds), `cobol` (10 ms), `autohotkey` and `jscript` (15 ms — both read
 `GetTickCount`/the Windows system timer), `modula2` (whole seconds plus
 `SysClock.fractions`) and `modula3` (whole seconds as a REAL). Their cells are read with that
 granularity in mind;
@@ -149,22 +148,21 @@ itself at 100 ns.
 
 **The `time.txt` fallback.** A row whose language exposes no standard-error stream writes the
 same line to a file `time.txt` in the working directory instead, exactly as `RUN.md` describes:
-`actionscript`, `dolphin`, `dyalog`, `euphoria`, `lobster`, `luau`, `modula2`, `modula3`,
+`actionscript`, `dolphin`, `euphoria`, `lobster`, `luau`, `modula2`, `modula3`,
 `ring`, `scheme` and `terra`. For `terra` this is the documented alternative to importing
 C's `stderr`, which `terralib.includec` does not expose; for `euphoria` both `printf(2, …)`
 and `puts(2, …)` write nothing when stderr is redirected.
 
-**No row is inspection-only any more.** Six rows — `basic`, `dolphin`, `dyalog`,
+**No row is inspection-only any more.** Six rows — `basic`, `cobol`, `dolphin`,
 `modula2`, `ring` and `swift` — were instrumented by inspection, because their
-toolchains were absent at the time, and the same was true of the J row (`j9.7`), `beef`, `swipl`
-and `sqlite`. Every one of those rows has been verified end to end (15/15 each) since its
-toolchain was installed. This is a statement about the machine the rows were built on, not about
+toolchains were absent at the time, and the same was true of `beef`, `swipl` and `swift`. Every
+one of those rows has been verified end to end (15/15 each) since its toolchain was installed. This is a statement about the machine the rows were built on, not about
 the rows.
 
 Every row also has a **row verifier** at `exec/<row>/verify.py` that runs the fifteen tasks and
 checks the answer, the timing line and task 15's file — the convention is described in
 `RUN.md`'s Measurement tooling section. The seven rows that had none (`actionscript`, `ada`,
-`algol68`, `arc`, `assembly`, `assemblyscript`, `autohotkey`) have one now, so no row is checked
+`algol68`, `assembly`, `assemblyscript`, `autohotkey`) have one now, so no row is checked
 by hand.
 
 ## Host
@@ -177,7 +175,7 @@ rows are Windows x64 only: each is a freestanding PE program built with `nasm -f
 too, including `flang` and `luajit`. See `RUN.md` for the full platform breakdown.
 
 Disk: **31 GB measured** for the first 96 toolchains, installed and run on one Windows x64 host,
-and about **41 GB for the 117** rows the tables below now list.
+and about **38 GB for the 111** rows the tables below now list.
 The heavy terms are LLVM (4.0 GB), Swift (3.2 GB), the AIR SDK (1.6 GB), GNAT with its MSYS2
 runtime (1.8 GB, which also supplies `flang`), MSVC (1.2 GB once reassembled from a 2.5 GB
 layout), Julia (1.1 GB), Perl (1.0 GB), the .NET SDK (0.7 GB) and GraalVM (0.7 GB); most other
@@ -197,25 +195,23 @@ The batch after that adds about 2.1 GB. The terms are moderate or small —
 Beef 845 MB, the Scala Native pair (scala-cli 131 MB plus the portable llvm-mingw 675 MB, and
 27 MB of Scala Native artifacts in the package cache), the SWI-Prolog tree 133 MB, Haxe with
 Neko and hxcpp 112 MB, Ring 19 MB, J 16 MB, Janet 8 MB, Chez Scheme 7 MB and AutoHotkey 4.4 MB.
-The three rows after those add about 1.3 GB and are dominated by one term: **Dyalog at 855 MB**,
-whose Windows distribution is an interpreter tree rather than a single binary (the 20.0 zip is
-256 MB and the extracted tree carries the interpreter, the SALT library and the .NET bridge).
-The rest are small: **Terra at 403 MB** — a 61 MB `.7z` holding a 341 MB tree whose `terra.exe`
+Two rows after those add about 1.3 GB: **Terra at 403 MB** — a 61 MB `.7z` holding a 341 MB tree whose `terra.exe`
 is 158 MB because LLVM 22.1 and clang are inside it — and **Poly/ML at 11 MB** (the MSI's whole
 payload is three files, plus the tarball's stub and a 187 KB import library). Terra needs no MSVC
 and no Windows SDK.
 The three rows after those add about **1.3 GB**, and one term is all of it: **TinyGo at 1.3 GB**,
 unpacked from a 178 MB zip, because the compiler ships a whole LLVM 22.1 tree inside it.
-**GraalVM JIT** and **Loom** add nothing at all — the first
+**GraalVM JIT** adds nothing at all: it
 is the same GraalVM JDK the `graalpy` and `graalvm native-image` rows already install (measured
-here: 771 MB extracted), and the second is the JDK the `openjdk` row already has. The Go SDK
+here: 771 MB extracted). The Go SDK
 (264 MB, measured) is needed by `tinygo` as well as by the `gc` row, so it is counted once.
 The newest batch adds about **0.3 GB**: the two hardware-description rows are gone, and in
 their place come **OpenJ9 at 388 MB** — the IBM Semeru JDK zip, extracted, with its own `javac`
 and `java` — and **MASM**, which installs nothing, because `ml64.exe` and `link.exe` come from
 the MSVC tree the `msvc` row already has. The `nasm` row's Windows build likewise reuses the
 assembler already on the host. **Unicon** adds 84 MB, unpacked from a 15 MB installer, and the four rows after it add about **4.4 GB**, almost all of it one term: **GHC at 4.1 GB**, extracted from a 452 MB `.tar.xz`, because the bindist carries a complete MinGW toolchain and the libraries for every package that ships with it. **gforth** is about 100 MB, **Lobster** about 30 MB and **Mercury** about 200 MB installed from a source build.
-That puts the current total at about **38 GB for all 117 toolchains**.
+That puts the current total for all 111 toolchains at about **38 GB**, the same figure the
+paragraph above states — the two used to differ by 3 GB and now agree.
 The three interpreted WebAssembly rows add about **0.14 GB** on top of the six that already
 existed: the single-file `ruby.wasm` is 99 MB, the Lua build reuses the `wasi-sdk` tree the C
 row already installs and adds only a 716 KB `lua.wasm`, and the CPython WASI build is a 28 MB
@@ -261,9 +257,9 @@ the program alone.
 | `rust` | parse → HIR → MIR → LLVM IR → object → link |
 | `zig` | AST → ZIR → LLVM IR → object → link (ships its own LLVM and lld) |
 | `go` | parse → type check → SSA → object → link, with its own backend and linker, no LLVM |
-| `d` (dmd) | direct to object with its own backend; (ldc2) LLVM IR; (gdc) the GCC pipeline |
-| `swift` | parse → SIL → LLVM IR → object → link |
+| `d` (dmd) | direct to object with its own backend; (ldc2) LLVM IR |
 | `fortran` (gfortran) | the GCC pipeline; (flang) LLVM IR |
+| `swift` | parse → SIL → LLVM IR → object → link |
 | `ada` | the GCC pipeline (`gnatmake` drives `gcc`) |
 | `pascal` | `fpc` direct to object, its own backend |
 | `crystal` | type inference → LLVM IR → object → link |
@@ -286,13 +282,11 @@ The toolchain translates the language to C or C++, then hands that to a C compil
 compilers are involved, and the C compiler is usually the one doing the optimisation, which is
 why several of these rows need an explicit flag to pass optimisation through.
 
-Ten rows that used to be here have been removed: `vala`, `nim`, `nelua`, `seed7`, `v`,
-`cobol`, `eiffel`, `python` (cython), `mercury` and `ats` all ended in **gcc** or **cl.exe**,
-the same compiler the `c` rows already measure, so the cell reported the backend's output
-rather than the language's. What is left is the rows where the second compiler is not one the
-matrix already has, plus `haxe` (kept as the deliberate measure of a front end on a known
-backend, against its own HashLink VM) and `python` (nuitka), which links the CPython runtime
-rather than emitting standalone C. `README.md` carries the full rule and the list.
+Eight rows that used to be here have been removed: `vala`, `nelua`, `seed7`, `v`, `eiffel`,
+`python` (cython), `mercury` and `ats` all ended in **gcc** or **cl.exe**, the same compiler the
+`c` rows already measure, so the cell reported the backend's output rather than the language's.
+**`nim` and `cobol` are back**: both were removed with that batch and have since been restored,
+so the table below carries them again. `README.md` carries the full rule and the list.
 
 | Rows | Stages |
 |---|---|
@@ -300,7 +294,9 @@ rather than emitting standalone C. `README.md` carries the full rule and the lis
 | `haxe` (hxcpp) | Haxe → C++ → hxcpp → g++ |
 | `qb64` | QB64 → C++ → the C++ compiler shipped inside the QB64 tree |
 | `commonlisp` (ecl) | ECL → C → cl.exe (pointed at the MSVC tree by `c::*cc*`) |
+| `nim` | nim → C → gcc or clang |
 | `python` (nuitka) | Nuitka → C → the C compiler, plus the CPython runtime it links in |
+| `cobol` | `cobc -x` generates C, then the C compiler builds it |
 | `euphoria` | interpreted; no translation step (see shape 6) |
 
 ### 3. Source to bytecode, then a virtual machine
@@ -311,7 +307,7 @@ language. Where a row has several VMs, that is the point of the row.
 
 | Rows | Stages |
 |---|---|
-| `java` (openjdk, openj9, loom) | javac → `.class` → HotSpot C2 or OpenJ9 JIT at run time |
+| `java` (openjdk, openj9) | javac → `.class` → HotSpot C2 or OpenJ9 JIT at run time |
 | `java` (graalvm jit) | javac → `.class` → GraalVM's JIT |
 | `java` (graalvm native-image) | javac → `.class` → ahead-of-time native image |
 | `kotlin` (native) | kotlinc-native → LLVM IR → object → link |
@@ -379,13 +375,10 @@ nothing is written to disk and nothing is reused between runs.
 | `perl`, `tcl`, `vbscript`, `jscript`, `autohotkey` | parse and execute on each run |
 | `euphoria` | a tree-walking interpreter; no bytecode file |
 | `babashka` | babashka runs Clojure on SCI, an interpreter, inside a GraalVM native image |
-| `j`, `dyalog` | APL interpreters |
 | `swipl` | SWI-Prolog compiles to its own clause representation in memory |
-| `sqlite`, `duckdb` | SQL is parsed and planned per statement; there is no program |
 | `algol68` | `a68g` is a compiler-interpreter: it parses and executes with no build step |
 | `gforth` | gforth interprets the file; the accumulator lives on the data stack |
 | `gdscript` | Godot parses and runs the script |
-| `arc` | Arc is interpreted on Racket, which loads the host on every run |
 | `terra` | the source is compiled at run time, in-process, by the JIT it embeds |
 
 ### 7. Compiled at run time
@@ -404,8 +397,8 @@ exists to show what it costs.
 | `python` (pypy) | trace compilation |
 | `php` (`+ jit`) | opcode JIT |
 | `ruby` (`+ yjit`) | method JIT |
-| `javascript` (node, bun, deno, spidermonkey, quickjs) | tiered JIT, except QuickJS which is bytecode only |
-| `csharp` (coreclr), `java` (openjdk, openj9, loom, graalvm jit), `scala`, `clojure` | the VM JITs on first execution |
+| `javascript` (bun, deno, spidermonkey, quickjs) | tiered JIT, except QuickJS which is bytecode only |
+| `csharp` (coreclr), `java` (openjdk, openj9, graalvm jit), `scala`, `clojure` | the VM JITs on first execution |
 
 ### What this means for reading a row
 
@@ -428,8 +421,8 @@ Three consequences are worth stating, because they are easy to get wrong:
 ### Compiled to native code — nothing needed at run time
 
 The output is a native executable in every row below, and for most of them that executable needs
-nothing but the operating system. Two rows are exceptions and say so in their own entry:
-Objective-C's binary imports `libobjc-4.6.dll`, `gnustep-base-1_31.dll` and
+nothing but the operating system. Three rows are exceptions and say so in their own entry:
+COBOL's imports `libcob-4.dll`, Objective-C's imports `libobjc-4.6.dll`, `gnustep-base-1_31.dll` and
 `libwinpthread-1.dll` from MSYS2, and
 Standard ML's needs `PolyLib.dll` beside it — in that last case the exported `.obj`
 is a whole heap image and the DLL is the runtime that loads it, so the pair has to travel
@@ -454,6 +447,8 @@ together.
 | Fortran | gfortran | 9 | distro package | `gfortran -O3 -o prog <task>.f90`. Task 03 also compiles `03_func_sum_add_one.f90`; task 11 needs `-fopenmp`. |
 | Fortran | flang | LLVM 17 | MSYS2 `ucrt64` on Windows, distro or LLVM release elsewhere | `flang -O3 -o prog <task>.f90` (older LLVM: `flang-new`). Same two extras as gfortran: the second file for task 03 and `-fopenmp` for task 11. The official LLVM Windows tarball has no `flang.exe`; MSYS2's `mingw-w64-ucrt-x86_64-flang` plus `-flang-rt` is the working Windows route, and it pulls in the runtime libraries as well. Task 11 additionally needs `mingw-w64-ucrt-x86_64-llvm-openmp`: without it the link stops with `cannot find -lomp`, which is the only task-11 gap — flang installs the rest of its runtime with the compiler package. |
 | Ada | gnat | 12 | alire.ada.dev | `gnatmake -O3 t<task>.adb` |
+| Nim | nim | 2.0 (2.2.12 measured) | nim-lang.org, `nim-<v>_x64.zip` extracted — no installer and no admin | `nim c -d:release -o:prog <task>.nim`. **The source file name matters**: Nim rejects a module name that is not a valid identifier, and the sources are `_01_branches.nim` … `_15_file_write.nim`, so each is copied to `t<task>.nim` (no leading underscore) before the build — `Error: invalid module name: '_01_branches'` otherwise. `-d:release` is the optimisation; without it Nim emits a debug build with the runtime checks on. The C backend needs `gcc` on `PATH`. |
+| COBOL | gnucobol | 3.2 | MSYS2 `ucrt64`, or gnucobol.sourceforge.io | `cobc -x -O2 -o prog <task>.cob`. `PIC 9(18) COMP-5` is the exact 64-bit picture, and COMP-5 keeps the full binary range regardless of the PICTURE, so limb arithmetic fits in one COMPUTE. Outside an MSYS2 shell, `cobc` needs `COB_CONFIG_DIR` and `COB_COPY_DIR` set to the package's `share/gnucobol/{config,copy}` or it stops with `configuration error: /ucrt64/share/gnucobol/config/default.conf`. Task 11 needs `CBL_GC_FORK`, which GnuCOBOL documents as unavailable on Windows outside Cygwin: it returns -1 there and the program falls back to four in-process quarters, so the answer is right but the row is single-core on Windows and four-way on Linux. The compiled exe also needs the MSYS2 `ucrt64/bin` on `PATH` to find its runtime DLLs, or it exits 0 with no output. Two fixed-format lines — the `COMPUTE CS0`/`CS1` clock conversions — ran past column 72, which fixed-format silently truncates; they are wrapped. Task 10 had a third defect worth recording: its six `CALL 'BIGMUL' USING ... <literal>` sites passed the multiplier as a numeric literal, which GnuCOBOL materialises as a DISPLAY-format temporary, while BIGMUL's `LINKAGE` declares it `COMP-5` — so the callee read the literal's bytes as a binary value (`5 * 4` came back as `24435220`). The spigot state diverged, grew without bound and the program ran for 80 minutes before dying on an out-of-range limb access; moving each literal into the `COMP-5` variable `S` first makes the row finish in 60 s with the right answer. Three more tasks needed a wider output `PIC`: 07 and 15 printed a leading zero (`9(7)`/`9(9)` for 6- and 8-digit answers) and 14 truncated (2389704704 needs 10 digits, not 9). |
 | Pascal | fpc | 3.2.2 | freepascal.org | `fpc -O3 -oprogram <task>.pas`. On Windows x64 there is no native compiler: install the i386-win32 native compiler plus the `cross.x86_64-win64` add-on, then build with `-Px86_64`. |
 | Odin | odin | dev-2026-09-nightly:a2fb372 | odin-lang.org | `odin build <task>.odin -file -o:speed -out:prog.exe`. Two additions to the bare `odin build` form are required by this compiler: **`-file`**, without which it stops with *takes a package/directory as its first argument*, and an explicit **`.exe` extension on `-out`**, without which it stops with *Output path ... must have an appropriate extension*. Odin also links through MSVC, so it needs the hand-extracted tree's environment (`tools/msvc_env.py`) plus `WindowsSdkDir`, `WindowsSDKVersion=10.0.26100.0` and `VCToolsInstallDir` set, or it cannot find the SDK. |
 | Kotlin | kotlin/native | 1.9 (2.4.20 measured) | kotlinlang.org, `kotlin-native-prebuilt-windows-x86_64-<v>.zip` (209 MB) extracted — no installer and no admin. The first build downloads its LLVM and libffi dependencies (about 1.4 GB) into `%USERPROFILE%\.konan`, so the first cell takes minutes | `kotlinc-native -opt -o prog <task>.kt`, run from `sources/kotlin-native/`, which holds all fifteen tasks. `-opt` is the optimiser. Tasks 11, 14 and 15 differ from the jvm row's files: Native has no `java.lang` and no `java.io`, so task 11 uses the stdlib `Worker` and the two file tasks use `platform.posix` (`fopen`/`fread`/`fwrite`) through `kotlinx.cinterop`. The other twelve are byte-identical to `sources/kotlin/`'s. The launcher wants a JDK via `JAVA_HOME`; see the caveat below. |
@@ -481,7 +476,6 @@ together.
 | Pony | ponyc | 0.65.0 | `tools/ponyc` — a release build extracted, no installer and no admin. **0.65.0 is deliberate**: ponyc 0.66.0 changed how Pony does networking on Windows and the release now documents Windows 11 / Server 2022 (build 20348) as the minimum, because the networking layer uses an OS readiness API introduced there. This host is Windows 10 19045 and 0.65.0 predates the change, so it is the last release that runs here. | `ponyc` compiles a **directory** as one package and names the executable after that directory, and all fifteen files declare `Main`, so each task is built from a scratch directory named after it: `mkdir -p temp/pony/<task> && cp sources/pony/<task>.pony temp/pony/<task>/ && tools/ponyc/bin/ponyc.exe -o temp/pony/<task> temp/pony/<task>` produces `temp/pony/<task>/<task>.exe`. Every link prints `O sistema não pode encontrar o caminho especificado.` — harmless, the executable is still produced. |
 | Lean 4 | lean | 4.34.1 | github.com/leanprover/lean4 releases, `lean-4.34.1-windows.zip` (811 MB), extracted — no installer and no admin. Windows is a **Tier 1** platform for Lean, so the binary release is built and tested by Lean's own CI. | Two steps: `lean -c <task>.c <task>.lean` compiles the module to C, then `leanc -O2 -o prog <task>.c` links it. `leanc` drives the toolchain Lean ships with itself — the `clang`, `lld` and Lean runtime DLLs all live in `tools/lean4/bin/` — so **put `tools/lean4/bin` on `PATH` first**, or `leanc` cannot find its own linker. The interpreter (`lean --run <task>.lean`) also works and is what a quick check uses, but the compiled route is the measured one because the interpreter is far slower on the 100-million-iteration tasks. |
 | Common Lisp | ecl | 24.5.10 | conda-forge `ecl-26.5.5` (or 24.5.10) `win-64` build, unpacked from the `.conda` archive — no installer and no admin. ECL has **no Windows binary upstream**: `ecl.common-lisp.dev` publishes source tarballs only, and MSYS2 and Cygwin carry no `ecl` package at all, so conda-forge is the only prebuilt Windows route. | `ecl.exe --norc --eval "(progn (require :cmp) (ext:install-c-compiler) … (compile-file \"<task>.lisp\" :output-file \"<task>.fas\") (ext:quit))"` then `ecl.exe --norc --eval "(load \"<task>.fas\" :verbose nil)"`, run from `sources/commonlisp-ecl/`. ECL compiles to C and routes it through a C compiler, which has to be pointed at the hand-extracted MSVC tree with `c::*cc*`/`c::*ld*` plus `INCLUDE` and `LIB`; the exact values are in each file's header. |
-| D | gdc | 4.9.2 (D 2.066.1) | **gdcproject.org's own archive, and the only native-Windows GDC there is from 2015.** `gdcproject.org/archive/binaries/x86_64-w64-mingw32/x86_64-w64-mingw32_2.066.1_gcc4.9.2_f378f9ab41_20150413.7z` (35 MB, 556 MB unpacked, 7315 files), a crosstool-NG build of GCC 4.9.2 with D 2.066.1 — extract into `tools/gdc/`, no installer and no admin. Nothing newer exists for Windows: the same archive's `6.3.0`, `5.4.0` and `5.2.0` directories hold **Linux-hosted cross-compilers** (`gdc-6.3.0+2.068.2-x86_64-linux-gnu.7z`), not Windows binaries, and the package route is closed — Cygwin's `gcc-gdc` ships `gdc.exe` and its `d21` backend but **no D runtime at all** (no `object.d`, no phobos, no druntime), so it cannot compile a single program; MSYS2 packages no `gdc`; and WinLibs, the standalone Windows GCC whose front page advertises C, C++, Objective-C, Fortran *and* D, ships no `gdc` binary in any of its archives. **Building it was tried and abandoned**: a full GCC bootstrap with `--enable-languages=d,c` is viable in principle (it needs GMP and MPFR development headers, extracted from their Cygwin packages, and MPC, which Cygwin does not package either and which must be built from source first), but it measured **one object per minute** at `-j4` on this host, which puts the remaining ~1000 objects plus libphobos at 20+ hours; and the shortcut does not exist, because GCC's libphobos cannot be configured standalone against the system `gdc` — `core.stdc.*` needs the D front end that the GCC tree itself builds. So the row is measured on an eleven-year-old compiler, which is a property of GDC on Windows rather than a choice. | `gdc -O2 -o prog _<task>.d` — the same fifteen files as the `dmd` and `ldc2` rows. Fourteen compile unmodified; **task 03 needs the `version(GNU)` branch**, because `pragma(inline, false)` only arrived in D 2.070, so under GDC the call is kept real by going through a reference of abstract base type instead. The branch is in the shared file, so all three D toolchains still build one source. Task 11 uses `core.thread` and is genuinely parallel here — measured 198 ms for task 02 against 123 ms for the same work on four threads. |
 
 ### Compiled to WebAssembly — the runtime is the VM, and the module is the program
 
@@ -551,7 +545,6 @@ has to start on every measured run. That startup is part of the number.
 | Java | openjdk | 17 | jdk.java.net or Adoptium | `javac _<task>.java`, then `java -cp . _<task>` |
 | Java | openj9 | 21 | IBM Semeru Open Edition, `ibm-semeru-open-jdk_x64_windows_21.0.12.15.zip` (230 MB) extracted into `tools/openj9/` — no installer, no admin, and it brings its own `javac` | `tools/openj9/bin/javac.exe -d . _<task>.java`, then `tools/openj9/bin/java.exe -cp . _<task>`. **Eclipse OpenJ9, not HotSpot**: run from `sources/java-openj9/`, which holds the same fifteen files as the `openjdk` row, unchanged, with no OpenJ9-specific flag and no `-X` option. The whole difference is which VM executes the bytecode — OpenJ9's JIT (`openj9-0.61.0`) against HotSpot's C2 — and OpenJ9 maps `java.lang.Thread` onto OS threads, so task 11 is a real four-thread pass. Verified with `java -version`, which reports `Eclipse OpenJ9 VM 21.0.12.15`. |
 | Java | graalvm jit | GraalVM 21 (25.0.4 measured) | graalvm.org, the same JDK tarball the `graalvm native-image` row installs | **No separate build step**: `javac _<task>.java` produces the same class files, and the row is the run line `<graalvm>/bin/java -cp . _<task>`. The whole difference from the `openjdk` row is which JIT compiles the bytecode: GraalVM's JDK has `EnableJVMCI`, `EnableJVMCIProduct` and `UseJVMCICompiler` all `true` by default, so the Graal compiler replaces HotSpot's C2 without any flag. Verified with `java -XX:+PrintFlagsFinal -version`. The sources are `sources/java-graalvm-jit/`, the same fifteen files as the `openjdk` row. |
-| Java | loom | 21 (25 measured) | jdk.java.net or Adoptium — no GraalVM needed | `javac -d . _<task>.java`, then `java -cp . _<task>`, exactly as the `openjdk` row, run from `sources/java-loom/`, which holds all fifteen tasks. **Task 11 differs**: it is the `openjdk` task 11 with `Thread.ofVirtual()` in place of `new Thread(...)` and nothing else changed. Virtual threads are final since 21, so no preview flag is involved. |
 | C# | coreclr | .NET 8 | dotnet.microsoft.com | `dotnet build -c Release` |
 | C# | mono | 6.12 | mono-project.com | `mcs -optimize+ <task>.cs` |
 | Scala | jvm | 3.3 | scala-lang.org | Two steps: `scalac -release 17 -d out <task>.scala`, then `java -cp "out;<scala>/maven2/org/scala-lang/scala3-library_3/<v>/scala3-library_3-<v>.jar;<scala>/maven2/org/scala-lang/scala-library/<v>/scala-library-<v>.jar" Main`, where `<scala>` is the distribution and `<v>` its version. **Scala CLI's `scala` is a subcommand runner, not the classic `scala Main` launcher**, so it rejects `scala Main` with `Main is not a scala sub-command`; running the compiled class through `java -cp` is the equivalent and it also keeps the launcher's own start-up out of the measurement. The compiler needs a JDK 17 or newer on `PATH`. |
@@ -575,7 +568,7 @@ time is zero. Everything is paid at run time.
 
 | Language | Toolchain |
 |---|---|
-| JavaScript | node, bun, deno |
+| JavaScript | bun, deno |
 | PHP | zend | 8.5.11 (ZTS) | windows.php.net, `php-8.5.11-Win32-vs17-x64.zip` (36 MB, the non-`nts` name is the thread-safe build), extracted into `tools/php-zts/` — no installer, no admin | **No build step**: `php <task>.php`. The row uses the **ZTS** build rather than the NTS one, because task 11 needs the PECL `parallel` extension and that extension only loads into a thread-safe PHP; `php_parallel-1.2.10-8.5-ts-vs17-x64.zip` from the Windows PECL builds goes into `ext/`, with `pthreadVC3.dll` beside `php.exe`, and `php.ini` must set **`extension_dir`** as well as `extension=parallel` — the build's compiled-in default is `C:\php\ext`, so a bare `extension=parallel` fails with `Unable to load dynamic library`. |
 | PHP | zend + jit | as above | as above | Same interpreter, with `-d opcache.enable_cli=1 -d opcache.jit=tracing -d opcache.jit_buffer_size=64M`. **`-d opcache.jit=tracing` is required**: PHP 8.5 changed the master default of `opcache.jit` to `disable`, so `opcache.jit_buffer_size` alone leaves the JIT off (`opcache_get_status()` reports `jit.on=false`, `buffer_size=0`) and the row would measure only opcache bytecode caching. With the flag set the JIT is on and the effect is large — measured 4.2x on task 01, 6.0x on 09 and 12.3x on 11. |
 | Python | cpython, pypy, graalpy |
@@ -601,19 +594,14 @@ time is zero. Everything is paid at run time.
 | Elixir | elixir (BEAM) | 8 MB zip on OTP 29.1.1 | Elixir from github.com/elixir-lang/elixir releases — an 8 MB zip, no installer and no admin — on top of the **179 MB Erlang/OTP Windows `.zip`** from erlang.org. The OTP tree is installed for this row alone now that the two Erlang rows are gone, and it is still required: Elixir does not ship a runtime. | **No build step**: `tools/elixir/bin/elixir.bat <task>.exs`, run from the task directory with `tools/erlang/bin` first on `PATH` so the launcher finds `erl.exe`. Elixir compiles the script on every run, so that compile is inside the measured number. |
 | Scheme | chez |
 | Prolog (SWI) | swipl |
-| J | jconsole |
 | Janet | janet |
 | Ring | ring |
 | JScript | cscript (WSH) |
 | AutoHotkey | v2 |
 | Terra | terra |
-| Dyalog APL | dyalog |
 | Pharo | Pharo 13 |
-| Arc | Anarki on Racket 9.3 |
 | Factor | factor | 0.100 | factorcode.org, the Windows `.exe` installer unpacked — no admin | **No build step**: `factor.exe <task>.factor`, run from `sources/factor/`. The script is compiled and run on every invocation, so the compile time is inside the measured number. `TIME_MS` goes to stderr and stdout is unchanged. |
 | Luau | luau, lute |
-| SQLite | sqlite3 |
-| DuckDB | duckdb | 1.5.6 | github.com/duckdb/duckdb releases, `duckdb_cli-windows-amd64.zip` (13 MB), extracted into `tools/duckdb/` — a single CLI binary, no installer and no admin. | **No build step**: `duckdb.exe -no-init :memory: ".read <task>.sql"`, run from `sources/duckdb/`. **`-init /dev/null` fails on this Windows build** (`IO Error: Failed to open file /dev/null`), so the run line passes no init file at all. Two CLI traps shape every file: the CLI CRLF-translates everything it writes unless `.binary on` is in force, **including the `.output stderr` target**, and the `.output` switch resets it, so `.binary on` is re-issued after each switch. `epoch_ms(now())` is the millisecond clock. **DuckDB 1.5.6 has an arbitrary-precision `VARINT` but `*`, `/`, `//` and `%` on it all return DOUBLE** — only `+` and `-` are exact — so task 10 is the hand-rolled base-1e9 route despite a bignum type existing, ported from `sources/sqlite/10_pi.sql`. Recursive CTEs allow only one recursive reference, so task 09's two-way recursion is a cross join against a two-row table. `PRAGMA threads=N` parallelises only DuckDB's own operators, never user computation, so task 11 is four child processes with rename-as-join, the SQLite row's shape. |
 
 **Pharo** runs a file headlessly with
 `PharoConsole.exe --headless tools/pharo/Pharo13.0-SNAPSHOT-64bit-d7c6f761d5.image st --quit --no-source <task>.st`,
@@ -622,9 +610,7 @@ compiled into it. Give the image as an **absolute path or a path relative to the
 directory you actually run from**: Pharo writes its `.changes` log and a `PharoDebug.log`
 into the process working directory, so invoking it from the repository root drops two
 untracked files there that do not belong to the benchmark. Run from `sources/pharo/` (or any
-scratch directory) and they land in `tools/pharo/` beside the image instead. **Arc** is Anarki — Arc 3.2 plus its `lib/` tree — hosted on Racket:
-`Racket.exe -t tools/arc/boot.rkt -e "(anarki-windows-cli)" -- <task>.arc`, run from
-`sources/arc/`, and Racket's own boot (~30 s on this machine) is inside every measured run.
+scratch directory) and they land in `tools/pharo/` beside the image instead.
 **Factor** is `factor.exe <task>.factor` from `sources/factor/`; each file carries a complete
 `USING:` line, and a clean run prints none of the `Restarts were invoked adding vocabularies to
 the search path` warning that Factor emits when it has to extend the search path at parse time.
@@ -632,8 +618,7 @@ the search path` warning that Factor emits when it has to extend the search path
 need **Lute**, the Luau team's own runtime, because the plain Luau CLI exposes no file I/O and no
 process API at all — its `os` is `{clock, date, difftime, time}`, it has no `io`, no
 `os.execute` and no `package`, so `data.bin`, `out.bin` and the four child processes of task 11
-are unreachable under it. `SQLite` is `sqlite3.exe :memory: ".read <task>.sql"`, and every loop
-in the row is a recursive CTE, because SQL has no loop statement.
+are unreachable under it.
 
 Twenty-three of these need more than a run command.
 
@@ -840,33 +825,6 @@ four workers, and it needs message queues rather than shared variables: `thread_
 **copies** the goal, so each worker sends its partial with `thread_send_message/2` and the
 parent collects four times before joining.
 
-**J** is `jconsole`, from the Windows x64 base zip `j9.7.1_win.zip` (6.3 MB), extracted into
-`tools/` so that `tools/j9.7/bin/jconsole.exe` is the interpreter. No admin is needed for the
-zip route (the AIO installer's "just for me" option is the no-admin alternative) and no addons
-are needed, because the console loads the profile and the profile loads the standard library.
-**The run line is a plain `jconsole.exe <task>.ijs`, from `sources/j/`; `-jprofile` is the
-wrong invocation.** Verified: with `-jprofile` the profile is skipped, the standard library is
-never loaded, and every name the scripts use is undefined — `4!:0` on `stdout`, `LF`, `exit`,
-`echo` and `load` returns `_1 _1 _1 _1 _1` against `0 3 0 3 3` for a plain run. Every script
-therefore ends with `exit 0`; without it jconsole finishes the file and drops into the
-interactive prompt, which hangs a batch runner. The minimum is **9.4**: both the `T.`/`t.`
-threads-and-tasks that task 11 uses and the GMP-backed extended integers that task 10 uses
-arrive in that release. The one runtime dependency is the VC++ x64 runtime for `j.dll`, which
-the `msvc` row already puts on this machine. Three traps cost time. J evaluates **right to
-left**, so `i * n + j` is `i * (n + j)` and every index and every spigot multiplier in this row
-is parenthesised. `":` on a *list* pads every number to a common width and the default print
-precision is 6 significant digits, so task 01 formats each counter atom at a time and task 08
-uses the fit form `(":!.12)` or it prints `0.498047`. And counted loops are `while.`, because
-`for_i. i. 100000000` materialises the 800 MB index vector before the first iteration — the same
-trap the R row records. Task 03 loads `AddOne.ijs` with `0!:0`, so the helper sits next to the
-task file. Task 07 measures a linear append: J documents that `x , y` appends to `x` in place
-when `x` is a zombie, which is exactly what the task's own line is. Task 15 has no fsync — J's
-foreign tables contain no flush, sync or `FlushFileBuffers` operation at all. Task 11 is real
-OS threads inside the interpreter (`0 T. ''` creates them, `u t. n y` dispatches a task and
-returns a pyx), with no extra install and no child processes, but the speedup is about **1.7x**
-rather than 4x, because J's explicit verbs run roughly 1.8x slower inside a worker thread than
-on the master thread.
-
 **Janet** is a single 2.13 MB per-user MSI from the project's releases page (1.42.1). The MSI is
 `InstallScope="perUser"`, so it installs without admin, and the no-touch alternative is
 `msiexec /a <msi> TARGETDIR=tools\janet /qn` — the same administrative extract the Raku and
@@ -1021,39 +979,6 @@ so this row is not in the flush-and-close group — but note that `_commit(-1)` 
 descriptor the program just opened. Binary modes are mandatory: text mode wrote 6 bytes for
 `"A\nB\n"` against 4 in binary, because a CR is inserted before every LF.
 
-**Dyalog APL** is a 20.0 Unicode Windows distribution, and the download page offers it as a
-**zip** containing `setup.exe` and `setup_64_unicode.msi`; the MSI is extracted with
-`msiexec /a <msi> /qn TARGETDIR=<dir>`, the same no-admin route SBCL, Raku and Janet use, and
-the interpreter tree then moves as a unit. There is no portable interpreter-only package on any
-platform — Linux gets `.deb`/`.rpm`, macOS a `.pkg` — so this is the only route. Two things
-about it matter more than the install. First, **it runs unregistered**: no licence file, no
-serial, no registration step, and `dyascript.exe -script <file>` writes nothing at all to stdout
-or stderr at start-up, so the row's cells are the program's own bytes and no ActionScript-style
-offset is needed. The `UNREGISTERED - not for commercial use` banner is interactive-mode-only
-and goes to **stderr**. Second, the right binary is `dyascript.exe`: `dyalog.exe`,
-`dyalogrt.exe` and `dyaedit.exe` are GUI-subsystem programs (PE subsystem 2) whose output never
-reaches a console, while `dyascript.exe` is the console one (subsystem 3). `-script` is
-mandatory rather than cosmetic — without it the interpreter does not run the file at all, it
-starts a Session. `⎕IO←0` and **`⎕PP←17`** are load-bearing in every file: the default `⎕PP` is
-10 and `⍕` of task 02's total then prints `7.500000075E15` instead of the exact digits, which
-would make every numeric cell `WRONG`. Dyalog has no 64-bit integer type and no bignum — `⎕DR`
-of `2*62` is 645, a 64-bit float, and `2*53+1` is `2*53` — so task 10 hand-rolls base-1e9 limbs.
-Three structural facts shape the whole row. **A dyadic tradfn is declared infix**: the header is
-`∇ r←a badd b`, not `∇ r←badd a b`, and the second form is not a syntax error — it silently
-defines a function named `a` and the failure surfaces later as an undefined name at the call
-site. **APL is right-associative**, so `ai-bi-borrow` parses as `ai-(bi-borrow)`, the same trap
-the J row records for `i * n + j`. And **a dfn cannot contain control structures** — "dfns do
-not support control structures or branch" — so every loop in this row lives in a tradfn, with
-its locals declared after the semicolon in the header, because an undeclared name assigned
-inside a tradfn is a global, which under task 11 is a data race rather than merely a leak. Task
-11 is the language's own `&` spawn joined by `⎕TSYNC`, and it is a correct-answer-no-speedup
-cell measured rather than assumed: four workers consume 0.99 CPU per wall second, four 5 M
-workers take 4.12x the time of one, and the threaded form is slower than the identical serial
-work. Task 07 appends in place (`text,←'x'`) and is linear; task 15 flushes rather than fsyncs,
-because the `⎕N*` foreign functions contain no flush, sync or `FlushFileBuffers` operation —
-`⎕NA` could call `kernel32|FlushFileBuffers` directly, but that is a DLL call the task did not
-ask for, so the deviation is recorded rather than taken.
-
 VBScript and JScript are also the rows here that are being withdrawn. Microsoft's phased
 deprecation makes the Windows Script Host engines a Feature on Demand in Windows 11 24H2 —
 present and enabled at first — then disables them by default, and finally removes them;
@@ -1074,6 +999,7 @@ and the slowest thing on this page to set up.
 | graalvm native-image | a C toolchain, `zlib` headers, and several GB of RAM. On Windows, the MSVC linker (`link.exe`) on `PATH` plus `INCLUDE`/`LIB`. |
 | kotlin/native | a JDK for the launcher. The 1.9-era launcher parsed `java -version` with `delims=-.` and broke on JDK 24, which prints `24` with no dot, leaving a stray quote in `if %_java_major_version% geq 24` — a batch syntax error rather than a clear message; the 2.4.20 prebuilt drives JDK 25.0.2 without trouble, so this is a launcher-version question, not a JDK ceiling. The first build also downloads its LLVM and libffi dependencies (about 1.4 GB) into `%USERPROFILE%\.konan`. |
 | swiftc | the Swift toolchain ships its own LLVM, needs `libcurl` and `libxml2`. On Windows it needs the MSVC toolchain to link, and `-sdk` pointing at the bundled Windows SDK. The Windows distribution is a WiX burn bundle, so a plain `--layout` copy is not enough: a `get_swift.py` (not committed, see the `tools/` note below) decompiles it with WiX's `dark.exe`, reads the burn manifest to recover the real package names (the extracted files are `a0`, `a1`, ...), stages each MSI next to its `.cab`, and administrative-extracts them. |
+| nim | a C compiler on `PATH` for the C backend. **The module name rule bites**: Nim rejects a source file whose name is not a valid identifier, so `_01_branches.nim` stops with `Error: invalid module name: '_01_branches'; a module name must be a valid Nim identifier` and the file has to be copied to a name such as `t01_branches.nim` first. Nim 2.x enables thread support by default, so task 11's `std/typedthreads` needs no extra flag. |
 | nuitka | in principle a C compiler, but in practice nothing on Python 3.13: Nuitka downloads its own zig-based backend and ignores a system MinGW. `--mingw64` is rejected on 3.13 and later. |
 | tinygo | the Go SDK on `PATH`. TinyGo bundles its own LLVM and its own standard library, but it still calls `go list` and `go env` for module resolution, so without `go` every build stops with `could not find 'go' command: executable file not found in %PATH%`. |
 | gdscript | a Godot build, run with `--headless` |

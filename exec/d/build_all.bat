@@ -3,7 +3,6 @@ setlocal enabledelayedexpansion
 rem Build all 15 D tasks with three toolchains.
 rem   dmd   tools/dmd/windows/bin64/dmd.exe -O -release -of=prog.exe _<task>.d
 rem   ldc2  tools/ldc2/bin/ldc2.exe -O3 -release -of=prog.exe _<task>.d
-rem   gdc   tools/gdc/x86_64-w64-mingw32/bin/gdc.exe -O2 -o prog.exe _<task>.d
 rem The sources carry a version(GNU) branch for the clock: GDC here is 4.9.2 (D 2.066.1),
 rem which predates core.time.MonoTime, so it uses TickDuration.currSystemTick instead.
 rem Task 03 uses pragma(inline, false) in-file, so no separate module is needed.
@@ -30,12 +29,4 @@ for %%T in (%TASKS%) do (
   if exist prog.exe ( echo OK ldc2 %%T ) else ( echo D-FAIL ldc2 %%T )
 )
 
-echo ########## gdc
-for %%T in (%TASKS%) do (
-  mkdir "%EXEC%\gdc\%%T" 2>nul
-  cd /d "%EXEC%\gdc\%%T"
-  copy /y "%SRC%\_%%T.d" . >nul
-  C:\stupidspeed\tools\gdc\x86_64-w64-mingw32\bin\gdc.exe -O2 -o prog.exe _%%T.d >build.log 2>&1
-  if exist prog.exe ( echo OK gdc %%T ) else ( echo D-FAIL gdc %%T )
-)
 echo ALLDONE

@@ -98,29 +98,6 @@
    ],
    "language": "Algol 68"
   },
-  "arc": {
-   "entries": [
-    {
-     "toolchain": "Anarki on Racket",
-     "tasks": [
-      "*"
-     ],
-     "cmd": [
-      "{root}/tools/racket/Racket.exe",
-      "-t",
-      "{root}/tools/arc/boot.rkt",
-      "-e",
-      "(anarki-windows-cli)",
-      "--",
-      "{task}.arc"
-     ],
-     "cwd": "{root}/exec/arc",
-     "artifact": "{root}/exec/arc/{task}.arc",
-     "timeout": 3600
-    }
-   ],
-   "language": "Arc"
-  },
   "assembly": {
    "entries": [
     {
@@ -361,6 +338,26 @@
    ],
    "language": "Clojure"
   },
+  "cobol": {
+   "entries": [
+    {
+     "toolchain": "gnucobol",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/cobol/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/cobol/{task}",
+     "artifact": "{root}/exec/cobol/{task}/prog.exe",
+     "env": {
+      "PATH": "{root}/tools/msys64/msys64/ucrt64/bin;{PATH}"
+     },
+     "timeout": 1200
+    }
+   ],
+   "language": "COBOL"
+  },
   "commonlisp": {
    "entries": [
     {
@@ -541,17 +538,6 @@
      ],
      "cwd": "{root}/exec/d/ldc2/{task}",
      "artifact": "{root}/exec/d/ldc2/{task}/prog.exe"
-    },
-    {
-     "toolchain": "gdc",
-     "tasks": [
-      "*"
-     ],
-     "cmd": [
-      "{root}/exec/d/gdc/{task}/prog.exe"
-     ],
-     "cwd": "{root}/exec/d/gdc/{task}",
-     "artifact": "{root}/exec/d/gdc/{task}/prog.exe"
     }
    ],
    "language": "D"
@@ -607,45 +593,6 @@
     }
    ],
    "language": "Dolphin Smalltalk"
-  },
-  "duckdb": {
-   "entries": [
-    {
-     "toolchain": "duckdb",
-     "tasks": [
-      "*"
-     ],
-     "cmd": [
-      "{root}/tools/duckdb/duckdb.exe",
-      "-no-init",
-      ":memory:",
-      ".read {task}.sql"
-     ],
-     "cwd": "{root}/exec/duckdb",
-     "artifact": "{root}/exec/duckdb/{task}.sql",
-     "timeout": 1200
-    }
-   ],
-   "language": "DuckDB"
-  },
-  "dyalog": {
-   "entries": [
-    {
-     "toolchain": "dyalog",
-     "tasks": [
-      "*"
-     ],
-     "cmd": [
-      "{root}/tools/dyalog/tree/ProgramFiles64Folder/Dyalog/Dyalog APL-64 20.0 Unicode/dyascript.exe",
-      "-script",
-      "{task}.dyalog"
-     ],
-     "cwd": "{root}/exec/dyalog",
-     "artifact": "{root}/exec/dyalog/{task}.dyalog",
-     "timeout": 1200
-    }
-   ],
-   "language": "Dyalog APL"
   },
   "elixir": {
    "entries": [
@@ -928,24 +875,6 @@
    ],
    "language": "Haxe"
   },
-  "j": {
-   "entries": [
-    {
-     "toolchain": "jconsole",
-     "tasks": [
-      "*"
-     ],
-     "cmd": [
-      "{root}/tools/j9.7/bin/jconsole.exe",
-      "{task}.ijs"
-     ],
-     "cwd": "{root}/exec/j/j9.7/{task}",
-     "artifact": "{root}/exec/j/j9.7/{task}/{task}.ijs",
-     "timeout": 7200
-    }
-   ],
-   "language": "J"
-  },
   "janet": {
    "entries": [
     {
@@ -1023,26 +952,6 @@
    ],
    "language": "Java"
   },
-  "java-loom": {
-   "entries": [
-    {
-     "toolchain": "loom",
-     "tasks": [
-      "*"
-     ],
-     "cmd": [
-      "java",
-      "-cp",
-      ".",
-      "_{task}"
-     ],
-     "cwd": "{root}/exec/java-loom/loom/{task}",
-     "artifact": "{root}/exec/java-loom/loom/{task}/_{task}.class",
-     "timeout": 600
-    }
-   ],
-   "language": "Java"
-  },
   "java-openj9": {
    "entries": [
     {
@@ -1065,19 +974,6 @@
   },
   "javascript": {
    "entries": [
-    {
-     "toolchain": "node",
-     "tasks": [
-      "*"
-     ],
-     "cmd": [
-      "C:\\Program Files\\nodejs\\node.exe",
-      "{task}.js"
-     ],
-     "cwd": "{root}/exec/javascript/node/{task}",
-     "artifact": "{root}/exec/javascript/node/{task}/{task}.js",
-     "timeout": 600
-    },
     {
      "toolchain": "bun",
      "tasks": [
@@ -1421,6 +1317,23 @@
     }
    ],
    "language": "Modula-3"
+  },
+  "nim": {
+   "entries": [
+    {
+     "toolchain": "nim",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/nim/nim/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/nim/nim/{task}",
+     "artifact": "{root}/exec/nim/nim/{task}/prog.exe",
+     "timeout": 600
+    }
+   ],
+   "language": "Nim"
   },
   "oberon07": {
    "entries": [
@@ -2078,28 +1991,6 @@
     }
    ],
    "language": "JavaScript"
-  },
-  "sqlite": {
-   "entries": [
-    {
-     "toolchain": "sqlite3",
-     "tasks": [
-      "*"
-     ],
-     "cmd": [
-      "{root}/tools/sqlite/sqlite3.exe",
-      ":memory:",
-      ".read {task}.sql"
-     ],
-     "cwd": "{root}/exec/sqlite/sqlite3/{task}",
-     "env": {
-      "PATH": "{root}/tools/sqlite;{PATH}"
-     },
-     "artifact": "{root}/exec/sqlite/sqlite3/{task}/{task}.sql",
-     "timeout": 1800
-    }
-   ],
-   "language": "SQLite"
   },
   "standardml": {
    "entries": [

@@ -1,5 +1,5 @@
 // task 03 func_sum — expected output: 100000000
-// build: none    run: node 03_func_sum.js | bun 03_func_sum.js | deno run 03_func_sum.js
+// build: none    run: bun 03_func_sum.js | deno run 03_func_sum.js
 // note: a plain function is the closest JS equivalent; V8 will inline addOne anyway.
 
 const __t0 = performance.now();

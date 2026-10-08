@@ -1,5 +1,5 @@
 // task 15 file_write — expected output: 52428800
-// build: none    run: node 15_file_write.js | bun 15_file_write.js | deno run --allow-write 15_file_write.js
+// build: none    run: bun 15_file_write.js | deno run --allow-write 15_file_write.js
 
 const __t0 = performance.now();
 

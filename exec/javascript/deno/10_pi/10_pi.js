@@ -1,5 +1,5 @@
 // task 10 pi — expected output: 4470
-// build: none    run: node 10_pi.js | bun 10_pi.js | deno run 10_pi.js
+// build: none    run: bun 10_pi.js | deno run 10_pi.js
 // note: Gibbons' unbounded spigot on native BigInt; only the digit sum is printed.
 
 const __t0 = performance.now();

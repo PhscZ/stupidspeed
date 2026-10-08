@@ -1,5 +1,5 @@
 // task 02 switch_case — expected output: 7500000075000000
-// build: none    run: node 02_switch_case.js | bun 02_switch_case.js | deno run 02_switch_case.js
+// build: none    run: bun 02_switch_case.js | deno run 02_switch_case.js
 
 const __t0 = performance.now();
 

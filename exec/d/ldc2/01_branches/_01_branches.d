@@ -5,22 +5,11 @@
 module _01_branches;
 
 import std.stdio;
-version(GNU)
-{
-    // GDC 4.9.2 (D 2.066.1) predates MonoTime, so the monotonic clock is the older
-    // TickDuration.currSystemTick; both branches expose ss_now/ss_elapsed_ms.
-    import core.time : TickDuration;
-    alias ss_clock_t = TickDuration;
-    ss_clock_t ss_now() { return TickDuration.currSystemTick; }
-    double ss_elapsed_ms(ss_clock_t t0) { return (TickDuration.currSystemTick - t0).usecs / 1000.0; }
-}
-else
-{
-    import core.time : MonoTime;
-    alias ss_clock_t = MonoTime;
-    ss_clock_t ss_now() { return MonoTime.currTime; }
-    double ss_elapsed_ms(ss_clock_t t0) { return (MonoTime.currTime - t0).total!"usecs" / 1000.0; }
-}
+import core.time : MonoTime;
+alias ss_clock_t = MonoTime;
+ss_clock_t ss_now() { return MonoTime.currTime; }
+double ss_elapsed_ms(ss_clock_t t0) { return (MonoTime.currTime - t0).total!"usecs" / 1000.0; }
+
 
 // timing: MonoTime.currTime is core.time's monotonic clock; TIME_MS goes to stderr and stdout
 // is unchanged.

@@ -1,5 +1,5 @@
 // task 07 string_append — expected output: 250000
-// build: none    run: node 07_string_append.js | bun 07_string_append.js | deno run 07_string_append.js
+// build: none    run: bun 07_string_append.js | deno run 07_string_append.js
 
 const __t0 = performance.now();
 

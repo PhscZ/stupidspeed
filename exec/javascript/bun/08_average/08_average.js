@@ -1,5 +1,5 @@
 // task 08 average — expected output: 0.498046875
-// build: none    run: node 08_average.js | bun 08_average.js | deno run 08_average.js
+// build: none    run: bun 08_average.js | deno run 08_average.js
 
 const __t0 = performance.now();
 

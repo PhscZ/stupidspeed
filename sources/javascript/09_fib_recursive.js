@@ -1,5 +1,5 @@
 // task 09 fib_recursive — expected output: 102334155
-// build: none    run: node 09_fib_recursive.js | bun 09_fib_recursive.js | deno run 09_fib_recursive.js
+// build: none    run: bun 09_fib_recursive.js | deno run 09_fib_recursive.js
 
 const __t0 = performance.now();
 

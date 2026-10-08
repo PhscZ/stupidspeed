@@ -1,5 +1,5 @@
 // task 06 char_count — expected output: 10000000
-// build: none    run: node 06_char_count.js | bun 06_char_count.js | deno run 06_char_count.js
+// build: none    run: bun 06_char_count.js | deno run 06_char_count.js
 
 const __t0 = performance.now();
 

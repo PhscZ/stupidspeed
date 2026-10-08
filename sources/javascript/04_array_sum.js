@@ -1,5 +1,5 @@
 // task 04 array_sum — expected output: 499999500000
-// build: none    run: node 04_array_sum.js | bun 04_array_sum.js | deno run 04_array_sum.js
+// build: none    run: bun 04_array_sum.js | deno run 04_array_sum.js
 
 const __t0 = performance.now();
 

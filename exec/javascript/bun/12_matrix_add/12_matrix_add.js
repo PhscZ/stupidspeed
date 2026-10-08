@@ -1,5 +1,5 @@
 // task 12 matrix_add — expected output: 999000000
-// build: none    run: node 12_matrix_add.js | bun 12_matrix_add.js | deno run 12_matrix_add.js
+// build: none    run: bun 12_matrix_add.js | deno run 12_matrix_add.js
 
 const __t0 = performance.now();
 

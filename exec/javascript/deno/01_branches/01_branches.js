@@ -1,5 +1,5 @@
 // task 01 branches — expected output: 33333334 13333333 7619048 45714285
-// build: none    run: node 01_branches.js | bun 01_branches.js | deno run 01_branches.js
+// build: none    run: bun 01_branches.js | deno run 01_branches.js
 
 const __t0 = performance.now();
 
