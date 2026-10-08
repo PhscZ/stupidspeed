@@ -15,14 +15,14 @@ them is in `RUN.md`.
 | `sources/<row>/` | the fifteen task programs for every row, as written |
 | `exec/<row>/` | the same rows built: each task's compiled program or staged script, plus that row's `build_all.bat`/`run_all.bat` and `verify.py` |
 | `exec/harness.py` | the test harness: runs every built program in `exec/`, N times each, and records speed, peak memory and program size |
-| `exec/cells.json` | the harness's registry: how to run each of the 1785 cells, transcribed from the row verifiers |
+| `exec/cells.json` | the harness's registry: how to run each of the 1740 cells, transcribed from the row verifiers |
 | `exec/plot.py` | turns `results.json` into `results.html`, the interactive chart of the whole matrix |
 | `data.bin` | the 50 MiB fixture tasks 14 and 15 use, committed once at the root |
 | `BUILD.md`, `RUN.md` | how each row is built, and how it is run |
 
 The built programs are committed, so a checkout can be verified without installing anything
 first — that is what `exec/<row>/verify.py` does, one row at a time. They are 3.39 GB across
-13 103 unique files; the paths number 22 265, because a build stages its own copies of the
+12 775 unique files; the paths number 21 897, because a build stages its own copies of the
 task sources and of the fixture, and git stores one blob per distinct content.
 
 One row's output is a *directory* package rather than a single file — the ActionScript row's
@@ -32,7 +32,7 @@ line-ending-converts them fails every ActionScript cell with `invalid license or
 `RUN.md` has the measurements and the one-line repair for an older clone.
 
 `exec/harness.py` runs all of them and measures them. It reads the cell registry at
-`exec/cells.json` — how to invoke each of the 1785 cells, transcribed from the row verifiers,
+`exec/cells.json` — how to invoke each of the 1740 cells, transcribed from the row verifiers,
 which stay the authority on how a row is built and run — runs each cell `--runs` times, and
 writes `exec/results.json` (every sample) and `exec/results.md` (the speed, peak-memory and
 program-size tables below, in the same shape as the results table).
@@ -52,7 +52,7 @@ python exec/harness.py --list --rows zig     # what would run, without running i
 Every cell has a number — its position in `--list` order, row then toolchain then task — and
 `--start`/`--end` take a slice of the matrix by that number, which is how a full sweep is run
 in chunks. `--rows` also takes numbers and ranges, so `--rows 1-30` is the first thirty
-languages and `--rows 1-96` is all of them.
+languages and `--rows 1-93` is all of them.
 
 A single language is run by naming its folder: `--rows actionscript` is that row's fifteen
 cells, in any case and as a path (`--rows exec/ada`, `--rows sources\ada`). A language the
@@ -94,7 +94,7 @@ terminal or can leave a crash dialog waiting for a click.
 ## Results
 
 One row per toolchain, one column per task. The column headings are the task numbers, and
-the task names are the section headings under [Tasks](#tasks). All 120 toolchains, empty and
+the task names are the section headings under [Tasks](#tasks). All 117 toolchains, empty and
 ready to fill in.
 
 A cell holds the median of the 5 timed runs, in milliseconds.
@@ -176,8 +176,6 @@ A cell holds the median of the 5 timed runs, in milliseconds.
 | OCaml | ocamlc (bytecode) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | VBScript | cscript |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Raku | rakudo (MoarVM) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| Erlang | OTP (escript) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| Erlang | erlc (compiled) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Elixir | elixir (BEAM) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Scala | native |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Beef | BeefBuild |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -211,7 +209,6 @@ A cell holds the median of the 5 timed runs, in milliseconds.
 | Arc | Anarki on Racket |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Lean 4 | lean |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Factor | factor |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| Gleam | gleam |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Luau | luau |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Luau | lute |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | SQLite | sqlite3 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -518,9 +515,10 @@ and the checksum holds no matter how the threads are scheduled.
   with no shared memory, so they are isolates rather than threads — and the results have to come
   back through shared properties, because a `MessageChannel`'s `send()` throws from inside a
   worker.
-- **Erlang, Elixir and Raku** all pass with real OS threads and no caveat on this task: BEAM
+- **Elixir and Raku** pass with real OS threads and no caveat on this task: BEAM
   runs one scheduler per core with no global lock, and MoarVM runs each Raku thread through
-  `uv_thread_create`. Erlang measured the best speedup in the matrix at **4.27x**.
+  `uv_thread_create`. The best speedup in the matrix is **Janet's 4.9x on four threads**;
+  Erlang held a 4.27x cell until that row was removed.
 - **Assembly** has no thread library of its own, so it makes the operating system's thread calls
   by hand: four real kernel threads on four stacks, and the same answer.
 - **VBScript** has no thread library either, and no way to declare one, so it starts four child
@@ -643,7 +641,6 @@ Output: `52428800`
 | OCaml | ocamlopt, ocamlc (bytecode) |
 | VBScript | cscript |
 | Raku | rakudo (MoarVM) |
-| Erlang | OTP (escript), erlc (compiled) |
 | Elixir | elixir (BEAM) |
 | Beef | BeefBuild |
 | Haxe | hxcpp, hashlink |
@@ -673,7 +670,6 @@ Output: `52428800`
 | Arc | Anarki on Racket |
 | Lean 4 | lean |
 | Factor | factor |
-| Gleam | gleam (BEAM) |
 | Luau | luau, lute |
 | SQLite | sqlite3 |
 | DuckDB | duckdb |
@@ -686,41 +682,12 @@ Output: `52428800`
 ### Languages that are not here, and why
 
 One line per language. A language is left out because it does not run on Windows x64, or
-because it fails a task, or because it is too slow to be worth measuring. Task 10 alone is never a reason — a language without big integers
+because it fails a task, or because it is too slow to be worth measuring, or because it was
+**removed after being measured** — the last case is the one below, and it is a different kind of
+exclusion from the others: those rows ran, passed, and produced numbers; what they measured was
+simply not themselves. Task 10 alone is never a reason — a language without big integers
 hand-rolls the limbs, as GDScript does. Nushell is the one exception: it fails task 10, and
 its hand-rolled limbs are two orders of magnitude too slow to run.
-
-**Front ends to another language's engine.** Eighteen rows have been removed on this ground,
-in three batches, and the rule is one rule: the cell measured another engine's output rather
-than the language's own.
-
-- **Ten compile to C or C++ and hand it to a C compiler the matrix already has**: `vala`,
-  `nim`, `nelua`, `seed7`, `v`, `cobol`, `eiffel`, `python` (cython), `mercury` and `ats`. The
-  second compiler is the one doing the optimisation, and it is the `c` row's own `gcc`, so the
-  cell reports `gcc` plus a front end.
-- **Eight compile to another language's bytecode and are run by that runtime's JIT**: `kotlin`
-  (jvm), `fsharp`, `vbnet`, `jython`, `ironpython`, `groovy`, `boo` and `componentpascal`. The
-  JIT is the `java` or `csharp` row's own JIT, so the cell reports that JIT plus a front end.
-
-The two families are the same shape, which is why they are treated together.
-
-What stays, and why, is worth stating rather than leaving implicit, because these are
-exceptions to the rule above. The test applied is not "does it borrow an engine" but "does it
-have a counterpart for the same language on a *different* runtime" — that pair is a controlled
-A/B, and it is the same shape as the Erlang `escript`/`erlc` pair this file points at
-elsewhere. A front end with no such counterpart reports a number for a runtime the matrix
-already measures, with a language's overhead mixed in and nothing to compare it against.
-
-| Kept | Ground |
-|---|---|
-| `java` (all five toolchains), `csharp` (all three) | They *own* the runtime. `java loom` is Java on Java's own JVM — a threading mechanism, not a front end. |
-| `lean4`, `qb64` | They ship their own backend (`leanc`, and a C++ compiler inside the QB64 tree) instead of borrowing the matrix's. |
-| `clojure` | Counterpart of `babashka`, which is Clojure on a GraalVM **native image**, not the JVM. |
-| `scala` (jvm) | Counterpart of `scala-native`, which is the same sources through LLVM IR. |
-| `ruby` (`jruby`) | Counterpart of `cruby-yjit` and `ruby-wasm` — same `.rb` sources, three runtimes. |
-| `haxe` (hxcpp) | Counterpart of `hashlink`, Haxe's **own** VM, not another language's. |
-| `commonlisp` (ecl) | Counterpart of `sbcl`. |
-| `python` (nuitka) | Counterpart of `cpython`/`pypy`/`graalpy`; it links the CPython runtime rather than emitting standalone C. |
 
 **Does not run on Windows x64.**
 
@@ -808,6 +775,91 @@ make it expensive. It is therefore being measured separately rather than dropped
 | Language | What was found |
 |---|---|
 | Vale | Archived project; a Windows binary exists but nobody can rebuild it. |
+
+### Languages that were removed, and what they actually ran
+
+Twenty-one rows were removed from the matrix after they had been built and measured. The reason
+is the same in every case: the cell was not measuring the language, it was measuring an engine
+the matrix already has. Grouping them by what actually executed is also what makes each removal
+checkable — the pipeline column is what the row's own `BUILD.md` entry said at the time.
+
+**Running GCC.** Ten rows translated to C and handed it to the same `gcc` the `c` row already
+measures. In every one of them the C compiler is the thing doing the optimisation, so the cell
+reports `gcc` plus a front end.
+
+| Removed row | Pipeline | The backend it ended in |
+|---|---|---|
+| `vala` | valac → C | gcc, with `-X -O2` forwarding the flag |
+| `nim` | nim → C | gcc or clang |
+| `nelua` | nelua → C | gcc |
+| `seed7` | s7c → C | gcc |
+| `v` | V → C | gcc — `-cc gcc` names it |
+| `cobol` | cobc → C | MSYS2 ucrt64 gcc |
+| `mercury` | mmc → C | gcc |
+| `ats` | patscc → C | Cygwin gcc |
+| `eiffel` | `ec -finalize -c_compile` → C | the MinGW gcc 4.4.5 the EiffelStudio delivery ships inside itself |
+| `python` (cython) | Cython → C | gcc, plus CPython's headers and the `python3xx.dll` it links |
+
+**Running the JVM.** Three rows compiled to JVM bytecode and were executed by the same HotSpot
+JIT as the `java` row.
+
+| Removed row | Pipeline | The backend it ended in |
+|---|---|---|
+| `kotlin` (jvm) | kotlinc → JVM bytecode | HotSpot |
+| `groovy` | Groovy → JVM bytecode | HotSpot |
+| `jython` | Jython → Java bytecode (Python 2 source) | the JVM — specifically **OpenJ9**, the `openj9` row's JDK |
+
+**Running the CLR.** Five rows compiled to IL and were executed by the same kind of runtime the
+`csharp` row measures.
+
+| Removed row | Pipeline | The backend it ended in |
+|---|---|---|
+| `fsharp` | F# compiler → IL | the .NET 8 runtime the `coreclr` row installs |
+| `vbnet` | VB compiler → IL | the same .NET 8 runtime |
+| `ironpython` | IronPython → IL | the same .NET 8 runtime |
+| `componentpascal` | gpcp → .NET IL | the same .NET 8 runtime |
+| `boo` | Boo → IL | **the .NET 10 runtime**, not .NET 8 — a different version of the same CLR the `csharp` row measures |
+
+Four of the five shared the exact runtime the `csharp` row installs; `boo` needed a newer one,
+which is a version difference rather than a different engine.
+
+**Running the BEAM.** One front end, and two rows that owned the VM.
+
+| Removed row | Pipeline | The backend it ended in |
+|---|---|---|
+| `gleam` | `gleam build` → **Erlang source** → `erlc` → BEAM | the BEAM, through Erlang's own compiler |
+| `erlang` (escript) | escript → BEAM bytecode on every run | the BEAM — it owned it |
+| `erlang-compiled` (erlc) | erlc → `.beam` once, then run | the BEAM — it owned it |
+
+`gleam` is the strongest case of the twenty-one: it did not emit bytecode at all, it emitted
+**Erlang source**, which Erlang's compiler then compiled — a two-hop front end, the same shape as
+`cobol` → C → `gcc`.
+
+**The two Erlang rows are the exception, and are documented as such.** They were not front ends
+to another engine; they *were* the engine, the way `java` owns the JVM and `csharp` owns the
+CLR. They were also the matrix's cleanest illustration of when a compile happens — `escript`
+compiled the script on every run, `erlc` compiled it once, and the only difference between the
+two cells was that timing. Removing them means the BEAM is now represented by `elixir`, a
+language that targets it, rather than by the language that defines it, and the
+`java`/`graalvm native-image` and `dart` `jit`/`aot` pairs now carry that contrast instead.
+
+What stays, and why, is worth stating rather than leaving implicit, because these are
+exceptions to the rule above. The test applied is not "does it borrow an engine" but "does it
+have a counterpart for the same language on a *different* runtime" — that pair is a controlled
+A/B, and it is the same shape as the `java`/`graalvm native-image` or `dart` `jit`/`aot` pairs
+this file points at elsewhere. A front end with no such counterpart reports a number for a runtime the matrix
+already measures, with a language's overhead mixed in and nothing to compare it against.
+
+| Kept | Ground |
+|---|---|
+| `java` (all five toolchains), `csharp` (all three) | They *own* the runtime. `java loom` is Java on Java's own JVM — a threading mechanism, not a front end. |
+| `lean4`, `qb64` | They ship their own backend (`leanc`, and a C++ compiler inside the QB64 tree) instead of borrowing the matrix's. |
+| `clojure` | Counterpart of `babashka`, which is Clojure on a GraalVM **native image**, not the JVM. |
+| `scala` (jvm) | Counterpart of `scala-native`, which is the same sources through LLVM IR. |
+| `ruby` (`jruby`) | Counterpart of `cruby-yjit` and `ruby-wasm` — same `.rb` sources, three runtimes. |
+| `haxe` (hxcpp) | Counterpart of `hashlink`, Haxe's **own** VM, not another language's. |
+| `commonlisp` (ecl) | Counterpart of `sbcl`. |
+| `python` (nuitka) | Counterpart of `cpython`/`pypy`/`graalpy`; it links the CPython runtime rather than emitting standalone C. |
 
 ## How it is measured
 

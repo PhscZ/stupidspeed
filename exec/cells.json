@@ -678,46 +678,6 @@
    ],
    "language": "Elixir"
   },
-  "erlang": {
-   "entries": [
-    {
-     "toolchain": "OTP (escript)",
-     "tasks": [
-      "*"
-     ],
-     "cmd": [
-      "{root}/tools/erlang/bin/escript.exe",
-      "{task}.erl"
-     ],
-     "cwd": "{root}/exec/erlang",
-     "artifact": "{root}/exec/erlang/{task}.erl"
-    }
-   ],
-   "language": "Erlang"
-  },
-  "erlang-compiled": {
-   "entries": [
-    {
-     "toolchain": "erlc (compiled)",
-     "tasks": [
-      "*"
-     ],
-     "cmd": [
-      "{root}/tools/erlang/bin/erl.exe",
-      "-noshell",
-      "-s",
-      "{task}",
-      "main",
-      "-s",
-      "init",
-      "stop"
-     ],
-     "cwd": "{root}/exec/erlang-compiled/{task}",
-     "artifact": "{root}/exec/erlang-compiled/{task}/{task}.beam"
-    }
-   ],
-   "language": "Erlang"
-  },
   "euphoria": {
    "entries": [
     {
@@ -857,28 +817,6 @@
     }
    ],
    "language": "Forth"
-  },
-  "gleam": {
-   "entries": [
-    {
-     "toolchain": "gleam",
-     "tasks": [
-      "*"
-     ],
-     "cmd": [
-      "{root}/tools/gleam/gleam.exe",
-      "run",
-      "--module",
-      "t{task}"
-     ],
-     "cwd": "{root}/exec/gleam",
-     "env": {
-      "PATH": "{root}/tools/erlang/bin;{root}/tools/gleam;{PATH}"
-     },
-     "artifact": "{root}/exec/gleam/build/dev/erlang/stupidspeed_gleam/ebin/t{task}.beam"
-    }
-   ],
-   "language": "Gleam"
   },
   "go": {
    "entries": [

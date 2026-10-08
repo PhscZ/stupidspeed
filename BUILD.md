@@ -91,7 +91,6 @@ duplicating the files it has in common with the main row. Nineteen rows are in t
 | Java loom | `sources/java-loom/` | task 11: `Thread.ofVirtual()` replaces `new Thread(...)` |
 | Scala native | `sources/scala-native/` | nothing — same fifteen files, built to LLVM IR by Scala Native |
 | Common Lisp ecl | `sources/commonlisp-ecl/` | the bodies, not just the header: ECL is a different implementation, so the declarations are `fixnum` where SBCL's are `(signed-byte 64)`, the case clauses end in `t` where SBCL's end in `otherwise`, tasks 11 and 14 use ECL's own thread and stream forms, and task 03 uses `(declaim (notinline add-one))` instead of the separate `03_func_sum_add_one.lisp` the SBCL row needs |
-| Erlang compiled | `sources/erlang-compiled/` | the module form: `-module`/`-export` and `main/0` replace the escript row's shebang and `main/1`, because `erlc` cannot compile a script that has no module declaration |
 | Go tinygo | `sources/tinygo/` | task 15: flushes by closing, because TinyGo's Windows target implements no fsync |
 | Python wasip1 | `sources/python-wasm/` | nothing — same fifteen files, run by the WASI build of CPython |
 | Ruby wasip1 | `sources/ruby-wasm/` | task 11: Fibers, because CRuby's wasip1 build is `THREAD_MODEL=none` |
@@ -178,7 +177,7 @@ rows are Windows x64 only: each is a freestanding PE program built with `nasm -f
 too, including `flang` and `luajit`. See `RUN.md` for the full platform breakdown.
 
 Disk: **31 GB measured** for the first 96 toolchains, installed and run on one Windows x64 host,
-and about **41 GB for the 120** rows the tables below now list.
+and about **41 GB for the 117** rows the tables below now list.
 The heavy terms are LLVM (4.0 GB), Swift (3.2 GB), the AIR SDK (1.6 GB), GNAT with its MSYS2
 runtime (1.8 GB, which also supplies `flang`), MSVC (1.2 GB once reassembled from a 2.5 GB
 layout), Julia (1.1 GB), Perl (1.0 GB), the .NET SDK (0.7 GB) and GraalVM (0.7 GB); most other
@@ -216,7 +215,7 @@ their place come **OpenJ9 at 388 MB** — the IBM Semeru JDK zip, extracted, wit
 and `java` — and **MASM**, which installs nothing, because `ml64.exe` and `link.exe` come from
 the MSVC tree the `msvc` row already has. The `nasm` row's Windows build likewise reuses the
 assembler already on the host. **Unicon** adds 84 MB, unpacked from a 15 MB installer, and the four rows after it add about **4.4 GB**, almost all of it one term: **GHC at 4.1 GB**, extracted from a 452 MB `.tar.xz`, because the bindist carries a complete MinGW toolchain and the libraries for every package that ships with it. **gforth** is about 100 MB, **Lobster** about 30 MB and **Mercury** about 200 MB installed from a source build.
-That puts the current total at about **38 GB for all 120 toolchains**.
+That puts the current total at about **38 GB for all 117 toolchains**.
 The three interpreted WebAssembly rows add about **0.14 GB** on top of the six that already
 existed: the single-file `ruby.wasm` is 99 MB, the Lua build reuses the `wasi-sdk` tree the C
 row already installs and adds only a 716 KB `lua.wasm`, and the CPython WASI build is a 28 MB
@@ -240,10 +239,11 @@ to get there, because that is what decides whether a cell's number contains comp
 of the program's own body. A row that compiles ahead of time has already finished parsing, type
 checking, optimising and generating code by then. A row that compiles on every run has not, and
 that work lands either inside the measured number or just before it, depending on where the
-compiler puts it. The two Erlang rows are the cleanest illustration in the matrix: `escript`
-compiles the script on every run and `erlc` compiles it once, and the only difference between
-the two cells is when the compile happens. The same split runs through the whole table, so a row
-is only comparable with another row of the same shape.
+compiler puts it. `java`/`openjdk` against `java`/`graalvm native-image` is the cleanest
+surviving illustration in the matrix: the same class files, JIT-compiled at run time in one row
+and turned into a native image ahead of time in the other, with nothing else changed. `dart`
+`jit` against `dart` `aot` makes the same point. The split runs through the whole table, so a
+row is only comparable with another row of the same shape.
 
 Six shapes appear below. Each entry names the stages the toolchain actually runs.
 
@@ -318,10 +318,7 @@ language. Where a row has several VMs, that is the point of the row.
 | `csharp` | Roslyn → IL → CoreCLR JIT, NativeAOT, or Mono |
 | `scala` | scalac → JVM bytecode |
 | `clojure` | clojure.main → JVM bytecode on every run |
-| `erlang` (escript) | escript → BEAM bytecode on every run |
-| `erlang-compiled` (erlc) | erlc → `.beam` once, then the BEAM runs it |
 | `elixir` | Elixir → BEAM bytecode |
-| `gleam` | `gleam build` → BEAM |
 | `hashlink` | Haxe → `.hl` bytecode → the HashLink VM |
 | `unicon` | icont → icode, appended to a self-contained `.exe` |
 | `janet` | Janet → bytecode on every run |
@@ -421,8 +418,8 @@ Three consequences are worth stating, because they are easy to get wrong:
 - **A JIT row's number depends on how long it ran.** A trace or method that compiles on first
   call needs enough iterations to pay for itself, which is why the loop counts are in the
   hundreds of millions and why a task's count is never lowered.
-- **A row with two toolchains is usually a pipeline comparison.** `escript` against `erlc`,
-  `julia` against `julia --compile=min`, `ocamlopt` against `ocamlc`,
+- **A row with two toolchains is usually a pipeline comparison.** `julia` against
+  `julia --compile=min`, `ocamlopt` against `ocamlc`,
   `gnu-r` against `gnu-r (no JIT)`, and the native/wasm pairs all exist to hold the language
   fixed and move one stage of the pipeline.
 
@@ -562,13 +559,11 @@ has to start on every measured run. That startup is part of the number.
 | OCaml | ocamlc (bytecode) | 5.0 (5.4.1 measured) | the same MSYS2 UCRT64 `ocaml` package the `ocamlopt` row installs — nothing extra | Two steps, run from the MSYS2 shell so the OCaml runtime DLLs resolve: `ocamlc -I +unix unix.cma -o prog.exe _<task>.ml`, then `./prog.exe`. The sources are the `ocamlopt` row's own fifteen files, unchanged — this is a backend comparison, not a second program. Three things are load-bearing. **`-I +unix unix.cma` is required**, or the link fails with `No implementation provided for the following modules: Unix`. The build must run **inside the MSYS2 shell** with `OCAMLLIB` set to the Windows form of the stdlib directory, because the produced launcher needs `ocamlrun.exe` and `dllunixbyt.dll` on `PATH`; `-custom` does not work here, since it needs a C compiler and fails with `stdio.h: No such file or directory`. And the source file names keep the row's leading underscore, because OCaml rejects a file whose name starts with a digit (`bad source file name: 01_branches is not a valid module name`). Bytecode is the interpreter half of the pair: measured 5.3 s against the native row's 0.4 s on task 01. |
 | ActionScript | AIR | 51.4.1 | AIR SDK from harman.com/developer/air | Two steps. `amxmlc -swf-version=51 -output prog.swf _<task>.as` compiles the AS3 to a SWF, then `adt -package -storetype pkcs12 -keystore test.p12 -storepass pass -target cmdline out app.xml prog.swf` packages it into a standalone `out\prog.exe` with the AIR runtime bundled beside it. Use **`amxmlc`, not `mxmlc`**: only `amxmlc` links against `airglobal.swc`, so the AIR-only APIs this row needs (`System.output`, `flash.filesystem`, `Worker`) do not exist under the plain Flex compiler. A JDK (17 works) has to be on `PATH` for both tools. `adt` refuses to package an unsigned bundle, so one self-signed certificate is generated once with `adt -certificate -cn SelfSigned 2048-RSA test.p12 pass` and reused by every task. **The signing options must precede `-target`**: `adt` scans for them in order and otherwise stops with `Found misplaced signing arguments`, and the application descriptor has to be the literal `app.xml` path rather than the class name or it reports `error 301: Application descriptor missing`. Class names carry the row's `_` prefix because AS3 requires the public class name to equal the file name and a file cannot start with a digit. One shared `app.xml` sits beside the fifteen `.as` files, the way GDScript's `project.godot` does, because every task compiles to `prog.swf` and packages to `prog.exe`; only the `.as` name changes between tasks. Task 11 is two translation units: `_11_parallel_sum_worker.as` compiles separately to `worker.swf`, which the `adt` line passes as an extra file so it lands in the bundle and the main SWF can load its bytes for `createWorker`. Task 14's `data.bin` is passed to `adt` the same way — see the note below on why. |
 
-| Gleam | gleam | 1.18.1 | github.com/gleam-lang/gleam releases, `gleam-v1.18.1-x86_64-pc-windows-msvc.zip` (8 MB), extracted — no installer and no admin. Runs on the Erlang/OTP tree the `erlang` and `elixir` rows already install. | One Gleam project, fifteen modules: `gleam build` then `gleam run --module <name>`. **The module names cannot start with a digit *or* an underscore** — Gleam rejects both — so the row's files are `t01_branches` … `t15_file_write` in `src/` rather than `01_branches`. There is no per-file run mode, so a single project with `--module` is the only clean way to get fifteen runnable programs out of one row. **`gleam build` fetches `gleam_stdlib` and `gleam_erlang` from hex on the first build**, so this is the one row in the matrix that needs network access before it can run; `manifest.toml` pins the two versions, and a `build/` directory left in place makes later builds offline. `gleam run` also needs `tools/erlang/bin` on `PATH`. |
 | Unicon | unicon | 13.3 | unicon.sourceforge.io — `setup-unicon_13.3~BYOPL2e_v0(64-bit).exe` (15 MB), unpacked rather than installed: it is an Inno Setup archive, so `7z` refuses it and `innoextract -e` extracts `app/` into `tools/unicon/`, no admin and no registry. **13.3 and not 13.2 is load-bearing**: the 13.2 Windows release is built without concurrent threads, so `unicon -features` omits the feature and `thread` dies with `function not supported`. | `unicon -s <task>.icn` compiles to icode and writes `<task>.exe`; task 03 also names `03_func_sum_add_one.icn` on the same command line, and the icode file is named after the first file. The measured run is the `.exe`, which is **self-contained** — the runtime is appended to the icode, so nothing from `tools/unicon` is needed at run time (verified with a clean `PATH`). Both the compiler and the executables it produces read their own appended image through `argv[0]`, so they must be invoked with a **Windows-style backslash path**: given `C:/…/prog.exe` they die with `can't read interpreter file header`, and given `C:\…\prog.exe` they run. `tools/unicon/bin` has to be on `PATH` to compile. |
 | Haskell | ghc | 9.14 | downloads.haskell.org — `ghc-9.14.1-x86_64-unknown-mingw32.tar.xz` (452 MB, 4.1 GB extracted) unpacked into `tools/ghc/`. **The bindist bundles its own MinGW**, so no MSVC and no Windows SDK are needed. No installer and no admin. | `ghc -O2 -threaded -o prog <task>.hs`, then `prog`. **`-threaded` is required for task 11** and the row is run as `prog +RTS -N4 -RTS`; without `-threaded` there are no capabilities to schedule onto. `-O2` alone is what the other compiled rows use. |
 | Lobster | lobster | 2026.8 | github.com/aardappel/lobster releases — `lobster_windows_release.zip` (15 MB) extracted into `tools/lobster/`, no installer and no admin. | **No build step**: `tools/lobster/bin/lobster.exe <task>.lobster` compiles to bytecode and runs it in one go. Tasks 14 and 15 read and write `data.bin`/`out.bin` in the working directory, so run from `sources/lobster/`. |
 | Forth | gforth | 0.7.9 | github.com/fukuyori/gforth_for_windows releases — `gforth-native-0.7.9_...-x64-setup.exe` (3.4 MB). It is an Inno Setup archive, so `7z` refuses it and `innoextract` 1.9 cannot read its 6.5 setup-data version; it is run **silently** instead, `gforth-setup.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP- /DIR=<target>`. Its manifest sets `PrivilegesRequired=lowest` and installs under the user profile, so no admin and no registry. | **No build step** — gforth interprets the file: `gforth <task>.fs`. The interpreter needs its image `gforth.fi` and the working directory's `data.bin` at once; in this layout `gforth.exe` finds the image beside itself, so no `GFORTHPATH` is needed as long as the run directory holds the sources and the fixture (verified 15/15 without it). Output has a trailing space after the numbers, so a byte-exact comparison must trim. |
 | Euphoria | eui | 4.1.0 | github.com/OpenEuphoria/euphoria releases, `euphoria-4.1.0-Windows-x64-*.zip` (21 MB), extracted into `tools/euphoria/` — no installer and no admin. | **No build step**: `EUDIR=<install root> eui.exe <task>.ex`, and **`EUDIR` is mandatory** or the interpreter fails to start. Three things shape the row. **There is no reachable stderr**: `printf(2, …)` and `puts(2, …)` both write nothing when stderr is redirected, so the contract's `time.txt` fallback carries `TIME_MS` (the same exception `dyalog`, `ring` and `modula2` record). **There is no high-resolution clock in `std`** — `time()` is whole seconds and the `datetime` fields are second-resolution — so the timer is an FFI call to `QueryPerformanceCounter` through `std/dll.e` and `std/machine.e`. And **`std/task.e` segfaults** on `task_create` in this build (signal 11), so task 11 is four child processes via `system_exec` from `std/os.e` rather than cooperative tasks. `integer` is 64-bit and exact, so task 02 and 04 are exact; there are no bignums in `std`, so task 10 hand-rolls base-1e9 limbs. |
-| Erlang | erlc (compiled) | OTP 29.1.1 | the same 179 MB OTP Windows `.zip` the `erlang` row installs — nothing extra | Two steps: `tools/erlang/bin/erlc.exe <task>.erl` writes `<task>.beam`, then `tools/erlang/bin/erl.exe -noshell -s <task> main -s init stop`. The sources are `sources/erlang-compiled/`, module-form rewrites of the escript row's scripts: that row's files carry a shebang and no `-module` declaration, so `erlc` cannot compile them as they stand. The rewrite replaces the shebang and the `%%! -smp enable` emulator line with `-module`/`-export` and `main/0`, and drops `-smp enable` because SMP is on by default in OTP 29 (`erlang:system_info(smp_support)` is true). Algorithms are unchanged, and the compiled row is the one that separates compile time from run time: the escript row charges the per-run compile to every cell, this one pays it once at build time. Task 11 stays a real parallel pass, four workers on the SMP scheduler. |
 
 The .NET SDK is installed once and fills every CLR row: C# (`coreclr`) and C#
 (`nativeaot`) are both built by it.
@@ -603,8 +598,7 @@ time is zero. Everything is paid at run time.
 | Common Lisp | sbcl |
 | VBScript | cscript |
 | Raku | rakudo (MoarVM) |
-| Erlang | OTP (escript) |
-| Elixir | elixir (BEAM) |
+| Elixir | elixir (BEAM) | 8 MB zip on OTP 29.1.1 | Elixir from github.com/elixir-lang/elixir releases — an 8 MB zip, no installer and no admin — on top of the **179 MB Erlang/OTP Windows `.zip`** from erlang.org. The OTP tree is installed for this row alone now that the two Erlang rows are gone, and it is still required: Elixir does not ship a runtime. | **No build step**: `tools/elixir/bin/elixir.bat <task>.exs`, run from the task directory with `tools/erlang/bin` first on `PATH` so the launcher finds `erl.exe`. Elixir compiles the script on every run, so that compile is inside the measured number. |
 | Scheme | chez |
 | Prolog (SWI) | swipl |
 | J | jconsole |
@@ -760,17 +754,17 @@ four times through `WScript.Shell.Exec` with a worker index as the argument and 
 child's stdout back, which blocks until that child exits and is therefore the join. That is
 real parallelism across four cores, the same category as the R row's `PSOCK` workers.
 
-**Raku, Erlang and Elixir** are three separate rows that share a runtime shape and one caveat.
-All three install without admin: Raku is a 64 MB MSI that `msiexec /a <msi> TARGETDIR=<dir> /qn`
+**Raku and Elixir** are two separate rows that share a runtime shape and one caveat.
+Both install without admin: Raku is a 64 MB MSI that `msiexec /a <msi> TARGETDIR=<dir> /qn`
 administratively extracts (the same no-admin route the SBCL row uses — the MSI itself installs
-per-machine and wants elevation), Erlang OTP 29.1.1 is a plain 179 MB Windows `.zip`, and Elixir
-is an 8 MB zip that sits on top of that Erlang. None has a build step: `raku <task>.raku`,
-`escript <task>.erl` and `elixir <task>.exs` each compile the file as they run, so that compile
-time is inside the measured number. All three have arbitrary-precision integers built in, so
-task 10 is a fast cell rather than a hand-rolled one, and all three have real OS threads, so
-task 11 is a genuine pass — Erlang measured **4.27x**, the best in the matrix.
+per-machine and wants elevation), and Elixir is an 8 MB zip that sits on top of the 179 MB
+Erlang OTP Windows `.zip`, which is installed for it alone now that the two Erlang rows are
+gone. Neither has a build step: `raku <task>.raku` and `elixir <task>.exs` each compile the file
+as they run, so that compile time is inside the measured number. Both have arbitrary-precision
+integers built in, so task 10 is a fast cell rather than a hand-rolled one, and both have real
+OS threads, so task 11 is a genuine pass.
 
-The caveat is task 07, and it is the same one for all three: each runtime has an explicit
+The caveat is task 07, and it is the same one for both: each runtime has an explicit
 optimisation for repeatedly appending the same value, which turns the natural expression into an
 amortised O(1) in-place extend. MoarVM's `MVM_string_concatenate` detects the pattern and bumps a
 repetition counter on the string's strand tree; BEAM's writable-binary optimisation does the same
@@ -778,14 +772,15 @@ for `<<Acc/binary, "x">>`. Both therefore run **linear**, not quadratic, and the
 optimised append instead of the quadratic copy the task is about. The rows
 record this rather than forcing a copy, because forcing one would mean writing them artificially.
 
-Erlang and Elixir also need a style note that the other 90 rows do not. Neither language has
-mutable variables or loop syntax — there is no assignment statement — so every loop in those two
-rows is tail recursion with explicit accumulators, which the compiler turns into a jump, plus
-`case`/`cond` for the branches. The rows deliberately avoid the functional style (no
-`map`/`foldl`/comprehensions/higher-order functions in any timed path) and use the languages' own
+Elixir also needs a style note that the other rows do not. It has no
+mutable variables and no loop syntax — there is no assignment statement — so every loop in that
+row is tail recursion with explicit accumulators, which the compiler turns into a jump, plus
+`case`/`cond` for the branches. The row deliberately avoids the functional style (no
+`map`/`foldl`/comprehensions/higher-order functions in any timed path) and uses the language's own
 escape hatches for state: the process dictionary, and `:atomics`, a real mutable array of 64-bit
-integers. That is the most procedural register either language has; it cannot honestly be called
-imperative and the rows do not claim to be. Raku needs no such note — it has mutable variables
+integers. That is the most procedural register the language has; it cannot honestly be called
+imperative and the row does not claim to be. The Erlang rows needed the same note and carried it
+until they were removed. Raku needs no such note — it has mutable variables
 and `for`/`while`/`loop`, so its row is ordinary imperative code.
 
 **Scheme** is Chez Scheme 10.4.1, and its toolchain has to be *built* before it can be run:

@@ -70,7 +70,6 @@ backend's output rather than the language's. Their entries are gone from the tab
 | Pony | ponyc | none | a static binary. **0.65.0 specifically**: 0.66.0 raised the Windows floor to 11 / Server 2022, see `BUILD.md`. |
 | Lean 4 | lean | none | the compiled binary is standalone; the `leanc` linker driver links against the toolchain's own tree at build time only. |
 | Common Lisp | ecl | none | the `.fas` is loaded by `ecl.exe` itself, so the interpreter tree is the runtime. |
-| Gleam | gleam | Erlang/OTP | the generated `.beam` runs on the same OTP tree the `erlang` and `elixir` rows install, so this row adds no runtime. |
 | Pharo | Pharo 13 | the image | `--quit --no-source` keeps the run from saving the image or compiling the script into it. |
 | Arc | Anarki on Racket | Racket 9.3 | the host's own boot is about 30 s and sits inside every measured run. |
 | Factor | factor | none — the distribution carries its own image | `factor.exe <task>.factor` from `sources/factor/`. |
@@ -104,9 +103,7 @@ backend's output rather than the language's. Their entries are gone from the tab
 | OCaml | ocamlopt | none — native static binary | The MSYS2 UCRT64 build needs the UCRT64 DLLs on `PATH` at run time, and building needs `OCAMLLIB` set to the Windows form of the stdlib path plus the `flexdll` package; see `BUILD.md`. |
 | OCaml | ocamlc (bytecode) | the MSYS2 UCRT64 OCaml runtime (`ocamlrun.exe` and `dllunixbyt.dll` must be reachable) | `ocamlc -I +unix unix.cma -o prog.exe _<task>.ml` then `./prog.exe`, both inside the MSYS2 shell. Same fifteen files as the native row. |
 | Raku | rakudo (MoarVM) | the extracted Rakudo tree | No build step. The MSI installs per-machine by default, so extract it with `msiexec /a` for a no-admin row. |
-| Erlang | OTP (escript) | the extracted OTP tree | No build step. `escript` compiles the script on each run. Run with `-smp enable` so all schedulers are live. |
-| Erlang | erlc (compiled) | the same extracted OTP tree | Two steps: `erlc <task>.erl` writes `<task>.beam`, then `erl -noshell -s <task> main -s init stop`. Module form, so the per-run compile the escript row pays is gone. Task 11 is a real four-worker parallel pass. |
-| Elixir | elixir (BEAM) | Erlang's tree plus Elixir's | No build step. Elixir needs Erlang on `PATH` first; `elixir` then compiles the script each run. |
+| Elixir | elixir (BEAM) | Erlang's tree plus Elixir's | No build step. Elixir needs Erlang on `PATH` first; `elixir` then compiles the script each run. The 179 MB OTP tree is installed for this row alone now that the two Erlang rows are gone. |
 | VBScript | cscript | none — `cscript.exe` ships with Windows | The runtime is a Windows component rather than something you install, which is also why the row is on borrowed time: see the platform table below. |
 | Common Lisp | sbcl | none — the dumped executable embeds the core | The build dumps a standalone `prog.exe` with `save-lisp-and-die`, so nothing has to be on `PATH` at run time. Task 11 uses `sb-thread`, which is a required part of the Windows build. |
 | C, C++, Rust, Go, AssemblyScript, WebAssembly, Ruby, Lua, Python, Zig (the ten wasm rows that run on 46) | wasmtime 46.0.3 | the `wasmtime.exe` from the release zip under `tools/wasmtime46/` | `wasmtime run prog.wasm`. Tasks 14 and 15 add `--dir=.` from a directory holding `data.bin`; Go's two cells need `--dir=<host>::/` instead, because Go opens its preopens by the WASI name and expects `/`. Task 11 adds `-S threads=y -W threads=y -W shared-memory=y` and **needs 46**, because `wasi-threads` was deleted in 47. Startup is part of every cell: measured, a no-op module costs 44 ms against 30 ms for a native executable and 31 ms for `wasmtime-min`. |
@@ -166,7 +163,7 @@ and **2.92x** for four platform threads on a 20-core host), Kotlin (native), C#,
 Scala (both rows), Odin, Julia (`-t4`), Fortran (OpenMP, needs `-fopenmp`), Perl (ithreads),
 PHP (`parallel`, needs a ZTS build), Crystal (`Fiber::ExecutionContext::Parallel`),
 Objective-C (`NSThread`), Modula-2 (Win32 `Threads` module), Modula-3 (`Thread.Fork`), BASIC (`THREADCREATE`),
-Clojure (`java.lang.Thread` interop, not `future`), Common Lisp (`sb-thread:make-thread` on real Win32 threads), OCaml (`Domain.spawn`/`Domain.join`, OCaml 5 only), Erlang and Elixir (`spawn` onto a BEAM scheduler, one per core, no global lock), Raku (`start`, which MoarVM runs through `uv_thread_create`), C3 (`std::thread`),
+Clojure (`java.lang.Thread` interop, not `future`), Common Lisp (`sb-thread:make-thread` on real Win32 threads), OCaml (`Domain.spawn`/`Domain.join`, OCaml 5 only), Elixir (`spawn` onto a BEAM scheduler, one per core, no global lock), Raku (`start`, which MoarVM runs through `uv_thread_create`), C3 (`std::thread`),
 Beef (`System.Threading.Thread`; `CreateThread`, `ResumeThread` and `SetThreadPriority` are in the
 executable's import table), Haxe (`sys.thread.Thread.create`, which hxcpp implements as
 `CreateThread`), Scheme (`fork-thread`/`thread-join` on a threaded
@@ -193,15 +190,14 @@ four chunks run serially. **13.3 only**: the 13.2 Windows release is built witho
 threads, `unicon -features` omits the feature there, and `thread` fails at run time with
 `function not supported`).
 
-**Four more rows added later are in this group too.** Pony (`Worker` actors scheduled by the
+**Three more rows added later are in this group too.** Pony (`Worker` actors scheduled by the
 runtime's thread pool — an in-process probe reading `runtime_info.Scheduler.scheduler_index()`
 reports the four workers on schedulers 1, 2, 0 and 3 at `--ponymaxthreads=4 --ponynoscale`, and
 all four on scheduler 0 at `--ponymaxthreads=1`),
 Lean 4 (`IO.asTask`, which hands the action to Lean's task pool — the compiled program holds 12
 OS threads while four workers run; measured 2992 ms on one worker against 1876 ms on four on a
-busy 8-core box), Arc (Racket's `(thread thunk #:pool 'own)`, the one Racket route that is not
-green) and Gleam (BEAM schedulers, one per core, no global lock —
-the same disposition as the Erlang and Elixir rows).
+busy 8-core box), and Arc (Racket's `(thread thunk #:pool 'own)`, the one Racket route that is
+not green).
 
 **The six WebAssembly rows that pass** are one mechanism, and it is a third kind: C, C++, Rust,
 AssemblyScript, the hand-written WAT row and Zig all reach the host's thread API through
@@ -703,7 +699,7 @@ so `--rows rust --start 1 --end 15` is the whole Rust row, while a bare `--start
 is the first two hundred cells of the matrix.
 
 `--rows` itself takes names, numbers and ranges: `--rows c,rust`, `--rows 7`, `--rows 1-30`,
-`--rows 1-96` (everything). Both together are how a long sweep is broken up.
+`--rows 1-93` (everything). Both together are how a long sweep is broken up.
 
 #### Running one language
 
@@ -971,7 +967,7 @@ row's own `timing:` comment as well.
 
 ## Expected cost
 
-Every task runs five times, in 120 toolchains.
+Every task runs five times, in 117 toolchains.
 
 - Fast compiled languages: under a second per run, so about **1.5 hours** for the matrix.
 - The 100-million-iteration tasks take 10 to 15 seconds in CPython.
@@ -984,8 +980,9 @@ Every task runs five times, in 120 toolchains.
     0.47 us for the equivalent `if`/`elsif` chain, because `when` smartmatches. The row keeps
     `given`/`when` in task 02, since that is Raku's own switch, and takes the ~10 minute run.
     Task 06's per-character `substr` scan is the other slow cell.
-  - **Erlang and Elixir** are the reverse: both are fast, and their per-run start-up (about
-    520 ms for Erlang, 800 ms for Elixir) is the main fixed cost, charged to every cell.
+  - **Elixir** is the reverse: it is fast, and its per-run start-up (about 800 ms) is the main
+    fixed cost, charged to every cell. Erlang was the same and about 520 ms until its two rows
+    were removed.
   - **Tcl** is slow per operation and, unlike the rows around it here, it is slow in *every*
     100-million-iteration task rather than in one cell: measured task 06 210.0 s, task 01
     201.3 s, task 03 185.8 s, task 08 185.5 s, task 02 165.7 s, task 13 155.6 s and task 09
@@ -1012,9 +1009,8 @@ Every task runs five times, in 120 toolchains.
   - **Oberon-07** task 10 is about 10 s at 1000 digits, **Algol 68 Genie** task 02 takes about
     2.5 minutes and its task 11 about the same and its task 14 about
     about 1.75 minutes, and **Cim** task 10 about 3 s.
-  - **The newest five rows** are a mix. **Euphoria** is fast (task 01 in 4.3 s, task 09 in
-    43 s) and **erlang-compiled** is the fast one (task 01 in 2.7 s — compiling ahead of time
-    removes the per-run compile the escript row pays). **OCaml bytecode** sits mid-pack: 5.3 s
+  - **That batch of rows** is a mix. **Euphoria** is fast (task 01 in 4.3 s, task 09 in
+    43 s). **OCaml bytecode** sits mid-pack: 5.3 s
     for task 01 and 17.5 s for task 10, against 0.4 s for the same file compiled natively.
     The other two are the slow ones, and they are slow by construction, because each is the
     *interpreted* half of a pair whose other half is fast:
@@ -1107,7 +1103,7 @@ Every task runs five times, in 120 toolchains.
     500000 / 1000000, an exact doubling per doubling — because the AVM2 extends the string in
     place when the value is unshared, where a real quadratic copy would move about 7.8 GB at
     the row's own loop count. All three rows keep the language's own spelling and record the
-    deviation, the same way the Raku, Erlang, Elixir and Lobster rows do.
+    deviation, the same way the Raku, Elixir and Lobster rows do.
   - The compiled rows (C3, Vala) are in the normal range, with C3's task 07 the outlier
     because appending to a string 250000 times is quadratic by design.
   - **Standard ML** is a fast row with one slow cell, like the other native compilers: every cell
