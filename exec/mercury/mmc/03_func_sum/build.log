@@ -1,6 +1,0 @@
-mercury_compile --make m03_func_sum --grade hlc.gc.pregen 
-Making Mercury\int3s\m03_func_sum.int3
-Making Mercury\ints\m03_func_sum.int
-Making Mercury\cs\m03_func_sum.c
-Making Mercury\os\m03_func_sum.o
-Making m03_func_sum.exe

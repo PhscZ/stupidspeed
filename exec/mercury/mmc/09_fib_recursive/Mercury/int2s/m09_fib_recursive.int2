@@ -1,2 +1,0 @@
-:- module m09_fib_recursive.
-:- interface.

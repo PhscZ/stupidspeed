@@ -1,9 +1,0 @@
-mercury_compile --make m11_parallel_sum --grade hlc.par.gc 
-Making Mercury\int3s\m11_parallel_sum.int3
-Making Mercury\ints\m11_parallel_sum.int
-Making Mercury\cs\m11_parallel_sum.c
-11_parallel_sum.m:052: In `worker'(in, in, in, di, uo):
-11_parallel_sum.m:052:   warning: determinism declaration could be tighter.
-11_parallel_sum.m:052:   Declared `cc_multi', inferred `det'.
-Making Mercury\os\m11_parallel_sum.o
-Making m11_parallel_sum.exe

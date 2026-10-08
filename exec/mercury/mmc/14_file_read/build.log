@@ -1,6 +1,0 @@
-mercury_compile --make m14_file_read --grade hlc.gc.pregen 
-Making Mercury\int3s\m14_file_read.int3
-Making Mercury\ints\m14_file_read.int
-Making Mercury\cs\m14_file_read.c
-Making Mercury\os\m14_file_read.o
-Making m14_file_read.exe

@@ -189,26 +189,6 @@
    ],
    "language": "AssemblyScript"
   },
-  "ats": {
-   "entries": [
-    {
-     "toolchain": "ats (gcc)",
-     "tasks": [
-      "*"
-     ],
-     "cmd": [
-      "{root}/exec/ats/{task}/prog.exe"
-     ],
-     "cwd": "{root}/exec/ats/{task}",
-     "env": {
-      "PATH": "C:\\cygwin64\\bin;{PATH}"
-     },
-     "artifact": "{root}/exec/ats/{task}/prog.exe",
-     "timeout": 300
-    }
-   ],
-   "language": "ATS"
-  },
   "autohotkey": {
    "entries": [
     {
@@ -264,24 +244,6 @@
     }
    ],
    "language": "Beef"
-  },
-  "boo": {
-   "entries": [
-    {
-     "toolchain": "booc",
-     "tasks": [
-      "*"
-     ],
-     "cmd": [
-      "{root}/tools/dotnet10/dotnet.exe",
-      "prog.exe"
-     ],
-     "cwd": "{root}/exec/boo/{task}",
-     "artifact": "{root}/exec/boo/{task}/prog.exe",
-     "timeout": 600
-    }
-   ],
-   "language": "Boo"
   },
   "c": {
    "entries": [
@@ -399,26 +361,6 @@
    ],
    "language": "Clojure"
   },
-  "cobol": {
-   "entries": [
-    {
-     "toolchain": "gnucobol",
-     "tasks": [
-      "*"
-     ],
-     "cmd": [
-      "{root}/exec/cobol/{task}/prog.exe"
-     ],
-     "cwd": "{root}/exec/cobol/{task}",
-     "artifact": "{root}/exec/cobol/{task}/prog.exe",
-     "env": {
-      "PATH": "{root}/tools/msys64/msys64/ucrt64/bin;{PATH}"
-     },
-     "timeout": 1200
-    }
-   ],
-   "language": "COBOL"
-  },
   "commonlisp": {
    "entries": [
     {
@@ -453,22 +395,6 @@
     }
    ],
    "language": "Common Lisp"
-  },
-  "componentpascal": {
-   "entries": [
-    {
-     "toolchain": "gpcp",
-     "tasks": [
-      "*"
-     ],
-     "cmd": [
-      "{root}/exec/componentpascal/_{task}/_{task}.exe"
-     ],
-     "cwd": "{root}/exec/componentpascal/_{task}",
-     "artifact": "{root}/exec/componentpascal/_{task}/_{task}.exe"
-    }
-   ],
-   "language": "Component Pascal"
   },
   "cpp": {
    "entries": [
@@ -721,22 +647,6 @@
    ],
    "language": "Dyalog APL"
   },
-  "eiffel": {
-   "entries": [
-    {
-     "toolchain": "eiffelstudio",
-     "tasks": [
-      "*"
-     ],
-     "cmd": [
-      "{root}/exec/eiffel/EIFGENs/t{task}/F_code/prog.exe"
-     ],
-     "cwd": "{root}/exec/eiffel/EIFGENs/t{task}/F_code",
-     "artifact": "{root}/exec/eiffel/EIFGENs/t{task}/F_code/prog.exe"
-    }
-   ],
-   "language": "Eiffel"
-  },
   "elixir": {
    "entries": [
     {
@@ -911,23 +821,6 @@
    ],
    "language": "BASIC"
   },
-  "fsharp": {
-   "entries": [
-    {
-     "toolchain": "dotnet",
-     "tasks": [
-      "*"
-     ],
-     "cmd": [
-      "{root}/tools/dotnet8/dotnet.exe",
-      "{root}/exec/fsharp/{task}/bin/Release/net8.0/{task}.dll"
-     ],
-     "cwd": "{root}/exec/fsharp/{task}",
-     "artifact": "{root}/exec/fsharp/{task}/bin/Release/net8.0/{task}.dll"
-    }
-   ],
-   "language": "F#"
-  },
   "gdscript": {
    "entries": [
     {
@@ -1032,26 +925,6 @@
    ],
    "language": "Go"
   },
-  "groovy": {
-   "entries": [
-    {
-     "toolchain": "groovy",
-     "tasks": [
-      "*"
-     ],
-     "cmd": [
-      "{root}/tools/groovy/groovy-4.0.33/bin/groovy.bat",
-      "{task}.groovy"
-     ],
-     "cwd": "{root}/exec/groovy",
-     "env": {
-      "GROOVY_HOME": "{root}/tools/groovy/groovy-4.0.33"
-     },
-     "artifact": "{root}/exec/groovy/{task}.groovy"
-    }
-   ],
-   "language": "Groovy"
-  },
   "hashlink": {
    "entries": [
     {
@@ -1116,24 +989,6 @@
     }
    ],
    "language": "Haxe"
-  },
-  "ironpython": {
-   "entries": [
-    {
-     "toolchain": "ipy",
-     "tasks": [
-      "*"
-     ],
-     "cmd": [
-      "{root}/tools/dotnet8/dotnet.exe",
-      "{root}/tools/ironpython/net8.0/ipy.dll",
-      "{task}.py"
-     ],
-     "cwd": "{root}/exec/ironpython",
-     "artifact": "{root}/exec/ironpython/{task}.py"
-    }
-   ],
-   "language": "IronPython"
   },
   "j": {
    "entries": [
@@ -1395,47 +1250,40 @@
      ],
      "cwd": "{root}/exec/julia/julia/{task}",
      "artifact": "{root}/exec/julia/julia/{task}/{task}.jl"
-    }
-   ],
-   "language": "Julia"
-  },
-  "jython": {
-   "entries": [
+    },
     {
-     "toolchain": "jython",
+     "toolchain": "julia (interpreted)",
+     "tasks": [
+      "11_parallel_sum"
+     ],
+     "cmd": [
+      "{root}/tools/julia/bin/julia.exe",
+      "--compile=min",
+      "-O0",
+      "-t4",
+      "{task}.jl"
+     ],
+     "cwd": "{root}/exec/julia/julia/{task}",
+     "artifact": "{root}/exec/julia/julia/{task}/{task}.jl",
+     "timeout": 1800
+    },
+    {
+     "toolchain": "julia (interpreted)",
      "tasks": [
       "*"
      ],
      "cmd": [
-      "{root}/tools/openj9/bin/java.exe",
-      "-jar",
-      "{root}/tools/jython/jython-standalone-2.7.4.jar",
-      "{task}.py"
+      "{root}/tools/julia/bin/julia.exe",
+      "--compile=min",
+      "-O0",
+      "{task}.jl"
      ],
-     "cwd": "{root}/exec/jython/jython/{task}",
-     "artifact": "{root}/exec/jython/jython/{task}/{task}.py",
+     "cwd": "{root}/exec/julia/julia/{task}",
+     "artifact": "{root}/exec/julia/julia/{task}/{task}.jl",
      "timeout": 1800
     }
    ],
-   "language": "Python"
-  },
-  "kotlin": {
-   "entries": [
-    {
-     "toolchain": "jvm",
-     "tasks": [
-      "*"
-     ],
-     "cmd": [
-      "C:\\Program Files\\Java\\jdk-24\\bin\\java.exe",
-      "-jar",
-      "prog.jar"
-     ],
-     "cwd": "{root}/exec/kotlin/{task}",
-     "artifact": "{root}/exec/kotlin/{task}/prog.jar"
-    }
-   ],
-   "language": "Kotlin"
+   "language": "Julia"
   },
   "kotlin-native": {
    "entries": [
@@ -1504,6 +1352,23 @@
      "env": {
       "LUA_PATH": "{root}/tools/lua-rocks\\share\\lua\\5.4\\?.lua;{root}/tools/lua-rocks\\share\\lua\\5.4\\?\\init.lua;;",
       "LUA_CPATH": "{root}/tools/lua-rocks\\lib\\lua\\5.4\\?.dll;;"
+     },
+     "artifact": "{root}/exec/lua/{task}.lua",
+     "timeout": 1800
+    },
+    {
+     "toolchain": "luajit",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/luajit/luajit.exe",
+      "{task}.lua"
+     ],
+     "cwd": "{root}/exec/lua",
+     "env": {
+      "LUA_PATH": "{root}/tools/lua-rocks\\share\\lua\\5.1\\?.lua;{root}/tools/lua-rocks\\share\\lua\\5.1\\?\\init.lua;;",
+      "LUA_CPATH": "{root}/tools/lua-rocks\\lib\\lua\\5.1\\?.dll;;"
      },
      "artifact": "{root}/exec/lua/{task}.lua",
      "timeout": 1800
@@ -1587,26 +1452,6 @@
    ],
    "language": "Assembly"
   },
-  "mercury": {
-   "entries": [
-    {
-     "toolchain": "mmc",
-     "tasks": [
-      "*"
-     ],
-     "cmd": [
-      "{root}/exec/mercury/mmc/{task}/m{task}.exe"
-     ],
-     "cwd": "{root}/exec/mercury/mmc/{task}",
-     "env": {
-      "PATH": "{root}/tools/msys64/msys64/ucrt64/bin;{root}/tools/mercury/bin;{PATH}"
-     },
-     "artifact": "{root}/exec/mercury/mmc/{task}/m{task}.exe",
-     "timeout": 600
-    }
-   ],
-   "language": "Mercury"
-  },
   "modula2": {
    "entries": [
     {
@@ -1638,40 +1483,6 @@
     }
    ],
    "language": "Modula-3"
-  },
-  "nelua": {
-   "entries": [
-    {
-     "toolchain": "nelua",
-     "tasks": [
-      "*"
-     ],
-     "cmd": [
-      "{root}/exec/nelua/nelua/{task}/{task}.exe"
-     ],
-     "cwd": "{root}/exec/nelua/nelua/{task}",
-     "artifact": "{root}/exec/nelua/nelua/{task}/{task}.exe",
-     "timeout": 600
-    }
-   ],
-   "language": "Nelua"
-  },
-  "nim": {
-   "entries": [
-    {
-     "toolchain": "nim",
-     "tasks": [
-      "*"
-     ],
-     "cmd": [
-      "{root}/exec/nim/nim/{task}/prog.exe"
-     ],
-     "cwd": "{root}/exec/nim/nim/{task}",
-     "artifact": "{root}/exec/nim/nim/{task}/prog.exe",
-     "timeout": 600
-    }
-   ],
-   "language": "Nim"
   },
   "oberon07": {
    "entries": [
@@ -1947,25 +1758,6 @@
      ],
      "cwd": "{root}/exec/python/nuitka/{task}/{task}.dist",
      "artifact": "{root}/exec/python/nuitka/{task}/{task}.dist/{task}.exe"
-    }
-   ],
-   "language": "Python"
-  },
-  "python-cython": {
-   "entries": [
-    {
-     "toolchain": "cython",
-     "tasks": [
-      "*"
-     ],
-     "cmd": [
-      "{root}/exec/python-cython/cython/{task}/prog.exe"
-     ],
-     "cwd": "{root}/exec/python-cython/cython/{task}",
-     "env": {
-      "PATH": "C:/Users/pz020/AppData/Local/Programs/Python/Python313;C:/Users/pz020/AppData/Local/Programs/Python/Python313/DLLs;{PATH}"
-     },
-     "artifact": "{root}/exec/python-cython/cython/{task}/prog.exe"
     }
    ],
    "language": "Python"
@@ -2332,23 +2124,6 @@
    ],
    "language": "Scheme"
   },
-  "seed7": {
-   "entries": [
-    {
-     "toolchain": "s7c",
-     "tasks": [
-      "*"
-     ],
-     "cmd": [
-      "{root}/exec/seed7/s7c/{task}/prog.exe"
-     ],
-     "cwd": "{root}/exec/seed7/s7c/{task}",
-     "artifact": "{root}/exec/seed7/s7c/{task}/prog.exe",
-     "timeout": 600
-    }
-   ],
-   "language": "Seed7"
-  },
   "spidermonkey": {
    "entries": [
     {
@@ -2547,63 +2322,6 @@
     }
    ],
    "language": "Unicon"
-  },
-  "v": {
-   "entries": [
-    {
-     "toolchain": "v",
-     "tasks": [
-      "*"
-     ],
-     "cmd": [
-      "{root}/exec/v/v/{task}/prog.exe"
-     ],
-     "cwd": "{root}/exec/v/v/{task}",
-     "env": {
-      "PATH": "{root}/tools/msys64/msys64/ucrt64/bin;{PATH}"
-     },
-     "artifact": "{root}/exec/v/v/{task}/prog.exe"
-    }
-   ],
-   "language": "V"
-  },
-  "vala": {
-   "entries": [
-    {
-     "toolchain": "valac",
-     "tasks": [
-      "*"
-     ],
-     "cmd": [
-      "{root}/exec/vala/valac/{task}/prog.exe"
-     ],
-     "cwd": "{root}/exec/vala/valac/{task}",
-     "env": {
-      "PATH": "{root}/tools/msys64/msys64/ucrt64/bin;{PATH}"
-     },
-     "artifact": "{root}/exec/vala/valac/{task}/prog.exe",
-     "timeout": 600
-    }
-   ],
-   "language": "Vala"
-  },
-  "vbnet": {
-   "entries": [
-    {
-     "toolchain": "dotnet",
-     "tasks": [
-      "*"
-     ],
-     "cmd": [
-      "{root}/tools/dotnet8/dotnet.exe",
-      "bin/Release/net8.0/{task}.dll"
-     ],
-     "cwd": "{root}/exec/vbnet/dotnet/{task}",
-     "artifact": "{root}/exec/vbnet/dotnet/{task}/bin/Release/net8.0/{task}.dll",
-     "timeout": 600
-    }
-   ],
-   "language": "VB.NET"
   },
   "vbscript": {
    "entries": [

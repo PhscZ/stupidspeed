@@ -15,18 +15,24 @@ them is in `RUN.md`.
 | `sources/<row>/` | the fifteen task programs for every row, as written |
 | `exec/<row>/` | the same rows built: each task's compiled program or staged script, plus that row's `build_all.bat`/`run_all.bat` and `verify.py` |
 | `exec/harness.py` | the test harness: runs every built program in `exec/`, N times each, and records speed, peak memory and program size |
-| `exec/cells.json` | the harness's registry: how to run each of the 2025 cells, transcribed from the row verifiers |
+| `exec/cells.json` | the harness's registry: how to run each of the 1785 cells, transcribed from the row verifiers |
 | `exec/plot.py` | turns `results.json` into `results.html`, the interactive chart of the whole matrix |
 | `data.bin` | the 50 MiB fixture tasks 14 and 15 use, committed once at the root |
 | `BUILD.md`, `RUN.md` | how each row is built, and how it is run |
 
 The built programs are committed, so a checkout can be verified without installing anything
-first — that is what `exec/<row>/verify.py` does, one row at a time. They are 4.0 GB across
-22 724 unique files; the paths number 34 485, because a build stages its own copies of the
+first — that is what `exec/<row>/verify.py` does, one row at a time. They are 3.39 GB across
+13 103 unique files; the paths number 22 265, because a build stages its own copies of the
 task sources and of the fixture, and git stores one blob per distinct content.
 
+One row's output is a *directory* package rather than a single file — the ActionScript row's
+`out\` — and the AIR runtime validates the bytes inside it, so `.gitattributes` marks those
+directories `-text` and they are checked out exactly as committed. A checkout that
+line-ending-converts them fails every ActionScript cell with `invalid license or package`;
+`RUN.md` has the measurements and the one-line repair for an older clone.
+
 `exec/harness.py` runs all of them and measures them. It reads the cell registry at
-`exec/cells.json` — how to invoke each of the 2025 cells, transcribed from the row verifiers,
+`exec/cells.json` — how to invoke each of the 1785 cells, transcribed from the row verifiers,
 which stay the authority on how a row is built and run — runs each cell `--runs` times, and
 writes `exec/results.json` (every sample) and `exec/results.md` (the speed, peak-memory and
 program-size tables below, in the same shape as the results table).
@@ -46,13 +52,13 @@ python exec/harness.py --list --rows zig     # what would run, without running i
 Every cell has a number — its position in `--list` order, row then toolchain then task — and
 `--start`/`--end` take a slice of the matrix by that number, which is how a full sweep is run
 in chunks. `--rows` also takes numbers and ranges, so `--rows 1-30` is the first thirty
-languages and `--rows 1-114` is all of them.
+languages and `--rows 1-96` is all of them.
 
 A single language is run by naming its folder: `--rows actionscript` is that row's fifteen
 cells, in any case and as a path (`--rows exec/ada`, `--rows sources\ada`). A language the
 results table splits across rows is run with `--language` and the name that table gives it —
 `--language C++` is the `cpp` and `cpp-wasm` rows, `--language Python` is `python`,
-`python-cython`, `python-wasm` and `jython`. The two are unioned, and a name that matches no
+`python-wasm`. The two are unioned, and a name that matches no
 row is an error rather than an empty run: since results are merged, a run that selected
 nothing would otherwise look like a run that measured nothing.
 
@@ -88,7 +94,7 @@ terminal or can leave a crash dialog waiting for a click.
 ## Results
 
 One row per toolchain, one column per task. The column headings are the task numbers, and
-the task names are the section headings under [Tasks](#tasks). All 137 toolchains, empty and
+the task names are the section headings under [Tasks](#tasks). All 120 toolchains, empty and
 ready to fill in.
 
 A cell holds the median of the 5 timed runs, in milliseconds.
@@ -118,13 +124,10 @@ A cell holds the median of the 5 timed runs, in milliseconds.
 | Java | graalvm jit |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Java | loom |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Java | graalvm native-image |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| Kotlin | jvm |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Kotlin | native |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | C# | coreclr |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | C# | nativeaot |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | C# | mono |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| F# | dotnet |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| VB.NET | dotnet |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Scala | jvm |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | JavaScript | node |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | JavaScript | bun |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -136,9 +139,8 @@ A cell holds the median of the 5 timed runs, in milliseconds.
 | Python | cpython |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Python | pypy |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Python | nuitka |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| Python | cython |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Python | graalpy |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| Python | jython |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Ruby | cruby-yjit |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Ruby | jruby |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Lua | puc-lua |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Lua | luajit |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -147,30 +149,23 @@ A cell holds the median of the 5 timed runs, in milliseconds.
 | R | gnu-r (no JIT) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Julia | julia |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Julia | julia (interpreted) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| Nim | nim |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Odin | odin |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Dart | jit |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Dart | aot |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | GDScript | godot --headless |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Crystal | crystal |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| V | v |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| ATS | ats (gcc) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Objective-C | clang (objc) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Modula-2 | adw |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Modula-3 | cm3 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| COBOL | gnucobol |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | BASIC | freebasic |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | BASIC | qb64 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Assembly | x86-64 nasm |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Assembly | x86-64 masm |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Assembly | x86-64 fasm |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Dolphin Smalltalk | Dolphin 8 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| Groovy | groovy |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Tcl | tclsh |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | C3 | c3c |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| Vala | valac |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Algol 68 | a68g |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| Component Pascal | gpcp |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Oberon-07 | akron |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | ActionScript | AIR |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Clojure | clojure.main |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -188,8 +183,6 @@ A cell holds the median of the 5 timed runs, in milliseconds.
 | Beef | BeefBuild |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Haxe | hxcpp |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Haxe | hashlink |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| Eiffel | eiffelstudio |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| Seed7 | s7c |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Scheme | chez |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Prolog (SWI) | swipl |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | J | jconsole |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -200,7 +193,6 @@ A cell holds the median of the 5 timed runs, in milliseconds.
 | Standard ML | Poly/ML |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Terra | terra |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Dyalog APL | dyalog |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| Nelua | nelua |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | C | clang (wasm32-wasip1) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | C++ | clang++ (wasm32-wasip1) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Rust | rustc (wasm32-wasip1) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -215,7 +207,6 @@ A cell holds the median of the 5 timed runs, in milliseconds.
 | D | gdc |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Common Lisp | ecl |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Pony | ponyc |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| Boo | booc |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Pharo | Pharo 13 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Arc | Anarki on Racket |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Lean 4 | lean |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -223,7 +214,6 @@ A cell holds the median of the 5 timed runs, in milliseconds.
 | Gleam | gleam |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Luau | luau |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Luau | lute |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| IronPython | ipy |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | SQLite | sqlite3 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | DuckDB | duckdb |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Unicon | unicon |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -231,7 +221,6 @@ A cell holds the median of the 5 timed runs, in milliseconds.
 | Forth | gforth |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Euphoria | eui |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | Lobster | lobster |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| Mercury | mmc |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 
 Most rows run on the stock install. The rest fall into a few groups, with the per-row detail in
 `BUILD.md` and `RUN.md`:
@@ -470,7 +459,7 @@ differs is where the integers come from, and both routes are legitimate.
 
 - A language with arbitrary-precision integers in its standard library uses them, and a
   division on those values is a real division — Python, Ruby, Java, C#, Go, JavaScript, Julia,
-  Common Lisp, Scala Native, Scheme, Prolog (SWI), Seed7 and J are among the rows that take
+  Common Lisp, Scala Native, Scheme, Prolog (SWI) and J are among the rows that take
   this route.
 - A language without them hand-writes sign-magnitude, little-endian, base-1e9 limbs, with add,
   subtract, multiply by a small integer, and a quotient that comes out of repeated subtraction,
@@ -478,7 +467,7 @@ differs is where the integers come from, and both routes are legitimate.
   and far more work per step. At 1000 digits that is about 0.6 s in C, and it runs to minutes
   in the interpreted rows that take this route — VBScript takes about 1.4 minutes, SQLite about
   4, and `a68g` about 7.5. `RUN.md` has the measurements. Among the rows that hand-roll them are
-  Beef, Haxe, Eiffel, Janet, Ring, JScript, AutoHotkey and Pony.
+  Beef, Haxe, Janet, Ring, JScript, AutoHotkey and Pony.
 
 A language with no bignum library is therefore **not** disqualified by this task, and no row
 here is missing because of it. `a68g`'s own arbitrary-precision `LONG LONG INT` mode was
@@ -622,39 +611,30 @@ Output: `52428800`
 | Ada | gnat |
 | Pascal | fpc |
 | Java | openjdk, openj9, graalvm jit, loom, graalvm native-image |
-| Kotlin | jvm, native |
+| Kotlin | native |
 | C# | coreclr, nativeaot, mono |
-| F# | dotnet |
-| VB.NET | dotnet |
 | Scala | jvm, native |
 | JavaScript | node, bun, deno, spidermonkey, quickjs |
 | PHP | zend, zend + jit |
-| Python | cpython, pypy, nuitka, cython, graalpy, jython |
-| Ruby | jruby |
+| Python | cpython, pypy, nuitka, graalpy |
+| Ruby | cruby-yjit, jruby |
 | Lua | puc-lua, luajit |
 | Perl | perl |
 | R | gnu-r, gnu-r (no JIT) |
 | Julia | julia, julia (interpreted) |
-| Nim | nim |
 | Odin | odin |
 | Dart | jit, aot |
 | GDScript | godot --headless |
 | Crystal | crystal |
-| V | v |
-| ATS | ats |
 | Objective-C | clang |
 | Modula-2 | adw |
 | Modula-3 | cm3 |
-| COBOL | gnucobol |
 | BASIC | freebasic, qb64 |
 | Assembly | x86-64 nasm, x86-64 masm, x86-64 fasm |
 | Dolphin Smalltalk | Dolphin 8 |
-| Groovy | groovy |
 | Tcl | tclsh |
 | C3 | c3c |
-| Vala | valac |
 | Algol 68 | a68g |
-| Component Pascal | gpcp |
 | Oberon-07 | akron |
 | ActionScript | AIR |
 | Clojure | clojure.main, babashka |
@@ -667,8 +647,6 @@ Output: `52428800`
 | Elixir | elixir (BEAM) |
 | Beef | BeefBuild |
 | Haxe | hxcpp, hashlink |
-| Eiffel | eiffelstudio |
-| Seed7 | s7c |
 | Scheme | chez |
 | Prolog (SWI) | swipl |
 | J | jconsole |
@@ -679,7 +657,6 @@ Output: `52428800`
 | Standard ML | Poly/ML |
 | Terra | terra |
 | Dyalog APL | dyalog |
-| Nelua | nelua |
 | C | wasm32-wasip1 (clang) |
 | C++ | wasm32-wasip1 (clang++) |
 | Rust | wasm32-wasip1 (rustc) |
@@ -692,14 +669,12 @@ Output: `52428800`
 | Zig | wasm32-wasip1 (zig) |
 | TinyGo | wasip1 (tinygo) |
 | Pony | ponyc |
-| Boo | booc (.NET) |
 | Pharo | Pharo 13 |
 | Arc | Anarki on Racket |
 | Lean 4 | lean |
 | Factor | factor |
 | Gleam | gleam (BEAM) |
 | Luau | luau, lute |
-| IronPython | ipy (.NET) |
 | SQLite | sqlite3 |
 | DuckDB | duckdb |
 | Unicon | unicon |
@@ -707,7 +682,6 @@ Output: `52428800`
 | Forth | gforth |
 | Euphoria | eui |
 | Lobster | lobster |
-| Mercury | mmc |
 
 ### Languages that are not here, and why
 
@@ -715,6 +689,38 @@ One line per language. A language is left out because it does not run on Windows
 because it fails a task, or because it is too slow to be worth measuring. Task 10 alone is never a reason — a language without big integers
 hand-rolls the limbs, as GDScript does. Nushell is the one exception: it fails task 10, and
 its hand-rolled limbs are two orders of magnitude too slow to run.
+
+**Front ends to another language's engine.** Eighteen rows have been removed on this ground,
+in three batches, and the rule is one rule: the cell measured another engine's output rather
+than the language's own.
+
+- **Ten compile to C or C++ and hand it to a C compiler the matrix already has**: `vala`,
+  `nim`, `nelua`, `seed7`, `v`, `cobol`, `eiffel`, `python` (cython), `mercury` and `ats`. The
+  second compiler is the one doing the optimisation, and it is the `c` row's own `gcc`, so the
+  cell reports `gcc` plus a front end.
+- **Eight compile to another language's bytecode and are run by that runtime's JIT**: `kotlin`
+  (jvm), `fsharp`, `vbnet`, `jython`, `ironpython`, `groovy`, `boo` and `componentpascal`. The
+  JIT is the `java` or `csharp` row's own JIT, so the cell reports that JIT plus a front end.
+
+The two families are the same shape, which is why they are treated together.
+
+What stays, and why, is worth stating rather than leaving implicit, because these are
+exceptions to the rule above. The test applied is not "does it borrow an engine" but "does it
+have a counterpart for the same language on a *different* runtime" — that pair is a controlled
+A/B, and it is the same shape as the Erlang `escript`/`erlc` pair this file points at
+elsewhere. A front end with no such counterpart reports a number for a runtime the matrix
+already measures, with a language's overhead mixed in and nothing to compare it against.
+
+| Kept | Ground |
+|---|---|
+| `java` (all five toolchains), `csharp` (all three) | They *own* the runtime. `java loom` is Java on Java's own JVM — a threading mechanism, not a front end. |
+| `lean4`, `qb64` | They ship their own backend (`leanc`, and a C++ compiler inside the QB64 tree) instead of borrowing the matrix's. |
+| `clojure` | Counterpart of `babashka`, which is Clojure on a GraalVM **native image**, not the JVM. |
+| `scala` (jvm) | Counterpart of `scala-native`, which is the same sources through LLVM IR. |
+| `ruby` (`jruby`) | Counterpart of `cruby-yjit` and `ruby-wasm` — same `.rb` sources, three runtimes. |
+| `haxe` (hxcpp) | Counterpart of `hashlink`, Haxe's **own** VM, not another language's. |
+| `commonlisp` (ecl) | Counterpart of `sbcl`. |
+| `python` (nuitka) | Counterpart of `cpython`/`pypy`/`graalpy`; it links the CPython runtime rather than emitting standalone C. |
 
 **Does not run on Windows x64.**
 
@@ -729,7 +735,7 @@ its hand-rolled limbs are two orders of magnitude too slow to run.
 | Austral | v0.2.0 ships a Linux binary only. |
 | gccgo | No Windows port of the Go front end's runtime. |
 | OpenAPL | Needs a POSIX port: `values.h`, `sys/times.h`, `sys/wait.h` and `fork`/`pipe`/`kill` are used directly, and no Windows build exists. |
-| Ruby (`cruby + yjit`) | YJIT has no Windows support: its mingw build needs `sys/mman.h`, which mingw does not provide, so `--enable-yjit` fails to compile (Ruby bug #19267), and the MSVC route still lacks the Microsoft x86 calling convention (feature #18439, still assigned). Feature #19325 "YJIT: Windows support lacking" is open, and no RubyInstaller build enables it. The `jruby` row still covers Ruby on the JVM. |
+| Ruby (YJIT enabled) | YJIT has no Windows support: its mingw build needs `sys/mman.h`, which mingw does not provide, so `--enable-yjit` fails to compile (Ruby bug #19267), and the MSVC route still lacks the Microsoft x86 calling convention (feature #18439, still assigned). Feature #19325 "YJIT: Windows support lacking" is open, and no RubyInstaller build enables it. The `cruby-yjit` toolchain is nevertheless registered, because that is the build the row was validated against, and its `--yjit` flag is inert on it — the row's own sources record the warning, `Ruby was built without YJIT support` — so that cell measures CRuby, not a JIT. `jruby` covers Ruby on the JVM and `wasip1 (ruby.wasm)` covers it under wasmtime. |
 
 **Fails.**
 
@@ -791,7 +797,7 @@ make it expensive. It is therefore being measured separately rather than dropped
 | Language | Why it moved |
 |---|---|
 | PowerShell | A full language with typed data, a real .NET GC, `BigInteger` and thread-pool
-  concurrency — its own `RUN.md` section argued it belongs beside C# and F#, not beside a
+  concurrency — its own `RUN.md` section argued it belongs beside C#, not beside a
   POSIX shell. Both hosts (`powershell` 5.1 on .NET Framework and `pwsh` 7 on .NET) are real
   toolchains, but the row's cost is dominated by tasks that a shell benchmark would not ask
   for: 100-million-iteration interpreted loops at ~2.6 us an iteration, 100-million-call
@@ -818,9 +824,9 @@ make it expensive. It is therefore being measured separately rather than dropped
   anything else — VBScript takes about 1.4 minutes at 1000 digits, and `a68g`, whose
   interpreter is around 900x slower than C on limb arithmetic, about 7.5 minutes. The
   slowest cell that is not task 10 is **Janet task 07** and **Racket task 07**, where appending
-  to an immutable string copies about 3.1x10^10 bytes in total. Five
+  to an immutable string copies about 3.1x10^10 bytes in total. Four
   rows of the newest batches put their slow cell in the same place and for the same reason —
-  Standard ML, Nelua, Terra and **TinyGo** all copy
+  Standard ML, Terra and **TinyGo** all copy
   the whole string per append, and Dyalog APL is the exception that proves the rule,
   because `,←` grows in place. `RUN.md` records the measurements,
   and for `a68g` the two options for it.

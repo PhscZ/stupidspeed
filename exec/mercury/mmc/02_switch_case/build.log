@@ -1,6 +1,0 @@
-mercury_compile --make m02_switch_case --grade hlc.gc.pregen 
-Making Mercury\int3s\m02_switch_case.int3
-Making Mercury\ints\m02_switch_case.int
-Making Mercury\cs\m02_switch_case.c
-Making Mercury\os\m02_switch_case.o
-Making m02_switch_case.exe

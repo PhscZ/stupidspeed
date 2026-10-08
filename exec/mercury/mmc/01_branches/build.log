@@ -1,6 +1,0 @@
-mercury_compile --make m01_branches --grade hlc.gc.pregen 
-Making Mercury\int3s\m01_branches.int3
-Making Mercury\ints\m01_branches.int
-Making Mercury\cs\m01_branches.c
-Making Mercury\os\m01_branches.o
-Making m01_branches.exe

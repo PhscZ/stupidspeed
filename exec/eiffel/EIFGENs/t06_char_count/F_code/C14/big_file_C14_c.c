@@ -1,7 +1,0 @@
-#include "ce670.c"
-#include "sp698.c"
-#include "ty653.c"
-#include "ty657.c"
-#include "ty661.c"
-#include "ty665.c"
-#include "ty669.c"

@@ -1,6 +1,0 @@
-mercury_compile --make m06_char_count --grade hlc.gc.pregen 
-Making Mercury\int3s\m06_char_count.int3
-Making Mercury\ints\m06_char_count.int
-Making Mercury\cs\m06_char_count.c
-Making Mercury\os\m06_char_count.o
-Making m06_char_count.exe

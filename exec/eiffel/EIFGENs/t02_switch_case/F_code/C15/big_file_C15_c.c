@@ -1,7 +1,0 @@
-#include "ce702.c"
-#include "co729.c"
-#include "ha744.c"
-#include "ha749.c"
-#include "st742.c"
-#include "st743.c"
-#include "ty715.c"

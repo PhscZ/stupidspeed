@@ -1,0 +1,22 @@
+# Line endings.
+#
+# The ActionScript row's build output is not a single file: `adt -target cmdline`
+# writes a package that is a *directory* -- prog.exe, prog.swf, mimetype,
+# META-INF/ and Adobe AIR/ -- and the AIR runtime validates the bytes inside it
+# before running the program.  Five of those files are plain text, so with
+# `core.autocrlf=true` (the Windows default, and set on this machine) a checkout
+# rewrites them to CRLF and the runtime refuses to start:
+#
+#   Security warning: invalid license or package - application may have been
+#   modified after packaging
+#
+# Restoring META-INF/AIR/application.xml to the committed bytes is what fixes it;
+# the CRLF forms of signatures.xml and of Adobe AIR/.../Licenses/*/COPYING do not
+# on their own stop the package from loading.  The whole bundle is therefore
+# checked out byte for byte rather than line-ending-converted, so a fresh clone
+# runs the row without being repackaged.
+#
+# This is deliberately scoped to the packaged directories: the row's sources
+# (.as), logs, descriptor input (app.xml) and scripts (build_all.bat, verify.py)
+# are ordinary working files and are left to the normal text handling.
+exec/actionscript/*/out/** -text

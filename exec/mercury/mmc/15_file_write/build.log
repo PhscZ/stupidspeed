@@ -1,6 +1,0 @@
-mercury_compile --make m15_file_write --grade hlc.gc.pregen 
-Making Mercury\int3s\m15_file_write.int3
-Making Mercury\ints\m15_file_write.int
-Making Mercury\cs\m15_file_write.c
-Making Mercury\os\m15_file_write.o
-Making m15_file_write.exe

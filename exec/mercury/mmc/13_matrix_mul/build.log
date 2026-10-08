@@ -1,6 +1,0 @@
-mercury_compile --make m13_matrix_mul --grade hlc.gc.pregen 
-Making Mercury\int3s\m13_matrix_mul.int3
-Making Mercury\ints\m13_matrix_mul.int
-Making Mercury\cs\m13_matrix_mul.c
-Making Mercury\os\m13_matrix_mul.o
-Making m13_matrix_mul.exe

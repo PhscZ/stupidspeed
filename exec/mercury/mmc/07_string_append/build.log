@@ -1,6 +1,0 @@
-mercury_compile --make m07_string_append --grade hlc.gc.pregen 
-Making Mercury\int3s\m07_string_append.int3
-Making Mercury\ints\m07_string_append.int
-Making Mercury\cs\m07_string_append.c
-Making Mercury\os\m07_string_append.o
-Making m07_string_append.exe

@@ -1,6 +1,0 @@
-mercury_compile --make m05_alloc_churn --grade hlc.gc.pregen 
-Making Mercury\int3s\m05_alloc_churn.int3
-Making Mercury\ints\m05_alloc_churn.int
-Making Mercury\cs\m05_alloc_churn.c
-Making Mercury\os\m05_alloc_churn.o
-Making m05_alloc_churn.exe

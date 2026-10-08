@@ -1,8 +1,0 @@
-#include "ar720.c"
-#include "ha704.c"
-#include "ha706.c"
-#include "re722.c"
-#include "sp717.c"
-#include "st703.c"
-#include "st713.c"
-#include "to728.c"

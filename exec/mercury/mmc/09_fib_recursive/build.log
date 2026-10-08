@@ -1,6 +1,0 @@
-mercury_compile --make m09_fib_recursive --grade hlc.gc.pregen 
-Making Mercury\int3s\m09_fib_recursive.int3
-Making Mercury\ints\m09_fib_recursive.int
-Making Mercury\cs\m09_fib_recursive.c
-Making Mercury\os\m09_fib_recursive.o
-Making m09_fib_recursive.exe
