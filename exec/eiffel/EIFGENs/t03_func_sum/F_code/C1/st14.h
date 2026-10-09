@@ -1,0 +1,29 @@
+
+#ifndef _C1_st14_
+#define _C1_st14_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+RTOSHF (EIF_REFERENCE,432)
+static EIF_REFERENCE F26_432_body(EIF_REFERENCE);
+extern EIF_REFERENCE F26_432(EIF_REFERENCE);
+RTOSHF (EIF_REFERENCE,433)
+static EIF_REFERENCE F26_433_body(EIF_REFERENCE);
+extern EIF_REFERENCE F26_433(EIF_REFERENCE);
+extern EIF_REFERENCE F26_435(EIF_REFERENCE);
+extern void F26_459(EIF_REFERENCE);
+extern void F26_476(EIF_REFERENCE, EIF_INTEGER_64);
+extern void F26_484(EIF_REFERENCE);
+extern void EIF_Minit14(void);
+extern void F785_5103(EIF_REFERENCE);
+extern void F492_2552(EIF_REFERENCE, EIF_INTEGER_64);
+extern void F785_5068(EIF_REFERENCE, EIF_REFERENCE);
+extern void F785_5067(EIF_REFERENCE, EIF_REFERENCE);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

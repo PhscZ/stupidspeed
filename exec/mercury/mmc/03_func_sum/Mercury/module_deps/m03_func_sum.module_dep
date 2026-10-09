@@ -1,0 +1,14 @@
+module(2, "03_func_sum.m",
+	m03_func_sum,
+	{},
+	{builtin, io, private_builtin},
+	{int, list, string, time, (string.format), (string.parse_util)},
+	{},
+	{},
+	{},
+	{},
+	{},
+	no_foreign_export,
+	no_main,
+	{}
+).

@@ -17,11 +17,349 @@
   "14_file_read",
   "15_file_write"
  ],
+ "engines": {
+  "a68g": {
+   "name": "Algol 68 Genie",
+   "kind": "interpreter",
+   "what": "a compiler-interpreter: parses and executes, no build step"
+  },
+  "adw": {
+   "name": "ADW",
+   "kind": "native-aot",
+   "what": "ADW Modula-2, direct to object"
+  },
+  "akron": {
+   "name": "Akron",
+   "kind": "native-aot",
+   "what": "Akron Oberon-07, direct to object"
+  },
+  "asm": {
+   "name": "none \u2014 hand-written machine code",
+   "kind": "assembler",
+   "what": "an assembler, not a compiler: the source already is machine code"
+  },
+  "autohotkey": {
+   "name": "AutoHotkey",
+   "kind": "interpreter",
+   "what": "AutoHotkey's expression compiler and interpreter"
+  },
+  "avm2": {
+   "name": "AVM2 (AIR)",
+   "kind": "native-jit",
+   "what": "the ActionScript VM's JIT"
+  },
+  "beam": {
+   "name": "BEAM",
+   "kind": "native-jit",
+   "what": "the Erlang VM's per-process scheduler and JIT"
+  },
+  "chez": {
+   "name": "Chez Scheme",
+   "kind": "native-aot",
+   "what": "Chez's own code generator"
+  },
+  "coreclr": {
+   "name": "CoreCLR",
+   "kind": "native-jit",
+   "what": "the .NET runtime's JIT"
+  },
+  "coreclr-aot": {
+   "name": "CoreCLR NativeAOT",
+   "kind": "native-aot",
+   "what": "ahead-of-time native .NET"
+  },
+  "cpython": {
+   "name": "CPython",
+   "kind": "bytecode-vm",
+   "what": "the reference Python bytecode VM"
+  },
+  "cruby": {
+   "name": "CRuby",
+   "kind": "bytecode-vm",
+   "what": "the reference Ruby ISeq VM"
+  },
+  "dart-aot": {
+   "name": "Dart AOT",
+   "kind": "native-aot",
+   "what": "dart compile exe"
+  },
+  "dart-jit": {
+   "name": "Dart VM",
+   "kind": "native-jit",
+   "what": "the Dart VM's JIT"
+  },
+  "dmd": {
+   "name": "DMD",
+   "kind": "native-aot",
+   "what": "Digital Mars D, its own backend"
+  },
+  "dolphin": {
+   "name": "Dolphin VM",
+   "kind": "native-jit",
+   "what": "a prebuilt image on Dolphin's VM"
+  },
+  "euphoria": {
+   "name": "Euphoria",
+   "kind": "interpreter",
+   "what": "a tree-walking interpreter"
+  },
+  "factor": {
+   "name": "Factor",
+   "kind": "native-jit",
+   "what": "Factor compiles the script and runs it on every invocation"
+  },
+  "fpc": {
+   "name": "FPC",
+   "kind": "native-aot",
+   "what": "Free Pascal Compiler, its own backend"
+  },
+  "freebasic": {
+   "name": "FreeBASIC",
+   "kind": "native-aot",
+   "what": "fbc's own emitter"
+  },
+  "gcc": {
+   "name": "GCC",
+   "kind": "native-aot",
+   "what": "the GNU Compiler Collection: parses, optimises and emits machine code"
+  },
+  "gforth": {
+   "name": "gforth",
+   "kind": "interpreter",
+   "what": "threaded-code interpreter"
+  },
+  "ghc": {
+   "name": "GHC",
+   "kind": "native-aot",
+   "what": "GHC's own STG/Cmm code generator"
+  },
+  "gnu-r": {
+   "name": "GNU R",
+   "kind": "bytecode-vm",
+   "what": "R's byte-code compiler and evaluator"
+  },
+  "go": {
+   "name": "Go (gc)",
+   "kind": "native-aot",
+   "what": "Go's own SSA backend and linker"
+  },
+  "godot": {
+   "name": "Godot",
+   "kind": "bytecode-vm",
+   "what": "Godot parses and runs the script"
+  },
+  "graalvm-jit": {
+   "name": "GraalVM JIT",
+   "kind": "native-jit",
+   "what": "the Graal compiler replacing HotSpot's C2"
+  },
+  "graalvm-native": {
+   "name": "GraalVM native-image",
+   "kind": "native-aot",
+   "what": "ahead-of-time native image built from the same class files"
+  },
+  "hashlink": {
+   "name": "HashLink",
+   "kind": "bytecode-vm",
+   "what": "Haxe's own VM"
+  },
+  "hotspot": {
+   "name": "HotSpot C2",
+   "kind": "native-jit",
+   "what": "the JVM's C2 optimising JIT"
+  },
+  "icx": {
+   "name": "Intel oneAPI (DPC++)",
+   "kind": "native-aot",
+   "what": "Intel's downstream LLVM fork (clang 24 from intel/llvm), a different build and optimisation pipeline from upstream clang"
+  },
+  "janet": {
+   "name": "Janet",
+   "kind": "bytecode-vm",
+   "what": "Janet compiles to bytecode on every run"
+  },
+  "jsc": {
+   "name": "JavaScriptCore",
+   "kind": "native-jit",
+   "what": "tiered JIT (LLInt + DFG + FTL)"
+  },
+  "jscript": {
+   "name": "JScript",
+   "kind": "interpreter",
+   "what": "the Windows Script Host JScript engine"
+  },
+  "julia": {
+   "name": "LLVM (JIT)",
+   "kind": "native-jit",
+   "what": "per-method LLVM compilation on first call"
+  },
+  "llvm": {
+   "name": "LLVM",
+   "kind": "native-aot",
+   "what": "LLVM IR and an LLVM backend (clang, rustc, swiftc, zig, ldc2, ...)"
+  },
+  "lobster": {
+   "name": "Lobster",
+   "kind": "bytecode-vm",
+   "what": "Lobster compiles to bytecode, then runs it"
+  },
+  "lua": {
+   "name": "PUC Lua",
+   "kind": "bytecode-vm",
+   "what": "Lua's register VM"
+  },
+  "luajit": {
+   "name": "LuaJIT",
+   "kind": "native-jit",
+   "what": "trace compilation"
+  },
+  "luau": {
+   "name": "Luau",
+   "kind": "bytecode-vm",
+   "what": "Luau's VM"
+  },
+  "lute": {
+   "name": "Lute",
+   "kind": "native-jit",
+   "what": "the Luau team's own runtime, for the tasks luau.exe cannot run"
+  },
+  "moarvm": {
+   "name": "MoarVM",
+   "kind": "bytecode-vm",
+   "what": "Rakudo's VM"
+  },
+  "mono": {
+   "name": "Mono",
+   "kind": "native-jit",
+   "what": "Mono's JIT, a different runtime from CoreCLR"
+  },
+  "msvc": {
+   "name": "MSVC",
+   "kind": "native-aot",
+   "what": "Microsoft's cl.exe: parses, optimises and emits machine code"
+  },
+  "ocaml-bytecode": {
+   "name": "OCaml (ocamlc)",
+   "kind": "bytecode-vm",
+   "what": "OCaml's bytecode interpreter"
+  },
+  "ocaml-native": {
+   "name": "OCaml (ocamlopt)",
+   "kind": "native-aot",
+   "what": "OCaml's own native code generator"
+  },
+  "openj9": {
+   "name": "OpenJ9",
+   "kind": "native-jit",
+   "what": "Eclipse OpenJ9's JIT, a different VM from HotSpot"
+  },
+  "perl": {
+   "name": "Perl",
+   "kind": "interpreter",
+   "what": "the perl interpreter"
+  },
+  "pharo": {
+   "name": "Pharo VM",
+   "kind": "native-jit",
+   "what": "a prebuilt image on Pharo's Cog VM"
+  },
+  "polyml": {
+   "name": "Poly/ML",
+   "kind": "native-aot",
+   "what": "Poly/ML's own x86-64 code generator"
+  },
+  "pypy": {
+   "name": "PyPy",
+   "kind": "native-jit",
+   "what": "trace compilation"
+  },
+  "quickjs": {
+   "name": "QuickJS",
+   "kind": "bytecode-vm",
+   "what": "QuickJS compiles to bytecode, then its own VM"
+  },
+  "ring": {
+   "name": "Ring",
+   "kind": "bytecode-vm",
+   "what": "Ring's VM"
+  },
+  "sbcl": {
+   "name": "SBCL",
+   "kind": "native-aot",
+   "what": "SBCL compiles to machine code at run time and on demand"
+  },
+  "spidermonkey": {
+   "name": "SpiderMonkey",
+   "kind": "native-jit",
+   "what": "tiered JIT (Baseline + Ion)"
+  },
+  "swipl": {
+   "name": "SWI-Prolog",
+   "kind": "bytecode-vm",
+   "what": "SWI's in-memory clause representation"
+  },
+  "tcc": {
+   "name": "TCC",
+   "kind": "native-aot",
+   "what": "Tiny C Compiler: one pass, no optimisation"
+  },
+  "tcl": {
+   "name": "Tcl",
+   "kind": "bytecode-vm",
+   "what": "Tcl's bytecode compiler and VM"
+  },
+  "unicon": {
+   "name": "Unicon",
+   "kind": "bytecode-vm",
+   "what": "icont compiles to icode, appended to the executable"
+  },
+  "v8": {
+   "name": "V8",
+   "kind": "native-jit",
+   "what": "tiered JIT (Ignition + TurboFan); here it runs the wasm module through the WASI shim"
+  },
+  "vbscript": {
+   "name": "VBScript",
+   "kind": "interpreter",
+   "what": "the Windows Script Host VBScript engine"
+  },
+  "wamr": {
+   "name": "WAMR (iwasm)",
+   "kind": "wasm-runtime",
+   "what": "WebAssembly Micro Runtime; the release build JITs via LLVM or interprets"
+  },
+  "wasm-edge": {
+   "name": "WasmEdge",
+   "kind": "wasm-runtime",
+   "what": "WasmEdge JITs the module on every run"
+  },
+  "wasmtime": {
+   "name": "wasmtime (Cranelift)",
+   "kind": "wasm-runtime",
+   "what": "Cranelift JITs the wasm module on every run -- wasmtime's optimising compiler"
+  },
+  "winch": {
+   "name": "wasmtime (Winch)",
+   "kind": "wasm-runtime",
+   "what": "Winch, wasmtime's baseline single-pass compiler, on the same modules as Cranelift"
+  },
+  "zend": {
+   "name": "Zend",
+   "kind": "bytecode-vm",
+   "what": "PHP's opcode VM"
+  },
+  "zend-jit": {
+   "name": "Zend JIT",
+   "kind": "native-jit",
+   "what": "opcode JIT on top of the Zend VM"
+  }
+ },
  "rows": {
   "actionscript": {
    "entries": [
     {
      "toolchain": "AIR",
+     "engine": "avm2",
      "tasks": [
       "*"
      ],
@@ -44,6 +382,7 @@
    "entries": [
     {
      "toolchain": "gnat",
+     "engine": "gcc",
      "tasks": [
       "*"
      ],
@@ -60,6 +399,7 @@
    "entries": [
     {
      "toolchain": "a68g",
+     "engine": "a68g",
      "tasks": [
       "*"
      ],
@@ -80,6 +420,7 @@
     },
     {
      "toolchain": "a68g",
+     "engine": "a68g",
      "tasks": [
       "06_char_count"
      ],
@@ -102,6 +443,7 @@
    "entries": [
     {
      "toolchain": "x86-64 nasm",
+     "engine": "asm",
      "tasks": [
       "*"
      ],
@@ -118,25 +460,33 @@
    "entries": [
     {
      "toolchain": "asc (wasip1)",
+     "cwd": "{root}/exec/assemblyscript/{task}",
+     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
+     "engine": "wasmtime",
      "tasks": [
       "*"
      ],
      "cmd": [
       "{root}/tools/wasmtime46/wasmtime.exe",
       "run",
+      "-C",
+      "compiler=cranelift",
       "prog.wasm"
-     ],
-     "cwd": "{root}/exec/assemblyscript/{task}",
-     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm"
+     ]
     },
     {
      "toolchain": "asc (wasip1)",
+     "cwd": "{root}/exec/assemblyscript/{task}",
+     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
+     "engine": "wasmtime",
      "tasks": [
       "11_parallel_sum"
      ],
      "cmd": [
       "{root}/tools/wasmtime46/wasmtime.exe",
       "run",
+      "-C",
+      "compiler=cranelift",
       "-S",
       "threads=y",
       "-W",
@@ -144,12 +494,13 @@
       "-W",
       "shared-memory=y",
       "prog.wasm"
-     ],
-     "cwd": "{root}/exec/assemblyscript/{task}",
-     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm"
+     ]
     },
     {
      "toolchain": "asc (wasip1)",
+     "cwd": "{root}/exec/assemblyscript/{task}",
+     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
+     "engine": "wasmtime",
      "tasks": [
       "14_file_read",
       "15_file_write"
@@ -157,19 +508,212 @@
      "cmd": [
       "{root}/tools/wasmtime46/wasmtime.exe",
       "run",
+      "-C",
+      "compiler=cranelift",
       "--dir=.",
       "prog.wasm"
-     ],
+     ]
+    },
+    {
+     "toolchain": "wasmtime (winch)",
      "cwd": "{root}/exec/assemblyscript/{task}",
-     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm"
+     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
+     "engine": "winch",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "run",
+      "-C",
+      "compiler=winch",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "wasmtime (winch)",
+     "cwd": "{root}/exec/assemblyscript/{task}",
+     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
+     "engine": "winch",
+     "tasks": [
+      "11_parallel_sum"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "run",
+      "-C",
+      "compiler=winch",
+      "-S",
+      "threads=y",
+      "-W",
+      "threads=y",
+      "-W",
+      "shared-memory=y",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "wasmtime (winch)",
+     "cwd": "{root}/exec/assemblyscript/{task}",
+     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
+     "engine": "winch",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "run",
+      "-C",
+      "compiler=winch",
+      "--dir=.",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "wasmedge",
+     "cwd": "{root}/exec/assemblyscript/{task}",
+     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
+     "engine": "wasm-edge",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmedge/bin/wasmedge.exe",
+      "--log-level",
+      "off",
+      "--run-mode=jit",
+      "prog.wasm"
+     ],
+     "except": [
+      "11_parallel_sum"
+     ]
+    },
+    {
+     "toolchain": "wasmedge",
+     "cwd": "{root}/exec/assemblyscript/{task}",
+     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
+     "engine": "wasm-edge",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/wasmedge/bin/wasmedge.exe",
+      "--log-level",
+      "off",
+      "--run-mode=jit",
+      "--dir",
+      ".:.",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "iwasm",
+     "cwd": "{root}/exec/assemblyscript/{task}",
+     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
+     "engine": "wamr",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wamr/iwasm.exe",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "iwasm",
+     "cwd": "{root}/exec/assemblyscript/{task}",
+     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
+     "engine": "wamr",
+     "tasks": [
+      "11_parallel_sum"
+     ],
+     "cmd": [
+      "{root}/tools/wamr/iwasm.exe",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "iwasm",
+     "cwd": "{root}/exec/assemblyscript/{task}",
+     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
+     "engine": "wamr",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/wamr/iwasm.exe",
+      "--dir=.",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "node (wasip1)",
+     "cwd": "{root}/exec/assemblyscript/{task}",
+     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
+     "engine": "v8",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/nodejs/node.exe",
+      "--no-warnings",
+      "{root}/tools/nodejs/wasi-run.js",
+      "prog.wasm",
+      "."
+     ],
+     "except": [
+      "11_parallel_sum"
+     ]
+    },
+    {
+     "toolchain": "node (wasip1)",
+     "cwd": "{root}/exec/assemblyscript/{task}",
+     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
+     "engine": "v8",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/nodejs/node.exe",
+      "--no-warnings",
+      "{root}/tools/nodejs/wasi-run.js",
+      "prog.wasm",
+      "."
+     ]
     }
    ],
    "language": "AssemblyScript"
+  },
+  "ats": {
+   "entries": [
+    {
+     "toolchain": "ats (gcc)",
+     "engine": "gcc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/ats/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/ats/{task}",
+     "env": {
+      "PATH": "C:\\cygwin64\\bin;{PATH}"
+     },
+     "artifact": "{root}/exec/ats/{task}/prog.exe",
+     "timeout": 300
+    }
+   ],
+   "language": "ATS"
   },
   "autohotkey": {
    "entries": [
     {
      "toolchain": "v2",
+     "engine": "autohotkey",
      "tasks": [
       "*"
      ],
@@ -192,6 +736,7 @@
    "entries": [
     {
      "toolchain": "babashka",
+     "engine": "graalvm-native",
      "tasks": [
       "*"
      ],
@@ -209,6 +754,7 @@
    "entries": [
     {
      "toolchain": "BeefBuild",
+     "engine": "llvm",
      "tasks": [
       "*"
      ],
@@ -222,10 +768,30 @@
    ],
    "language": "Beef"
   },
+  "boo": {
+   "entries": [
+    {
+     "toolchain": "booc",
+     "engine": "coreclr",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/dotnet10/dotnet.exe",
+      "prog.exe"
+     ],
+     "cwd": "{root}/exec/boo/{task}",
+     "artifact": "{root}/exec/boo/{task}/prog.exe",
+     "timeout": 600
+    }
+   ],
+   "language": "Boo"
+  },
   "c": {
    "entries": [
     {
      "toolchain": "gcc",
+     "engine": "gcc",
      "tasks": [
       "*"
      ],
@@ -238,6 +804,7 @@
     },
     {
      "toolchain": "clang",
+     "engine": "llvm",
      "tasks": [
       "*"
      ],
@@ -250,6 +817,7 @@
     },
     {
      "toolchain": "tcc",
+     "engine": "tcc",
      "tasks": [
       "*"
      ],
@@ -262,6 +830,7 @@
     },
     {
      "toolchain": "msvc",
+     "engine": "msvc",
      "tasks": [
       "*"
      ],
@@ -279,11 +848,16 @@
    "entries": [
     {
      "toolchain": "clang (wasm32-wasip1)",
+     "cwd": "{root}/exec/c-wasm/{task}",
+     "artifact": "{root}/exec/c-wasm/{task}/prog.wasm",
+     "engine": "wasmtime",
      "tasks": [
       "*"
      ],
      "cmd": [
       "{root}/tools/wasmtime46/wasmtime.exe",
+      "-C",
+      "compiler=cranelift",
       "-S",
       "threads=y",
       "-W",
@@ -294,9 +868,88 @@
       ".",
       "prog.wasm"
      ],
+     "timeout": 600
+    },
+    {
+     "toolchain": "wasmtime (winch)",
      "cwd": "{root}/exec/c-wasm/{task}",
      "artifact": "{root}/exec/c-wasm/{task}/prog.wasm",
+     "engine": "winch",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "-C",
+      "compiler=winch",
+      "-S",
+      "threads=y",
+      "-W",
+      "threads=y",
+      "-W",
+      "shared-memory=y",
+      "--dir",
+      ".",
+      "prog.wasm"
+     ],
      "timeout": 600
+    },
+    {
+     "toolchain": "wasmedge",
+     "cwd": "{root}/exec/c-wasm/{task}",
+     "artifact": "{root}/exec/c-wasm/{task}/prog.wasm",
+     "engine": "wasm-edge",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmedge/bin/wasmedge.exe",
+      "--log-level",
+      "off",
+      "--run-mode=jit",
+      "--dir",
+      ".:.",
+      "prog.wasm"
+     ],
+     "timeout": 600,
+     "except": [
+      "11_parallel_sum"
+     ]
+    },
+    {
+     "toolchain": "iwasm",
+     "cwd": "{root}/exec/c-wasm/{task}",
+     "artifact": "{root}/exec/c-wasm/{task}/prog.wasm",
+     "engine": "wamr",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wamr/iwasm.exe",
+      "--dir=.",
+      "prog.wasm"
+     ],
+     "timeout": 600
+    },
+    {
+     "toolchain": "node (wasip1)",
+     "cwd": "{root}/exec/c-wasm/{task}",
+     "artifact": "{root}/exec/c-wasm/{task}/prog.wasm",
+     "engine": "v8",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/nodejs/node.exe",
+      "--no-warnings",
+      "{root}/tools/nodejs/wasi-run.js",
+      "prog.wasm",
+      "."
+     ],
+     "timeout": 600,
+     "except": [
+      "11_parallel_sum"
+     ]
     }
    ],
    "language": "C"
@@ -305,6 +958,7 @@
    "entries": [
     {
      "toolchain": "c3c",
+     "engine": "llvm",
      "tasks": [
       "*"
      ],
@@ -322,6 +976,7 @@
    "entries": [
     {
      "toolchain": "clojure.main",
+     "engine": "hotspot",
      "tasks": [
       "*"
      ],
@@ -338,10 +993,30 @@
    ],
    "language": "Clojure"
   },
+  "clojurescript": {
+   "entries": [
+    {
+     "toolchain": "cljs.main",
+     "engine": "v8",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/nodejs/node.exe",
+      "prog.js"
+     ],
+     "cwd": "{root}/exec/clojurescript/{task}",
+     "artifact": "{root}/exec/clojurescript/{task}/prog.js",
+     "timeout": 600
+    }
+   ],
+   "language": "Clojure"
+  },
   "cobol": {
    "entries": [
     {
      "toolchain": "gnucobol",
+     "engine": "gcc",
      "tasks": [
       "*"
      ],
@@ -362,6 +1037,7 @@
    "entries": [
     {
      "toolchain": "sbcl",
+     "engine": "sbcl",
      "tasks": [
       "*"
      ],
@@ -378,6 +1054,7 @@
    "entries": [
     {
      "toolchain": "ecl",
+     "engine": "msvc",
      "tasks": [
       "*"
      ],
@@ -393,10 +1070,28 @@
    ],
    "language": "Common Lisp"
   },
+  "componentpascal": {
+   "entries": [
+    {
+     "toolchain": "gpcp",
+     "engine": "coreclr",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/componentpascal/_{task}/_{task}.exe"
+     ],
+     "cwd": "{root}/exec/componentpascal/_{task}",
+     "artifact": "{root}/exec/componentpascal/_{task}/_{task}.exe"
+    }
+   ],
+   "language": "Component Pascal"
+  },
   "cpp": {
    "entries": [
     {
      "toolchain": "g++",
+     "engine": "gcc",
      "tasks": [
       "*"
      ],
@@ -409,6 +1104,7 @@
     },
     {
      "toolchain": "clang++",
+     "engine": "llvm",
      "tasks": [
       "*"
      ],
@@ -421,6 +1117,7 @@
     },
     {
      "toolchain": "msvc",
+     "engine": "msvc",
      "tasks": [
       "*"
      ],
@@ -438,11 +1135,16 @@
    "entries": [
     {
      "toolchain": "clang++ (wasm32-wasip1)",
+     "cwd": "{root}/exec/cpp-wasm/{task}",
+     "artifact": "{root}/exec/cpp-wasm/{task}/prog.wasm",
+     "engine": "wasmtime",
      "tasks": [
       "*"
      ],
      "cmd": [
       "{root}/tools/wasmtime46/wasmtime.exe",
+      "-C",
+      "compiler=cranelift",
       "-S",
       "threads=y",
       "-W",
@@ -453,9 +1155,88 @@
       ".",
       "prog.wasm"
      ],
+     "timeout": 600
+    },
+    {
+     "toolchain": "wasmtime (winch)",
      "cwd": "{root}/exec/cpp-wasm/{task}",
      "artifact": "{root}/exec/cpp-wasm/{task}/prog.wasm",
+     "engine": "winch",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "-C",
+      "compiler=winch",
+      "-S",
+      "threads=y",
+      "-W",
+      "threads=y",
+      "-W",
+      "shared-memory=y",
+      "--dir",
+      ".",
+      "prog.wasm"
+     ],
      "timeout": 600
+    },
+    {
+     "toolchain": "wasmedge",
+     "cwd": "{root}/exec/cpp-wasm/{task}",
+     "artifact": "{root}/exec/cpp-wasm/{task}/prog.wasm",
+     "engine": "wasm-edge",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmedge/bin/wasmedge.exe",
+      "--log-level",
+      "off",
+      "--run-mode=jit",
+      "--dir",
+      ".:.",
+      "prog.wasm"
+     ],
+     "timeout": 600,
+     "except": [
+      "11_parallel_sum"
+     ]
+    },
+    {
+     "toolchain": "iwasm",
+     "cwd": "{root}/exec/cpp-wasm/{task}",
+     "artifact": "{root}/exec/cpp-wasm/{task}/prog.wasm",
+     "engine": "wamr",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wamr/iwasm.exe",
+      "--dir=.",
+      "prog.wasm"
+     ],
+     "timeout": 600
+    },
+    {
+     "toolchain": "node (wasip1)",
+     "cwd": "{root}/exec/cpp-wasm/{task}",
+     "artifact": "{root}/exec/cpp-wasm/{task}/prog.wasm",
+     "engine": "v8",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/nodejs/node.exe",
+      "--no-warnings",
+      "{root}/tools/nodejs/wasi-run.js",
+      "prog.wasm",
+      "."
+     ],
+     "timeout": 600,
+     "except": [
+      "11_parallel_sum"
+     ]
     }
    ],
    "language": "C++"
@@ -464,6 +1245,7 @@
    "entries": [
     {
      "toolchain": "crystal",
+     "engine": "llvm",
      "tasks": [
       "*"
      ],
@@ -480,6 +1262,7 @@
    "entries": [
     {
      "toolchain": "coreclr",
+     "engine": "coreclr",
      "tasks": [
       "*"
      ],
@@ -491,6 +1274,7 @@
     },
     {
      "toolchain": "nativeaot",
+     "engine": "coreclr-aot",
      "tasks": [
       "*"
      ],
@@ -502,6 +1286,7 @@
     },
     {
      "toolchain": "mono",
+     "engine": "mono",
      "tasks": [
       "*"
      ],
@@ -519,6 +1304,7 @@
    "entries": [
     {
      "toolchain": "dmd",
+     "engine": "dmd",
      "tasks": [
       "*"
      ],
@@ -530,6 +1316,7 @@
     },
     {
      "toolchain": "ldc2",
+     "engine": "llvm",
      "tasks": [
       "*"
      ],
@@ -546,6 +1333,7 @@
    "entries": [
     {
      "toolchain": "aot",
+     "engine": "dart-aot",
      "tasks": [
       "*"
      ],
@@ -557,6 +1345,7 @@
     },
     {
      "toolchain": "jit",
+     "engine": "dart-jit",
      "tasks": [
       "*"
      ],
@@ -574,6 +1363,7 @@
    "entries": [
     {
      "toolchain": "Dolphin 8",
+     "engine": "dolphin",
      "tasks": [
       "*"
      ],
@@ -594,10 +1384,28 @@
    ],
    "language": "Dolphin Smalltalk"
   },
+  "eiffel": {
+   "entries": [
+    {
+     "toolchain": "eiffelstudio",
+     "engine": "gcc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/eiffel/EIFGENs/t{task}/F_code/prog.exe"
+     ],
+     "cwd": "{root}/exec/eiffel/EIFGENs/t{task}/F_code",
+     "artifact": "{root}/exec/eiffel/EIFGENs/t{task}/F_code/prog.exe"
+    }
+   ],
+   "language": "Eiffel"
+  },
   "elixir": {
    "entries": [
     {
      "toolchain": "elixir (BEAM)",
+     "engine": "beam",
      "tasks": [
       "*"
      ],
@@ -625,10 +1433,53 @@
    ],
    "language": "Elixir"
   },
+  "erlang": {
+   "entries": [
+    {
+     "toolchain": "OTP (escript)",
+     "engine": "beam",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/erlang/bin/escript.exe",
+      "{task}.erl"
+     ],
+     "cwd": "{root}/exec/erlang",
+     "artifact": "{root}/exec/erlang/{task}.erl"
+    }
+   ],
+   "language": "Erlang"
+  },
+  "erlang-compiled": {
+   "entries": [
+    {
+     "toolchain": "erlc (compiled)",
+     "engine": "beam",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/erlang/bin/erl.exe",
+      "-noshell",
+      "-s",
+      "{task}",
+      "main",
+      "-s",
+      "init",
+      "stop"
+     ],
+     "cwd": "{root}/exec/erlang-compiled/{task}",
+     "artifact": "{root}/exec/erlang-compiled/{task}/{task}.beam"
+    }
+   ],
+   "language": "Erlang"
+  },
   "euphoria": {
    "entries": [
     {
      "toolchain": "eui",
+     "engine": "euphoria",
      "tasks": [
       "*"
      ],
@@ -649,6 +1500,7 @@
    "entries": [
     {
      "toolchain": "factor",
+     "engine": "factor",
      "tasks": [
       "*"
      ],
@@ -666,6 +1518,7 @@
    "entries": [
     {
      "toolchain": "x86-64 fasm",
+     "engine": "asm",
      "tasks": [
       "*"
      ],
@@ -682,6 +1535,7 @@
    "entries": [
     {
      "toolchain": "gfortran",
+     "engine": "gcc",
      "tasks": [
       "*"
      ],
@@ -696,6 +1550,7 @@
     },
     {
      "toolchain": "flang",
+     "engine": "llvm",
      "tasks": [
       "*"
      ],
@@ -715,6 +1570,7 @@
    "entries": [
     {
      "toolchain": "freebasic",
+     "engine": "freebasic",
      "tasks": [
       "*"
      ],
@@ -728,10 +1584,29 @@
    ],
    "language": "BASIC"
   },
+  "fsharp": {
+   "entries": [
+    {
+     "toolchain": "dotnet",
+     "engine": "coreclr",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/dotnet8/dotnet.exe",
+      "{root}/exec/fsharp/{task}/bin/Release/net8.0/{task}.dll"
+     ],
+     "cwd": "{root}/exec/fsharp/{task}",
+     "artifact": "{root}/exec/fsharp/{task}/bin/Release/net8.0/{task}.dll"
+    }
+   ],
+   "language": "F#"
+  },
   "gdscript": {
    "entries": [
     {
      "toolchain": "godot --headless",
+     "engine": "godot",
      "tasks": [
       "*"
      ],
@@ -752,6 +1627,7 @@
    "entries": [
     {
      "toolchain": "gforth",
+     "engine": "gforth",
      "tasks": [
       "*"
      ],
@@ -765,10 +1641,34 @@
    ],
    "language": "Forth"
   },
+  "gleam": {
+   "entries": [
+    {
+     "toolchain": "gleam",
+     "engine": "beam",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/gleam/gleam.exe",
+      "run",
+      "--module",
+      "t{task}"
+     ],
+     "cwd": "{root}/exec/gleam",
+     "env": {
+      "PATH": "{root}/tools/erlang/bin;{root}/tools/gleam;{PATH}"
+     },
+     "artifact": "{root}/exec/gleam/build/dev/erlang/stupidspeed_gleam/ebin/t{task}.beam"
+    }
+   ],
+   "language": "Gleam"
+  },
   "go": {
    "entries": [
     {
      "toolchain": "gc",
+     "engine": "go",
      "tasks": [
       "*"
      ],
@@ -780,6 +1680,7 @@
     },
     {
      "toolchain": "tinygo",
+     "engine": "llvm",
      "tasks": [
       "*"
      ],
@@ -796,24 +1697,116 @@
    "entries": [
     {
      "toolchain": "gc (wasip1)",
+     "cwd": "{root}/exec/go-wasm/{task}",
+     "artifact": "{root}/exec/go-wasm/{task}/prog.wasm",
+     "engine": "wasmtime",
      "tasks": [
       "*"
      ],
      "cmd": [
       "{root}/tools/wasmtime46/wasmtime.exe",
+      "-C",
+      "compiler=cranelift",
       "--dir={root}/exec/go-wasm/{task}::/",
       "prog.wasm"
-     ],
+     ]
+    },
+    {
+     "toolchain": "wasmtime (winch)",
      "cwd": "{root}/exec/go-wasm/{task}",
-     "artifact": "{root}/exec/go-wasm/{task}/prog.wasm"
+     "artifact": "{root}/exec/go-wasm/{task}/prog.wasm",
+     "engine": "winch",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "-C",
+      "compiler=winch",
+      "--dir={root}/exec/go-wasm/{task}::/",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "wasmedge",
+     "cwd": "{root}/exec/go-wasm/{task}",
+     "artifact": "{root}/exec/go-wasm/{task}/prog.wasm",
+     "engine": "wasm-edge",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmedge/bin/wasmedge.exe",
+      "--log-level",
+      "off",
+      "--run-mode=jit",
+      "--dir",
+      ".:.",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "iwasm",
+     "cwd": "{root}/exec/go-wasm/{task}",
+     "artifact": "{root}/exec/go-wasm/{task}/prog.wasm",
+     "engine": "wamr",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wamr/iwasm.exe",
+      "--dir=.",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "node (wasip1)",
+     "cwd": "{root}/exec/go-wasm/{task}",
+     "artifact": "{root}/exec/go-wasm/{task}/prog.wasm",
+     "engine": "v8",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/nodejs/node.exe",
+      "--no-warnings",
+      "{root}/tools/nodejs/wasi-run.js",
+      "prog.wasm",
+      "."
+     ]
     }
    ],
    "language": "Go"
+  },
+  "groovy": {
+   "entries": [
+    {
+     "toolchain": "groovy",
+     "engine": "hotspot",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/groovy/groovy-4.0.33/bin/groovy.bat",
+      "{task}.groovy"
+     ],
+     "cwd": "{root}/exec/groovy",
+     "env": {
+      "GROOVY_HOME": "{root}/tools/groovy/groovy-4.0.33"
+     },
+     "artifact": "{root}/exec/groovy/{task}.groovy",
+     "timeouts": {
+      "07_string_append": 7200
+     }
+    }
+   ],
+   "language": "Groovy"
   },
   "hashlink": {
    "entries": [
     {
      "toolchain": "hashlink",
+     "engine": "hashlink",
      "tasks": [
       "*"
      ],
@@ -831,6 +1824,7 @@
    "entries": [
     {
      "toolchain": "ghc",
+     "engine": "ghc",
      "tasks": [
       "*"
      ],
@@ -843,6 +1837,7 @@
     },
     {
      "toolchain": "ghc",
+     "engine": "ghc",
      "tasks": [
       "11_parallel_sum"
      ],
@@ -863,6 +1858,7 @@
    "entries": [
     {
      "toolchain": "hxcpp",
+     "engine": "gcc",
      "tasks": [
       "*"
      ],
@@ -875,10 +1871,29 @@
    ],
    "language": "Haxe"
   },
+  "icx": {
+   "entries": [
+    {
+     "toolchain": "icx (oneAPI)",
+     "engine": "icx",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/icx/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/icx/{task}",
+     "artifact": "{root}/exec/icx/{task}/prog.exe",
+     "timeout": 600
+    }
+   ],
+   "language": "C"
+  },
   "janet": {
    "entries": [
     {
      "toolchain": "janet",
+     "engine": "janet",
      "tasks": [
       "*"
      ],
@@ -900,6 +1915,7 @@
    "entries": [
     {
      "toolchain": "openjdk",
+     "engine": "hotspot",
      "tasks": [
       "*"
      ],
@@ -920,6 +1936,7 @@
    "entries": [
     {
      "toolchain": "graalvm jit",
+     "engine": "graalvm-jit",
      "tasks": [
       "*"
      ],
@@ -940,6 +1957,7 @@
    "entries": [
     {
      "toolchain": "graalvm native-image",
+     "engine": "graalvm-native",
      "tasks": [
       "*"
      ],
@@ -956,6 +1974,7 @@
    "entries": [
     {
      "toolchain": "openj9",
+     "engine": "openj9",
      "tasks": [
       "*"
      ],
@@ -976,6 +1995,7 @@
    "entries": [
     {
      "toolchain": "bun",
+     "engine": "jsc",
      "tasks": [
       "*"
      ],
@@ -989,6 +2009,7 @@
     },
     {
      "toolchain": "deno",
+     "engine": "v8",
      "tasks": [
       "11_parallel_sum",
       "14_file_read"
@@ -1006,6 +2027,7 @@
     },
     {
      "toolchain": "deno",
+     "engine": "v8",
      "tasks": [
       "15_file_write"
      ],
@@ -1022,6 +2044,7 @@
     },
     {
      "toolchain": "deno",
+     "engine": "v8",
      "tasks": [
       "*"
      ],
@@ -1042,6 +2065,7 @@
    "entries": [
     {
      "toolchain": "cscript (WSH)",
+     "engine": "jscript",
      "tasks": [
       "*"
      ],
@@ -1062,6 +2086,7 @@
    "entries": [
     {
      "toolchain": "julia",
+     "engine": "julia",
      "tasks": [
       "11_parallel_sum"
      ],
@@ -1075,6 +2100,7 @@
     },
     {
      "toolchain": "julia",
+     "engine": "julia",
      "tasks": [
       "*"
      ],
@@ -1087,6 +2113,7 @@
     },
     {
      "toolchain": "julia (interpreted)",
+     "engine": "julia",
      "tasks": [
       "11_parallel_sum"
      ],
@@ -1103,6 +2130,7 @@
     },
     {
      "toolchain": "julia (interpreted)",
+     "engine": "julia",
      "tasks": [
       "*"
      ],
@@ -1119,10 +2147,30 @@
    ],
    "language": "Julia"
   },
+  "kotlin": {
+   "entries": [
+    {
+     "toolchain": "jvm",
+     "engine": "hotspot",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "C:\\Program Files\\Java\\jdk-24\\bin\\java.exe",
+      "-jar",
+      "prog.jar"
+     ],
+     "cwd": "{root}/exec/kotlin/{task}",
+     "artifact": "{root}/exec/kotlin/{task}/prog.jar"
+    }
+   ],
+   "language": "Kotlin"
+  },
   "kotlin-native": {
    "entries": [
     {
      "toolchain": "native",
+     "engine": "llvm",
      "tasks": [
       "*"
      ],
@@ -1139,6 +2187,7 @@
    "entries": [
     {
      "toolchain": "lean",
+     "engine": "llvm",
      "tasks": [
       "*"
      ],
@@ -1155,6 +2204,7 @@
    "entries": [
     {
      "toolchain": "lobster",
+     "engine": "lobster",
      "tasks": [
       "*"
      ],
@@ -1175,6 +2225,7 @@
    "entries": [
     {
      "toolchain": "puc-lua",
+     "engine": "lua",
      "tasks": [
       "*"
      ],
@@ -1192,6 +2243,7 @@
     },
     {
      "toolchain": "luajit",
+     "engine": "luajit",
      "tasks": [
       "*"
      ],
@@ -1214,6 +2266,7 @@
    "entries": [
     {
      "toolchain": "wasip1 (puc-lua)",
+     "engine": "wasmtime",
      "tasks": [
       "*"
      ],
@@ -1236,6 +2289,7 @@
    "entries": [
     {
      "toolchain": "luau",
+     "engine": "luau",
      "tasks": [
       "*"
      ],
@@ -1253,6 +2307,7 @@
     },
     {
      "toolchain": "lute",
+     "engine": "lute",
      "tasks": [
       "11_parallel_sum",
       "14_file_read",
@@ -1273,6 +2328,7 @@
    "entries": [
     {
      "toolchain": "x86-64 masm",
+     "engine": "asm",
      "tasks": [
       "*"
      ],
@@ -1286,10 +2342,32 @@
    ],
    "language": "Assembly"
   },
+  "mercury": {
+   "entries": [
+    {
+     "toolchain": "mmc",
+     "engine": "gcc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/mercury/mmc/{task}/m{task}.exe"
+     ],
+     "cwd": "{root}/exec/mercury/mmc/{task}",
+     "env": {
+      "PATH": "{root}/tools/msys64/msys64/ucrt64/bin;{root}/tools/mercury/bin;{PATH}"
+     },
+     "artifact": "{root}/exec/mercury/mmc/{task}/m{task}.exe",
+     "timeout": 600
+    }
+   ],
+   "language": "Mercury"
+  },
   "modula2": {
    "entries": [
     {
      "toolchain": "adw",
+     "engine": "adw",
      "tasks": [
       "*"
      ],
@@ -1306,6 +2384,7 @@
    "entries": [
     {
      "toolchain": "cm3",
+     "engine": "msvc",
      "tasks": [
       "*"
      ],
@@ -1318,10 +2397,29 @@
    ],
    "language": "Modula-3"
   },
+  "nelua": {
+   "entries": [
+    {
+     "toolchain": "nelua",
+     "engine": "gcc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/nelua/nelua/{task}/{task}.exe"
+     ],
+     "cwd": "{root}/exec/nelua/nelua/{task}",
+     "artifact": "{root}/exec/nelua/nelua/{task}/{task}.exe",
+     "timeout": 600
+    }
+   ],
+   "language": "Nelua"
+  },
   "nim": {
    "entries": [
     {
      "toolchain": "nim",
+     "engine": "gcc",
      "tasks": [
       "*"
      ],
@@ -1339,6 +2437,7 @@
    "entries": [
     {
      "toolchain": "akron",
+     "engine": "akron",
      "tasks": [
       "*"
      ],
@@ -1355,6 +2454,7 @@
    "entries": [
     {
      "toolchain": "clang (objc)",
+     "engine": "llvm",
      "tasks": [
       "*"
      ],
@@ -1375,6 +2475,7 @@
    "entries": [
     {
      "toolchain": "ocamlopt",
+     "engine": "ocaml-native",
      "tasks": [
       "*"
      ],
@@ -1391,6 +2492,7 @@
     },
     {
      "toolchain": "ocamlc (bytecode)",
+     "engine": "ocaml-bytecode",
      "tasks": [
       "*"
      ],
@@ -1412,6 +2514,7 @@
    "entries": [
     {
      "toolchain": "odin",
+     "engine": "llvm",
      "tasks": [
       "*"
      ],
@@ -1428,6 +2531,7 @@
    "entries": [
     {
      "toolchain": "fpc",
+     "engine": "fpc",
      "tasks": [
       "*"
      ],
@@ -1445,6 +2549,7 @@
    "entries": [
     {
      "toolchain": "perl",
+     "engine": "perl",
      "tasks": [
       "*"
      ],
@@ -1467,6 +2572,7 @@
    "entries": [
     {
      "toolchain": "Pharo 13",
+     "engine": "pharo",
      "tasks": [
       "*"
      ],
@@ -1494,6 +2600,7 @@
    "entries": [
     {
      "toolchain": "zend",
+     "engine": "zend",
      "tasks": [
       "*"
      ],
@@ -1507,6 +2614,7 @@
     },
     {
      "toolchain": "zend + jit",
+     "engine": "zend-jit",
      "tasks": [
       "*"
      ],
@@ -1531,6 +2639,7 @@
    "entries": [
     {
      "toolchain": "ponyc",
+     "engine": "llvm",
      "tasks": [
       "*"
      ],
@@ -1543,6 +2652,7 @@
     },
     {
      "toolchain": "ponyc",
+     "engine": "llvm",
      "tasks": [
       "11_parallel_sum"
      ],
@@ -1562,6 +2672,7 @@
    "entries": [
     {
      "toolchain": "cpython",
+     "engine": "cpython",
      "tasks": [
       "*"
      ],
@@ -1575,6 +2686,7 @@
     },
     {
      "toolchain": "pypy",
+     "engine": "pypy",
      "tasks": [
       "*"
      ],
@@ -1588,6 +2700,7 @@
     },
     {
      "toolchain": "graalpy",
+     "engine": "graalvm-jit",
      "tasks": [
       "*"
      ],
@@ -1601,6 +2714,7 @@
     },
     {
      "toolchain": "nuitka",
+     "engine": "gcc",
      "tasks": [
       "*"
      ],
@@ -1613,10 +2727,31 @@
    ],
    "language": "Python"
   },
+  "python-cython": {
+   "entries": [
+    {
+     "toolchain": "cython",
+     "engine": "gcc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/python-cython/cython/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/python-cython/cython/{task}",
+     "env": {
+      "PATH": "C:/Users/pz020/AppData/Local/Programs/Python/Python313;C:/Users/pz020/AppData/Local/Programs/Python/Python313/DLLs;{PATH}"
+     },
+     "artifact": "{root}/exec/python-cython/cython/{task}/prog.exe"
+    }
+   ],
+   "language": "Python"
+  },
   "python-wasm": {
    "entries": [
     {
      "toolchain": "wasip1 (cpython)",
+     "engine": "wasmtime",
      "tasks": [
       "*"
      ],
@@ -1643,6 +2778,7 @@
    "entries": [
     {
      "toolchain": "qb64",
+     "engine": "llvm",
      "tasks": [
       "*"
      ],
@@ -1660,6 +2796,7 @@
    "entries": [
     {
      "toolchain": "quickjs",
+     "engine": "quickjs",
      "tasks": [
       "*"
      ],
@@ -1678,6 +2815,7 @@
    "entries": [
     {
      "toolchain": "gnu-r",
+     "engine": "gnu-r",
      "tasks": [
       "*"
      ],
@@ -1691,6 +2829,7 @@
     },
     {
      "toolchain": "gnu-r (no JIT)",
+     "engine": "gnu-r",
      "tasks": [
       "*"
      ],
@@ -1712,6 +2851,7 @@
    "entries": [
     {
      "toolchain": "racket (CS)",
+     "engine": "chez",
      "tasks": [
       "*"
      ],
@@ -1733,6 +2873,7 @@
    "entries": [
     {
      "toolchain": "rakudo (MoarVM)",
+     "engine": "moarvm",
      "tasks": [
       "*"
      ],
@@ -1751,6 +2892,7 @@
    "entries": [
     {
      "toolchain": "ring",
+     "engine": "ring",
      "tasks": [
       "*"
      ],
@@ -1772,6 +2914,7 @@
    "entries": [
     {
      "toolchain": "cruby-yjit",
+     "engine": "cruby",
      "tasks": [
       "*"
      ],
@@ -1790,6 +2933,7 @@
     },
     {
      "toolchain": "jruby",
+     "engine": "openj9",
      "tasks": [
       "*"
      ],
@@ -1822,6 +2966,7 @@
    "entries": [
     {
      "toolchain": "wasip1 (ruby.wasm)",
+     "engine": "wasmtime",
      "tasks": [
       "*"
      ],
@@ -1842,6 +2987,7 @@
    "entries": [
     {
      "toolchain": "rustc",
+     "engine": "llvm",
      "tasks": [
       "*"
      ],
@@ -1858,23 +3004,31 @@
    "entries": [
     {
      "toolchain": "rustc (wasm32-wasip1)",
+     "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
+     "engine": "wasmtime",
      "tasks": [
       "*"
      ],
      "cmd": [
       "{root}/tools/wasmtime46/wasmtime.exe",
+      "-C",
+      "compiler=cranelift",
       "prog.wasm"
-     ],
-     "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
-     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm"
+     ]
     },
     {
      "toolchain": "rustc (wasm32-wasip1)",
+     "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
+     "engine": "wasmtime",
      "tasks": [
       "11_parallel_sum"
      ],
      "cmd": [
       "{root}/tools/wasmtime46/wasmtime.exe",
+      "-C",
+      "compiler=cranelift",
       "-S",
       "threads=y",
       "-W",
@@ -1882,24 +3036,194 @@
       "-W",
       "shared-memory=y",
       "prog.wasm"
-     ],
-     "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
-     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm"
+     ]
     },
     {
      "toolchain": "rustc (wasm32-wasip1)",
+     "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
+     "engine": "wasmtime",
      "tasks": [
       "14_file_read",
       "15_file_write"
      ],
      "cmd": [
       "{root}/tools/wasmtime46/wasmtime.exe",
+      "-C",
+      "compiler=cranelift",
       "--dir",
       ".",
       "prog.wasm"
-     ],
+     ]
+    },
+    {
+     "toolchain": "wasmtime (winch)",
      "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
-     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm"
+     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
+     "engine": "winch",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "-C",
+      "compiler=winch",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "wasmtime (winch)",
+     "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
+     "engine": "winch",
+     "tasks": [
+      "11_parallel_sum"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "-C",
+      "compiler=winch",
+      "-S",
+      "threads=y",
+      "-W",
+      "threads=y",
+      "-W",
+      "shared-memory=y",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "wasmtime (winch)",
+     "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
+     "engine": "winch",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "-C",
+      "compiler=winch",
+      "--dir",
+      ".",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "wasmedge",
+     "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
+     "engine": "wasm-edge",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmedge/bin/wasmedge.exe",
+      "--log-level",
+      "off",
+      "--run-mode=jit",
+      "prog.wasm"
+     ],
+     "except": [
+      "11_parallel_sum"
+     ]
+    },
+    {
+     "toolchain": "wasmedge",
+     "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
+     "engine": "wasm-edge",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/wasmedge/bin/wasmedge.exe",
+      "--log-level",
+      "off",
+      "--run-mode=jit",
+      "--dir",
+      ".:.",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "iwasm",
+     "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
+     "engine": "wamr",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wamr/iwasm.exe",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "iwasm",
+     "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
+     "engine": "wamr",
+     "tasks": [
+      "11_parallel_sum"
+     ],
+     "cmd": [
+      "{root}/tools/wamr/iwasm.exe",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "iwasm",
+     "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
+     "engine": "wamr",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/wamr/iwasm.exe",
+      "--dir=.",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "node (wasip1)",
+     "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
+     "engine": "v8",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/nodejs/node.exe",
+      "--no-warnings",
+      "{root}/tools/nodejs/wasi-run.js",
+      "prog.wasm",
+      "."
+     ],
+     "except": [
+      "11_parallel_sum"
+     ]
+    },
+    {
+     "toolchain": "node (wasip1)",
+     "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
+     "engine": "v8",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/nodejs/node.exe",
+      "--no-warnings",
+      "{root}/tools/nodejs/wasi-run.js",
+      "prog.wasm",
+      "."
+     ]
     }
    ],
    "language": "Rust"
@@ -1908,6 +3232,7 @@
    "entries": [
     {
      "toolchain": "jvm",
+     "engine": "hotspot",
      "tasks": [
       "*"
      ],
@@ -1928,10 +3253,30 @@
    ],
    "language": "Scala"
   },
+  "scala-js": {
+   "entries": [
+    {
+     "toolchain": "scala-cli (js)",
+     "engine": "v8",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/nodejs/node.exe",
+      "prog.js"
+     ],
+     "cwd": "{root}/exec/scala-js/{task}",
+     "artifact": "{root}/exec/scala-js/{task}/prog.js",
+     "timeout": 600
+    }
+   ],
+   "language": "Scala"
+  },
   "scala-native": {
    "entries": [
     {
      "toolchain": "native",
+     "engine": "llvm",
      "tasks": [
       "*"
      ],
@@ -1949,6 +3294,7 @@
    "entries": [
     {
      "toolchain": "chez",
+     "engine": "chez",
      "tasks": [
       "*"
      ],
@@ -1975,10 +3321,29 @@
    ],
    "language": "Scheme"
   },
+  "seed7": {
+   "entries": [
+    {
+     "toolchain": "s7c",
+     "engine": "gcc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/seed7/s7c/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/seed7/s7c/{task}",
+     "artifact": "{root}/exec/seed7/s7c/{task}/prog.exe",
+     "timeout": 600
+    }
+   ],
+   "language": "Seed7"
+  },
   "spidermonkey": {
    "entries": [
     {
      "toolchain": "spidermonkey",
+     "engine": "spidermonkey",
      "tasks": [
       "*"
      ],
@@ -1996,6 +3361,7 @@
    "entries": [
     {
      "toolchain": "Poly/ML",
+     "engine": "polyml",
      "tasks": [
       "*"
      ],
@@ -2015,6 +3381,7 @@
    "entries": [
     {
      "toolchain": "swiftc",
+     "engine": "llvm",
      "tasks": [
       "*"
      ],
@@ -2035,6 +3402,7 @@
    "entries": [
     {
      "toolchain": "swipl",
+     "engine": "swipl",
      "tasks": [
       "*"
      ],
@@ -2064,6 +3432,7 @@
    "entries": [
     {
      "toolchain": "tclsh",
+     "engine": "tcl",
      "tasks": [
       "*"
      ],
@@ -2082,6 +3451,7 @@
    "entries": [
     {
      "toolchain": "terra",
+     "engine": "llvm",
      "tasks": [
       "*"
      ],
@@ -2106,19 +3476,25 @@
    "entries": [
     {
      "toolchain": "wasip1 (tinygo)",
+     "cwd": "{root}/exec/tinygo-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/tinygo-wasm/wasip1/{task}/prog.wasm",
+     "engine": "wasmtime",
      "tasks": [
       "*"
      ],
      "cmd": [
       "{root}/tools/wasmtime46/wasmtime.exe",
       "run",
+      "-C",
+      "compiler=cranelift",
       "prog.wasm"
-     ],
-     "cwd": "{root}/exec/tinygo-wasm/wasip1/{task}",
-     "artifact": "{root}/exec/tinygo-wasm/wasip1/{task}/prog.wasm"
+     ]
     },
     {
      "toolchain": "wasip1 (tinygo)",
+     "cwd": "{root}/exec/tinygo-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/tinygo-wasm/wasip1/{task}/prog.wasm",
+     "engine": "wasmtime",
      "tasks": [
       "14_file_read",
       "15_file_write"
@@ -2126,11 +3502,141 @@
      "cmd": [
       "{root}/tools/wasmtime46/wasmtime.exe",
       "run",
+      "-C",
+      "compiler=cranelift",
       "--dir=.",
       "prog.wasm"
-     ],
+     ]
+    },
+    {
+     "toolchain": "wasmtime (winch)",
      "cwd": "{root}/exec/tinygo-wasm/wasip1/{task}",
-     "artifact": "{root}/exec/tinygo-wasm/wasip1/{task}/prog.wasm"
+     "artifact": "{root}/exec/tinygo-wasm/wasip1/{task}/prog.wasm",
+     "engine": "winch",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "run",
+      "-C",
+      "compiler=winch",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "wasmtime (winch)",
+     "cwd": "{root}/exec/tinygo-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/tinygo-wasm/wasip1/{task}/prog.wasm",
+     "engine": "winch",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "run",
+      "-C",
+      "compiler=winch",
+      "--dir=.",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "wasmedge",
+     "cwd": "{root}/exec/tinygo-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/tinygo-wasm/wasip1/{task}/prog.wasm",
+     "engine": "wasm-edge",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmedge/bin/wasmedge.exe",
+      "--log-level",
+      "off",
+      "--run-mode=jit",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "wasmedge",
+     "cwd": "{root}/exec/tinygo-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/tinygo-wasm/wasip1/{task}/prog.wasm",
+     "engine": "wasm-edge",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/wasmedge/bin/wasmedge.exe",
+      "--log-level",
+      "off",
+      "--run-mode=jit",
+      "--dir",
+      ".:.",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "iwasm",
+     "cwd": "{root}/exec/tinygo-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/tinygo-wasm/wasip1/{task}/prog.wasm",
+     "engine": "wamr",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wamr/iwasm.exe",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "iwasm",
+     "cwd": "{root}/exec/tinygo-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/tinygo-wasm/wasip1/{task}/prog.wasm",
+     "engine": "wamr",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/wamr/iwasm.exe",
+      "--dir=.",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "node (wasip1)",
+     "cwd": "{root}/exec/tinygo-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/tinygo-wasm/wasip1/{task}/prog.wasm",
+     "engine": "v8",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/nodejs/node.exe",
+      "--no-warnings",
+      "{root}/tools/nodejs/wasi-run.js",
+      "prog.wasm",
+      "."
+     ]
+    },
+    {
+     "toolchain": "node (wasip1)",
+     "cwd": "{root}/exec/tinygo-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/tinygo-wasm/wasip1/{task}/prog.wasm",
+     "engine": "v8",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/nodejs/node.exe",
+      "--no-warnings",
+      "{root}/tools/nodejs/wasi-run.js",
+      "prog.wasm",
+      "."
+     ]
     }
    ],
    "language": "TinyGo"
@@ -2139,6 +3645,7 @@
    "entries": [
     {
      "toolchain": "unicon",
+     "engine": "unicon",
      "tasks": [
       "*"
      ],
@@ -2152,10 +3659,71 @@
    ],
    "language": "Unicon"
   },
+  "v": {
+   "entries": [
+    {
+     "toolchain": "v",
+     "engine": "gcc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/v/v/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/v/v/{task}",
+     "env": {
+      "PATH": "{root}/tools/msys64/msys64/ucrt64/bin;{PATH}"
+     },
+     "artifact": "{root}/exec/v/v/{task}/prog.exe"
+    }
+   ],
+   "language": "V"
+  },
+  "vala": {
+   "entries": [
+    {
+     "toolchain": "valac",
+     "engine": "gcc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/vala/valac/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/vala/valac/{task}",
+     "env": {
+      "PATH": "{root}/tools/msys64/msys64/ucrt64/bin;{PATH}"
+     },
+     "artifact": "{root}/exec/vala/valac/{task}/prog.exe",
+     "timeout": 600
+    }
+   ],
+   "language": "Vala"
+  },
+  "vbnet": {
+   "entries": [
+    {
+     "toolchain": "dotnet",
+     "engine": "coreclr",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/dotnet8/dotnet.exe",
+      "bin/Release/net8.0/{task}.dll"
+     ],
+     "cwd": "{root}/exec/vbnet/dotnet/{task}",
+     "artifact": "{root}/exec/vbnet/dotnet/{task}/bin/Release/net8.0/{task}.dll",
+     "timeout": 600
+    }
+   ],
+   "language": "VB.NET"
+  },
   "vbscript": {
    "entries": [
     {
      "toolchain": "cscript",
+     "engine": "vbscript",
      "tasks": [
       "*"
      ],
@@ -2174,26 +3742,34 @@
    "entries": [
     {
      "toolchain": "hand-written WAT",
+     "cwd": "{root}/exec/wasm/wat/{task}",
+     "artifact": "{root}/exec/wasm/wat/{task}/{task}.wat",
+     "engine": "wasmtime",
      "tasks": [
       "*"
      ],
      "cmd": [
       "{root}/tools/wasmtime46/wasmtime.exe",
       "run",
+      "-C",
+      "compiler=cranelift",
       "{task}.wat"
      ],
-     "cwd": "{root}/exec/wasm/wat/{task}",
-     "artifact": "{root}/exec/wasm/wat/{task}/{task}.wat",
      "timeout": 600
     },
     {
      "toolchain": "hand-written WAT",
+     "cwd": "{root}/exec/wasm/wat/{task}",
+     "artifact": "{root}/exec/wasm/wat/{task}/{task}.wat",
+     "engine": "wasmtime",
      "tasks": [
       "11_parallel_sum"
      ],
      "cmd": [
       "{root}/tools/wasmtime46/wasmtime.exe",
       "run",
+      "-C",
+      "compiler=cranelift",
       "-S",
       "threads=y",
       "-W",
@@ -2202,12 +3778,13 @@
       "shared-memory=y",
       "{task}.wat"
      ],
-     "cwd": "{root}/exec/wasm/wat/{task}",
-     "artifact": "{root}/exec/wasm/wat/{task}/{task}.wat",
      "timeout": 600
     },
     {
      "toolchain": "hand-written WAT",
+     "cwd": "{root}/exec/wasm/wat/{task}",
+     "artifact": "{root}/exec/wasm/wat/{task}/{task}.wat",
+     "engine": "wasmtime",
      "tasks": [
       "14_file_read",
       "15_file_write"
@@ -2215,11 +3792,70 @@
      "cmd": [
       "{root}/tools/wasmtime46/wasmtime.exe",
       "run",
+      "-C",
+      "compiler=cranelift",
       "--dir=.",
       "{task}.wat"
      ],
+     "timeout": 600
+    },
+    {
+     "toolchain": "wasmtime (winch)",
      "cwd": "{root}/exec/wasm/wat/{task}",
      "artifact": "{root}/exec/wasm/wat/{task}/{task}.wat",
+     "engine": "winch",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "run",
+      "-C",
+      "compiler=winch",
+      "{task}.wat"
+     ],
+     "timeout": 600
+    },
+    {
+     "toolchain": "wasmtime (winch)",
+     "cwd": "{root}/exec/wasm/wat/{task}",
+     "artifact": "{root}/exec/wasm/wat/{task}/{task}.wat",
+     "engine": "winch",
+     "tasks": [
+      "11_parallel_sum"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "run",
+      "-C",
+      "compiler=winch",
+      "-S",
+      "threads=y",
+      "-W",
+      "threads=y",
+      "-W",
+      "shared-memory=y",
+      "{task}.wat"
+     ],
+     "timeout": 600
+    },
+    {
+     "toolchain": "wasmtime (winch)",
+     "cwd": "{root}/exec/wasm/wat/{task}",
+     "artifact": "{root}/exec/wasm/wat/{task}/{task}.wat",
+     "engine": "winch",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "run",
+      "-C",
+      "compiler=winch",
+      "--dir=.",
+      "{task}.wat"
+     ],
      "timeout": 600
     }
    ],
@@ -2229,6 +3865,7 @@
    "entries": [
     {
      "toolchain": "zig",
+     "engine": "llvm",
      "tasks": [
       "*"
      ],
@@ -2245,25 +3882,33 @@
    "entries": [
     {
      "toolchain": "wasm32-wasip1 (zig)",
+     "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
+     "engine": "wasmtime",
      "tasks": [
       "*"
      ],
      "cmd": [
       "{root}/tools/wasmtime46/wasmtime.exe",
       "run",
+      "-C",
+      "compiler=cranelift",
       "prog.wasm"
-     ],
-     "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
-     "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm"
+     ]
     },
     {
      "toolchain": "wasm32-wasip1 (zig)",
+     "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
+     "engine": "wasmtime",
      "tasks": [
       "11_parallel_sum"
      ],
      "cmd": [
       "{root}/tools/wasmtime46/wasmtime.exe",
       "run",
+      "-C",
+      "compiler=cranelift",
       "-S",
       "threads=y",
       "-W",
@@ -2271,12 +3916,13 @@
       "-W",
       "shared-memory=y",
       "prog.wasm"
-     ],
-     "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
-     "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm"
+     ]
     },
     {
      "toolchain": "wasm32-wasip1 (zig)",
+     "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
+     "engine": "wasmtime",
      "tasks": [
       "14_file_read",
       "15_file_write"
@@ -2284,11 +3930,182 @@
      "cmd": [
       "{root}/tools/wasmtime46/wasmtime.exe",
       "run",
+      "-C",
+      "compiler=cranelift",
       "--dir=.",
       "prog.wasm"
-     ],
+     ]
+    },
+    {
+     "toolchain": "wasmtime (winch)",
      "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
-     "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm"
+     "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
+     "engine": "winch",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "run",
+      "-C",
+      "compiler=winch",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "wasmtime (winch)",
+     "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
+     "engine": "winch",
+     "tasks": [
+      "11_parallel_sum"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "run",
+      "-C",
+      "compiler=winch",
+      "-S",
+      "threads=y",
+      "-W",
+      "threads=y",
+      "-W",
+      "shared-memory=y",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "wasmtime (winch)",
+     "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
+     "engine": "winch",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "run",
+      "-C",
+      "compiler=winch",
+      "--dir=.",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "wasmedge",
+     "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
+     "engine": "wasm-edge",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmedge/bin/wasmedge.exe",
+      "--log-level",
+      "off",
+      "--run-mode=jit",
+      "prog.wasm"
+     ],
+     "except": [
+      "11_parallel_sum"
+     ]
+    },
+    {
+     "toolchain": "wasmedge",
+     "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
+     "engine": "wasm-edge",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/wasmedge/bin/wasmedge.exe",
+      "--log-level",
+      "off",
+      "--run-mode=jit",
+      "--dir",
+      ".:.",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "iwasm",
+     "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
+     "engine": "wamr",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wamr/iwasm.exe",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "iwasm",
+     "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
+     "engine": "wamr",
+     "tasks": [
+      "11_parallel_sum"
+     ],
+     "cmd": [
+      "{root}/tools/wamr/iwasm.exe",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "iwasm",
+     "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
+     "engine": "wamr",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/wamr/iwasm.exe",
+      "--dir=.",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "node (wasip1)",
+     "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
+     "engine": "v8",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/nodejs/node.exe",
+      "--no-warnings",
+      "{root}/tools/nodejs/wasi-run.js",
+      "prog.wasm",
+      "."
+     ],
+     "except": [
+      "11_parallel_sum"
+     ]
+    },
+    {
+     "toolchain": "node (wasip1)",
+     "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
+     "engine": "v8",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/nodejs/node.exe",
+      "--no-warnings",
+      "{root}/tools/nodejs/wasi-run.js",
+      "prog.wasm",
+      "."
+     ]
     }
    ],
    "language": "Zig"

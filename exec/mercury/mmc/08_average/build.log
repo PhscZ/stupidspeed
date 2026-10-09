@@ -1,0 +1,6 @@
+mercury_compile --make m08_average --grade hlc.gc.pregen 
+Making Mercury\int3s\m08_average.int3
+Making Mercury\ints\m08_average.int
+Making Mercury\cs\m08_average.c
+Making Mercury\os\m08_average.o
+Making m08_average.exe

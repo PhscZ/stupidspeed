@@ -9,17 +9,35 @@ the filesystem with no server and no network.
     python exec/plot.py --open          # ...and open it in the browser
     python exec/plot.py --json other.json --html other.html
 
-The page has two views onto the same numbers:
+The matrix is read **engine-first**.  A row's language is its front end; its
+*engine* is the component that actually turns the program into executed machine
+code, or interprets it -- `ada`, `fortran`, `modula-2`, `c++` and `c` are all
+GCC, and `java`, `kotlin`, `scala`, `clojure` and `groovy` are all HotSpot.  So
+many rows are the same engine wearing a different front end, and the page is
+built to say so:
 
-  * a zoomable multi-series chart -- one line per toolchain, one point per task,
-    with wheel zoom, drag to pan, click a legend entry to isolate it, hover for
-    the full cell record;
-  * a ranked bar chart for a single task, every toolchain sorted, so "which
-    language is fastest at task 13" is one glance.
+  * every series is tagged with its engine and coloured by the engine's *kind*
+    (`native-aot`, `native-jit`, `bytecode-vm`, `interpreter`, `wasm-runtime`,
+    `assembler`) rather than by language -- six kinds is few enough for a
+    readable, accessible palette;
+  * the legend is grouped by engine: each engine is a heading (its display name
+    and kind) with its rows/toolchains nested underneath, and clicking a heading
+    collapses its group;
+  * the multi-series chart has two modes, chosen with the View control --
+    "per toolchain" (one line per row/toolchain) and "per engine" (one line per
+    engine, each point the median of that engine's rows' medians for the task);
+  * the ranked bar chart for a single task names the engine beside each row.
 
-Both read whichever metric is selected (the program's own `TIME_MS`, the
+The page reads whichever metric is selected (the program's own `TIME_MS`, the
 harness's end-to-end wall clock, peak working set, or artifact size), on a log
-or linear axis.
+or linear axis.  The multi-series chart zooms with the wheel, pans with a drag,
+isolates a series on a legend or bar click and shows the full cell record on
+hover; the ranked bar chart sorts every toolchain so "which language is fastest
+at task 13" is one glance.
+
+The engine table travels in `results.json`.  When a cell has no engine (an older
+results file), the registry (`cells.json`) is consulted for that row/toolchain's
+engine, and anything still unknown is shown as `?` rather than dropped.
 
 Cells that failed are drawn as hollow markers at the bottom of the chart rather
 than dropped, because a row that is missing from a chart reads as "not
@@ -108,6 +126,13 @@ svg{display:block;width:100%;touch-action:none;cursor:crosshair}
 .lg .sw{width:11px;height:11px;border-radius:2px;flex:0 0 11px}
 .lg .nm{overflow:hidden;text-overflow:ellipsis;color:var(--fg)}
 .lg .vl{margin-left:auto;color:var(--muted);font-variant-numeric:tabular-nums}
+.lgh{display:flex;align-items:center;gap:6px;padding:3px 5px;border-radius:4px;cursor:pointer;
+  font-size:11.5px;font-weight:650;white-space:nowrap}
+.lgh:hover{color:var(--accent)}
+.lgh .caret{width:9px;color:var(--muted);font-size:9px;flex:0 0 9px}
+.lgh .sw{width:11px;height:11px;border-radius:2px;flex:0 0 11px}
+.lgh .kd{margin-left:auto;color:var(--muted);font-weight:400;font-size:10.5px}
+.lgrow{padding-left:16px}
 .tip{position:absolute;pointer-events:none;background:var(--bg);border:1px solid var(--border);
   border-radius:6px;padding:7px 9px;font-size:11.5px;box-shadow:0 4px 16px rgba(0,0,0,.18);
   max-width:290px;display:none;z-index:5}
@@ -118,7 +143,7 @@ svg{display:block;width:100%;touch-action:none;cursor:crosshair}
 .bar{display:flex;align-items:center;gap:8px;padding:2px 8px;font-size:11.5px;cursor:pointer}
 .bar:hover{background:var(--surface)}
 .bar .rk{width:34px;color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
-.bar .nm{width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar .nm{width:310px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .bar .tr{flex:1;height:13px;background:var(--surface);border-radius:2px;overflow:hidden}
 .bar .fl{display:block;height:100%;border-radius:2px}
 .bar .vl{width:86px;text-align:right;font-variant-numeric:tabular-nums;color:var(--fg)}
@@ -153,12 +178,19 @@ svg{display:block;width:100%;touch-action:none;cursor:crosshair}
       <option value="bad">failed only</option>
     </select>
   </label>
-  <label>Search <input type="text" id="search" placeholder="row or toolchain"></label>
+  <label>View
+    <select id="view">
+      <option value="toolchain">per toolchain</option>
+      <option value="engine">per engine (rollup)</option>
+    </select>
+  </label>
+  <label>Search <input type="text" id="search" placeholder="row, toolchain or engine"></label>
   <button id="reset">Reset zoom</button>
   <button id="iso">Clear isolation</button>
   <span class="spacer"></span>
   <span class="hint">wheel = zoom &middot; shift+wheel = time axis &middot; drag = pan &middot; dbl-click = reset</span>
 </div>
+<div class="hint" id="viewnote"></div>
 
 <div class="wrap">
   <div class="chartbox">
@@ -204,50 +236,138 @@ function fmtBytes(v){
   return (i === 0 ? v : v.toFixed(v < 10 ? 2 : 1)) + " " + u[i];
 }
 
+// ---- engine table ----------------------------------------------------------
+// The registry's engine table travels in the results doc.  A cell may still
+// lack an engine (an older results file, or a toolchain added since the file
+// was written), so fall back to the registry copy that build() embeds, then to
+// "?" -- a series is never dropped just because its engine is unknown.
+const ENGINES = DOC.engines || {};
+const REG_ENGINES = __ENGINES__ || {};
+function engineOf(c){
+  if (!c) return "?";
+  if (c.engine) return c.engine;
+  const e = REG_ENGINES[c.row + "/" + c.toolchain];
+  return e || "?";
+}
+function engineMeta(id){
+  return ENGINES[id] || REG_ENGINES["#" + id] || {name: id, kind: "", what: ""};
+}
+function engineName(id){ return engineMeta(id).name || id; }
+
+// ---- kind palette ----------------------------------------------------------
+// Six kinds, six hues, picked to stay distinguishable on both the light and the
+// dark surface (mid-lightness, decent saturation).  Colour is by kind, not by
+// language: the question the page answers is "what actually ran", and two rows
+// of one engine share a hue on purpose.
+const KIND_COLORS = {
+  "native-aot":   "hsl(212 72% 50%)",   // blue
+  "native-jit":   "hsl(28 88% 50%)",    // orange
+  "bytecode-vm":  "hsl(280 62% 55%)",   // violet
+  "interpreter":  "hsl(158 62% 38%)",   // green
+  "wasm-runtime": "hsl(340 72% 52%)",   // pink
+  "assembler":    "hsl(48 90% 40%)",    // amber
+};
+const KIND_FALLBACK = "hsl(215 12% 52%)";   // grey for an unknown kind
+function kindColor(kind){ return KIND_COLORS[kind] || KIND_FALLBACK; }
+
 // ---- series model ----------------------------------------------------------
-// One series per (row, toolchain).  Colour is by language so a row's toolchains
-// read as a family: same hue, different lightness.
+// One series per (row, toolchain) in toolchain mode; one per engine in engine
+// mode.  A series' `cells` map always holds a cell-shaped object, so the same
+// drawing, tooltip and bar code works for both.
 const SERIES = [];
 const BY_KEY = new Map();
+const ENGINE_SERIES = [];
+const BY_ENGINE = new Map();
 for (const c of DOC.cells){
   const key = c.row + "/" + c.toolchain;
+  const eng = engineOf(c);
   let s = BY_KEY.get(key);
   if (!s){
     s = {key, row: c.row, toolchain: c.toolchain, language: c.language || c.row,
-         cells: new Map(), toolchainIndex: 0};
+         engine: eng, cells: new Map()};
     BY_KEY.set(key, s);
     SERIES.push(s);
   }
   s.cells.set(c.task, c);
 }
-// toolchain order within a row, for the lightness ramp
-{
-  const seen = new Map();
-  for (const s of SERIES){
-    const n = seen.get(s.row) || 0;
-    s.toolchainIndex = n;
-    seen.set(s.row, n + 1);
-  }
-}
-function hue(str){
-  let h = 0;
-  for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) % 360;
-  return h;
-}
 for (const s of SERIES){
-  const h = hue(s.row);
-  const l = Math.min(72, 44 + s.toolchainIndex * 13);
-  s.color = `hsl(${h} 68% ${l}%)`;
+  s.color = kindColor(engineMeta(s.engine).kind);
 }
 SERIES.sort((a,b) => a.row.localeCompare(b.row) || a.toolchain.localeCompare(b.toolchain));
+
+// ---- engine rollup ---------------------------------------------------------
+// One series per engine: for each task, the median of the rows' medians.  The
+// median (rather than the fastest row) is labelled as such in the UI, because
+// it is the robust summary of "what this engine typically does"; the fastest
+// row would flatter an engine whose front ends disagree.  A cell the rollup
+// synthesises is not a measurement, so its `median_wall_ms`/memory fields are
+// copied from the chosen contributing cell only when that is meaningful -- for
+// the median it is left null and the tooltip names the contributor count.
+{
+  const members = new Map();       // engine id -> [series]
+  for (const s of SERIES){
+    if (!members.has(s.engine)) members.set(s.engine, []);
+    members.get(s.engine).push(s);
+  }
+  for (const [eng, list] of members){
+    const meta = engineMeta(eng);
+    const es = {key: "engine:" + eng, engine: eng, kind: meta.kind,
+                name: meta.name || eng, rows: list, cells: new Map()};
+    es.color = kindColor(meta.kind);
+    for (const t of (DOC.tasks || [])){
+      // Aggregate each metric the page can show, not just the speed one: the
+      // rollup must survive the Metric control, and a field with no values in
+      // this task's rows is left null (drawn as "not measured").
+      const pick = (field) => {
+        const vals = [];
+        for (const s of list){
+          const c = s.cells.get(t);
+          if (!c || c.status !== "OK") continue;
+          let v = c[field];
+          if (v == null && field === "median_ms") v = c.median_wall_ms;
+          if (v == null) continue;
+          vals.push(v);
+        }
+        vals.sort((a,b) => a-b);
+        return vals;
+      };
+      const sv = pick("median_ms");
+      if (!sv.length) continue;
+      const med = (vals) => {
+        const n = vals.length;
+        return n % 2 ? vals[(n-1)/2] : (vals[n/2 - 1] + vals[n/2]) / 2;
+      };
+      const wv = pick("median_wall_ms"), mv = pick("peak_bytes"), av = pick("artifact_bytes");
+      es.cells.set(t, {row: meta.name || eng, toolchain: eng + " (rollup)",
+                       task: t, status: "OK",
+                       median_ms: med(sv), median_wall_ms: wv.length ? med(wv) : null,
+                       peak_bytes: mv.length ? med(mv) : null,
+                       artifact_bytes: av.length ? med(av) : null,
+                       runs: sv.length, engine: eng,
+                       _rollup: true, _members: sv.length, _min: sv[0], _max: sv[sv.length-1]});
+    }
+    ENGINE_SERIES.push(es);
+  }
+  ENGINE_SERIES.sort((a,b) => a.name.localeCompare(b.name));
+}
+
+// The active series set and lookup for the current view.
+function activeSeries(){
+  return state.view === "engine" ? ENGINE_SERIES : SERIES;
+}
+function seriesByKey(key){
+  if (state.view === "engine") return BY_ENGINE.get(key);
+  return BY_KEY.get(key);
+}
+for (const es of ENGINE_SERIES) BY_ENGINE.set(es.key, es);
 
 const TASKS = DOC.tasks && DOC.tasks.length ? DOC.tasks : __TASKS__;
 const taskIndex = new Map(TASKS.map((t,i) => [t,i]));
 
 // ---- state -----------------------------------------------------------------
 const state = {
-  metric: "speed", scale: "log", status: "ok",
-  search: "", hidden: new Set(), isolated: null,
+  metric: "speed", scale: "log", status: "ok", view: "toolchain",
+  search: "", hidden: new Set(), isolated: null, collapsed: new Set(),
   task: TASKS[0],
   // domains in transformed space (log10 of the value when scale is log)
   x0: -0.6, x1: TASKS.length - 0.4, y0: 0, y1: 1, yInit: false,
@@ -262,12 +382,18 @@ function el(name, attrs){
   return e;
 }
 
+function matches(s, q){
+  if (!q) return true;
+  if (state.view === "engine") return (s.name + " " + s.engine + " " + (s.kind || "")).toLowerCase().includes(q);
+  return (s.row + "/" + s.toolchain).toLowerCase().includes(q) ||
+         (s.engine + " " + engineName(s.engine)).toLowerCase().includes(q);
+}
 function visibleSeries(){
   const q = state.search.trim().toLowerCase();
-  return SERIES.filter(s => {
+  return activeSeries().filter(s => {
     if (state.isolated && s.key !== state.isolated) return false;
     if (state.hidden.has(s.key)) return false;
-    if (q && !(s.row + "/" + s.toolchain).toLowerCase().includes(q)) return false;
+    if (!matches(s, q)) return false;
     return true;
   });
 }
@@ -305,6 +431,7 @@ function valueOf(c){
 }
 function failedCells(){
   if (state.status === "ok") return [];
+  if (state.view === "engine") return [];   // a rollup is an aggregate, not a cell
   return [...BY_KEY.values()].flatMap(s => [...s.cells.values()])
     .filter(c => c.status !== "OK");
 }
@@ -415,10 +542,12 @@ function render(){
 
   // --- failures: hollow markers along the bottom, never silently dropped
   const bad = failedCells().filter(c => {
-    if (state.isolated && (c.row + "/" + c.toolchain) !== state.isolated) return false;
+    const s = BY_KEY.get(c.row + "/" + c.toolchain);
+    if (!s) return false;
+    if (state.isolated && s.key !== state.isolated) return false;
+    if (state.hidden.has(s.key)) return false;
     const q = state.search.trim().toLowerCase();
-    if (q && !(c.row + "/" + c.toolchain).toLowerCase().includes(q)) return false;
-    if (state.hidden.has(c.row + "/" + c.toolchain)) return false;
+    if (!matches(s, q)) return false;
     return true;
   });
   const yBad = PAD.t + plotH() - 9;
@@ -492,39 +621,117 @@ function renderLegend(){
   box.innerHTML = "";
   const m = metric();
   const q = state.search.trim().toLowerCase();
-  const visible = SERIES.filter(s => !q || (s.row + "/" + s.toolchain).toLowerCase().includes(q));
-  const parts = [];
-  // Sort the legend by the median of the series' visible tasks: fastest first,
-  // which is the order the reader wants when comparing languages.
-  const scored = visible.map(s => {
-    const vals = TASKS.map(t => valueOf(s.cells.get(t))).filter(v => v != null);
-    vals.sort((a,b) => a-b);
-    return {s, med: vals.length ? vals[Math.floor(vals.length/2)] : null};
+
+  // Per-engine view: a flat list, one line per engine, no grouping to do.
+  if (state.view === "engine"){
+    const list = ENGINE_SERIES.filter(s => matches(s, q)).map(s => ({s, med: seriesMedian(s)}));
+    list.sort((a,b) => {
+      if (a.med == null && b.med == null) return a.s.name.localeCompare(b.s.name);
+      if (a.med == null) return 1;
+      if (b.med == null) return -1;
+      return a.med - b.med;
+    });
+    for (const {s, med} of list){
+      box.appendChild(legendRow(s, med, false));
+    }
+    if (!list.length) box.innerHTML = `<div class="note" style="padding:6px">no match</div>`;
+    return;
+  }
+
+  // Per-toolchain view, grouped by engine: the engine name (and kind) is a
+  // heading, its rows nest underneath.  Groups are ordered by their fastest
+  // member's median, so the engines that win float to the top, and inside a
+  // group the rows keep the same fastest-first order.
+  const groups = new Map();
+  for (const s of SERIES){
+    if (q && !matches(s, q)) continue;
+    if (!groups.has(s.engine)) groups.set(s.engine, []);
+    groups.get(s.engine).push(s);
+  }
+  const gList = [];
+  for (const [eng, members] of groups){
+    members.sort((a,b) => {
+      const am = seriesMedian(a), bm = seriesMedian(b);
+      if (am == null && bm == null) return a.row.localeCompare(b.row) || a.toolchain.localeCompare(b.toolchain);
+      if (am == null) return 1;
+      if (bm == null) return -1;
+      return am - bm;
+    });
+    const best = members.reduce((acc,s) => {
+      const v = seriesMedian(s);
+      return v == null ? acc : (acc == null || v < acc ? v : acc);
+    }, null);
+    gList.push({eng, members, best});
+  }
+  gList.sort((a,b) => {
+    if (a.best == null && b.best == null) return engineName(a.eng).localeCompare(engineName(b.eng));
+    if (a.best == null) return 1;
+    if (b.best == null) return -1;
+    return a.best - b.best;
   });
-  scored.sort((a,b) => {
-    if (a.med == null && b.med == null) return a.s.row.localeCompare(b.s.row);
-    if (a.med == null) return 1;
-    if (b.med == null) return -1;
-    return a.med - b.med;
-  });
-  for (const {s, med} of scored){
-    const off = state.hidden.has(s.key);
-    const row = document.createElement("div");
-    row.className = "lg" + (off ? " off" : "");
-    row.dataset.key = s.key;
-    row.innerHTML = `<span class="sw" style="background:${s.color}"></span>` +
-      `<span class="nm">${esc(s.row)} <span style="color:var(--muted)">${esc(s.toolchain)}</span></span>` +
-      `<span class="vl">${med == null ? "--" : (m.unit === "ms" ? fmtMs(med) : fmtBytes(med))}</span>`;
-    row.onclick = () => {
-      if (state.hidden.has(s.key)) state.hidden.delete(s.key);
-      else state.hidden.add(s.key);
+  for (const {eng, members, best} of gList){
+    const meta = engineMeta(eng);
+    const collapsed = state.collapsed.has(eng);
+    const allOff = members.every(s => state.hidden.has(s.key));
+    const head = document.createElement("div");
+    head.className = "lgh";
+    head.title = (meta.what || meta.name || eng) + " -- " + members.length + " row(s)";
+    head.innerHTML = `<span class="caret">${collapsed ? "\u25B8" : "\u25BE"}</span>` +
+      `<span class="sw" style="background:${kindColor(meta.kind)}"></span>` +
+      `<span>${esc(engineName(eng))}</span>` +
+      `<span class="kd">${esc(meta.kind || "?")}${allOff ? " (off)" : ""}</span>`;
+    head.onclick = () => {
+      if (collapsed) state.collapsed.delete(eng); else state.collapsed.add(eng);
+      renderLegend();
+    };
+    // A double-click on the heading toggles every row in the group, which is
+    // how the reader isolates "all of GCC" without clicking fifteen rows.
+    head.ondblclick = evt => {
+      evt.stopPropagation();
+      if (allOff) for (const s of members) state.hidden.delete(s.key);
+      else for (const s of members) state.hidden.add(s.key);
       render();
     };
-    row.onmouseenter = () => highlight(s.key);
-    row.onmouseleave = () => highlight(null);
-    box.appendChild(row);
+    box.appendChild(head);
+    if (collapsed) continue;
+    for (const s of members){
+      const row = legendRow(s, seriesMedian(s), true);
+      row.classList.add("lgrow");
+      box.appendChild(row);
+    }
   }
-  if (!scored.length) box.innerHTML = `<div class="note" style="padding:6px">no match</div>`;
+  if (!gList.length) box.innerHTML = `<div class="note" style="padding:6px">no match</div>`;
+}
+// The median of a series' visible tasks: the legend's sort key.
+function seriesMedian(s){
+  const vals = TASKS.map(t => valueOf(s.cells.get(t))).filter(v => v != null);
+  vals.sort((a,b) => a-b);
+  return vals.length ? vals[Math.floor(vals.length/2)] : null;
+}
+function legendRow(s, med, nested){
+  const m = metric();
+  const off = state.hidden.has(s.key);
+  const row = document.createElement("div");
+  row.className = "lg" + (off ? " off" : "");
+  row.dataset.key = s.key;
+  if (nested){
+    const meta = engineMeta(s.engine);
+    row.title = s.row + "/" + s.toolchain + " -- engine " + engineName(s.engine) +
+      (meta.kind ? " (" + meta.kind + ")" : "");
+  }
+  const label = nested
+    ? `<span class="nm">${esc(s.row)} <span style="color:var(--muted)">${esc(s.toolchain)}</span></span>`
+    : `<span class="nm">${esc(s.name)} <span style="color:var(--muted)">${esc(s.kind || "?")}</span></span>`;
+  row.innerHTML = `<span class="sw" style="background:${s.color}"></span>` + label +
+    `<span class="vl">${med == null ? "--" : (m.unit === "ms" ? fmtMs(med) : fmtBytes(med))}</span>`;
+  row.onclick = () => {
+    if (state.hidden.has(s.key)) state.hidden.delete(s.key);
+    else state.hidden.add(s.key);
+    render();
+  };
+  row.onmouseenter = () => highlight(s.key);
+  row.onmouseleave = () => highlight(null);
+  return row;
 }
 function esc(s){ return String(s).replace(/[&<>"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch])); }
 
@@ -534,7 +741,7 @@ function highlight(key){
     p.style.opacity = key == null ? "" : "0.12";
   }
   if (key == null) return;
-  const s = BY_KEY.get(key);
+  const s = seriesByKey(key);
   if (!s) return;
   const pts = [];
   for (const t of TASKS){
@@ -605,6 +812,7 @@ window.addEventListener("mousemove", evt => {
   }
   if (!best || bd > 18 * 18){ tip.style.display = "none"; return; }
   const c = best.c, m = metric();
+  const em = engineMeta(c.engine || best.s.engine);
   const rows = [
     ["status", c.status + (c.warnings ? " (!)" : "")],
     ["TIME_MS", c.median_ms == null ? "--" : fmtMs(c.median_ms) + " ms"],
@@ -613,9 +821,16 @@ window.addEventListener("mousemove", evt => {
     ["size", fmtBytes(c.artifact_bytes)],
     ["runs", c.runs == null ? "--" : c.runs],
   ];
+  if (c._rollup) rows.push(["rows", c._members + " (" + fmtMs(c._min) + "-" + fmtMs(c._max) + " ms)"]);
   if (c.error) rows.push(["error", c.error.slice(0, 120)]);
-  tip.innerHTML = `<div class="t">${esc(best.s.row)} <span style="color:var(--muted)">${esc(best.s.toolchain)}</span></div>` +
+  const head = c._rollup
+    ? `<div class="t">${esc(c.row)} <span style="color:var(--muted)">rollup</span></div>`
+    : `<div class="t">${esc(best.s.row)} <span style="color:var(--muted)">${esc(best.s.toolchain)}</span></div>`;
+  tip.innerHTML = head +
+    `<div style="color:var(--muted);margin-bottom:4px">engine ${esc(em.name || c.engine)}` +
+    (em.kind ? " &middot; " + esc(em.kind) : "") + "</div>" +
     `<div style="color:var(--muted);margin-bottom:4px">${esc(best.t)} &middot; ${esc(TASK_TITLES[best.t] || "")}</div>` +
+    (c._rollup ? `<div style="color:var(--muted);margin-bottom:4px">median of the rows' medians</div>` : "") +
     rows.map(([k,v]) => `<div class="r"><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join("");
   tip.style.display = "block";
   const box = svg.parentElement.getBoundingClientRect();
@@ -631,10 +846,12 @@ svg.addEventListener("mouseleave", () => { tip.style.display = "none"; });
 function renderBars(){
   const m = metric();
   const t = state.task;
+  const isEng = state.view === "engine";
   document.getElementById("barhead").textContent =
-    "Ranked -- " + t + " (" + (TASK_TITLES[t] || "") + "), " + m.label;
+    "Ranked -- " + t + " (" + (TASK_TITLES[t] || "") + "), " + m.label +
+    (isEng ? " -- engines (median of rows' medians)" : " -- toolchains (engine in grey)");
   const rows = [];
-  for (const s of SERIES){
+  for (const s of activeSeries()){
     const c = s.cells.get(t);
     if (!c) { rows.push({s, v: null, c: null}); continue; }
     rows.push({s, v: valueOf(c), c});
@@ -652,8 +869,14 @@ function renderBars(){
     const w = Math.max(1.5, (state.scale === "log"
       ? (Math.log10(r.v + 1) / Math.log10(max + 1))
       : (r.v / max)) * 100);
-    d.innerHTML = `<span class="rk">${rank}</span>` +
-      `<span class="nm" title="${esc(r.s.row)}/${esc(r.s.toolchain)}">${esc(r.s.row)} <span style="color:var(--muted)">${esc(r.s.toolchain)}</span></span>` +
+    // In toolchain view the label is "row toolchain" with the engine named in
+    // grey beside it -- the engine is the fact the bar is really about.
+    const nm = isEng
+      ? `<span class="nm" title="${esc(r.s.name)}">${esc(r.s.name)} <span style="color:var(--muted)">${esc(r.s.kind || "?")}</span></span>`
+      : `<span class="nm" title="${esc(r.s.row)}/${esc(r.s.toolchain)} (${esc(engineName(r.s.engine))})">` +
+        `${esc(r.s.row)} <span style="color:var(--muted)">${esc(r.s.toolchain)}</span>` +
+        `<span style="color:var(--muted)"> \u00b7 ${esc(engineName(r.s.engine))}</span></span>`;
+    d.innerHTML = `<span class="rk">${rank}</span>` + nm +
       `<span class="tr"><span class="fl" style="width:${w}%;background:${r.s.color}"></span></span>` +
       `<span class="vl">${m.unit === "ms" ? fmtMs(r.v) + " ms" : fmtBytes(r.v)}</span>`;
     d.onmouseenter = () => highlight(r.s.key);
@@ -664,13 +887,17 @@ function renderBars(){
   for (const r of missing){
     const d = document.createElement("div");
     d.className = "bar bad";
-    d.innerHTML = `<span class="rk"></span>` +
-      `<span class="nm">${esc(r.s.row)} <span style="color:var(--muted)">${esc(r.s.toolchain)}</span></span>` +
+    const nm = isEng
+      ? `<span class="nm">${esc(r.s.name)}</span>`
+      : `<span class="nm">${esc(r.s.row)} <span style="color:var(--muted)">${esc(r.s.toolchain)}</span>` +
+        `<span style="color:var(--muted)"> \u00b7 ${esc(engineName(r.s.engine))}</span></span>`;
+    d.innerHTML = `<span class="rk"></span>` + nm +
       `<span class="tr"></span><span class="vl" style="color:var(--err)">${r.c ? esc(r.c.status) : "not run"}</span>`;
     box.appendChild(d);
   }
-  document.getElementById("barnote").textContent =
-    have.length + " toolchains measured, " + missing.length + " not measured or not OK.";
+  document.getElementById("barnote").textContent = isEng
+    ? have.length + " engines with a measurement, " + missing.length + " without."
+    : have.length + " toolchains measured, " + missing.length + " not measured or not OK.";
 }
 
 // ---- controls --------------------------------------------------------------
@@ -704,13 +931,34 @@ document.getElementById("scale").onchange = e => {
 document.getElementById("status").onchange = e => {
   state.status = e.target.value; state.yInit = false; fitY(); render(); renderBars();
 };
+document.getElementById("view").onchange = e => {
+  state.view = e.target.value;
+  // Keys are namespaced per view, so an isolation from the other view cannot
+  // apply here; hidden flags are kept per view too, so start the new one clean.
+  state.isolated = null;
+  state.yInit = false; fitY(); render(); renderBars(); updateViewNote();
+};
 document.getElementById("search").oninput = e => {
-  state.search = e.target.value; state.yInit = false; fitY(); render();
+  state.search = e.target.value; state.yInit = false; fitY(); render(); renderBars();
 };
 document.getElementById("reset").onclick = () => resetZoom();
 document.getElementById("iso").onclick = () => {
   state.isolated = null; state.hidden.clear(); render();
 };
+
+// A one-line reminder of what the current view means, since "per engine" turns
+// the rows into something that is not a measurement of any one toolchain.
+function updateViewNote(){
+  const n = document.getElementById("viewnote");
+  if (state.view === "engine"){
+    n.textContent = "Per engine: one line per engine, each point the median of " +
+      "that engine's rows' medians for the task. Colour is the engine kind. " +
+      "GCC and LLVM dominate because they are the same engine behind many front ends.";
+  } else {
+    n.textContent = "Per toolchain: one line per row/toolchain, coloured by its " +
+      "engine's kind. The legend groups rows under their engine.";
+  }
+}
 
 // ---- boot ------------------------------------------------------------------
 function resize(){
@@ -733,9 +981,11 @@ const sub = document.getElementById("sub");
   if (method.runs) parts.push(method.runs + " timed runs each");
   if (method.pinning) parts.push(method.pinning);
   if (DOC.generated) parts.push("generated " + esc(DOC.generated));
+  parts.push(`<b>${ENGINE_SERIES.length}</b> engines`);
   sub.innerHTML = parts.join(" &middot; ");
 }
 buildTaskPicker();
+updateViewNote();
 resize();
 renderBars();
 </script>
@@ -749,23 +999,44 @@ def load(path):
         return json.load(fh)
 
 
-def build(doc, tasks):
-    """The page, with the measurements and the task list embedded in it."""
+def build(doc, tasks, engines=None, engine_of=None):
+    """The page, with the measurements and the task list embedded in it.
+
+    `engines` is the registry's engine table and `engine_of` a
+    ``"row/toolchain" -> engine id`` map.  The results doc carries both, but an
+    older file may not, so the registry copy is embedded as a fallback: a cell
+    whose engine is missing is grouped by the registry rather than shown as
+    unknown.
+    """
     cells = doc.get("cells") or []
+    engines = engines or doc.get("engines") or {}
+    engine_of = engine_of or {}
     # Only what the page draws: a full cell carries its per-run samples and the
     # resolved command, which would multiply the file size for nothing.
-    keep = ("row", "language", "toolchain", "task", "status", "median_ms",
-            "median_wall_ms", "min_ms", "max_ms", "stdev_ms", "peak_bytes",
-            "artifact_bytes", "out_bytes", "runs", "check",
+    keep = ("row", "language", "toolchain", "engine", "task", "status",
+            "median_ms", "median_wall_ms", "min_ms", "max_ms", "stdev_ms",
+            "peak_bytes", "artifact_bytes", "out_bytes", "runs", "check",
             "pinned_cpu", "measured", "self_timed", "warnings", "error")
     slim = [{k: c.get(k) for k in keep if k in c} for c in cells]
-    doc = dict(doc, cells=slim, tasks=tasks)
+    # A cell with no engine at all is filled from the registry here, so the page
+    # has one place to fall back and the JS fallback is only for the registry's
+    # own gaps.
+    for c in slim:
+        if not c.get("engine"):
+            e = engine_of.get(c.get("row", "") + "/" + c.get("toolchain", ""))
+            if e:
+                c["engine"] = e
+    doc = dict(doc, cells=slim, tasks=tasks, engines=engines)
+    reg = dict(engine_of)
+    for eid, meta in engines.items():
+        reg["#" + eid] = meta
     # The measurements go in last: they are the one part of the page whose text
     # is not ours, so they must not be able to collide with a placeholder that
     # has not been substituted yet.
     return (TEMPLATE
             .replace("__TITLES__", json.dumps(TASK_TITLES, separators=(",", ":")))
             .replace("__TASKS__", json.dumps(tasks))
+            .replace("__ENGINES__", json.dumps(reg, separators=(",", ":")))
             .replace("__COUNT__", str(len(cells)))
             .replace("__TOTAL__", str(len(doc.get("all_cells") or [])))
             .replace("__DATA__", json.dumps(doc, separators=(",", ":"))))
@@ -787,6 +1058,8 @@ def main():
     doc = load(args.json)
     tasks = doc.get("tasks") or TASKS
     total = len(doc.get("cells") or [])
+    engines = doc.get("engines") or {}
+    engine_of = {}
     try:
         # The harness is the authority on how many cells the matrix has: it is
         # the same `expand` that decided what to run, so asking it keeps the
@@ -796,10 +1069,18 @@ def main():
         reg = load(args.registry)
         tasks = reg.get("tasks", tasks)
         total = len(harness.expand(reg["rows"], tasks))
+        # The registry is also the authority on which engine a row/toolchain is:
+        # it is where the ids were assigned.  It fills in any cell the results
+        # file left without one (a file written before the engine column).
+        engines = engines or reg.get("engines", {})
+        for row, r in (reg.get("rows") or {}).items():
+            for e in r.get("entries", []):
+                if e.get("engine"):
+                    engine_of[row + "/" + e.get("toolchain", "")] = e["engine"]
     except (OSError, ValueError, KeyError, ImportError, SystemExit):
         pass
     doc["all_cells"] = [None] * total
-    html = build(doc, tasks)
+    html = build(doc, tasks, engines, engine_of)
     with open(args.html, "w", encoding="utf-8") as fh:
         fh.write(html)
     cells = doc.get("cells") or []

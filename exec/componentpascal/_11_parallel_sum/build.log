@@ -1,0 +1,128 @@
+#gpcp: Created _11_parallel_sum.exe
+   1 (* task 11 parallel_sum ƒ?? expected output: 7500000075000000 *)
+   2 (* build: gpcp /list- _11_parallel_sum.cp    run: _11_parallel_sum.exe *)
+   3 (* note: four real .NET threads, started with System.Threading.Thread. A Thread needs a
+   4    ThreadStart delegate, which gpcp reaches through REGISTER applied to a bound method
+   5    (REGISTER(s, w0.Run)) ƒ?? the foreign ThreadStart type is already a delegate, so no
+   6    EVENT type has to be declared. gpcp prints four "Procedure variables are deprecated"
+   7    warnings for these calls; /warn- silences them and they do not affect the run. *)
+   8 (* note: each thread owns a fixed range of 25000000 indices and writes its own
+   9    accumulator, so the result does not depend on how the threads are scheduled; the
+  10    main thread joins all four before summing. *)
+  11 (* note: measured on this machine, the four threads are faster than task 02's serial
+  12    loop: median 1475 ms against 2287 ms over five runs, both including the same .NET
+  13    startup. *)
+  14 (* note: gpcp does not allow a LONGINT CASE selector, so each thread's index is a 32 bit
+  15    INTEGER, which covers the range 0..99999999 that the work spans. *)
+  16 (* note: build and run from the directory holding the source, with CROOT set to the
+  17    gpcp-NET tree, CPSYM=.;%CROOT%\symfiles;%CROOT%\symfiles\NetSystem, %CROOT%\bin on
+  18    PATH, and %CROOT%\bin\RTS.dll copied next to the executable. gpcp has no
+  19    optimisation levels; the documented invocation is plain "gpcp _11_parallel_sum.cp"
+  20    and /list- only suppresses the .lst listing file. *)
+  21 (* note: Console.WriteInt takes a 32 bit INTEGER only, so the LONGINT total is printed
+  22    by the local WriteLong. *)
+  23 (* timing: Env.Environment.get_TickCount() is .NET's millisecond clock, and the Error module
+  24    writes to stderr, so TIME_MS is reported there and stdout is unchanged. *)
+  25 
+  26 MODULE _11_parallel_sum;
+  27  IMPORT CPmain, Console, Error, Env := mscorlib_System, Th := mscorlib_System_Threading;
+  28 
+  29  CONST SLICE = 25000000;
+  30 
+  31  TYPE Worker = POINTER TO RECORD
+  32                  t : LONGINT;   (* which quarter of the range this thread owns *)
+  33                  acc : LONGINT
+  34                END;
+  35 
+  36  VAR s0, s1, s2, s3 : Th.ThreadStart;
+  37      ss_t0, ss_t1 : LONGINT;
+  38      th0, th1, th2, th3 : Th.Thread;
+  39      w0, w1, w2, w3 : Worker;
+  40      total : LONGINT;
+  41 
+  42  PROCEDURE (self : Worker) Run(), NEW;
+  43    VAR i : INTEGER;
+  44  BEGIN
+  45    self.acc := 0;
+  46    FOR i := SHORT(self.t * SLICE) TO SHORT((self.t + 1) * SLICE) - 1 DO
+  47      CASE i MOD 4 OF
+  48        0: self.acc := self.acc + 1
+  49      | 1: self.acc := self.acc + i
+  50      | 2: self.acc := self.acc + 2 * i
+  51      | 3: self.acc := self.acc + 3 * i
+  52      END
+  53    END
+  54  END Run;
+  55 
+  56  PROCEDURE WriteLong(x : LONGINT);
+  57    VAR s : ARRAY 24 OF CHAR;
+  58        n, k : INTEGER;
+  59        t : CHAR;
+  60  BEGIN
+  61    IF x = 0 THEN Console.Write("0"); RETURN END;
+  62    n := 0;
+  63    WHILE x > 0 DO
+  64      s[n] := CHR(SHORT(x MOD 10) + ORD("0"));
+  65      x := x DIV 10;
+  66      INC(n)
+  67    END;
+  68    s[n] := 0X;
+  69    k := 0; DEC(n);
+  70    WHILE k < n DO
+  71      t := s[k]; s[k] := s[n]; s[n] := t;
+  72      INC(k); DEC(n)
+  73    END;
+  74    Console.WriteString(s)
+  75  END WriteLong;
+  76 
+  77  PROCEDURE WMs(x : LONGINT);
+  78    VAR s : ARRAY 24 OF CHAR;
+  79        n, k : INTEGER;
+  80        t : CHAR;
+  81  BEGIN
+  82    IF x = 0 THEN Error.Write("0"); RETURN END;
+  83    n := 0;
+  84    WHILE x > 0 DO
+  85      s[n] := CHR(SHORT(x MOD 10) + ORD("0"));
+  86      x := x DIV 10;
+  87      INC(n)
+  88    END;
+  89    s[n] := 0X;
+  90    k := 0; DEC(n);
+  91    WHILE k < n DO
+  92      t := s[k]; s[k] := s[n]; s[n] := t;
+  93      INC(k); DEC(n)
+  94    END;
+  95    Error.WriteString(s)
+  96  END WMs;
+  97 
+  98 BEGIN
+  99   ss_t0 := Env.Environment.get_TickCount();
+ 100   NEW(w0); NEW(w1); NEW(w2); NEW(w3);
+ 101   w0.t := 0; w1.t := 1; w2.t := 2; w3.t := 3;
+ 102 
+ 103   REGISTER(s0, w0.Run);
+ 104   REGISTER(s1, w1.Run);
+ 105   REGISTER(s2, w2.Run);
+ 106   REGISTER(s3, w3.Run);
+ 107 
+ 108   th0 := Th.Thread.init(s0);
+**** ------------------------^ Warning: Procedure variables are deprecated
+ 109   th1 := Th.Thread.init(s1);
+**** ------------------------^ Warning: Procedure variables are deprecated
+ 110   th2 := Th.Thread.init(s2);
+**** ------------------------^ Warning: Procedure variables are deprecated
+ 111   th3 := Th.Thread.init(s3);
+**** ------------------------^ Warning: Procedure variables are deprecated
+ 112 
+ 113   th0.Start(); th1.Start(); th2.Start(); th3.Start();
+ 114   th0.Join();  th1.Join();  th2.Join();  th3.Join();
+ 115 
+ 116   total := w0.acc + w1.acc + w2.acc + w3.acc;
+ 117 
+ 118   ss_t1 := Env.Environment.get_TickCount();
+ 119   Error.WriteString("TIME_MS="); WMs(ss_t1 - ss_t0); Error.WriteLn();
+ 120 
+ 121   WriteLong(total); Console.WriteLn
+ 122 END _11_parallel_sum.
+#gpcp: <_11_parallel_sum> No errors, and 4 warnings

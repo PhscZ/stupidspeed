@@ -1,0 +1,56 @@
+/*
+** Automatically generated from `13_matrix_mul.m'
+** by the Mercury compiler,
+** version 22.01.9
+** configured for x86_64-w64-mingw32.
+** Do not edit.
+**
+** The autoconfigured grade settings governing
+** the generation of this C file were
+**
+** TAG_BITS=2
+** UNBOXED_FLOAT=no
+** UNBOXED_INT64S=no
+** PREGENERATED_DIST=yes
+** HIGHLEVEL_CODE=yes
+**
+** END_OF_C_GRADE_INFO
+*/
+
+
+// :- module m13_matrix_mul.
+// :- interface.
+
+#ifndef MR_HEADER_GUARD_m13_matrix_mul
+#define MR_HEADER_GUARD_m13_matrix_mul
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "mercury.h"
+
+
+#ifndef M13_MATRIX_MUL_DECL_GUARD
+#define M13_MATRIX_MUL_DECL_GUARD
+
+#endif
+
+
+
+
+void MR_CALL 
+main_2_p_0(void);
+
+void mercury__m13_matrix_mul__init(void);
+void mercury__m13_matrix_mul__init_type_tables(void);
+void mercury__m13_matrix_mul__init_debugger(void);
+const char *mercury__m13_matrix_mul__grade_check(void);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif // MR_HEADER_GUARD_m13_matrix_mul
+
+// :- end_interface m13_matrix_mul.

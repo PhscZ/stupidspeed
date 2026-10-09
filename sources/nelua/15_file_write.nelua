@@ -1,0 +1,67 @@
+-- task 15 file_write — expected output: 52428800
+-- build: cmd.exe /c "..\..\tools\nelua\nelua.bat" -r -o 15_file_write.exe 15_file_write.nelua
+-- run: ./15_file_write.exe
+-- measured: 0.0965 s wall clock (min of 3 runs), against 0.0143 s for the write and
+--       0.0328 s for the fsync as timed inside the program. out.bin is written into the
+--       working directory, so this must be run from sources/nelua/.
+-- note: the 1 MiB buffer is bytes 0,1,2,...,255 repeated 4096 times, built once by index
+--       before the write loop, then written 50 times to out.bin in the working directory.
+-- note: the file is opened "wb". On Windows the C runtime translates every 0x0A byte to
+--       CRLF in text mode, which would turn the buffer's 4096 newline bytes (i % 256 ==
+--       10) into 8192 and produce a 52633600-byte file instead of 52428800; the `b` flag
+--       turns that off. The same trap is recorded in the Janet row.
+-- note: why raw C stdio here rather than the `io` module. The task wants flush *and*
+--       fsync, and fsync on Windows is `_commit` on the C file descriptor. Nelua's
+--       `filestream` exposes `flush` and `close` and nothing else — its descriptor is
+--       reached through a module-private method — so this file goes through
+--       fopen/fwrite/fflush/_fileno/_commit/fclose, all of them declared with Nelua's
+--       own `@cinclude` C-interop annotation, which is the language's normal way of
+--       touching the platform.
+-- note: measured on this host, built with -r: 50 MiB written and flushed in 0.0143 s,
+--       and `_commit(_fileno(fp))` returned 0 in 0.0328 s. Both files written by the two
+--       routes (this one and the io module) were read back and compared byte for byte
+--       against the source buffer: 0 mismatching chunks of 1 MiB, 52428800 bytes each.
+-- note: the printed value is the number of bytes fwrite reported, accumulated across the
+--       fifty writes, printed after the flush, the fsync and the close.
+require 'io'
+require 'os'
+require 'string'
+local function fopen(pathname: cstring, mode: cstring): pointer <cimport, nodecl, cinclude '<stdio.h>'> end
+local function fwrite(ptr: pointer, size: usize, n: usize, fp: pointer): usize <cimport, nodecl, cinclude '<stdio.h>'> end
+local function fflush(fp: pointer): cint <cimport, nodecl, cinclude '<stdio.h>'> end
+local function fclose(fp: pointer): cint <cimport, nodecl, cinclude '<stdio.h>'> end
+local function _fileno(fp: pointer): cint <cimport, nodecl, cinclude '<stdio.h>'> end
+local function _commit(fd: cint): cint <cimport, nodecl, cinclude '<io.h>'> end
+
+-- timing: os.now is Nelua's monotonic clock in seconds (nanosecond resolution on
+--         Windows, via QueryPerformanceCounter); TIME_MS goes to stderr through
+--         io.stderr and stdout is unchanged.
+local ssT0 = os.now()
+local function ss_report()
+  io.stderr:write(string.format('TIME_MS=%.3f\n', (os.now() - ssT0) * 1000))
+end
+
+local CHUNK: usize = 1048576
+local REPEATS: integer = 50
+
+local buf: [1048576]byte
+for i = 0, 1048575 do
+  buf[i] = (@byte)(i % 256)
+end
+
+local fp: pointer = fopen('out.bin', 'wb')
+if fp == nilptr then
+  print('cannot open out.bin')
+end
+
+local written: usize = 0
+for i = 1, REPEATS do
+  written = written + fwrite(&buf[0], 1, CHUNK, fp)
+end
+
+fflush(fp)
+_commit(_fileno(fp))
+fclose(fp)
+
+ss_report()
+print((@integer)(written))

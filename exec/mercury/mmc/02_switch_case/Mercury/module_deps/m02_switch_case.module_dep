@@ -1,0 +1,14 @@
+module(2, "02_switch_case.m",
+	m02_switch_case,
+	{},
+	{builtin, io, private_builtin},
+	{int, list, string, time, (string.format), (string.parse_util)},
+	{},
+	{},
+	{},
+	{},
+	{},
+	no_foreign_export,
+	no_main,
+	{}
+).

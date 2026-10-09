@@ -101,6 +101,9 @@ EXPECTED = {
 TIME_RE = re.compile(r"TIME_MS=([0-9]+(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?)")
 DEFAULT_TIMEOUT = 900
 
+# Cells recorded before a row was removed have no engine in the registry any more.
+UNKNOWN_ENGINE = "(not in the registry)"
+
 
 # ---------------------------------------------------------------- peak memory
 
@@ -190,15 +193,22 @@ else:
 # ------------------------------------------------------------------- registry
 
 def load_registry(path):
-    """The task list and the per-row run recipes.
+    """The task list, the per-row run recipes, and the engine table.
 
     The fifteen expected answers are pinned above rather than read from the
     registry: they are the same in every row, and the rows' verifiers read them
     from their own source headers, so a copy in the registry could only drift.
+
+    `engines` is the other half of a row's identity.  Every toolchain entry names
+    the component that actually turns its program into executed machine code --
+    `gcc` for Ada, Fortran and C alike, `hotspot` for Java, Kotlin and Groovy --
+    so the matrix can be read as "what ran" rather than "what was written".
+    A row's language is its front end; its engine is what a cell's number is
+    really about.
     """
     with open(path, encoding="utf-8") as fh:
         reg = json.load(fh)
-    return reg.get("tasks", TASKS), reg["rows"]
+    return reg.get("tasks", TASKS), reg["rows"], reg.get("engines", {})
 
 
 def expand(rows, tasks):
@@ -726,6 +736,7 @@ def _measure(cell, runs, timeout_override, check_only, cpu=3, cores=4):
     pin_to = None if cpu is None or cpu < 0 else (task, cpu, cores)
 
     result = {"row": row, "language": lang, "toolchain": tc, "task": task,
+              "engine": entry.get("engine"),
               "status": "OK", "cmd": cmd, "cwd": cwd, "samples": [],
               "artifact_bytes": None, "out_bytes": None, "timeout_s": timeout,
               # Provenance travels with the cell, not with the file: a results
@@ -932,6 +943,27 @@ def load_results(path):
     return cells if isinstance(cells, list) else []
 
 
+def engine_index(rows):
+    """`(row, toolchain) -> engine id`, from the registry.
+
+    The results file is additive, so it can hold cells measured before the
+    engine field existed.  The registry is the authority on what runs a row, so
+    the writer stamps it onto every cell it is about to write rather than
+    trusting each record to have carried it.
+    """
+    idx = {}
+    for row, v in rows.items():
+        for e in v["entries"]:
+            idx[(row, e["toolchain"])] = e.get("engine")
+    return idx
+
+def backfill_engines(cells, index):
+    """Give every cell an engine, from the registry, in place."""
+    for c in cells:
+        if not c.get("engine"):
+            c["engine"] = index.get((c.get("row"), c.get("toolchain")))
+    return cells
+
 def merge_results(previous, fresh, order=None):
     """`previous` with `fresh` laid over it, keyed by cell.
 
@@ -1018,7 +1050,7 @@ def provenance(cells, runs, cpu):
     return run_text, pin_text
 
 
-def write_json(path, cells, runs, cpu=None, cores=4):
+def write_json(path, cells, runs, cpu=None, cores=4, engines=None):
     run_text, pin_text = provenance(cells, runs, cpu)
     doc = {
         "generated": time.strftime("%Y-%m-%dT%H:%M:%S"),
@@ -1028,31 +1060,92 @@ def write_json(path, cells, runs, cpu=None, cores=4):
         "task11_cores": cores,
         "cells_in_file": len(cells),
         "method": {"runs": run_text, "pinning": pin_text},
+        # The engine table travels with the numbers so a reader of this file
+        # alone can group them; exec/cells.json remains the authority.
+        "engines": engines or {},
         "cells": cells,
     }
     atomic_write(path, json.dumps(doc, indent=1) + "\n")
 
 
 def _table(rows_order, cells, value, fmt):
+    """One markdown table, ordered so rows that share an engine sit together.
+
+    `rows_order` is a list of `(engine_name, language, toolchain, row)` tuples
+    already sorted by engine.  The Engine column repeats on every line rather
+    than being a group header, because the point of the column is to be
+    grep-able: `grep '^| GCC '` is every row GCC runs, whatever front end is
+    above it.
+    """
     index = {(c["row"], c["toolchain"], c["task"]): c for c in cells}
-    head = "| Language | Toolchain | " + " | ".join(t[:2] for t in TASKS) + " |"
-    sep = "|" + "---|" * (len(TASKS) + 2)
+    head = "| Engine | Language | Toolchain | " + " | ".join(t[:2] for t in TASKS) + " |"
+    sep = "|" + "---|" * (len(TASKS) + 3)
     lines = [head, sep]
-    for row, tc, lang in rows_order:
+    for eng, lang, tc, row in rows_order:
         vals = []
         for t in TASKS:
             c = index.get((row, tc, t))
             vals.append(fmt(value(c)) if c and c["status"] == "OK" else "")
-        lines.append("| %s | %s | %s |" % (lang, tc, " | ".join(vals)))
+        lines.append("| %s | %s | %s | %s |" % (eng, lang, tc, " | ".join(vals)))
+    return "\n".join(lines)
+
+def _rollup(rows_order, cells, engines):
+    """How many rows and cells each engine covers, biggest engine first.
+
+    This is the table that answers "how much of this matrix is the same thing
+    twice": GCC and LLVM between them run about a third of the rows.
+
+    `rows_order` carries the engine's *display* name (that is what the tables
+    show), so the metadata lookup is by name too, and a cell whose engine is not
+    in the registry -- a stale record of a row that has since been removed --
+    lands in one clearly-labelled bucket instead of being dropped.
+    """
+    by_name = {meta.get("name", eid): meta for eid, meta in engines.items()}
+    name_of = {eid: meta.get("name", eid) for eid, meta in engines.items()}
+    per = {}
+    for eng, _lang, tc, row in rows_order:
+        per.setdefault(eng, {"rows": [], "cells": 0, "ok": 0})
+        if (row, tc) not in per[eng]["rows"]:
+            per[eng]["rows"].append((row, tc))
+    for c in cells:
+        eng = name_of.get(c.get("engine"), UNKNOWN_ENGINE)
+        if eng not in per:
+            continue
+        per[eng]["cells"] += 1
+        if c["status"] == "OK":
+            per[eng]["ok"] += 1
+    lines = [
+        "| Engine | What it is | Kind | Rows | Cells | Measured |",
+        "|---|---|---|---|---|---|",
+    ]
+    def sort_key(kv):
+        # the unknown bucket is not an engine; keep it at the bottom
+        return (kv[0] == UNKNOWN_ENGINE, -len(kv[1]["rows"]), kv[0])
+    for eng, d in sorted(per.items(), key=sort_key):
+        meta = by_name.get(eng, {})
+        lines.append("| %s | %s | %s | %d | %d | %d |"
+                     % (eng, meta.get("what", ""), meta.get("kind", ""),
+                        len(d["rows"]), d["cells"], d["ok"]))
     return "\n".join(lines)
 
 
-def write_md(path, cells, runs, check=False, cpu=None, expected=()):
+def write_md(path, cells, runs, check=False, cpu=None, expected=(), engines=None):
+    engines = engines or {}
+    def eng_name(eid):
+        return engines.get(eid, {}).get("name", eid or UNKNOWN_ENGINE)
     order = []
     for c in cells:
-        key = (c["row"], c["toolchain"], c.get("language", c["row"]))
+        key = (c.get("engine"), c["row"], c["toolchain"], c.get("language", c["row"]))
         if key not in order:
             order.append(key)
+    # Engine first, then language, then row: rows that share an engine are
+    # adjacent, and within an engine the front ends read alphabetically.  Cells
+    # of rows that have since been removed have no engine and go last -- they
+    # are history in an additive file, not part of the current matrix.
+    order = [(eng_name(eng), lang, tc, row)
+             for eng, row, tc, lang in
+             sorted(order, key=lambda k: (eng_name(k[0]) == UNKNOWN_ENGINE,
+                                          eng_name(k[0]).lower(), k[3], k[2]))]
     ok = sum(1 for c in cells if c["status"] == "OK" and not c.get("check"))
     checked = sum(1 for c in cells if c["status"] == "OK" and c.get("check"))
     skipped = [c for c in cells if c["status"] == "SKIP"]
@@ -1089,9 +1182,24 @@ def write_md(path, cells, runs, check=False, cpu=None, expected=()):
             "%d of %d task-15 cells wrote a 52428800-byte `out.bin`."
             % (len(wrote), len(writers)),
             "",
+            "## By engine",
+            "",
+            "A row's **engine** is the component that actually turns its program "
+            "into executed machine code, or interprets it.  Rows that share an "
+            "engine are the same code generator or virtual machine wearing "
+            "different front ends: `ada`, `fortran`, `modula-2`, `c++` and `c` "
+            "are all GCC, and `java`, `kotlin`, `scala`, `clojure` and `groovy` "
+            "are all HotSpot.  A cell's number is a fact about the engine plus "
+            "whatever the front end adds on top, so two rows with the same engine "
+            "and the same kind are directly comparable and two rows with "
+            "different kinds are not.",
+            "",
+            _rollup(order, cells, engines),
+            "",
             "## Speed -- median `TIME_MS`, in milliseconds",
             "",
-            "The program times its own work, so start-up is outside the number.  A "
+            "Grouped by engine, so every row of one engine is adjacent.  The "
+            "program times its own work, so start-up is outside the number.  A "
             "cell marked `*` in the console output has no `TIME_MS` line at all (the "
             "luau CLI cells, by design), so its end-to-end wall clock is the number "
             "here instead.",
@@ -1158,8 +1266,9 @@ def write_md(path, cells, runs, check=False, cpu=None, expected=()):
 
 # ----------------------------------------------------------------------- main
 
-def validate(rows, tasks):
+def validate(rows, tasks, engines=None):
     problems = []
+    engines = engines or {}
     for row in sorted(rows):
         entries = rows[row]["entries"]
         if not entries:
@@ -1175,9 +1284,23 @@ def validate(rows, tasks):
                 if key in e and not isinstance(e[key], str):
                     problems.append("%s/%s: %s must be a string"
                                     % (row, e.get("toolchain"), key))
+            # Every entry names what actually runs it, and that name has to be
+            # one the engine table defines -- otherwise the grouping would
+            # silently drop the row from the chart and the rollup.
+            eng = e.get("engine")
+            if not eng:
+                problems.append("%s/%s: missing 'engine'"
+                                % (row, e.get("toolchain")))
+            elif engines and eng not in engines:
+                problems.append("%s/%s: unknown engine %r"
+                                % (row, e.get("toolchain"), eng))
             for t in e.get("tasks", []):
                 if t != "*" and t not in tasks:
                     problems.append("%s/%s: unknown task %r" % (row, e.get("toolchain"), t))
+    for eid, meta in sorted(engines.items()):
+        for key in ("name", "kind", "what"):
+            if key not in meta:
+                problems.append("engine %s: missing %r" % (eid, key))
     try:
         cells = expand(rows, tasks)
     except SystemExit as exc:
@@ -1363,12 +1486,15 @@ def main():
     if args.runs < 1 and not args.check:
         ap.error("--runs must be at least 1")
 
-    tasks, rows = load_registry(args.registry)
-    problems, all_cells = validate(rows, tasks)
+    tasks, rows, engines = load_registry(args.registry)
+    eng_index = engine_index(rows)
+    problems, all_cells = validate(rows, tasks, engines)
     if args.validate:
         for p in problems:
             print("PROBLEM %s" % p)
-        print("rows=%d cells=%d problems=%d" % (len(rows), len(all_cells), len(problems)))
+        used = {e.get("engine") for r in rows.values() for e in r["entries"]}
+        print("rows=%d engines=%d cells=%d problems=%d"
+              % (len(rows), len(used), len(all_cells), len(problems)))
         return 1 if problems else 0
 
     row_names = sorted(rows)
@@ -1390,8 +1516,9 @@ def main():
     numbered = item_range(selected, args.start, args.end)
 
     if args.list:
-        for n, (row, tc, task, _e, _lang) in numbered:
-            print("%d\t%s\t%s\t%s" % (n, row, tc, task))
+        for n, (row, tc, task, entry, _lang) in numbered:
+            print("%d\t%s\t%s\t%s\t%s"
+                  % (n, row, tc, entry.get("engine", "?"), task))
         if numbered:
             print("%d of %d cells selected (items %d-%d)"
                   % (len(numbered), len(selected), numbered[0][0], numbered[-1][0]))
@@ -1425,8 +1552,9 @@ def main():
     def flush():
         """Write the file: previous cells, this run's cells, in registry order."""
         merged = merge_results(previous, results, order)
-        write_json(args.json, merged, args.runs, cpu, args.cores)
-        write_md(args.md, merged, args.runs, args.check, cpu, expected)
+        backfill_engines(merged, eng_index)
+        write_json(args.json, merged, args.runs, cpu, args.cores, engines)
+        write_md(args.md, merged, args.runs, args.check, cpu, expected, engines)
         return merged
 
     try:

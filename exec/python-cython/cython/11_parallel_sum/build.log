@@ -1,0 +1,6 @@
+In file included from C:\Users\pz020\AppData\Local\Programs\Python\Python313\Include/Python.h:14,
+                 from _11_parallel_sum.c:19:
+C:\Users\pz020\AppData\Local\Programs\Python\Python313\Include/pyconfig.h:248:9: warning: 'MS_WIN64' redefined
+  248 | #define MS_WIN64
+      |         ^~~~~~~~
+<command-line>: note: this is the location of the previous definition

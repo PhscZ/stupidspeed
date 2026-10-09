@@ -1,0 +1,14 @@
+In file included from C:/stupidspeed/tools/msys64/msys64/ucrt64/include/glib-2.0/glib/gthread.h:34,
+                 from C:/stupidspeed/tools/msys64/msys64/ucrt64/include/glib-2.0/glib/gasyncqueue.h:34,
+                 from C:/stupidspeed/tools/msys64/msys64/ucrt64/include/glib-2.0/glib.h:34,
+                 from C:/stupidspeed/exec/vala/valac/10_pi/10_pi.vala.c:21:
+C:/stupidspeed/exec/vala/valac/10_pi/10_pi.vala.c: In function 'big_get_type':
+C:/stupidspeed/tools/msys64/msys64/ucrt64/include/glib-2.0/glib/gatomic.h:131:5: warning: argument 2 of '__atomic_load' discards 'volatile' qualifier [-Wdiscarded-qualifiers]
+  131 |     __atomic_load (gapg_temp_atomic, &gapg_temp_newval, __ATOMIC_SEQ_CST); \
+      |     ^~~~~~~~~~~~~
+C:/stupidspeed/tools/msys64/msys64/ucrt64/include/glib-2.0/glib/gthread.h:274:7: note: in expansion of macro 'g_atomic_pointer_get'
+  274 |     (!g_atomic_pointer_get (location) &&                             \
+      |       ^~~~~~~~~~~~~~~~~~~~
+C:/stupidspeed/exec/vala/valac/10_pi/10_pi.vala.c:957:13: note: in expansion of macro 'g_once_init_enter'
+  957 |         if (g_once_init_enter (&big_type_id__once)) {
+      |             ^~~~~~~~~~~~~~~~~

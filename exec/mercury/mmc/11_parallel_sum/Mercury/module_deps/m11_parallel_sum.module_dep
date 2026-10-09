@@ -1,0 +1,14 @@
+module(2, "11_parallel_sum.m",
+	m11_parallel_sum,
+	{},
+	{builtin, io, private_builtin},
+	{int, list, maybe, string, thread, time, (string.format), (string.parse_util), (thread.mvar)},
+	{},
+	{},
+	{},
+	{},
+	{},
+	no_foreign_export,
+	no_main,
+	{}
+).

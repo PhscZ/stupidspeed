@@ -1,0 +1,26 @@
+
+#ifndef _C5_ty220_
+#define _C5_ty220_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern EIF_REFERENCE F673_3393(EIF_REFERENCE);
+extern EIF_REFERENCE F673_3395(EIF_REFERENCE, EIF_INTEGER_32);
+extern EIF_INTEGER_32 F673_3396(EIF_REFERENCE);
+extern EIF_INTEGER_32 F673_3397(EIF_REFERENCE);
+extern EIF_BOOLEAN F673_3402(EIF_REFERENCE);
+extern EIF_BOOLEAN F673_3403(EIF_REFERENCE, EIF_REFERENCE);
+extern EIF_REFERENCE F673_3410(EIF_REFERENCE);
+extern EIF_REFERENCE F673_3422(EIF_REFERENCE);
+extern void EIF_Minit220(void);
+extern void F789_5005(EIF_REFERENCE, EIF_REFERENCE);
+extern char *(*R2713[])();
+extern char *(*R2691[])();
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

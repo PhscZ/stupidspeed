@@ -1,0 +1,20 @@
+' task 07 string_append — expected output: 250000
+' build: dotnet build -c Release 07_string_append.vbproj    run: dotnet bin/Release/net8.0/07_string_append.dll
+' String concatenation with & copies the whole string every time, as intended.
+
+Imports System
+
+Module Program
+    Sub Main()
+        Dim sw As System.Diagnostics.Stopwatch = System.Diagnostics.Stopwatch.StartNew()
+        Dim text As String = ""
+
+        For i As Long = 1 To 250000
+            text = text & "x"
+        Next
+
+        sw.Stop()
+        Console.Error.WriteLine("TIME_MS=" & sw.Elapsed.TotalMilliseconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture))
+        Console.WriteLine(text.Length)
+    End Sub
+End Module

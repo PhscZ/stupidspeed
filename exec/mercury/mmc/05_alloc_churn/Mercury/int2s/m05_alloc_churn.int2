@@ -1,0 +1,2 @@
+:- module m05_alloc_churn.
+:- interface.

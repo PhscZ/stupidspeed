@@ -1,0 +1,8 @@
+[90mCompiling project (Scala 3.9.0, Scala.js 1.22.0)[0m
+[90mCompiled project (Scala 3.9.0, Scala.js 1.22.0)[0m
+[E] Exiting BSP server with Connection reset
+Bloop 'bsp' command exited with code 1. Something may be wrong with the current configuration.
+Running the [1mclean[0m sub-command to clear the working directory and remove caches might help.
+If the error persists, please report the issue as a bug and attach a log with increased verbosity by passing [1m-v -v -v[0m.
+Wrote C:\stupidspeed\exec\scala-js\js\11_parallel_sum\prog.js, run it with
+  node .\prog.js

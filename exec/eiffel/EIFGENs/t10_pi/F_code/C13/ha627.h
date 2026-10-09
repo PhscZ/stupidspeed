@@ -1,0 +1,123 @@
+
+#ifndef _C13_ha627_
+#define _C13_ha627_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern void F632_2943(EIF_REFERENCE, EIF_INTEGER_32);
+extern void F632_2946(EIF_REFERENCE, EIF_INTEGER_32);
+extern EIF_INTEGER_32 F632_2947(EIF_REFERENCE);
+extern EIF_INTEGER_32 F632_2949(EIF_REFERENCE, EIF_REFERENCE);
+extern EIF_BOOLEAN F632_2951(EIF_REFERENCE, EIF_REFERENCE);
+extern EIF_REFERENCE F632_2958(EIF_REFERENCE);
+extern EIF_INTEGER_32 F632_2960(EIF_REFERENCE, EIF_REFERENCE);
+extern EIF_INTEGER_32 F632_2961(EIF_REFERENCE);
+extern EIF_INTEGER_32 F632_2964(EIF_REFERENCE);
+extern EIF_INTEGER_32 F632_2965(EIF_REFERENCE);
+extern EIF_BOOLEAN F632_2966(EIF_REFERENCE, EIF_REFERENCE);
+extern EIF_BOOLEAN F632_2967(EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE);
+extern EIF_BOOLEAN F632_2975(EIF_REFERENCE);
+extern EIF_BOOLEAN F632_2976(EIF_REFERENCE);
+extern void F632_2985(EIF_REFERENCE, EIF_REFERENCE);
+extern EIF_INTEGER_32 F632_2987(EIF_REFERENCE, EIF_INTEGER_32);
+extern EIF_INTEGER_32 F632_2988(EIF_REFERENCE, EIF_INTEGER_32);
+extern void F632_2989(EIF_REFERENCE, EIF_INTEGER_32, EIF_REFERENCE);
+extern void F632_2990(EIF_REFERENCE, EIF_INTEGER_32, EIF_REFERENCE);
+extern void F632_2997(EIF_REFERENCE);
+extern void F632_3000(EIF_REFERENCE, EIF_REFERENCE);
+extern EIF_REFERENCE F632_3001(EIF_REFERENCE, EIF_INTEGER_32);
+extern void F632_3002(EIF_REFERENCE);
+extern EIF_INTEGER_32 F632_3011(EIF_REFERENCE);
+extern EIF_BOOLEAN F632_3012(EIF_REFERENCE);
+extern EIF_INTEGER_32 F632_3019(EIF_REFERENCE);
+extern EIF_REFERENCE F632_3020(EIF_REFERENCE);
+extern EIF_INTEGER_32 F632_3021(EIF_REFERENCE, EIF_INTEGER_32);
+extern EIF_BOOLEAN F632_3022(EIF_REFERENCE, EIF_INTEGER_32);
+extern void F632_3025(EIF_REFERENCE, EIF_REFERENCE);
+extern void F632_3027(EIF_REFERENCE, EIF_REFERENCE);
+extern void F632_3028(EIF_REFERENCE, EIF_REFERENCE);
+extern void F632_3029(EIF_REFERENCE, EIF_REFERENCE);
+extern void F632_3033(EIF_REFERENCE, EIF_REFERENCE);
+extern void F632_3039(EIF_REFERENCE);
+extern void F632_3052(EIF_REFERENCE);
+extern void EIF_Minit627(void);
+extern void F226_2088(EIF_REFERENCE);
+extern void F226_2070(EIF_REFERENCE, EIF_REFERENCE);
+extern void F642_3210(EIF_REFERENCE);
+extern void F642_3194(EIF_REFERENCE, EIF_INTEGER_32, EIF_INTEGER_32, EIF_INTEGER_32);
+extern void F299_2156(EIF_REFERENCE);
+extern void F648_3194(EIF_REFERENCE, EIF_BOOLEAN, EIF_INTEGER_32, EIF_INTEGER_32);
+extern void F648_3173(EIF_REFERENCE, EIF_BOOLEAN, EIF_INTEGER_32);
+extern EIF_REFERENCE F630_2949(EIF_REFERENCE, EIF_REFERENCE);
+extern void F642_3191(EIF_REFERENCE, EIF_INTEGER_32, EIF_INTEGER_32);
+extern void F642_3173(EIF_REFERENCE, EIF_INTEGER_32, EIF_INTEGER_32);
+extern EIF_REFERENCE F614_2826(EIF_REFERENCE);
+extern EIF_INTEGER_32 F449_2244(EIF_REFERENCE, EIF_INTEGER_32);
+extern void F614_2825(EIF_REFERENCE);
+extern EIF_REFERENCE F1_14(EIF_REFERENCE);
+extern EIF_BOOLEAN F630_2951(EIF_REFERENCE, EIF_REFERENCE);
+extern void F648_3191(EIF_REFERENCE, EIF_BOOLEAN, EIF_INTEGER_32);
+extern EIF_INTEGER_32 F648_3184(EIF_REFERENCE);
+RTOSHF(EIF_REFERENCE,2826)
+extern char *(*R2346[])();
+extern char *(*R1806[])();
+extern char *(*R1808[])();
+extern char *(*R2383[])();
+extern char *(*R2504[])();
+extern char *(*R2505[])();
+extern char *(*R2365[])();
+extern char *(*R2396[])();
+extern char *(*R2311[])();
+extern char *(*R2312[])();
+extern char *(*R2356[])();
+extern char *(*R2308[])();
+extern char *(*R2595[])();
+extern char *(*R2538[])();
+extern char *(*R2320[])();
+extern char *(*R2519[])();
+extern char *(*R2322[])();
+extern char *(*R2366[])();
+extern char *(*R2369[])();
+extern char *(*R2328[])();
+extern char *(*R2329[])();
+extern char *(*R1944[])();
+extern char *(*R2178[])();
+extern char *(*R1793[])();
+extern char *(*R1794[])();
+extern char *(*R1795[])();
+extern char *(*R2371[])();
+extern char *(*R2372[])();
+extern char *(*R2373[])();
+extern char *(*R2377[])();
+extern char *(*R2337[])();
+extern char *(*R2339[])();
+extern char *(*R2355[])();
+extern char *(*R2340[])();
+extern long O1906[];
+extern long O2364[];
+extern long O2352[];
+extern long O2353[];
+extern long O2354[];
+extern long O2398[];
+extern long O2357[];
+extern long O2358[];
+extern long O2312[];
+extern long O2362[];
+extern long O2363[];
+extern long O2321[];
+extern EIF_TYPE_INDEX Y1946[];
+extern EIF_TYPE_INDEX *Y1946_gen_type [];
+extern EIF_TYPE_INDEX Y2348[];
+extern EIF_TYPE_INDEX *Y2348_gen_type [];
+extern EIF_TYPE_INDEX Y2349[];
+extern EIF_TYPE_INDEX *Y2349_gen_type [];
+extern EIF_TYPE_INDEX Y1809[];
+extern EIF_TYPE_INDEX *Y1809_gen_type [];
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

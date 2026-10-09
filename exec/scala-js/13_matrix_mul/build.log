@@ -1,0 +1,4 @@
+[90mCompiling project (Scala 3.9.0, Scala.js 1.22.0)[0m
+[90mCompiled project (Scala 3.9.0, Scala.js 1.22.0)[0m
+Wrote C:\stupidspeed\exec\scala-js\js\13_matrix_mul\prog.js, run it with
+  node .\prog.js

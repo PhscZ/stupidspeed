@@ -11,7 +11,7 @@ Fourteen things do not follow the flat `<task>.<ext>` layout, and each says why.
 that needs a directory of its own rather than a differently named file is a separate case and is
 described after the list:
 
-- **C#** keeps a folder per task (`01_branches/01_branches.csproj`) because the
+- **C#, F# and VB.NET** keep a folder per task (`01_branches/01_branches.csproj`) because the
   .NET SDK does not support several projects in one directory: `dotnet build` with no project
   argument fails when the folder holds more than one `.csproj`, and the projects would share
   one `obj/` and `bin/`.
@@ -28,6 +28,11 @@ described after the list:
   engine's version banner on stdout.
 - **Tcl task 03** is two files, `03_func_sum.tcl` and `03_func_sum_add_one.tcl`, because the
   proc has to live in another file to be a real cross-file call; the main file `source`s it.
+- **Vala task 03** is two files, `03_func_sum.vala` and `03_func_sum_add_one.vala`, for the
+  same reason as Fortran's and Tcl's: Vala has no no-inline attribute (`[NoInline]` is rejected
+  as "attribute never used"), and a same-file `add_one` keeps external linkage in the generated
+  C, so `gcc -O2` is free to inline it at its single call site. valac emits one C file per Vala
+  file, so passing both names makes them two translation units.
 - **Oberon-07 task 03** imports `AddOne.ob07` instead of carrying a `_03_func_sum_add_one`
   name: the compiler requires an imported module's name to equal its file name (error 23), and
   Oberon identifiers are `letter {letter|digit}`, so `_03_func_sum_add_one` is not a legal
@@ -42,16 +47,22 @@ described after the list:
   equal its file name and start with an uppercase letter — the lexer's `idtype` is
   `'_'* 'A'..'Z' (alnum|'_')*` — so neither `01_branches.hx` nor `_01_branches.hx` is a legal
   module.
-- **Scheme, Prolog (SWI), Janet, Ring, JScript and AutoHotkey task 03** each keep the
+- **Eiffel** needs `t01_branches.e` … `t15_file_write.e`, holding classes `T01_BRANCHES` …
+  `T15_FILE_WRITE`: an Eiffel class name cannot start with a digit, and the convention is one
+  class per file named after the class. Task 03's helper is therefore `add_one.e`, not
+  `03_func_sum_add_one.e`.
+- **Scheme, Prolog (SWI), Janet, Ring, JScript, AutoHotkey and Seed7 task 03** each keep the
   helper in a second file beside the task — `03_func_sum_add_one.ss`, `.pl`, `.janet`, `.ring`,
-  `.js` and `.ahk` — which is the same shape as the Fortran, Tcl and
-  Oberon-07 entries above, so it is one case here and not six. One of the six is shape
-  rather than necessity: AutoHotkey has no inlining
-  pass to defeat, so its `#Include` split is the row's cross-file convention. It does not claim
-  a real call on that account. **Terra and Standard ML task 03** join this group with
-  `03_func_sum_add_one.t` and `.sml`. Terra has a real no-inline facility
-  (`setinlined(false)`), and it needs it *as well as* the file split — Terra
-  inlines a plain cross-file call and then deletes the loop. Standard ML has no
+  `.js`, `.ahk` and `.s7i` — which is the same shape as the Fortran, Tcl, Vala and
+  Oberon-07 entries above, so it is one case here and not seven. Two of the seven are shape
+  rather than necessity: Seed7 has no no-inline marker at all, and `s7c` emits one C translation
+  unit whatever the file split, so its helper is inlined anyway; and AutoHotkey has no inlining
+  pass to defeat, so its `#Include` split is the row's cross-file convention. Neither row claims
+  a real call on that account. **Terra, Nelua and Standard ML task 03** join this group with
+  `03_func_sum_add_one.t`, `.nelua` and `.sml`. Terra and Nelua have real no-inline facilities
+  (`setinlined(false)` and `<noinline>`), and both need them *as well as* the file split — Terra
+  inlines a plain cross-file call and then deletes the loop, and Nelua concatenates every
+  required module into one C translation unit, so the same thing happens. Standard ML has no
   per-function marker at all and needs `PolyML.Compiler.maxInlineSize := 0` set before the
   helper is loaded, because a separate file alone is not enough there either.
 - **Unicon task 03** is two files, `03_func_sum.icn` and `03_func_sum_add_one.icn`, and both are
@@ -68,19 +79,19 @@ code needs a file called `main.swift` only applies when several files are passed
 invocation, where `swiftc` has to pick which one holds `main`; with a single file there is
 nothing to pick, so the name is free.
 
-Java, D, Nim, Ada, Haxe and Oberon-07 prefix the name
+Java, D, Nim, Ada, Eiffel, Haxe, Component Pascal and Oberon-07 prefix the name
 (`_01_branches.java`, `_01_branches.d`, `_01_branches.nim`, `t01_branches.adb`,
-`T01_branches.hx`, `_01_branches.ob07`), because those
+`t01_branches.e`, `T01_branches.hx`, `_01_branches.cp`, `_01_branches.ob07`), because those
 languages tie the file name to an identifier and a digit cannot start one — in Haxe's case the
 identifier must additionally start with an uppercase letter, which is why its prefix is `T` and
-not `_`. In Oberon-07 the compiler enforces the tie — the
+not `_`. In Component Pascal and Oberon-07 the compiler enforces the tie — the
 `MODULE` name must equal the file name — so the underscore is mandatory there, not merely
 conventional.
 
 Most toolchain rows share their language's main source directory — `sources/c/` is built by
 `gcc`, `clang`, `msvc` and `tcc`, `sources/d/` by `dmd` and `ldc2`, and so on. A row
 whose source cannot be shared gets a directory of its own, holding **all fifteen tasks** and
-duplicating the files it has in common with the main row. Nineteen rows are in that position:
+duplicating the files it has in common with the main row. Eighteen rows are in that position:
 
 | Row | Directory | What differs from the main row |
 |---|---|---|
@@ -90,7 +101,9 @@ duplicating the files it has in common with the main row. Nineteen rows are in t
 | Java graalvm native-image | `sources/java-graalvm-native/` | nothing — same fifteen files, compiled ahead of time |
 | Scala native | `sources/scala-native/` | nothing — same fifteen files, built to LLVM IR by Scala Native |
 | Common Lisp ecl | `sources/commonlisp-ecl/` | the bodies, not just the header: ECL is a different implementation, so the declarations are `fixnum` where SBCL's are `(signed-byte 64)`, the case clauses end in `t` where SBCL's end in `otherwise`, tasks 11 and 14 use ECL's own thread and stream forms, and task 03 uses `(declaim (notinline add-one))` instead of the separate `03_func_sum_add_one.lisp` the SBCL row needs |
+| Erlang compiled | `sources/erlang-compiled/` | the module form: `-module`/`-export` and `main/0` replace the escript row's shebang and `main/1`, because `erlc` cannot compile a script that has no module declaration |
 | Go tinygo | `sources/tinygo/` | task 15: flushes by closing, because TinyGo's Windows target implements no fsync |
+| Python cython | `sources/python-cython/` | nothing — same fifteen files, `cython --embed` compiles them |
 | Python wasip1 | `sources/python-wasm/` | nothing — same fifteen files, run by the WASI build of CPython |
 | Ruby wasip1 | `sources/ruby-wasm/` | task 11: Fibers, because CRuby's wasip1 build is `THREAD_MODEL=none` |
 | Lua wasip1 | `sources/lua-wasm/` | task 11: coroutines, because Lanes has no wasm build |
@@ -123,15 +136,17 @@ contract exactly.
 time and not a wall-clock reading that a time sync can move. Three kinds of clock deviate, and
 each is recorded in the source's own `timing:` comment:
 
-- **Processor-time clocks** — `a68g` and `ring` read CPU time (`clock()`,
-  `time.clock`) rather than elapsed time. Both are single-threaded interpreters, so CPU
+- **Processor-time clocks** — `a68g`, `ring` and `mercury` read CPU time (`clock()`,
+  `time.clock`) rather than elapsed time. All three are single-threaded interpreters, so CPU
   time and elapsed time are the same quantity there.
 - **Time-of-day clocks** — readings of the system clock, which a time sync can move:
   `unicon` (`&time`, ms since midnight), `vbscript` (`Timer()`, seconds since midnight),
-  `freebasic` (same), `cobol` (`ACCEPT ... FROM TIME`, `hhmmsscc`), `modula3` (`Time.Now`, seconds since the epoch as a REAL),
+  `freebasic` (same), `cobol` (`ACCEPT ... FROM TIME`, `hhmmsscc`), `eiffel` (`TIME.make_now`
+  plus its millisecond fields), `modula3` (`Time.Now`, seconds since the epoch as a REAL),
   `hashlink` (`Sys.time()`),
   `haskell` (`getPOSIXTime`), `ocaml` (`Unix.gettimeofday`), `swift` (`Date()`),
-  `jscript` (`new Date().getTime()`, the Windows system timer).
+  `seed7` (`GET_TIME (TIM_NOW)`, local time of day) and `jscript` (`new Date().getTime()`,
+  the Windows system timer).
 - **VM-relative counters** — `dolphin`
   (the VM's millisecond clock) and `actionscript` (`getTimer()`, ms since the VM started).
   These do not move with the system clock, but they are not monotonic clocks either.
@@ -153,10 +168,11 @@ same line to a file `time.txt` in the working directory instead, exactly as `RUN
 C's `stderr`, which `terralib.includec` does not expose; for `euphoria` both `printf(2, …)`
 and `puts(2, …)` write nothing when stderr is redirected.
 
-**No row is inspection-only any more.** Six rows — `basic`, `cobol`, `dolphin`,
-`modula2`, `ring` and `swift` — were instrumented by inspection, because their
-toolchains were absent at the time, and the same was true of `beef`, `swipl` and `swift`. Every
-one of those rows has been verified end to end (15/15 each) since its toolchain was installed. This is a statement about the machine the rows were built on, not about
+**No row is inspection-only any more.** Nine rows — `ats`, `basic`, `cobol`, `dolphin`,
+`eiffel`, `modula2`, `ring`, `seed7` and `swift` — were instrumented by inspection, because their
+toolchains were absent at the time, and the same was true of `beef` and `swipl`.
+All eleven toolchains are installed on this machine now, and every one of those
+rows has been verified end to end (15/15 each). This is a statement about this machine, not about
 the rows.
 
 Every row also has a **row verifier** at `exec/<row>/verify.py` that runs the fifteen tasks and
@@ -175,14 +191,15 @@ rows are Windows x64 only: each is a freestanding PE program built with `nasm -f
 too, including `flang` and `luajit`. See `RUN.md` for the full platform breakdown.
 
 Disk: **31 GB measured** for the first 96 toolchains, installed and run on one Windows x64 host,
-and about **38 GB for the 111** rows the tables below now list.
+and about **41 GB for the 125** rows the tables below now list.
 The heavy terms are LLVM (4.0 GB), Swift (3.2 GB), the AIR SDK (1.6 GB), GNAT with its MSYS2
 runtime (1.8 GB, which also supplies `flang`), MSVC (1.2 GB once reassembled from a 2.5 GB
 layout), Julia (1.1 GB), Perl (1.0 GB), the .NET SDK (0.7 GB) and GraalVM (0.7 GB); most other
 rows are 0.1-0.6 GB.
 An earlier batch of six rows added about 2.4 GB between them, and one term dominates: an MSYS2
-tree with the UCRT64 toolchain and the GLib/GObject/GTK build dependencies the `tcl`, `ocaml` and
-`objectivec` rows need from it (**2.2 GB**).
+tree with the UCRT64 toolchain and the GLib/GObject/GTK build dependencies the `tcl`, `ocaml`,
+`objectivec` and `vala` rows need from it (**2.2 GB**; `valac` is one package inside that same
+tree, so restoring the Vala row adds a few tens of MB to a tree already counted).
 The rest are small — `c3c` with its shipped standard library and LLVM shim (79 MB), the Algol
 68 Genie source tree (20 MB), and Cim, the Oberon-07 compiler and the
 installed a68g at a few MB each. The AIR SDK is large because it carries a runtime for every
@@ -209,9 +226,20 @@ The newest batch adds about **0.3 GB**: the two hardware-description rows are go
 their place come **OpenJ9 at 388 MB** — the IBM Semeru JDK zip, extracted, with its own `javac`
 and `java` — and **MASM**, which installs nothing, because `ml64.exe` and `link.exe` come from
 the MSVC tree the `msvc` row already has. The `nasm` row's Windows build likewise reuses the
-assembler already on the host. **Unicon** adds 84 MB, unpacked from a 15 MB installer, and the four rows after it add about **4.4 GB**, almost all of it one term: **GHC at 4.1 GB**, extracted from a 452 MB `.tar.xz`, because the bindist carries a complete MinGW toolchain and the libraries for every package that ships with it. **gforth** is about 100 MB, **Lobster** about 30 MB and **Mercury** about 200 MB installed from a source build.
-That puts the current total for all 111 toolchains at about **38 GB**, the same figure the
-paragraph above states — the two used to differ by 3 GB and now agree.
+assembler already on the host. **Unicon** adds 84 MB, unpacked from a 15 MB installer, and the four rows after it add about **4.4 GB**, almost all of it one term: **GHC at 4.1 GB**, extracted from a 452 MB `.tar.xz`, because the bindist carries a complete MinGW toolchain and the libraries for every package that ships with it. **gforth** is about 100 MB and **Lobster** about 30 MB.
+**The fourteen restored rows** add about **2.6 GB**, and two terms are most of it: **Eiffel at
+1.14 GB**, extracted from a 139 MB `.7z` with a further 32 MB per target of `EIFGENs` once built,
+and the **.NET 10 SDK at 784 MB**, which the `boo` row needs because Boo's compiler is built with
+it and its assemblies target `Microsoft.NETCore.App` 10.0.0 — the only row here on a newer CLR
+than the `csharp` row's .NET 8. The rest are moderate or small — **Mercury** 112 MB from a source
+build, **V** 98 MB, **Kotlin** (jvm) 94 MB for the compiler zip, **ATS** 68 MB built under a
+Cygwin tree of about 1.3 GB that lives outside `tools/`, the **Seed7** tree 65 MB (from a 47 MB
+source tree, once its build objects exist), **Boo** 62 MB, **Groovy** 33 MB, **GPCP** — the
+Component Pascal compiler, 24 MB — **Cython** a 15 MB `pip install`, and **Nelua** 6 MB, the git
+repository and its 502 KB self-built interpreter, because Nelua's `runner.lua` needs `lfs`,
+`hasher` and `lpeglabel`, which the stock Lua does not have. The Cygwin tree is the one term here
+the tables below do not count, because it is a host toolchain rather than a `tools/` row.
+That puts the current total for all 128 toolchains at about **41 GB**, plus the Cygwin tree.
 The three interpreted WebAssembly rows add about **0.14 GB** on top of the six that already
 existed: the single-file `ruby.wasm` is 99 MB, the Lua build reuses the `wasi-sdk` tree the C
 row already installs and adds only a 716 KB `lua.wasm`, and the CPython WASI build is a 28 MB
@@ -230,6 +258,53 @@ is the practical way to get a working `flang` on Windows.
 The four sections below group the rows by what the **artifact** is — a native executable, a
 WebAssembly module, a bytecode file, or nothing at all. This section groups them by what happens
 to get there, because that is what decides whether a cell's number contains compilation.
+
+**The engine, and why it is the axis that matters.** Each of the seven shapes below is a
+different *kind* of execution; the **engine** is the specific component doing it. `exec/cells.json`
+carries an `engine` id on every toolchain entry and an `engines` table naming what each one is,
+and `exec/harness.py` groups its tables by it. 159 toolchains resolve to 67 engines, and the
+counts are not spread evenly:
+
+| Engine | Rows | The rows |
+|---|---|---|
+| GCC | 16 | `ada` (gnat), `fortran` (gfortran), `c` (gcc), `cpp` (g++), `cobol`, `vala`, `nim`, `mercury`, `ats`, `eiffel`, `seed7`, `v`, `nelua`, `python` (cython), `python` (nuitka), `haxe` (hxcpp) |
+| LLVM | 19 | `c`/`cpp` (clang), `rust`, `swift`, `zig`, `d` (ldc2), `fortran` (flang), `go` (tinygo), `crystal`, `odin`, `c3`, `beef`, `pony`, `lean4`, `kotlin` (native), `scala` (native), `terra`, `objectivec`, `qb64` |
+| wasmtime (Cranelift) | 11 | the eleven `wasm32-wasip1` rows |
+| V8 | 9 | eight of those same modules under node's WASI shim, plus `scala-js` and `clojurescript` |
+| wasmtime (Winch) | 8 | the same eight compiled modules under wasmtime's baseline compiler |
+| WasmEdge | 7 | the same modules under a third runtime |
+| WAMR (iwasm) | 7 | the same modules under a fourth runtime |
+| HotSpot C2 | 5 | `java` (openjdk), `kotlin` (jvm), `scala` (jvm), `clojure`, `groovy` |
+| CoreCLR | 5 | `csharp`, `fsharp`, `vbnet`, `boo`, `componentpascal` |
+| MSVC | 4 | `c`/`cpp` (msvc), `commonlisp` (ecl), `modula3` |
+| BEAM | 4 | `erlang` (escript), `erlang` (erlc), `elixir`, `gleam` — one VM, three front ends, and a compile-once/compile-every-run pair inside it |
+| 52 more | 1-3 each | engines only one or two rows here use |
+
+**Sixteen rows share one code generator.** Ada, Fortran, COBOL, Vala, Nim, Mercury, ATS, Eiffel,
+Seed7, V, Nelua, Cython, Nuitka, hxcpp and the two C-family rows all hand their output to GCC;
+the only thing the cell measures about "the language" is what the front end emitted before gcc
+started. That is not a defect in the matrix — the front end's output quality is a real property
+of the language — but it does mean a reader comparing `ada` against `c` is comparing two GCC
+front ends, not two compilers, and a reader comparing `ada` against `rust` is comparing GCC
+against LLVM with each language's front end folded in.
+
+**Four rows share the BEAM**, and they are the axis's cleanest illustration after GCC: `erlang`
+and `elixir` are two languages on one VM, `gleam` is a third whose output is Erlang *source*
+that `erlc` then compiles, and `erlang`'s two toolchains differ only in when the compile
+happens. All four land in the same `native-jit` kind, so their numbers are comparable, and the
+differences between them are exactly what the front end and the compile timing cost.
+
+**The four WebAssembly runtimes are the other clean group.** Eight modules are plain
+`wasm32-wasip1`, so the same bytes run under wasmtime's two code generators, WasmEdge, WAMR and
+node's V8 — five engines for one artifact, with the front end held perfectly fixed. That is the
+strongest form of the comparison this axis enables, and it is why `cranelift`/`winch` are two
+engines rather than one: the compiler is the variable.
+
+**`kind` is the coarse version of the same idea** and is what makes two cells comparable at all:
+`native-aot`, `native-jit`, `wasm-runtime`, `bytecode-vm`, `interpreter`, `assembler`. Two rows
+with the same kind measure the same *sort* of thing; two rows with different kinds do not, which
+is the point made under [What this means for reading a row](#what-this-means-for-reading-a-row)
+below.
 
 **Why it matters.** The self-timing contract in `RUN.md` starts the clock at the first statement
 of the program's own body. A row that compiles ahead of time has already finished parsing, type
@@ -272,7 +347,7 @@ the program alone.
 | `pony` | type check → LLVM IR → object → link |
 | `scala-native` | scalac → NIR → LLVM IR → clang → link |
 | `standardml` | Poly/ML compiles to native code with its own code generator, then gcc links its `.obj` with `polystub.obj` |
-| `modula2`, `modula3`, `oberon07` | small self-contained compilers, direct to object |
+| `modula2`, `modula3`, `oberon07`, `componentpascal` | small self-contained compilers, direct to object |
 | `basic` | `fbc` builds the executable in one command, `fbc -O 2 -x prog.exe <task>.bas` — no separate link step in the row's build line |
 | `assembly` (nasm, masm, fasm) | assemble to object → link; see shape 5 |
 
@@ -282,21 +357,23 @@ The toolchain translates the language to C or C++, then hands that to a C compil
 compilers are involved, and the C compiler is usually the one doing the optimisation, which is
 why several of these rows need an explicit flag to pass optimisation through.
 
-Eight rows that used to be here have been removed: `vala`, `nelua`, `seed7`, `v`, `eiffel`,
-`python` (cython), `mercury` and `ats` all ended in **gcc** or **cl.exe**, the same compiler the
-`c` rows already measure, so the cell reported the backend's output rather than the language's.
-**`nim` and `cobol` are back**: both were removed with that batch and have since been restored,
-so the table below carries them again. `README.md` carries the full rule and the list.
-
 | Rows | Stages |
 |---|---|
+| `vala` | valac → C → gcc (`-X -O2` is what forwards `-O2`) |
+| `nim` | nim → C → gcc or clang |
+| `nelua` | nelua → C → gcc |
 | `lean4` | `lean -c` → C → `leanc` (Lean's own clang) |
 | `haxe` (hxcpp) | Haxe → C++ → hxcpp → g++ |
 | `qb64` | QB64 → C++ → the C++ compiler shipped inside the QB64 tree |
 | `commonlisp` (ecl) | ECL → C → cl.exe (pointed at the MSVC tree by `c::*cc*`) |
-| `nim` | nim → C → gcc or clang |
+| `seed7` | `s7c` → C → gcc |
+| `mercury` | `mmc` → C → gcc |
+| `ats` | `patscc` → C → gcc |
+| `v` | V → C → gcc (`-cc gcc` names the backend) |
+| `python` (cython) | Cython → C → gcc, with CPython's headers |
 | `python` (nuitka) | Nuitka → C → the C compiler, plus the CPython runtime it links in |
 | `cobol` | `cobc -x` generates C, then the C compiler builds it |
+| `eiffel` | `ec -finalize -c_compile` translates Eiffel to C, then compiles the C |
 | `euphoria` | interpreted; no translation step (see shape 6) |
 
 ### 3. Source to bytecode, then a virtual machine
@@ -310,11 +387,17 @@ language. Where a row has several VMs, that is the point of the row.
 | `java` (openjdk, openj9) | javac → `.class` → HotSpot C2 or OpenJ9 JIT at run time |
 | `java` (graalvm jit) | javac → `.class` → GraalVM's JIT |
 | `java` (graalvm native-image) | javac → `.class` → ahead-of-time native image |
-| `kotlin` (native) | kotlinc-native → LLVM IR → object → link |
+| `kotlin` | kotlinc → JVM bytecode (jvm row) or native (native row) |
 | `csharp` | Roslyn → IL → CoreCLR JIT, NativeAOT, or Mono |
+| `fsharp`, `vbnet`, `boo` | their compiler → IL → the same runtime |
 | `scala` | scalac → JVM bytecode |
 | `clojure` | clojure.main → JVM bytecode on every run |
+| `groovy` | Groovy → JVM bytecode |
+| `scala-js` | scalac → **JavaScript** → V8 — Scala's third backend beside the JVM and Scala Native |
+| `clojurescript` | ClojureScript → **JavaScript** → V8 — Clojure's fourth runtime, after the JVM, a GraalVM native image and (via `babashka`) SCI |
 | `elixir` | Elixir → BEAM bytecode |
+| `erlang` (erlc) | erlc → `.beam` once, then the BEAM runs it |
+| `gleam` | `gleam build` → **Erlang source** → `erlc` → BEAM — a two-hop front end, but the same VM |
 | `hashlink` | Haxe → `.hl` bytecode → the HashLink VM |
 | `unicon` | icont → icode, appended to a self-contained `.exe` |
 | `janet` | Janet → bytecode on every run |
@@ -333,6 +416,7 @@ language. Where a row has several VMs, that is the point of the row.
 | `factor` | Factor compiles the script and runs it on every invocation |
 | `scheme` | Chez compiles the script on every run |
 | `pharo`, `dolphin` | a prebuilt image, compiled ahead of time by someone else |
+| `componentpascal` (gpcp) | → .NET IL |
 | `actionscript` | `amxmlc` compiles AS3 to SWF bytecode, then `adt` packages it into a standalone exe with the captive AIR runtime beside it |
 
 ### 4. Source to WebAssembly, then a runtime
@@ -398,7 +482,7 @@ exists to show what it costs.
 | `php` (`+ jit`) | opcode JIT |
 | `ruby` (`+ yjit`) | method JIT |
 | `javascript` (bun, deno, spidermonkey, quickjs) | tiered JIT, except QuickJS which is bytecode only |
-| `csharp` (coreclr), `java` (openjdk, openj9, graalvm jit), `scala`, `clojure` | the VM JITs on first execution |
+| `csharp` (coreclr), `java` (openjdk, openj9, graalvm jit), `fsharp`, `vbnet`, `scala`, `clojure`, `groovy` | the VM JITs on first execution |
 
 ### What this means for reading a row
 
@@ -421,8 +505,10 @@ Three consequences are worth stating, because they are easy to get wrong:
 ### Compiled to native code — nothing needed at run time
 
 The output is a native executable in every row below, and for most of them that executable needs
-nothing but the operating system. Three rows are exceptions and say so in their own entry:
-COBOL's imports `libcob-4.dll`, Objective-C's imports `libobjc-4.6.dll`, `gnustep-base-1_31.dll` and
+nothing but the operating system. Five rows are exceptions and say so in their own entry: Vala's
+binary imports `libglib-2.0-0.dll` whenever the code touches GLib, COBOL's imports `libcob-4.dll`,
+Cython's imports `python3xx.dll` because CPython on Windows ships no static library to link
+against, Objective-C's imports `libobjc-4.6.dll`, `gnustep-base-1_31.dll` and
 `libwinpthread-1.dll` from MSYS2, and
 Standard ML's needs `PolyLib.dll` beside it — in that last case the exported `.obj`
 is a whole heap image and the DLL is the runtime that loads it, so the pair has to travel
@@ -433,6 +519,7 @@ together.
 | C | gcc | 9 (C11 + pthreads) | distro package | `gcc -O2 -pthread -o prog <task>.c` |
 | C | clang | 10 | releases.llvm.org | `clang -O2 -pthread -o prog <task>.c` |
 | C | msvc | VS 2019 | Visual Studio Build Tools, C++ workload | `cl /O2 /Fe:prog <task>.c`. Works without admin: `--layout` the bootstrapper, then reassemble the packages (see below). |
+| C | icx (oneAPI) | DPC++ 7.2.0 (clang 24, nightly) | github.com/intel/llvm nightly `sycl_windows.tar.gz` (568 MB) extracted into `tools/icx/` — no installer and no admin. Intel's downstream LLVM fork; `icx` is its `clang.exe`. It targets `x86_64-pc-windows-msvc`, so it needs the MSVC environment (`tools/msvc_env.py`) for headers and libraries, and it links with `link.exe`. | `clang.exe -O2 -o prog.exe <task>.c`, run with the MSVC `PATH`/`INCLUDE`/`LIB` set. A different build and optimisation pipeline from upstream clang, which is the point of the row. |
 | C | tcc | 0.9.27 | bellard.org/tcc | `tcc -o prog <task>.c` |
 | C++ | g++ | 9 | distro package | `g++ -O2 -pthread -o prog <task>.cpp` |
 | C++ | clang++ | 10 | releases.llvm.org | `clang++ -O2 -pthread -o prog <task>.cpp` |
@@ -447,15 +534,15 @@ together.
 | Fortran | gfortran | 9 | distro package | `gfortran -O3 -o prog <task>.f90`. Task 03 also compiles `03_func_sum_add_one.f90`; task 11 needs `-fopenmp`. |
 | Fortran | flang | LLVM 17 | MSYS2 `ucrt64` on Windows, distro or LLVM release elsewhere | `flang -O3 -o prog <task>.f90` (older LLVM: `flang-new`). Same two extras as gfortran: the second file for task 03 and `-fopenmp` for task 11. The official LLVM Windows tarball has no `flang.exe`; MSYS2's `mingw-w64-ucrt-x86_64-flang` plus `-flang-rt` is the working Windows route, and it pulls in the runtime libraries as well. Task 11 additionally needs `mingw-w64-ucrt-x86_64-llvm-openmp`: without it the link stops with `cannot find -lomp`, which is the only task-11 gap — flang installs the rest of its runtime with the compiler package. |
 | Ada | gnat | 12 | alire.ada.dev | `gnatmake -O3 t<task>.adb` |
-| Nim | nim | 2.0 (2.2.12 measured) | nim-lang.org, `nim-<v>_x64.zip` extracted — no installer and no admin | `nim c -d:release -o:prog <task>.nim`. **The source file name matters**: Nim rejects a module name that is not a valid identifier, and the sources are `_01_branches.nim` … `_15_file_write.nim`, so each is copied to `t<task>.nim` (no leading underscore) before the build — `Error: invalid module name: '_01_branches'` otherwise. `-d:release` is the optimisation; without it Nim emits a debug build with the runtime checks on. The C backend needs `gcc` on `PATH`. |
-| COBOL | gnucobol | 3.2 | MSYS2 `ucrt64`, or gnucobol.sourceforge.io | `cobc -x -O2 -o prog <task>.cob`. `PIC 9(18) COMP-5` is the exact 64-bit picture, and COMP-5 keeps the full binary range regardless of the PICTURE, so limb arithmetic fits in one COMPUTE. Outside an MSYS2 shell, `cobc` needs `COB_CONFIG_DIR` and `COB_COPY_DIR` set to the package's `share/gnucobol/{config,copy}` or it stops with `configuration error: /ucrt64/share/gnucobol/config/default.conf`. Task 11 needs `CBL_GC_FORK`, which GnuCOBOL documents as unavailable on Windows outside Cygwin: it returns -1 there and the program falls back to four in-process quarters, so the answer is right but the row is single-core on Windows and four-way on Linux. The compiled exe also needs the MSYS2 `ucrt64/bin` on `PATH` to find its runtime DLLs, or it exits 0 with no output. Two fixed-format lines — the `COMPUTE CS0`/`CS1` clock conversions — ran past column 72, which fixed-format silently truncates; they are wrapped. Task 10 had a third defect worth recording: its six `CALL 'BIGMUL' USING ... <literal>` sites passed the multiplier as a numeric literal, which GnuCOBOL materialises as a DISPLAY-format temporary, while BIGMUL's `LINKAGE` declares it `COMP-5` — so the callee read the literal's bytes as a binary value (`5 * 4` came back as `24435220`). The spigot state diverged, grew without bound and the program ran for 80 minutes before dying on an out-of-range limb access; moving each literal into the `COMP-5` variable `S` first makes the row finish in 60 s with the right answer. Three more tasks needed a wider output `PIC`: 07 and 15 printed a leading zero (`9(7)`/`9(9)` for 6- and 8-digit answers) and 14 truncated (2389704704 needs 10 digits, not 9). |
 | Pascal | fpc | 3.2.2 | freepascal.org | `fpc -O3 -oprogram <task>.pas`. On Windows x64 there is no native compiler: install the i386-win32 native compiler plus the `cross.x86_64-win64` add-on, then build with `-Px86_64`. |
+| Nim | nim | 2.0 (2.2.12 measured) | nim-lang.org, `nim-<v>_x64.zip` extracted — no installer and no admin | `nim c -d:release -o:prog <task>.nim`. **The source file name matters**: Nim rejects a module name that is not a valid identifier, and the sources are `_01_branches.nim` … `_15_file_write.nim`, so each is copied to `t<task>.nim` (no leading underscore) before the build — `Error: invalid module name: '_01_branches'` otherwise. `-d:release` is the optimisation; without it Nim emits a debug build with the runtime checks on. The C backend needs `gcc` on `PATH`. |
 | Odin | odin | dev-2026-09-nightly:a2fb372 | odin-lang.org | `odin build <task>.odin -file -o:speed -out:prog.exe`. Two additions to the bare `odin build` form are required by this compiler: **`-file`**, without which it stops with *takes a package/directory as its first argument*, and an explicit **`.exe` extension on `-out`**, without which it stops with *Output path ... must have an appropriate extension*. Odin also links through MSVC, so it needs the hand-extracted tree's environment (`tools/msvc_env.py`) plus `WindowsSdkDir`, `WindowsSDKVersion=10.0.26100.0` and `VCToolsInstallDir` set, or it cannot find the SDK. |
 | Kotlin | kotlin/native | 1.9 (2.4.20 measured) | kotlinlang.org, `kotlin-native-prebuilt-windows-x86_64-<v>.zip` (209 MB) extracted — no installer and no admin. The first build downloads its LLVM and libffi dependencies (about 1.4 GB) into `%USERPROFILE%\.konan`, so the first cell takes minutes | `kotlinc-native -opt -o prog <task>.kt`, run from `sources/kotlin-native/`, which holds all fifteen tasks. `-opt` is the optimiser. Tasks 11, 14 and 15 differ from the jvm row's files: Native has no `java.lang` and no `java.io`, so task 11 uses the stdlib `Worker` and the two file tasks use `platform.posix` (`fopen`/`fread`/`fwrite`) through `kotlinx.cinterop`. The other twelve are byte-identical to `sources/kotlin/`'s. The launcher wants a JDK via `JAVA_HOME`; see the caveat below. |
 | Java | graalvm native-image | 21 | graalvm.org | `native-image -O2 _<task>`, run from `sources/java-graalvm-native/`, which holds the same fifteen files as the `openjdk` row. Emits a standalone native executable, so it belongs here and not with the bytecode rows. **Task 03 adds `-H:NeverInline=_03_func_sum.addOne`**: the JVM has no source-level no-inline attribute, and with a constant bound and a constant start native-image constant-folds the whole hundred-million-iteration loop at build time, so the cell measured nothing (TIME_MS 0.0001, against 31 ms for the same source built `-O0`). `-H:NeverInline` is native-image's own no-inline lever and the counterpart of the C row's `__attribute__((noinline))`; with it the cell measures a real call, 75 ms. |
 | C# | nativeaot | .NET 8 | dotnet.microsoft.com | `dotnet publish -c Release -p:PublishAot=true`. Emits a native executable. |
 | Dart | aot | 3.3 | dart.dev | `dart compile exe -o prog <task>.dart`. Emits a native executable. |
 | Python | nuitka | 4.0 | nuitka.net | `nuitka --standalone <task>.py`. Compiles to C and then to a binary. |
+| Python | cython | 3.3 (3.3.0 measured) | pypi.org/project/Cython | Two steps: `cython --embed -3 --module-name _<task> -o _<task>.c <task>.py`, then `gcc -O2 -DMS_WIN64 -municode -I <python>/include -o prog.exe _<task>.c -L <python>/libs -lpython3xx`. `--embed` makes Cython emit a `main` that starts the interpreter and runs the module, so the source file is used **unchanged** — the same fifteen files as the `cpython` row, held in `sources/python-cython/`. Three flags are load-bearing on Windows. `--module-name` is required because every file's name starts with a digit, which is not a legal Python module name (`'01_branches' is not a valid module name`). `-DMS_WIN64` is required because CPython's hand-maintained `pyconfig.h` only defines `MS_WIN64` inside an `#ifdef _MSC_VER` block, so under MinGW `SIZEOF_VOID_P` is 4 and Cython's own `sizeof(void*)` assertion fails to compile. `-municode` is required because `--embed` generates a `wmain`, not a `main`. Cython **3.3 or newer** is the floor, because tasks 02 and 11 use `match` and PEP-634 support only landed there. |
 | Assembly | nasm | 2.15 | nasm.us | `nasm -f win64 <task>.asm -o prog.obj`, then `link /nologo /subsystem:console /entry:main /out:prog.exe prog.obj kernel32.lib`, run from `sources/assembly/`. A Windows x64 console program with no C runtime: the only imports are from `kernel32.dll`. Task 11 issues `CreateThread` and `WaitForSingleObject` itself, since there is no thread library to call. |
 | Assembly | masm | VS 2019 (`ml64.exe`) | the MSVC tree the `msvc` row already installs — nothing extra | `ml64.exe /nologo /c /Fo prog.obj <task>.asm`, then `link /nologo /subsystem:console /entry:main /out:prog.exe prog.obj kernel32.lib`, run from `sources/masm/`. Same shape as the `nasm` row — freestanding, `kernel32.dll` only — in MASM syntax instead of NASM's, so the two rows differ in assembler and syntax and in nothing else. Task 11 issues `CreateThread` and `WaitForSingleObject` itself. One trap: `ml64.exe` reads an environment variable named `ML`, and `link.exe` reads `LINK`, as default command-line options — so naming a script's tool-path variables `ML`/`LINK` makes ml64 try to assemble its own executable and stop with `A2044`. Name them anything else (`ML64EXE`/`LINKEXE`). |
 | Assembly | fasm | 1.73.35 | flatassembler.net — `fasmw17335.zip` (1 MB). **The `fasmw` archive is the Windows one**: the plain `fasm17335.zip` download is the DOS build, whose `FASM.EXE` is a raw MZ image with no PE header, and Windows refuses it with "not compatible with the version of Windows". Extract `fasmw` and use its `FASM.EXE`, not the `FASMW.EXE` beside it — that one is the GUI IDE and blocks waiting for a window. | `fasm <task>.asm <out>.exe`, **run with `tools/fasm/INCLUDE` as the working directory**, because the standard includes (`win64a.inc`) are resolved relative to the current directory and FASM has no `-I` option. Third assembler syntax beside `nasm` and `masm`, and the same freestanding shape: `format PE64 console` + `include 'win64a.inc'` + an explicit `.idata` import list, `kernel32.dll` only. Two things are load-bearing. `format` must come **before** the include, or the linker emits a GUI-subsystem binary (subsystem 2) that prints nothing; and the `win64ax.inc` variant's `invoke` macro fails here with `undefined symbol`, so the imports are called directly — `call [WriteFile]`, with handles loaded by `mov ecx, -12` + `call [GetStdHandle]`. Task 11 issues `CreateThread` and `WaitForSingleObject` itself. |
@@ -463,15 +550,22 @@ together.
 | Objective-C | clang | 22 | MSYS2 `ucrt64` | `clang -fobjc-runtime=gnustep-2.2 -O2 -o prog <task>.m -lobjc -lgnustep-base`. The runtime flag is required; without it the link fails on `objc_autoreleasePoolPush` and `__objc_load`. `gcc-objc` 16.2.0 is an alternative front end, but the clang path is the one measured. **Two defects in this UCRT64 package set have to be worked around.** (1) GNU ld (binutils 2.47) cannot link tasks 06, 10, 11, 14 and 15: clang emits every typed selector as a COMDAT section all named `.objcrt$SEL$m`, bfd collapses them, and the link stops with `undefined reference to .objc_selector_<name>_<types>`; adding **`-fuse-ld=lld`** (ld.lld ships in the same clang package) fixes all five. (2) `gnustep-base-1_31.dll` fails to load with `STATUS_ENTRYPOINT_NOT_FOUND` (0xC0000139) and no output, because the tree ships `libstdc++-6.dll` from libstdc++-16.2.0-4 while gnustep-base was built against gcc-libs-16.1.0-3 and imports five `std::__format` symbols that 16.2.0-4 does not export. The fix is to vendor `libstdc++-6.dll` from gcc-libs-16.1.0-3 beside the executable, where the Windows loader finds it before `ucrt64\bin`. Only the tasks that actually pull in Foundation are affected, which masks the failure. |
 | Modula-2 | adw | 1.6.879 | modula2.org/adwm2, `ADWM2Setup.exe` (18 MB) — an **Inno Setup** archive, unpacked with `innoextract -e -d tools/adwm2/` rather than installed: no admin, no registry. The tree's `app/` is the install root, with the two ASCII-compiler binaries and the runtime libraries in `ASCII/` | Two steps, not one. `m2amd64.exe /sym:.;<ADW>\ASCII\winamd64sym <task>.mod` compiles, then `sblink.exe /machine:amd64 /out:prog.exe <module>.obj <ADW>\ASCII\rtl-win-amd64.lib <ADW>\ASCII\win64api.lib` links. Four things are load-bearing. **The `.` in `/sym:` is required**: the compiler does not search the working directory for symbol files, so a module whose definition module was compiled in the same directory fails with `Could not open SYM file. 2 Func`. `/machine:amd64` is required because the default linker machine type rejects the 64-bit object with `Incorrect Machine Type`. The compiler writes the `.obj` **beside the source file**, named after the `MODULE` rather than the file — and **truncated to the length of the source file's stem**, so `10_pi.mod`'s five characters turn `MODULE Task10` into `Task1.obj`, which is why that file's module is named `T10`. Copy the source into a scratch directory first or the repo fills up with objects. **There is no `<module>.lib` to link**: a program module produces only an `.obj`; the runtime and API libraries are the whole link line. Task 03 compiles `Func.def` to `Func.sym`, then `Func.mod` to `Func.obj`, then itself, and links `Func.obj` as well, because its `AddOne` has to live in a separate module. |
 | Modula-3 | cm3 | 5.10.0 | github.com/modula3/cm3 — `cm3-all-AMD64_NT-<v>.zip` (79 MB) extracted, no installer and no admin. **Not the newest release**: `d5.12.0` and `d5.11.x` ship only `cm3-boot-*` and `cm3-dist-*` archives, which are the source and bootstrap trees; `cm3-all-…-VC2019-20210221` is the last prebuilt `AMD64_NT` binary distribution | `cm3 -build -O` in a directory holding `Main.m3` and an `m3makefile`, with `tools/cm3/bin` on `PATH` and `INSTALL_ROOT` pointing at the tree. Needs the MSVC environment (`tools/msvc_env.py`) for its C backend, and writes the binary to `AMD64_NT\prog.exe`. **Three runtime DLLs have to sit beside the produced exe** or it dies with `rc 53` (`STATUS_DLL_NOT_FOUND`) before `main`: `m3.dll` and `m3core.dll` for every task, plus `arithmetic.dll` for task 10, whose `m3makefile` imports `arithmetic` for `BigInteger`. Task 10's source also has to spell the timing constant as a `LONGREAL` literal — `1000.0` alone is an `illegal operand(s) for '*'` against `Time.Now`'s `LONGREAL`, so it is `1000.0D0` — and the text writer is `Wr.PutText`, not `Wr.PutString`, whose `READONLY ARRAY OF CHAR` formal rejects a `TEXT` actual. |
+| COBOL | gnucobol | 3.2 | MSYS2 `ucrt64`, or gnucobol.sourceforge.io | `cobc -x -O2 -o prog <task>.cob`. `PIC 9(18) COMP-5` is the exact 64-bit picture, and COMP-5 keeps the full binary range regardless of the PICTURE, so limb arithmetic fits in one COMPUTE. Outside an MSYS2 shell, `cobc` needs `COB_CONFIG_DIR` and `COB_COPY_DIR` set to the package's `share/gnucobol/{config,copy}` or it stops with `configuration error: /ucrt64/share/gnucobol/config/default.conf`. Task 11 needs `CBL_GC_FORK`, which GnuCOBOL documents as unavailable on Windows outside Cygwin: it returns -1 there and the program falls back to four in-process quarters, so the answer is right but the row is single-core on Windows and four-way on Linux. The compiled exe also needs the MSYS2 `ucrt64/bin` on `PATH` to find its runtime DLLs, or it exits 0 with no output. Two fixed-format lines — the `COMPUTE CS0`/`CS1` clock conversions — ran past column 72, which fixed-format silently truncates; they are wrapped. Task 10 had a third defect worth recording: its six `CALL 'BIGMUL' USING ... <literal>` sites passed the multiplier as a numeric literal, which GnuCOBOL materialises as a DISPLAY-format temporary, while BIGMUL's `LINKAGE` declares it `COMP-5` — so the callee read the literal's bytes as a binary value (`5 * 4` came back as `24435220`). The spigot state diverged, grew without bound and the program ran for 80 minutes before dying on an out-of-range limb access; moving each literal into the `COMP-5` variable `S` first makes the row finish in 60 s with the right answer. Three more tasks needed a wider output `PIC`: 07 and 15 printed a leading zero (`9(7)`/`9(9)` for 6- and 8-digit answers) and 14 truncated (2389704704 needs 10 digits, not 9). |
 | BASIC | freebasic | 1.10.1 | freebasic.net | `fbc -O 2 -x prog.exe <task>.bas`. `-x` names the output, so the source file name must come after it; `-x <task>.bas` alone would write the executable over the source. `LONGINT` is the 64-bit type; `THREADCREATE` gives real threads for task 11. Task 03 also compiles `03_func_sum_add_one.bas` on the same command line. |
 | BASIC | qb64 | QB64-PE 4.7.0 | github.com/QB64-Phoenix-Edition/QB64pe releases, `qb64pe_win-x64-4.7.0-GLFW.7z` (104 MB), extracted into `tools/qb64/` — no installer and no admin. The compiler **translates QB64 to C++ and shells out to a C++ compiler**, which the release zip carries in `internal/`, so the first build is slow (about 6 s per task) and the extracted tree is 814 MB. | `qb64pe.exe -x <task>.bas -o prog.exe`, which compiles without running. QB64-PE is not FreeBASIC: `DECLARE LIBRARY` fails with `LIBRARY not found` and the working form is `DECLARE DYNAMIC LIBRARY "kernel32"`. `PRINT` pads positive numbers, so the answer goes out through `LTRIM$(STR$(x))`. `TIMER` is the clock. `_INTEGER64` is needed for task 02's 7500000075000000, and task 10 hand-rolls base-1e9 limbs in `_INTEGER64` arrays because the language has no bignums. No threads: task 11 is four child processes. Binary file I/O is `OPEN ... FOR BINARY` with `GET`/`PUT`. |
+| V | v | 0.5.2 | vlang.io | `v -prod -cc x86_64-w64-mingw32-gcc -o prog <task>.v`. V compiles through a C backend, so it needs a C compiler; `-cc` picks it. Task 03 keeps `add_one` in the same file with `@[noinline]`, V's own no-inline facility, which the generated C carries over as `__attribute__((noinline))`. |
+| ATS | ats | 0.4.2 | ats-lang.org, or SourceForge `ats2-lang` | Built from source under Cygwin: `./configure && make -f Makefile_dist all`. GCC 14 rejects the 2014-era bootstrap C, so `src/CBOOT/Makefile` needs `CFLAGS += -fpermissive -Wno-implicit-function-declaration -Wno-int-conversion -Wno-implicit-int` first. That is enough to get `patsopt` and `patscc`; `make all` then fails on `utils/myatscc`, which is a build utility and not needed. `patscc -DATS_MEMALLOC_LIBC -O2 -o prog <task>.dats`. Task 03 needs `ATS_DYNLOADFLAG 0` on the helper unit, or the separate compilation gets optimised away. | The shipped sources needed a syntax pass against 0.4.2, which is now done: all fifteen build and run. Three things were wrong. (1) `val () = $extfcall (void, ...)` is rejected, so the timing-report calls are now bare statements. (2) Two calls sat in the `let` declaration block of tasks 07 and 09, which only takes declarations; they moved into the `in` body. (3) Task 10's bignum kept its counts in dependent-`int` record fields, which the constraint solver widened to `size_t` and could not reconcile — the fields and the index variables are now `llint`, with `$UN.cast{int}` at the `ptr0_get_at_int`/`ptr0_set_at_int` index boundary, and the `if a.n > b.n then a.n else b.n` max is a `var` overwritten conditionally, because an if-expression over dependent fields poisoned every arithmetic use of its result. Verified 15/15 with the expected outputs. | c3c | 0.8.4 | github.com/c3lang/c3c releases | `c3c compile -O2 --wincrt=dynamic --win-sdk <sdk> -L <vc-lib> -L <ucrt-lib> -L <um-lib> -o prog <task>.c3`. `-O0` is the default and `-O2` is the first level that turns off bounds and null checks, so `-O2` is the flag the task wants; `int` is 32 bits, so the 100-million counters are `i64` and task 02's total does not fit in `int`. On Windows c3c links through `lld-link` and wants the MSVC SDK: it will offer to **download** one if it cannot find one, which needs no admin but is a large fetch. The hand-extracted tree under `tools/msvc` works with `--win-sdk "…/Windows Kits/10"` plus one `-L` per library directory (the MSVC `lib\x64`, the SDK `ucrt\x64` and the SDK `um\x64`); `--win-vs-dirs` does **not** accept that tree. `-o prog` already yields `prog.exe` — passing `-o prog.exe` produces `prog.exe.exe`. Task 11 uses the standard library's `std::thread` module (`Thread.create` / `Thread.join`); task 10 hand-writes the limbs, because the standard library's `std::math::bigint` is 8192 bits (about 2466 decimal digits) and 10000 digits do not fit. |
+| Vala | valac | 0.56 | MSYS2 `ucrt64` on Windows, distro package elsewhere | `valac -X -O2 -o prog <task>.vala`, run from the MSYS2 UCRT64 shell. `valac` translates to C and drives `gcc`; `-X -O2` is what hands `-O2` to that gcc, and without it the generated C is compiled unoptimised. The build needs `valac` plus GLib's development files (`pkg-config` resolves them). The generated binary imports `libglib-2.0-0.dll` **whenever the Vala code touches GLib**, which is most of these tasks, so those executables need the UCRT64 `bin` directory on `PATH` at run time; the few tasks that call no GLib function at all link nothing extra and run with a bare system `PATH`. Each file's header says which case it is. Static linking (`-X -static`) fails and is not used. Task 03 also compiles `03_func_sum_add_one.vala` on the same command line, because Vala has no no-inline attribute. Task 11 uses `GLib.Thread<int64?>` with a lambda, joined in spawn order; task 10 hand-writes the base-10^9 limbs, since GLib has no big integers. |
 | Oberon-07 | akron | 1.69 | github.com/AntKrotov/oberon-07-compiler | The repository ships a ready 64-bit Windows `Compiler.exe`, no build needed. `Compiler.exe <task>.ob07 win64con -out prog.exe`, run from the directory holding the source with `lib\Windows\` beside it — the compiler resolves BOTH the file name and its import tree against the process working directory, so a build script has to copy `lib\Windows` into each task directory or it stops with `file ...\lib\Windows\RTL.ob07 not found`. It has **no optimisation switch**: its x86-64 code generator has no unoptimised mode, so the plain build line is the whole story, and `-nochk a` is not used because turning off the range and type checks changes what a program means. `INTEGER` is 64 bits. No task 11 problem: the shipped library has no thread module, but the compiler's own `[convention, "dll", "proc"]` foreign declaration imports `CreateThread` and `WaitForSingleObject` from kernel32 directly, which is how its `Out`, `File` and `WINAPI` modules are built — the same hand-rolled route the Assembly row takes with `clone` and `futex`. The start routine must be declared `PROCEDURE [windows]` with a matching `PROCEDURE [windows] (p: INTEGER): INTEGER` type, or the ABI is wrong and the thread never returns. |
 | Beef | BeefBuild | 0.43.5 | beeflang.org/setup, `BeefSetup_0_43_5.exe` (259 MB) extracted with 7-Zip, not installed — no admin | `tools/beef/bin/BeefBuild.exe -proddir=sources/beef/<task> -config=Release -platform=Win64`, then `sources/beef/<task>/out/prog.exe`. **`-config=Release` is mandatory**: Beef's Windows Debug toolset is Microsoft's and stops without Visual Studio, while Release links with the bundled `lld-link.exe`. Every project wrapper also sets `CLibType = "SystemMSVCRT"`, because the Release default asks for MSVC's static CRT. `corlib` is recompiled once per project on every build, so a task takes 11-23 s. |
 | Haxe | hxcpp | 4.3 | haxe.org win64 zip, plus `neko` for `haxelib` and a 64-bit MinGW `g++` | `haxe -cp sources/haxe -main T01_branches -cpp temp/haxe/01_branches -D mingw -D MINGW_ROOT=<mingw root> -D no_shared_libs`, then `<outdir>/T01_branches.exe`. `haxe -cpp` writes C++ and runs `haxelib run hxcpp`, which drives `g++` and `windres`; `-D no_shared_libs` is what makes the link static. `MINGW_ROOT` is not optional — hxcpp guesses `c:/MinGW` and otherwise stops with `Could not guess MINGW_ROOT`. |
 | JavaScript | spidermonkey | C159.0a1 | archive.mozilla.org — the official Firefox nightly `jsshell-win64.zip` (18 MB), extracted into `tools/spidermonkey/`; no installer and no admin. It is a **shell**, not Node, so `require` and `worker_threads` do not exist. | **No build step**: `tools/spidermonkey/js.exe <task>.js`. `print()` is the output call; there is no `console.log` guarantee. Tasks 14 and 15 need `data.bin` in the working directory. |
 | Haxe | hashlink | 4.3 | haxe.org win64 zip for the compiler, plus the HashLink VM — `hashlink-1.16.0-win64.zip` extracted into `tools/hashlink/` (the `hl.exe` runtime and its `*.hdll` natives). No installer and no admin. | Two steps, unlike the `hxcpp` row: `haxe -cp sources/hashlink -main T<NN>_<name> -hl <out>.hl`, then `hl <out>.hl`. `-hl` emits bytecode for the VM instead of C++, so there is no C toolchain and no hxcpp in the path. The measured run is the `hl` one; both binaries have to be on `PATH`. |
+| Eiffel | eiffelstudio | 25.12 | ftp.eiffel.com/pub/download, win64 `.7z` (139 MB) extracted — no admin, no activation | `ec -batch -finalize -c_compile -config stupidspeed.ecf -target tNN`, run from `sources/eiffel/`; the executable is `EIFGENs/<tNN>/F_code/prog.exe`. `-finalize` is the optimisation — EiffelStudio has no `-O` level, its knob is the compilation mode (`-melt`, `-freeze`, `-finalize`). The delivery ships its own MinGW gcc 4.4.5, so no MSVC is needed. One ECF carries all 15 targets, and only task 11 sets the concurrency capability to `thread`. Four environment variables are needed: `ISE_EIFFEL` and `ISE_LIBRARY` both point at the tree root (`ISE_LIBRARY` must not be the `library` subdirectory, because the ECF refers to `$ISE_LIBRARY\library\base\base.ecf`), `ISE_PLATFORM=win64`, and **`ISE_C_COMPILER=mingw`** — plain `gcc` leaves the compiler path empty and ec stops with `Cannot start "".`; `mingw` selects the gcc 4.4.5 the delivery ships under `gcc\win64\mingw\bin`. Two source/library fixes were needed for 25.12: the `TIME` class moved out of `base` into the separate `time` library, so the ECF adds `<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>` to every target, and its millisecond query is spelled **`milli_second`**, not `millisecond`. A target's `EIFGENs` directory must also be wiped before a rebuild: a partial one makes the generated E2 Makefile stop with `No rule to make target 'big_file_E2_c.obj'`. |
+| Seed7 | s7c | 2026-07-11 (interpreter 5.4.10, s7c 3.5.10) | source release `seed7_05_20260711.tgz` (4.5 MB), built with MSYS2's MSVCRT MinGW gcc: `cp mk_msys.mak makefile`, `make -f mk_msys.mak depend`, `make -f mk_msys.mak`, `make -f mk_msys.mak s7c` | `s7c -O2 prog.sd7` -> `prog.exe`. **There is no output-name flag**: s7c names the executable after the source file and writes it beside the source, so the build copies the task to `prog.sd7` in a scratch directory first. `-O2` is required — without `-O` s7c passes no optimisation flag to the C compiler it drives. |
 | Scala | native | 0.5 (0.5.12 measured) | scala-cli plus a C toolchain; on Windows the portable llvm-mingw zip, no admin | `scala-cli --power package <task>.scala --native -S 3.9.0 --native-version 0.5.12 --native-mode release-fast --native-clang <llvm-mingw>/bin/clang.exe --native-clangpp <llvm-mingw>/bin/clang++.exe --native-compile=-D_PID_T_ --native-linking=-static -o prog.exe`, then `prog.exe`, run from `sources/scala-native/`, which holds the same fifteen files as the `jvm` row. `--native-mode release-fast` is mandatory: the default `debug` mode compiles with `-O0` and measured 0.270 s against 0.074 s on task 02. |
 | Standard ML | Poly/ML | 5.9.1 | github.com/polyml/polyml releases, `PolyML5.9.1-64bit.msi` (3.03 MB), extracted with `msiexec /a <msi> TARGETDIR=<dir> /qn` — no admin. **v5.9.2 is newer but has no Windows asset at all**; 5.9.1 is the one. | Two steps, and they are the two `polyc` would have driven, because the MSI ships no `polyc` and no import library (see below): `PolyML.exe -q --error-exit --script build/<task>.ML` exports a whole heap image to `<task>.obj`, where the driver file contains `use "<task>.sml"; PolyML.export ("<task>", main);`, then `gcc -Wl,-u,WinMain -mconsole -o prog.exe <task>.obj polystub.obj -Ltools/polyml -lpolyml`. **`PolyLib.dll` must sit beside the produced executable** or it dies before `main` with `STATUS_DLL_NOT_FOUND` and no output. Task 03 loads `03_func_sum_add_one.sml` with `use` and sets `PolyML.Compiler.maxInlineSize := 0` **before** it — a separate file alone is not enough. Task 14 reads in 65536-byte chunks. |
+| Nelua | nelua | 0.2.0-dev (`a5845056`) | `git clone --depth 1 https://github.com/edubart/nelua-lang tools/nelua` (6 MB, no installer, no admin), then build the repository's own Lua interpreter once: `mingw32-make` in `tools/nelua/`, which compiles `src/onelua.c` with its `lfs`, `hasher` and `lpeglabel` companions into `nelua-lua.exe` (24 s). The host's own Lua cannot run the compiler: `runner.lua` requires those three C modules and there is no `luarocks` here to add them. | `cmd.exe /c tools/nelua/nelua.bat -r -o prog.exe <task>.nelua`, run from `sources/nelua/` — the launcher has to go through `cmd.exe`, and `require` resolves against the **working directory**, not the source file's, so the build must run from the row's directory (`-L sources/nelua` also works). `-r` (`--release`) is this compiler's `-O2` equivalent, literally `gcc ... -fwrapv -fno-strict-aliasing -O2 -DNDEBUG`, and it also turns on the compiler's `nochecks` pragma; `-M`/`--maximum-performance` is deliberately not used because it adds `-Ofast -march=native -flto=auto`. Task 03's helper is in its own file **and** marked `<noinline>`: Nelua concatenates every required module into one C translation unit, so a plain cross-file call is inlined and the loop is deleted. |
 
 | Pony | ponyc | 0.65.0 | `tools/ponyc` — a release build extracted, no installer and no admin. **0.65.0 is deliberate**: ponyc 0.66.0 changed how Pony does networking on Windows and the release now documents Windows 11 / Server 2022 (build 20348) as the minimum, because the networking layer uses an OS readiness API introduced there. This host is Windows 10 19045 and 0.65.0 predates the change, so it is the last release that runs here. | `ponyc` compiles a **directory** as one package and names the executable after that directory, and all fifteen files declare `Main`, so each task is built from a scratch directory named after it: `mkdir -p temp/pony/<task> && cp sources/pony/<task>.pony temp/pony/<task>/ && tools/ponyc/bin/ponyc.exe -o temp/pony/<task> temp/pony/<task>` produces `temp/pony/<task>/<task>.exe`. Every link prints `O sistema não pode encontrar o caminho especificado.` — harmless, the executable is still produced. |
 | Lean 4 | lean | 4.34.1 | github.com/leanprover/lean4 releases, `lean-4.34.1-windows.zip` (811 MB), extracted — no installer and no admin. Windows is a **Tier 1** platform for Lean, so the binary release is built and tested by Lean's own CI. | Two steps: `lean -c <task>.c <task>.lean` compiles the module to C, then `leanc -O2 -o prog <task>.c` links it. `leanc` drives the toolchain Lean ships with itself — the `clang`, `lld` and Lean runtime DLLs all live in `tools/lean4/bin/` — so **put `tools/lean4/bin` on `PATH` first**, or `leanc` cannot find its own linker. The interpreter (`lean --run <task>.lean`) also works and is what a quick check uses, but the compiled route is the measured one because the interpreter is far slower on the 100-million-iteration tasks. |
@@ -513,6 +607,33 @@ onto one thread. All three are correct-answer-no-speedup cells.
 | Zig | wasm32-wasip1 (zig) | 0.16 | ziglang.org/download, the same tree the native `zig` row installs | `zig build-exe <task>.zig -target wasm32-wasi -O ReleaseFast -femit-bin=prog.wasm`, run from `sources/zig-wasm/`. Zig 0.16 replaced `std.posix.write` and moved `std.fs` onto `std.Io`, so the entry point is `pub fn main(init: std.process.Init) !void` and output goes through `std.Io.File.stdout().writeStreamingAll(io, …)`; `sources/zig/` is the native sibling with the same shape. Task 11 needs `-fno-single-threaded -mcpu=generic+atomics+bulk_memory --shared-memory --import-memory --export-memory --max-memory=2147483648 -rdynamic`: **`-rdynamic` is load-bearing** — wasm-ld only exports symbols in the dynamic table, and without it wasmtime aborts with `failed to find a wasi-threads entry point function; expected an export with name: wasi_thread_start`. |
 | TinyGo | wasip1 (tinygo) | 0.42 | tinygo.org, `tinygo0.42.0.windows-amd64.zip` (178 MB), extracted into `tools/tinygo/` — no installer, no admin. Needs `go` on `PATH` for the same reason the native `tinygo` row does. The release zip ships **no `wasm-opt`**, and every wasm target runs it, so `tools/tinygo/bin/wasm-opt.exe` (binaryen) has to be dropped in beside `tinygo.exe`. | `tools/tinygo/bin/tinygo.exe build -target=wasip1 -o prog.wasm <task>.go`, run from `sources/tinygo-wasm/`. The sources are TinyGo-compatible Go written for this row, not the native `sources/go/` files. Task 11 is a `correct-answer-no-speedup` cell: Go's `wasip1` port has no thread support, so the four goroutines are multiplexed onto the single wasm thread. |
 
+**Four runtimes, one artifact.** Eight of the eleven modules are plain `wasm32-wasip1` and run
+unchanged under every runtime below, which makes them a controlled comparison of the runtime
+alone — same bytes, same answers, different execution engine:
+
+| Runtime | Install | Run line |
+|---|---|---|
+| wasmtime 46.0.3, Cranelift | the release zip under `tools/wasmtime46/` | `wasmtime run -C compiler=cranelift prog.wasm` |
+| wasmtime 46.0.3, Winch | the *same binary* — only the code generator changes | `wasmtime run -C compiler=winch prog.wasm` |
+| WasmEdge 0.18.0 | `WasmEdge-0.18.0-windows.zip` under `tools/wasmedge/` | `wasmedge --log-level off --run-mode=jit --dir .:. prog.wasm` |
+| WAMR 2.4.5 (`iwasm`) | `iwasm-2.4.5-x86_64-windows-2022.zip` under `tools/wamr/` | `iwasm --dir=. prog.wasm` |
+| V8 (node 22) | node under `tools/nodejs/`, plus a 20-line WASI shim | `node --no-warnings tools/nodejs/wasi-run.js prog.wasm .` |
+
+Cranelift and Winch are the same runtime with two code generators, so that pair isolates the
+compiler: measured on `c-wasm` task 01, Cranelift is **6.3x faster** than Winch on byte-identical
+input. Three capability boundaries are worth recording rather than treating as failures:
+
+- **WasmEdge cannot load a shared-memory module at all** — it rejects the module's import
+  section with `malformed limits flags` before running anything — and it exposes no threads
+  proposal, so it has no route to task 11.
+- **node's WASI shim has no `env.memory`** to hand a module that imports its memory, so it
+  cannot run the `wasi-threads` task either.
+- **Winch does not implement `wasm_exceptions`**, which the Lua and CPython WASI builds need,
+  so those three interpreted rows stay on Cranelift only.
+
+Each of those rows therefore records task 11 (or the whole row) as a runtime capability
+boundary, in the registry's `except` field, rather than as a cell that failed.
+
 Run lines, all eleven rows: `wasmtime run prog.wasm`. Task 11 adds
 `-S threads=y -W threads=y -W shared-memory=y` for the six compiled rows. Tasks 14 and 15 add
 `--dir=.` **from a directory holding `data.bin`**, and the three interpreted rows need
@@ -545,21 +666,31 @@ has to start on every measured run. That startup is part of the number.
 | Java | openjdk | 17 | jdk.java.net or Adoptium | `javac _<task>.java`, then `java -cp . _<task>` |
 | Java | openj9 | 21 | IBM Semeru Open Edition, `ibm-semeru-open-jdk_x64_windows_21.0.12.15.zip` (230 MB) extracted into `tools/openj9/` — no installer, no admin, and it brings its own `javac` | `tools/openj9/bin/javac.exe -d . _<task>.java`, then `tools/openj9/bin/java.exe -cp . _<task>`. **Eclipse OpenJ9, not HotSpot**: run from `sources/java-openj9/`, which holds the same fifteen files as the `openjdk` row, unchanged, with no OpenJ9-specific flag and no `-X` option. The whole difference is which VM executes the bytecode — OpenJ9's JIT (`openj9-0.61.0`) against HotSpot's C2 — and OpenJ9 maps `java.lang.Thread` onto OS threads, so task 11 is a real four-thread pass. Verified with `java -version`, which reports `Eclipse OpenJ9 VM 21.0.12.15`. |
 | Java | graalvm jit | GraalVM 21 (25.0.4 measured) | graalvm.org, the same JDK tarball the `graalvm native-image` row installs | **No separate build step**: `javac _<task>.java` produces the same class files, and the row is the run line `<graalvm>/bin/java -cp . _<task>`. The whole difference from the `openjdk` row is which JIT compiles the bytecode: GraalVM's JDK has `EnableJVMCI`, `EnableJVMCIProduct` and `UseJVMCICompiler` all `true` by default, so the Graal compiler replaces HotSpot's C2 without any flag. Verified with `java -XX:+PrintFlagsFinal -version`. The sources are `sources/java-graalvm-jit/`, the same fifteen files as the `openjdk` row. |
+| Kotlin | jvm | 1.9 (2.4.20 measured) | kotlinlang.org, `kotlin-compiler-<v>.zip` (85 MB) extracted — no installer and no admin. Needs a JDK on `PATH`; `JAVA_HOME` selects which | `kotlinc <task>.kt -include-runtime -d prog.jar`, then `java -jar prog.jar`, run from `sources/kotlin/`, which holds all fifteen tasks. `-include-runtime` bundles `kotlin-stdlib` into the jar, so the run line needs a JRE and nothing else. Task 11 uses four `java.lang.Thread` workers. |
 | C# | coreclr | .NET 8 | dotnet.microsoft.com | `dotnet build -c Release` |
 | C# | mono | 6.12 | mono-project.com | `mcs -optimize+ <task>.cs` |
+| F# | dotnet | .NET 8 | as above | `dotnet build -c Release` |
+| VB.NET | dotnet | .NET 8 | as above | `dotnet build -c Release`, with a `.vbproj` instead of a `.csproj`. Same SDK as C# and F#, so no extra install. |
 | Scala | jvm | 3.3 | scala-lang.org | Two steps: `scalac -release 17 -d out <task>.scala`, then `java -cp "out;<scala>/maven2/org/scala-lang/scala3-library_3/<v>/scala3-library_3-<v>.jar;<scala>/maven2/org/scala-lang/scala-library/<v>/scala-library-<v>.jar" Main`, where `<scala>` is the distribution and `<v>` its version. **Scala CLI's `scala` is a subcommand runner, not the classic `scala Main` launcher**, so it rejects `scala Main` with `Main is not a scala sub-command`; running the compiled class through `java -cp` is the equivalent and it also keeps the launcher's own start-up out of the measurement. The compiler needs a JDK 17 or newer on `PATH`. |
+| Scala | scala-cli (js) | 3.9.0 (Scala.js 1.22.0) | scala-cli, plus a JDK for the compiler; the Scala.js linker (`scala-js-ld`) downloads itself on first use | `scala-cli --power package <task>.scala --js -o prog.js --force --jvm system`, then `node prog.js`. `--jvm system` is required: without it scala-cli tries to download its own JDK and fails. The same fifteen files as the `jvm` row except tasks 11, 14 and 15 — see the row's own headers. |
+| Clojure | cljs.main | 1.11.132 | the official ClojureScript release jar, `tools/clojurescript/cljs.jar` (31 MB) — it bundles the Closure compiler, which the 5 MB Maven artifact does **not** | `java -cp "<root>/tools/clojurescript/cljs.jar;." clojure.main -m cljs.main --target node --optimizations simple --output-dir out --output-to prog.js --compile-opts "{:warnings {:single-segment-namespace false}}" --compile t<NN>-<name>`, then `node prog.js`. The namespace must match the file name, so the sources are `t01-branches` … `t15-file-write`. Tasks 11, 14 and 15 differ from the `clojure` row's files. |
+| Component Pascal | gpcp | 1.4.08b3 | github.com/k-john-gough/gpcp releases | Gardens Point Component Pascal for .NET, `gpcp-NET1.4.08b3.zip`, expanded anywhere. `gpcp /list- _<task>.cp` compiles a module to an assembly named after the `MODULE`; `/list-` only suppresses the `.lst` file and there are no optimisation levels. It needs `CROOT` pointing at the expanded tree, `%CROOT%\bin` on `PATH`, and `CPSYM=.;%CROOT%\symfiles;%CROOT%\symfiles\NetSystem` — the leading `.` is not decoration: without it the compiler cannot find the helper module that task 03 builds in the same directory, and without the `NetSystem` entry no `mscorlib` type is visible. The file name must equal the `MODULE` name, so the row uses `_<task>.cp`. The .NET runtime is needed on every run (see `RUN.md`), and `RTS.dll` plus any `GP*Files.dll` the module imports must be copied next to the executable — they are not found on `PATH`. Task 03 is two modules, `_03_func_sum_add_one.cp` and `_03_func_sum.cp`, compiled in that order, because Component Pascal has no no-inline marker and the call has to cross an assembly boundary. Task 11 uses the foreign `mscorlib_System_Threading` module: `Th.ThreadStart` is already a delegate type, so `REGISTER(s, w.Run)` attaches a bound method to it and `Th.Thread.init(s)` / `Start` / `Join` give four real .NET threads. Task 10 hand-writes the base-10^9 limbs with `LONGINT`; nothing in the shipped symbol files is arbitrary-precision. |
 | OCaml | ocamlopt | 5.0 (5.4.1 measured) | MSYS2 UCRT64 `mingw-w64-ucrt-x86_64-ocaml`, plus `mingw-w64-ucrt-x86_64-flexdll` | `ocamlopt -unsafe -o prog.exe _<task>.ml`. **Version 5 is required**: the 4.14 toolchain that the old "OCaml for Windows" installer ships has no `Domain` module and serialises `Thread`, so task 11 could only be a correct-answer-no-speedup cell there. `-unsafe` drops array and string bounds checks, which is the usual speed knob; `-O3` is accepted but is a **no-op** unless the compiler was built with Flambda, and the MSYS2 package reports `flambda: false`. Two environment details are mandatory and neither is obvious. `OCAMLLIB` must be set to the **Windows** form of the stdlib directory (`C:\...\ucrt64\lib\ocaml`), because `ocamlopt` is a native Win32 binary and the MSYS2-style `/ucrt64/...` path baked into its config resolves to nothing — without it every compile fails with `Unbound module Stdlib`. And `flexdll` is a **separate package**; without it the link step stops with `'flexlink' is not recognized`. Filenames carry the row's `_` prefix because OCaml derives a module name from the file name and a module name must be a valid identifier, so `01_branches.ml` draws `Warning 24: bad source file name`. Task 03 uses `[@inline never]`, OCaml's own no-inline attribute, so it needs only one file. Task 10 hand-writes the base-1e9 limbs in `int64`: the standard library has no bignum, and `zarith` is not in MSYS2's UCRT64 repository. Task 11 uses `Domain.spawn`/`Domain.join`. |
 | OCaml | ocamlc (bytecode) | 5.0 (5.4.1 measured) | the same MSYS2 UCRT64 `ocaml` package the `ocamlopt` row installs — nothing extra | Two steps, run from the MSYS2 shell so the OCaml runtime DLLs resolve: `ocamlc -I +unix unix.cma -o prog.exe _<task>.ml`, then `./prog.exe`. The sources are the `ocamlopt` row's own fifteen files, unchanged — this is a backend comparison, not a second program. Three things are load-bearing. **`-I +unix unix.cma` is required**, or the link fails with `No implementation provided for the following modules: Unix`. The build must run **inside the MSYS2 shell** with `OCAMLLIB` set to the Windows form of the stdlib directory, because the produced launcher needs `ocamlrun.exe` and `dllunixbyt.dll` on `PATH`; `-custom` does not work here, since it needs a C compiler and fails with `stdio.h: No such file or directory`. And the source file names keep the row's leading underscore, because OCaml rejects a file whose name starts with a digit (`bad source file name: 01_branches is not a valid module name`). Bytecode is the interpreter half of the pair: measured 5.3 s against the native row's 0.4 s on task 01. |
 | ActionScript | AIR | 51.4.1 | AIR SDK from harman.com/developer/air | Two steps. `amxmlc -swf-version=51 -output prog.swf _<task>.as` compiles the AS3 to a SWF, then `adt -package -storetype pkcs12 -keystore test.p12 -storepass pass -target cmdline out app.xml prog.swf` packages it into a standalone `out\prog.exe` with the AIR runtime bundled beside it. Use **`amxmlc`, not `mxmlc`**: only `amxmlc` links against `airglobal.swc`, so the AIR-only APIs this row needs (`System.output`, `flash.filesystem`, `Worker`) do not exist under the plain Flex compiler. A JDK (17 works) has to be on `PATH` for both tools. `adt` refuses to package an unsigned bundle, so one self-signed certificate is generated once with `adt -certificate -cn SelfSigned 2048-RSA test.p12 pass` and reused by every task. **The signing options must precede `-target`**: `adt` scans for them in order and otherwise stops with `Found misplaced signing arguments`, and the application descriptor has to be the literal `app.xml` path rather than the class name or it reports `error 301: Application descriptor missing`. Class names carry the row's `_` prefix because AS3 requires the public class name to equal the file name and a file cannot start with a digit. One shared `app.xml` sits beside the fifteen `.as` files, the way GDScript's `project.godot` does, because every task compiles to `prog.swf` and packages to `prog.exe`; only the `.as` name changes between tasks. Task 11 is two translation units: `_11_parallel_sum_worker.as` compiles separately to `worker.swf`, which the `adt` line passes as an extra file so it lands in the bundle and the main SWF can load its bytes for `createWorker`. Task 14's `data.bin` is passed to `adt` the same way — see the note below on why. |
 
+| Boo | booc | 0.9.7 | github.com/boo-lang/boo source, built once with the .NET 10 SDK: `dotnet build Boo.slnx -c Release`. The repository ships `booc.cmd`, but it only points at a build output that does not exist until the solution has been built once. | `dotnet tools/boo/src/booc/bin/Release/net10.0/booc.dll -o:prog.exe <task>.boo` emits a .NET assembly. **Two things must sit beside `prog.exe` or it will not start**: `Boo.Lang.dll` (from `tools/boo/src/Boo.Lang/bin/Release/net10.0/`) and a `prog.runtimeconfig.json` declaring `Microsoft.NETCore.App` version `10.0.0`. Without the DLL it dies with `Could not load file or assembly 'Boo.Lang'`; without the config it dies with `The library 'hostpolicy.dll' … was not found`, because a bare assembly is treated as self-contained. |
 | Unicon | unicon | 13.3 | unicon.sourceforge.io — `setup-unicon_13.3~BYOPL2e_v0(64-bit).exe` (15 MB), unpacked rather than installed: it is an Inno Setup archive, so `7z` refuses it and `innoextract -e` extracts `app/` into `tools/unicon/`, no admin and no registry. **13.3 and not 13.2 is load-bearing**: the 13.2 Windows release is built without concurrent threads, so `unicon -features` omits the feature and `thread` dies with `function not supported`. | `unicon -s <task>.icn` compiles to icode and writes `<task>.exe`; task 03 also names `03_func_sum_add_one.icn` on the same command line, and the icode file is named after the first file. The measured run is the `.exe`, which is **self-contained** — the runtime is appended to the icode, so nothing from `tools/unicon` is needed at run time (verified with a clean `PATH`). Both the compiler and the executables it produces read their own appended image through `argv[0]`, so they must be invoked with a **Windows-style backslash path**: given `C:/…/prog.exe` they die with `can't read interpreter file header`, and given `C:\…\prog.exe` they run. `tools/unicon/bin` has to be on `PATH` to compile. |
 | Haskell | ghc | 9.14 | downloads.haskell.org — `ghc-9.14.1-x86_64-unknown-mingw32.tar.xz` (452 MB, 4.1 GB extracted) unpacked into `tools/ghc/`. **The bindist bundles its own MinGW**, so no MSVC and no Windows SDK are needed. No installer and no admin. | `ghc -O2 -threaded -o prog <task>.hs`, then `prog`. **`-threaded` is required for task 11** and the row is run as `prog +RTS -N4 -RTS`; without `-threaded` there are no capabilities to schedule onto. `-O2` alone is what the other compiled rows use. |
 | Lobster | lobster | 2026.8 | github.com/aardappel/lobster releases — `lobster_windows_release.zip` (15 MB) extracted into `tools/lobster/`, no installer and no admin. | **No build step**: `tools/lobster/bin/lobster.exe <task>.lobster` compiles to bytecode and runs it in one go. Tasks 14 and 15 read and write `data.bin`/`out.bin` in the working directory, so run from `sources/lobster/`. |
 | Forth | gforth | 0.7.9 | github.com/fukuyori/gforth_for_windows releases — `gforth-native-0.7.9_...-x64-setup.exe` (3.4 MB). It is an Inno Setup archive, so `7z` refuses it and `innoextract` 1.9 cannot read its 6.5 setup-data version; it is run **silently** instead, `gforth-setup.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP- /DIR=<target>`. Its manifest sets `PrivilegesRequired=lowest` and installs under the user profile, so no admin and no registry. | **No build step** — gforth interprets the file: `gforth <task>.fs`. The interpreter needs its image `gforth.fi` and the working directory's `data.bin` at once; in this layout `gforth.exe` finds the image beside itself, so no `GFORTHPATH` is needed as long as the run directory holds the sources and the fixture (verified 15/15 without it). Output has a trailing space after the numbers, so a byte-exact comparison must trim. |
 | Euphoria | eui | 4.1.0 | github.com/OpenEuphoria/euphoria releases, `euphoria-4.1.0-Windows-x64-*.zip` (21 MB), extracted into `tools/euphoria/` — no installer and no admin. | **No build step**: `EUDIR=<install root> eui.exe <task>.ex`, and **`EUDIR` is mandatory** or the interpreter fails to start. Three things shape the row. **There is no reachable stderr**: `printf(2, …)` and `puts(2, …)` both write nothing when stderr is redirected, so the contract's `time.txt` fallback carries `TIME_MS` (the same exception `dyalog`, `ring` and `modula2` record). **There is no high-resolution clock in `std`** — `time()` is whole seconds and the `datetime` fields are second-resolution — so the timer is an FFI call to `QueryPerformanceCounter` through `std/dll.e` and `std/machine.e`. And **`std/task.e` segfaults** on `task_create` in this build (signal 11), so task 11 is four child processes via `system_exec` from `std/os.e` rather than cooperative tasks. `integer` is 64-bit and exact, so task 02 and 04 are exact; there are no bignums in `std`, so task 10 hand-rolls base-1e9 limbs. |
+| Mercury | mmc | 22.01.9 | Built from source: the `mercury-srcdist-22.01.9.tar.gz` release compiled with the MSYS2 UCRT64 gcc the `valac` row already installs, and `mercury_compile.exe` was copied into `tools/mercury/bin/` so the toolchain does not depend on the source tree. No Windows binary is published. The configured grade is **`hlc.gc.pregen`** — the default `hlc.gc` is not installed and every build fails with "the Mercury standard library cannot be found in grade hlc.gc". | `mercury_compile --make <module> --grade hlc.gc.pregen`, with `MERCURY_STDLIB_DIR` pointing at the installed `lib/mercury`, `mkinit.exe` on `PATH`, and UCRT64 `gcc` on `PATH` for the C back end. A Mercury module name cannot start with a digit, so the files are `01_branches.m` and the modules are `m01_branches`; `Mercury.modules` holds the mapping. **Task 11 is compiled with `--grade hlc.par.gc`** instead, because the default grade has no parallelism; the other fourteen use `hlc.gc.pregen`. |
 
-The .NET SDK is installed once and fills every CLR row: C# (`coreclr`) and C#
-(`nativeaot`) are both built by it.
+One SDK covers three rows here. C# (`coreclr`), F# and VB.NET are separate compilers and
+separate cells, but they all build with the .NET SDK and run on the .NET runtime, so
+installing it once fills all three. VB.NET is the only one of the three that needs a
+`.vbproj` rather than a `.csproj` or `.fsproj`.
 
 ### No build step — the interpreter is the runtime
 
@@ -581,6 +712,7 @@ time is zero. Everything is paid at run time.
 | Julia | julia (interpreted) | 1.11 | the same tree the `julia` row installs — nothing extra | **No build step**: `julia --compile=min -O0 <task>.jl`. The sources are the `julia` row's own fifteen files, unchanged, so this is a compilation-strategy comparison rather than a second program. `--compile=min` turns off Julia's type-specialised code generation and `-O0` the LLVM optimisation pass, so the loop bodies are interpreted rather than JIT-compiled. The cost is real and large: measured 438 s for task 01 and 535 s for task 02 against about 20 ms and 15 ms under the default JIT. Task 11 must be run with **`-t4`** (`julia --compile=min -O0 -t4`), or its four `Threads.@threads` workers have one thread to share and the cell becomes a correct-answer-no-speedup; with `-t4` it measured 151 s against a 497 s single-thread baseline on the same range, a 3.3x speedup. The worst cells are task 13 at **942 s** and task 14 at **954 s**. That is the honest price of the language's interpreter, not a workaround. |
 | Dart | jit |
 | GDScript | godot --headless | 4.7.2 | godotengine.org, `Godot_v4.7.2-stable_win64.exe` — a single self-contained binary, no installer and no admin | **No build step**: `Godot_v4.7.2-stable_win64_console.exe --headless --script <task>.gd`, run from the directory holding the scripts and `project.godot`. **Use the `_console.exe` build**: the plain `.exe` is a GUI subsystem program whose output never reaches a pipe, the same trap as Dyalog's `dyalog.exe` and Dolphin's `Dolphin8.exe`. Each script `extends SceneTree` and does its work in `_initialize()`. This is the slowest row in the matrix — the 100 M-iteration loops take tens of seconds each. |
+| Groovy | groovy | 4.0.33 | groovy.apache.org / dlcdn.apache.org, `apache-groovy-binary-4.0.33.zip` (30 MB), extracted — no installer and no admin | **No build step**: `groovy <task>.groovy`, with `GROOVY_HOME` set to the extracted tree and its `bin` on `PATH`. Needs a JDK on `PATH` (it runs on the system Java). Groovy's `def` would box the counters into `BigDecimal`, so the loop index and the four counters are declared `long` and the arithmetic stays primitive. `System.nanoTime` is the monotonic clock and `System.err` is stderr. |
 | Dolphin Smalltalk | Dolphin 8 | 8.2.3 | github.com/dolphinsmalltalk/Dolphin releases, `Dolphin8Setup.exe` (42 MB), an Inno Setup installer unpacked with `innoextract -e -d tools/dolphin/` — no admin | **No build step**: `Dolphin8.exe DPRO.img8 -u -f <task>.st -q`, run from the directory holding the script. `DPRO.img8` ships in `userdocs/Dolphin Smalltalk 8/` and is copied next to `Dolphin8.exe`; the VM is 32-bit and needs the x86 VC++ runtime, which the installer carries as `tmp/vc_redist.x86.exe`. Scripts write through `SessionManager current stdout` and end with `SessionManager current quit: 0`. Two source fixes were needed: `cr` on a file stream hangs the VM, so the `time.txt` write ends with `nextPut: 10` instead, and task 09 read its clock *before* `fib value: 40` ran (the call sat inside the final output expression), so the call is hoisted above the timing write. |
 | Tcl | tclsh |
 | Algol 68 | a68g |
@@ -592,6 +724,9 @@ time is zero. Everything is paid at run time.
 | VBScript | cscript |
 | Raku | rakudo (MoarVM) |
 | Elixir | elixir (BEAM) | 8 MB zip on OTP 29.1.1 | Elixir from github.com/elixir-lang/elixir releases — an 8 MB zip, no installer and no admin — on top of the **179 MB Erlang/OTP Windows `.zip`** from erlang.org. The OTP tree is installed for this row alone now that the two Erlang rows are gone, and it is still required: Elixir does not ship a runtime. | **No build step**: `tools/elixir/bin/elixir.bat <task>.exs`, run from the task directory with `tools/erlang/bin` first on `PATH` so the launcher finds `erl.exe`. Elixir compiles the script on every run, so that compile is inside the measured number. |
+| Erlang | OTP (escript) | 29.1.1 | the same 179 MB OTP Windows `.zip` the `erlc` row installs — nothing extra | **No build step**: `tools/erlang/bin/escript.exe <task>.erl`. The script carries its own shebang and `main/1`, so `escript` compiles it to BEAM bytecode on **every run**, which is the whole point of this row beside `erlc`: the pair isolates when the compile happens. `%%! -smp enable` is in the file so all schedulers are live for task 11. |
+| Erlang | erlc (compiled) | OTP 29.1.1 | the same 179 MB OTP Windows `.zip` the `erlang` row installs — nothing extra | Two steps: `tools/erlang/bin/erlc.exe <task>.erl` writes `<task>.beam`, then `tools/erlang/bin/erl.exe -noshell -s <task> main -s init stop`. The sources are `sources/erlang-compiled/`, module-form rewrites of the escript row's scripts: that row's files carry a shebang and no `-module` declaration, so `erlc` cannot compile them as they stand. The rewrite replaces the shebang and the `%%! -smp enable` emulator line with `-module`/`-export` and `main/0`, and drops `-smp enable` because SMP is on by default in OTP 29 (`erlang:system_info(smp_support)` is true). Algorithms are unchanged, and the compiled row is the one that separates compile time from run time: the escript row charges the per-run compile to every cell, this one pays it once at build time. Task 11 stays a real parallel pass, four workers on the SMP scheduler. |
+| Gleam | gleam | 1.18.1 | github.com/gleam-lang/gleam releases, `gleam-v1.18.1-x86_64-pc-windows-msvc.zip` (8 MB), extracted — no installer and no admin. Runs on the Erlang/OTP tree the `erlang` and `elixir` rows already install. | One Gleam project, fifteen modules: `gleam build` then `gleam run --module <name>`. **The module names cannot start with a digit *or* an underscore** — Gleam rejects both — so the row's files are `t01_branches` … `t15_file_write` in `src/` rather than `01_branches`. There is no per-file run mode, so a single project with `--module` is the only clean way to get fifteen runnable programs out of one row. **`gleam build` fetches `gleam_stdlib` and `gleam_erlang` from hex on the first build**, so this is the one row in the matrix that needs network access before it can run; `manifest.toml` pins the two versions, and a `build/` directory left in place makes later builds offline. `gleam run` also needs `tools/erlang/bin` on `PATH`. |
 | Scheme | chez |
 | Prolog (SWI) | swipl |
 | Janet | janet |
@@ -743,8 +878,8 @@ real parallelism across four cores, the same category as the R row's `PSOCK` wor
 Both install without admin: Raku is a 64 MB MSI that `msiexec /a <msi> TARGETDIR=<dir> /qn`
 administratively extracts (the same no-admin route the SBCL row uses — the MSI itself installs
 per-machine and wants elevation), and Elixir is an 8 MB zip that sits on top of the 179 MB
-Erlang OTP Windows `.zip`, which is installed for it alone now that the two Erlang rows are
-gone. Neither has a build step: `raku <task>.raku` and `elixir <task>.exs` each compile the file
+Erlang OTP Windows `.zip`, which the `erlang` and `erlang-compiled` rows install too — one
+OTP tree serves all three BEAM rows. Neither has a build step: `raku <task>.raku` and `elixir <task>.exs` each compile the file
 as they run, so that compile time is inside the measured number. Both have arbitrary-precision
 integers built in, so task 10 is a fast cell rather than a hand-rolled one, and both have real
 OS threads, so task 11 is a genuine pass.
@@ -764,8 +899,7 @@ row is tail recursion with explicit accumulators, which the compiler turns into 
 `map`/`foldl`/comprehensions/higher-order functions in any timed path) and uses the language's own
 escape hatches for state: the process dictionary, and `:atomics`, a real mutable array of 64-bit
 integers. That is the most procedural register the language has; it cannot honestly be called
-imperative and the row does not claim to be. The Erlang rows needed the same note and carried it
-until they were removed. Raku needs no such note — it has mutable variables
+imperative and the row does not claim to be. The `erlang` and `erlang-compiled` rows need the same note and carry it. Raku needs no such note — it has mutable variables
 and `for`/`while`/`loop`, so its row is ordinary imperative code.
 
 **Scheme** is Chez Scheme 10.4.1, and its toolchain has to be *built* before it can be run:
@@ -999,8 +1133,8 @@ and the slowest thing on this page to set up.
 | graalvm native-image | a C toolchain, `zlib` headers, and several GB of RAM. On Windows, the MSVC linker (`link.exe`) on `PATH` plus `INCLUDE`/`LIB`. |
 | kotlin/native | a JDK for the launcher. The 1.9-era launcher parsed `java -version` with `delims=-.` and broke on JDK 24, which prints `24` with no dot, leaving a stray quote in `if %_java_major_version% geq 24` — a batch syntax error rather than a clear message; the 2.4.20 prebuilt drives JDK 25.0.2 without trouble, so this is a launcher-version question, not a JDK ceiling. The first build also downloads its LLVM and libffi dependencies (about 1.4 GB) into `%USERPROFILE%\.konan`. |
 | swiftc | the Swift toolchain ships its own LLVM, needs `libcurl` and `libxml2`. On Windows it needs the MSVC toolchain to link, and `-sdk` pointing at the bundled Windows SDK. The Windows distribution is a WiX burn bundle, so a plain `--layout` copy is not enough: a `get_swift.py` (not committed, see the `tools/` note below) decompiles it with WiX's `dark.exe`, reads the burn manifest to recover the real package names (the extracted files are `a0`, `a1`, ...), stages each MSI next to its `.cab`, and administrative-extracts them. |
-| nim | a C compiler on `PATH` for the C backend. **The module name rule bites**: Nim rejects a source file whose name is not a valid identifier, so `_01_branches.nim` stops with `Error: invalid module name: '_01_branches'; a module name must be a valid Nim identifier` and the file has to be copied to a name such as `t01_branches.nim` first. Nim 2.x enables thread support by default, so task 11's `std/typedthreads` needs no extra flag. |
 | nuitka | in principle a C compiler, but in practice nothing on Python 3.13: Nuitka downloads its own zig-based backend and ignores a system MinGW. `--mingw64` is rejected on 3.13 and later. |
+| cython | a C compiler, CPython's development files (`include/` and `libs/`), and the interpreter's `python3xx.dll` beside the built executable — CPython on Windows ships no static library. MinGW needs the three flags in the build line above, and one of them is a genuine trap: CPython's `pyconfig.h` defines `MS_WIN64` **inside `#ifdef _MSC_VER`**, so under MinGW `SIZEOF_VOID_P` stays 4 while `sizeof(void*)` is 8, and Cython's own consistency check fails to compile with `enumerator value for '__pyx_check_sizeof_voidp' is not an integer constant`. |
 | tinygo | the Go SDK on `PATH`. TinyGo bundles its own LLVM and its own standard library, but it still calls `go list` and `go env` for module resolution, so without `go` every build stops with `could not find 'go' command: executable file not found in %PATH%`. |
 | gdscript | a Godot build, run with `--headless` |
 | lua, for task 11 only | the Lanes C extension: `luarocks install lanes`. Needs a C compiler — a MinGW `gcc` on `PATH` is enough, and it builds Lanes 3.17.2 in about 20 s. Stock Lua has no threads. The distribution matters: the official `lua.org` release is source only, and the Windows binaries from LuaBinaries carry no `luarocks`, but the Lua 5.4.6 Windows install this row uses **does** ship `luarocks.exe` 3.9.2, so it is one command rather than a hand build. The rock lands **outside** the interpreter tree (`%APPDATA%\luarocks`, or whatever `--tree` names), so `LUA_PATH`/`LUA_CPATH` must point at it or `require("lanes")` fails with `module 'lanes' not found` — the interpreter does not search the rock tree by default. |
@@ -1010,20 +1144,26 @@ and the slowest thing on this page to set up.
 | scala/native | a C toolchain that Scala Native can drive. On Windows the documented route is LLVM/clang 16+ plus Visual Studio's C++ workload (the "C++ Clang tools for Windows" package does not work); without admin the portable llvm-mingw zip is the route, and it needs the two flags in the build line above. `--native-compile=-D_PID_T_` suppresses mingw's own `pid_t` typedef through its `#ifndef _PID_T_` guard, because Scala Native's `gc/shared/ThreadUtil.h` does `typedef int pid_t` under `#ifdef _WIN32` and clang rejects the redefinition; without it every build fails. `--native-linking=-static` is needed because Scala Native forces C++ exceptions on Windows, so a default link produces an executable importing `libc++.dll` from the llvm-mingw tree and only runs with that directory on the DLL search path. The mingw codegen path ships in the released compiler (`scala/scalanative/codegen/llvm/compat/os/WindowsGnuCompat.class` beside `WindowsCompat.class`), but upstream CI does not cover it, so it can break on a Scala Native upgrade. |
 | C# nativeaot | the MSVC linker. With a hand-extracted MSVC tree, `dotnet publish` cannot find `vcvarsall` and reports `Platform linker not found`; pass `-p:IlcUseEnvironmentalTools=true` so it uses `PATH`/`INCLUDE`/`LIB` instead. |
 | java/graalvm native-image | the MSVC toolchain, and there is **no `IlcUseEnvironmentalTools` equivalent**: native-image looks for `vswhere.exe` under `%ProgramFiles(x86)%\Microsoft Visual Studio\Installer` and then runs the `VC\Auxiliary\Build\vcvarsall.bat` that the tool reports, taking the environment delta as its build environment. A hand-extracted tree therefore needs a `vswhere.exe` that prints the tree's VS root and a `vcvarsall.bat` under it that sets `PATH`/`INCLUDE`/`LIB`; **`-H:-CheckToolchain` does not skip the lookup**, it only defers the `cl.exe` check. Three things bite after that: `cl.exe` needs the `1033\clui.dll` resources copied beside it or it dies with `C1510`, the linker needs `lib\x64\setargv.obj`, which ships in the **Store** CRT package rather than the Desktop one, and `OLDNAMES.lib` no longer ships at all — build an empty one with `lib.exe /OUT:OLDNAMES.lib <any>.obj`. |
+| nim | a C compiler on `PATH` for the C backend. **The module name rule bites**: Nim rejects a source file whose name is not a valid identifier, so `_01_branches.nim` stops with `Error: invalid module name: '_01_branches'; a module name must be a valid Nim identifier` and the file has to be copied to a name such as `t01_branches.nim` first. Nim 2.x enables thread support by default, so task 11's `std/typedthreads` needs no extra flag. |
 | masm | nothing extra: `ml64.exe` and `link.exe` come from the same hand-extracted MSVC tree the `msvc` row installs, driven through `tools/msvc_env.py` so `INCLUDE`/`LIB` resolve. The link line is `link /subsystem:console /entry:main /out:<task>.exe <task>.obj kernel32.lib` — `kernel32.lib` is the only import library the row needs, because the programs are freestanding PE64 with no C runtime. |
 | adw (Modula-2) | nothing beyond the unpacked tree, but the compiler is fussier than ISO Modula-2 in three ways. **`TYPE (expr)` conversion is not accepted** — `LONGCARD (dt.hour)` fails with `error: { expected`, and only `VAL (LONGCARD, dt.hour)` compiles; `VAL` is what ADW's own library sources use. **`ADR` is not exported by default** — a module that passes a buffer to `IOChan.RawWrite` must name it in the `FROM SYSTEM IMPORT` list, or the call is `Undeclared symbol`. **A procedure heading that precedes other procedures must carry its own body**, not just a forward declaration: `PROCEDURE fib (n : CARDINAL) : LONGCARD;` followed by a nested `PROCEDURE` and then a bare `BEGIN … END fib;` fails with `Undeclared symbol` / `Invalid Factor`, because ADW reads the heading plus the next `BEGIN` as one unit. The heading has to be repeated immediately before its body. |
 | cm3 (Modula-3) | the C backend, so the MSVC environment (`tools/msvc_env.py`) must be set, and `INSTALL_ROOT` must point at the cm3 tree. `Wr.PutString` takes a `READONLY ARRAY OF CHAR` and **rejects a `TEXT` actual** (`actual not assignable to READONLY formal`), so text goes through `Wr.PutText`. Arithmetic between `Time.Now`'s `LONGREAL` and an untyped `1000.0` is an `illegal operand(s) for '*'` — the literal has to be `1000.0D0`. The runtime is **not** linked in: `m3.dll` and `m3core.dll` must be copied beside the executable, or it exits `53` before `main` with no output at all; a task that imports `arithmetic` needs `arithmetic.dll` as well. |
 | fpc (Windows x64) | the i386-win32 native compiler plus the `cross.x86_64-win64` add-on, since there is no native x64 compiler. |
 | odin (Windows) | `WindowsSdkDir`, `WindowsSDKVersion` and `VCToolsInstallDir` in the environment. Odin does not discover the SDK on its own; without them it fails with `Windows SDK not found`. |
 | c3c (Windows) | the MSVC SDK to link against, because c3c emits object files and hands them to `lld-link`. Without one it prints `To target x64 you need the MSVC SDK` and offers to download it. A hand-extracted tree works via `--win-sdk` plus three `-L` flags (see the toolchain table above); `--win-vs-dirs` does not accept one. |
+| valac | a C compiler and GLib's development files. On Windows both come from MSYS2 `ucrt64` (`mingw-w64-ucrt-x86_64-vala`, which pulls in the GLib/GObject/GTK dependency chain and about 2.2 GB of tree). `valac` has to run inside that shell so `pkg-config` resolves. |
 | cim | a C compiler and Cygwin. The compiler and runtime are built once under Cygwin, and `cim.exe` then drives the system `gcc` on every build, so `C:\cygwin64\bin` must be on `PATH` when it runs. |
+| gpcp | the .NET runtime, and `RTS.dll` copied next to every executable (plus `RealStr.dll` for the row that formats reals, and the `GP*Files.dll` pair for the file tasks). `CPSYM` must be set or no symbol file is found. |
 | a68g, for task 11 only | a source build with `--enable-parallel`. The prebuilt Windows binary is configured without the parallel clause and cannot run task 11 at all. It also needs `C:\cygwin64\bin` on `PATH` when built under Cygwin. |
 | beef (Windows) | a `shell32.lib` from outside the distribution. `bin/lib/x64` ships eleven import libraries and the Release link line asks for `shell32.lib` anyway, so the link stops with `lld-link: error: could not open 'shell32.lib'`; any Windows SDK copy works, as does a MinGW import library renamed to it. `BeefConfig.toml` also has to be copied from the installer's `__user/bin/` into `bin/`, or BeefBuild stops with `ERROR: Unable to load project 'corlib'` — its `UnversionedLibDirs` is resolved against the config file's own directory. |
 | haxe | Neko for `haxelib`, and the hxcpp backend. `haxelib.exe` ships without `neko.dll` and dies with `error while loading shared libraries: neko.dll`, and copying just that DLL is not enough — Neko then wants `gcmt-dll.dll`, `std.ndll`, `regexp.ndll` and the MSVC runtime, so the whole official `neko-2.4.1-win64.zip` is unpacked, put on `PATH` and named by `NEKOPATH`. `haxelib install hxcpp` is unusable where `lib.haxe.org` answers HTTP 403, so `hxcpp-4.3.171.zip` is unpacked and registered with `haxelib dev hxcpp <dir>` — dropping the tree in as a *version* fails, because haxelib parses the directory name as a version and rejects a three-part one. hxcpp 4.3.171 then does not compile with MinGW's libstdc++ as shipped: `src/hx/gc/GcCommon.cpp` calls `std::sscanf` without including `<cstdio>`, which MSVC pulls in transitively and libstdc++ does not, so one `#include <cstdio>` line has to be added to the installed copy. hxcpp also needs its own tool built once — `haxe compile.hxml` run from `tools/hxcpp/hxcpp-4.3.171/tools/hxcpp/`, which leaves `hxcpp.n` at the tree root; without it the first `haxe -cpp` stops at `Can't continue without hxcpp.n` after prompting to build it. Every build line also carries `-D mingw -D MINGW_ROOT=<the directory holding bin/g++.exe>`, because hxcpp guesses `c:/MinGW` and otherwise stops with `Could not guess MINGW_ROOT`. |
+| eiffelstudio | four environment variables and a C compiler, which the delivery supplies itself: MinGW gcc 4.4.5 under `gcc/win64/mingw/bin`, selected with `ISE_C_COMPILER=mingw`, so no MSVC is needed. `ISE_EIFFEL` points at the tree, `ISE_PLATFORM` is `win64`, and `ISE_LIBRARY` must be the **root** of the tree rather than its `library` subdirectory — every shipped ECF refers to `$ISE_LIBRARY\library\base\base.ecf`, so pointing it at `library` makes `ec` fail with `Could not open file: …\library\library\base\base.ecf`. The MSYS 1.0 `sh.exe` the generated Makefiles call through also fails intermittently with `*** Couldn't reserve space for cygwin's heap (…) in child, Win32 error 0`, aborting the C compilation partway; re-running the same `ec` command resumes and finishes it, and six of the fifteen targets needed retries, so a build script has to retry and check for `prog.exe`. |
+| s7c | the MSYS2 **MSVCRT** MinGW gcc to build the toolchain itself, not the UCRT one this repository already has. `make depend` runs `chkccomp`, which probes the C compiler for a `read_buffer_empty` macro; UCRT's `FILE` is opaque, so none of the candidate struct-member probes compile and the build dies at `fil_win.c:245: implicit declaration of function 'read_buffer_empty'`. MSYS2's `mingw-w64-x86_64-gcc` has the classic `_ptr/_cnt/_base` layout and works. The build must be driven from the MSYS2 MINGW64 shell with `/mingw64/bin` first on `PATH`, because `mk_msys.mak` uses Unix shell commands while its `mk_mingw.mak` counterpart does not work under this workstation's `sh`. `make depend` takes about 31 minutes and is **not** hung — it prints a `#*.+` progress bar and spends minutes on database probes. The same gcc must be on `PATH` for every later `s7c` run too, because `s7c` has no code generator of its own and calls it. |
 | chez | a MinGW gcc and GNU Make, because there is no no-admin Windows binary to unpack. The build runs from the MSYS2 UCRT64 shell with `mingw-w64-ucrt-x86_64-gcc` (plus `pacman -S make`) and bootstraps from the bytecode boot files in `boot/pb`, so no existing Chez is needed; zlib has to be built once **serially** in each workarea first, because under `make -j8` both `pb/zlib` and `ta6nt/zlib` die with `collect2.exe: error: ld returned 32 exit status` and `libz.a` is missing at link time. `make install` does not work either — `makefiles/installsh` is a `/bin/sh` script that `zuo` hands to `cmd.exe` — so the four installed files are placed by hand. |
 | ring, for task 11 only | the Threads extension, which the light release does not ship: `bin/load/threads.ring`, `extensions/ringthreads/{ring_threads.c,ring_threads.rh,threads.ring}` and its bundled `tinycthread/{tinycthread.c,tinycthread.h}` from the `v1.27` tag, compiled with `gcc -O2 -shared -o bin/ring_threads.dll ring_threads.c -I../../language/include ../../bin/ring.dll`. The light release carries the headers and the import library, so no MSVC is needed, and the DLL must end up beside `ring.exe` in `bin/`, which is where the loader looks. |
 | poly/ml | a C compiler **and three files the MSI does not ship**, all built once from the matching source tarball (`polyml-5.9.1.tar.gz`). The MSI's complete payload is `PolyML.exe`, `PolyLib.dll` and `PolyPerf.dll` — no `polyc`, no `poly` launcher, no import library, no `libpolymain` — so the row builds them: `gcc -c -O2 -o polystub.obj src/polystub.c` (with `winconfig.h` and `polyexports.h` beside it, which `polystub.c` includes) for the `WinMain` start-up stub, and `gendef PolyLib.dll && dlltool -d PolyLib.def -l libpolyml.a -D PolyLib.dll` for the link library (247 exports). `polyc` is a shell script and there is no `sh` in the MSI, which is why the two steps it performs are driven by hand. MinGW gcc is enough; MSVC is not needed. |
 | terra (Windows) | a **non-nil `VCINSTALLDIR`** and an `INCLUDE` pointing at a C sysroot, or the interpreter will not start at all — see the paragraph below. `LIB` is needed only by `terra.getvclinker`. On this host the sysroot is the `tools/llvm-mingw/include` tree that the Scala Native row already needs, so nothing extra is installed for Terra itself. No MSVC, no Windows SDK, and nothing is linked. |
+| nelua | a C compiler (the `gcc` the row already has) and a Lua 5.4 or 5.3 interpreter that has `lfs`, `hasher` and `lpeglabel`. The host's stock Lua does **not** — Nelua's `runner.lua` requires all three and there is no `luarocks` on this machine to add them — so the repository's own bundled interpreter is built once from `src/onelua.c` and its companions with `mingw32-make` in `tools/nelua/` (24 s), which is what `nelua.bat` then uses. |
 
 ## Things that are hard or not really possible
 
@@ -1058,7 +1198,7 @@ Worth knowing before starting, because these will eat a day each:
 - **gdscript** threads exist but are awkward, and Godot headless startup alone is on the
   order of a second, which will dominate every short task.
 - **cim** is a 2013 tree built against a 1990s C dialect. Three things have to be got right
-  or it does not build at all, and they are all in the same class as the Akron Oberon-07 entry below:
+  or it does not build at all, and they are all in the same class as the ATS entry above:
   `-std=gnu89` (a default `-std=gnu17` rejects the implicit declarations the generated C
   relies on), `-w` (the tree does not compile warning-free), and `-fpermissive` for the
   `reg_this` prototype conflict in `dekl.c`. Two more bite at *run* time rather than build
@@ -1076,6 +1216,14 @@ Worth knowing before starting, because these will eat a day each:
   build that has the clause is the **Cygwin** one, where the host is recognised and
   `pthread_attr_getstacksize` links. The prebuilt Windows binary on the project's download page
   is built without it and answers `interpreter was built without parallel-clause support`.
+- **gpcp** needs three environment variables set correctly and every one of them fails with an
+  unhelpful message: `CROOT` (otherwise `CPMake`/`gpcp` cannot find their libraries), `CPSYM`
+  with **both** the top-level `symfiles` directory and its `NetSystem` subdirectory, and a
+  leading `.` on `CPSYM` if task 03's helper module is in the working directory. Without the
+  `NetSystem` entry, importing `mscorlib_System_Threading` fails with
+  `Cannot open symbol file`, which reads like a missing file rather than a missing path entry.
+  The runtime DLLs are found next to the executable, never on `PATH`, so a program that ran a
+  minute ago dies with `FileNotFoundException: RTS` the moment it is moved.
 - **a68g's binary transput never reports end of file.** `end of file (f)` stays `FALSE` after
   reading past the end of a file opened on the back channel: reading a 3 MiB file in 1 MiB
   `getbin` chunks reports `FALSE` after every chunk, so the natural
