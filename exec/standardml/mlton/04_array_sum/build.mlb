@@ -1,0 +1,3 @@
+$(SML_LIB)/basis/basis.mlb
+04_array_sum.sml
+driver.sml

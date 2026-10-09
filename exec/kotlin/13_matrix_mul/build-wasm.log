@@ -1,0 +1,24 @@
+warning: advanced option value is passed in an obsolete form. Please use the '=' character to specify the value: -Xwasm-target=...
+warning: advanced option value is passed in an obsolete form. Please use the '=' character to specify the value: -Xwasm-target=...
+warning: advanced option value is passed in an obsolete form. Please use the '=' character to specify the value: -Xinclude=...
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x00007fffaba7c8d2, pid=25492, tid=29144
+#
+# JRE version: Java(TM) SE Runtime Environment (25.0.2+10) (build 25.0.2+10-LTS-69)
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (25.0.2+10-LTS-69, mixed mode, sharing, tiered, compressed oops, compressed class ptrs, g1 gc, windows-amd64)
+# Problematic frame:
+# V  [jvm.dll+0x24c8d2]
+#
+# No core dump will be written. Minidumps are not enabled by default on client versions of Windows
+#
+# An error report file with more information is saved as:
+# D:\Users\pedro.cardoso\stupidspeed\exec\kotlin\13_matrix_mul\hs_err_pid25492.log
+#
+# Compiler replay data is saved as:
+# D:\Users\pedro.cardoso\stupidspeed\exec\kotlin\13_matrix_mul\replay_pid25492.log
+#
+# If you would like to submit a bug report, please visit:
+#   https://bugreport.java.com/bugreport/crash.jsp
+#

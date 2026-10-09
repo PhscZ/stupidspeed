@@ -1,0 +1,4 @@
+Hint: used config file 'D:\Users\pedro.cardoso\stupidspeed\tools\nim\nim-2.2.12\config\nim.cfg' [Conf]
+Hint: used config file 'D:\Users\pedro.cardoso\stupidspeed\tools\nim\nim-2.2.12\config\config.nims' [Conf]
+.....................................................................
+D:\Users\pedro.cardoso\stupidspeed\tools\nim\nim-2.2.12\lib\std\typedthreads.nim(140, 29) Error: undeclared identifier: 'nimThreadProcWrapperBody'

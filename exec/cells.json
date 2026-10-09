@@ -392,6 +392,26 @@
    "name": "Wasmer (Singlepass)",
    "kind": "wasm-runtime",
    "what": "the same runtime, Singlepass: a fast single-pass compiler with no optimisation"
+  },
+  "zig-cc": {
+   "name": "zig cc",
+   "kind": "native-aot",
+   "what": "clang's front end on Zig's toolchain and libc"
+  },
+  "zig-selfhosted": {
+   "name": "Zig (self-hosted x86-64)",
+   "kind": "native-aot",
+   "what": "Zig's own x86-64 code generator, LLVM left out (-fno-llvm)"
+  },
+  "neko": {
+   "name": "Neko",
+   "kind": "bytecode-vm",
+   "what": "Neko's bytecode VM"
+  },
+  "mlton": {
+   "name": "MLton",
+   "kind": "native-aot",
+   "what": "MLton's whole-program compiler, which optimises across the entire SML program"
   }
  },
  "rows": {
@@ -700,7 +720,7 @@
      "cmd": [
       "{root}/tools/nodejs/node.exe",
       "--no-warnings",
-      "{root}/tools/nodejs/wasi-run.js",
+      "{root}/exec/wasi-run.js",
       "prog.wasm",
       "."
      ],
@@ -720,7 +740,7 @@
      "cmd": [
       "{root}/tools/nodejs/node.exe",
       "--no-warnings",
-      "{root}/tools/nodejs/wasi-run.js",
+      "{root}/exec/wasi-run.js",
       "prog.wasm",
       "."
      ]
@@ -940,6 +960,18 @@
      "cwd": "{root}/exec/c/{toolchain}/{task}",
      "artifact": "{root}/exec/c/{toolchain}/{task}/prog.exe",
      "timeout": 600
+    },
+    {
+     "toolchain": "zig cc",
+     "backend": "zig-cc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/c/zig-cc/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/c/zig-cc/{task}",
+     "artifact": "{root}/exec/c/zig-cc/{task}/prog.exe"
     }
    ],
    "language": "C"
@@ -1042,7 +1074,7 @@
      "cmd": [
       "{root}/tools/nodejs/node.exe",
       "--no-warnings",
-      "{root}/tools/nodejs/wasi-run.js",
+      "{root}/exec/wasi-run.js",
       "prog.wasm",
       "."
      ],
@@ -1390,7 +1422,7 @@
      "cmd": [
       "{root}/tools/nodejs/node.exe",
       "--no-warnings",
-      "{root}/tools/nodejs/wasi-run.js",
+      "{root}/exec/wasi-run.js",
       "prog.wasm",
       "."
      ],
@@ -1591,6 +1623,45 @@
      ],
      "cwd": "{root}/exec/dart/jit",
      "artifact": "{root}/exec/dart/jit/{task}.dart"
+    },
+    {
+     "toolchain": "dart2js",
+     "backend": "v8",
+     "tasks": [
+      "*"
+     ],
+     "except": [
+      "04_array_sum",
+      "11_parallel_sum",
+      "12_matrix_add",
+      "13_matrix_mul",
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/nodejs/node.exe",
+      "prog.js"
+     ],
+     "cwd": "{root}/exec/dart/dart2js/{task}",
+     "artifact": "{root}/exec/dart/dart2js/{task}/prog.js"
+    },
+    {
+     "toolchain": "dart2wasm",
+     "backend": "v8",
+     "tasks": [
+      "*"
+     ],
+     "except": [
+      "11_parallel_sum",
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/nodejs/node.exe",
+      "{root}/exec/dart/dart2wasm/run.mjs"
+     ],
+     "cwd": "{root}/exec/dart/dart2wasm/{task}",
+     "artifact": "{root}/exec/dart/dart2wasm/{task}/prog.wasm"
     }
    ],
    "language": "Dart"
@@ -2006,7 +2077,7 @@
      "cmd": [
       "{root}/tools/nodejs/node.exe",
       "--no-warnings",
-      "{root}/tools/nodejs/wasi-run.js",
+      "{root}/exec/wasi-run.js",
       "prog.wasm",
       "."
      ]
@@ -2163,6 +2234,92 @@
      ],
      "cwd": "{root}/exec/haxe/T{task}",
      "artifact": "{root}/exec/haxe/T{task}/out/T{task}.exe"
+    },
+    {
+     "toolchain": "haxe (js)",
+     "backend": "v8",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/nodejs/node.exe",
+      "js/T{task}.js"
+     ],
+     "cwd": "{root}/exec/haxe/T{task}",
+     "artifact": "{root}/exec/haxe/T{task}/js/T{task}.js"
+    },
+    {
+     "toolchain": "haxe (jvm)",
+     "backend": "hotspot",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "java",
+      "-jar",
+      "jvm/T{task}.jar"
+     ],
+     "cwd": "{root}/exec/haxe/T{task}",
+     "artifact": "{root}/exec/haxe/T{task}/jvm/T{task}.jar"
+    },
+    {
+     "toolchain": "haxe (cs)",
+     "backend": "mono",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/mono/Mono/bin/mono.exe",
+      "cs/T{task}.exe"
+     ],
+     "cwd": "{root}/exec/haxe/T{task}",
+     "artifact": "{root}/exec/haxe/T{task}/cs/T{task}.exe"
+    },
+    {
+     "toolchain": "haxe (php)",
+     "backend": "zend",
+     "tasks": [
+      "*"
+     ],
+     "except": [
+      "11_parallel_sum"
+     ],
+     "cmd": [
+      "{root}/tools/php/php.exe",
+      "-d",
+      "extension_dir={root}/tools/php/ext",
+      "-d",
+      "extension=mbstring",
+      "php/index.php"
+     ],
+     "cwd": "{root}/exec/haxe/T{task}",
+     "artifact": "{root}/exec/haxe/T{task}/php/index.php"
+    },
+    {
+     "toolchain": "haxe (python)",
+     "backend": "cpython",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "python",
+      "py/T{task}.py"
+     ],
+     "cwd": "{root}/exec/haxe/T{task}",
+     "artifact": "{root}/exec/haxe/T{task}/py/T{task}.py"
+    },
+    {
+     "toolchain": "haxe (neko)",
+     "backend": "neko",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/neko/neko.exe",
+      "neko/T{task}.n"
+     ],
+     "cwd": "{root}/exec/haxe/T{task}",
+     "artifact": "{root}/exec/haxe/T{task}/neko/T{task}.n"
     }
    ],
    "language": "Haxe"
@@ -2500,12 +2657,50 @@
       "*"
      ],
      "cmd": [
-      "C:\\Program Files\\Java\\jdk-24\\bin\\java.exe",
+      "java",
       "-jar",
       "prog.jar"
      ],
      "cwd": "{root}/exec/kotlin/{task}",
      "artifact": "{root}/exec/kotlin/{task}/prog.jar"
+    },
+    {
+     "toolchain": "js",
+     "backend": "v8",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/nodejs/node.exe",
+      "prog.js"
+     ],
+     "cwd": "{root}/exec/kotlin/{task}",
+     "artifact": "{root}/exec/kotlin/{task}/prog.js"
+    },
+    {
+     "toolchain": "wasm",
+     "backend": "wasmtime",
+     "tasks": [
+      "*"
+     ],
+     "except": [
+      "11_parallel_sum",
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "run",
+      "-W",
+      "gc=y",
+      "-W",
+      "function-references=y",
+      "-W",
+      "exceptions=y",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/kotlin/{task}",
+     "artifact": "{root}/exec/kotlin/{task}/prog.wasm"
     }
    ],
    "language": "Kotlin"
@@ -2773,6 +2968,18 @@
      "cwd": "{root}/exec/nim/nim/{task}",
      "artifact": "{root}/exec/nim/nim/{task}/prog.exe",
      "timeout": 600
+    },
+    {
+     "toolchain": "nim (cpp)",
+     "backend": "gcc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/nim/cpp/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/nim/cpp/{task}",
+     "artifact": "{root}/exec/nim/cpp/{task}/prog.exe"
     }
    ],
    "language": "Nim"
@@ -3556,7 +3763,7 @@
      "cmd": [
       "{root}/tools/nodejs/node.exe",
       "--no-warnings",
-      "{root}/tools/nodejs/wasi-run.js",
+      "{root}/exec/wasi-run.js",
       "prog.wasm",
       "."
      ],
@@ -3576,7 +3783,7 @@
      "cmd": [
       "{root}/tools/nodejs/node.exe",
       "--no-warnings",
-      "{root}/tools/nodejs/wasi-run.js",
+      "{root}/exec/wasi-run.js",
       "prog.wasm",
       "."
      ]
@@ -3790,6 +3997,22 @@
      "cwd": "{root}/exec/standardml/polyml/{task}",
      "artifact": "{root}/exec/standardml/polyml/{task}/{task}.exe",
      "note": "-H 256 is the row's documented run line (Poly/ML's initial heap in MB). All fifteen tasks run from the build directory, which is where build_all.bat stages data.bin; RUN.md's sentence about sources/standardml describes the source header's run line."
+    },
+    {
+     "toolchain": "MLton",
+     "backend": "mlton",
+     "tasks": [
+      "*"
+     ],
+     "except": [
+      "03_func_sum",
+      "11_parallel_sum"
+     ],
+     "cmd": [
+      "{root}/exec/standardml/mlton/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/standardml/mlton/{task}",
+     "artifact": "{root}/exec/standardml/mlton/{task}/prog.exe"
     }
    ],
    "language": "Standard ML"
@@ -4033,7 +4256,7 @@
      "cmd": [
       "{root}/tools/nodejs/node.exe",
       "--no-warnings",
-      "{root}/tools/nodejs/wasi-run.js",
+      "{root}/exec/wasi-run.js",
       "prog.wasm",
       "."
      ]
@@ -4050,7 +4273,7 @@
      "cmd": [
       "{root}/tools/nodejs/node.exe",
       "--no-warnings",
-      "{root}/tools/nodejs/wasi-run.js",
+      "{root}/exec/wasi-run.js",
       "prog.wasm",
       "."
      ]
@@ -4219,6 +4442,18 @@
       "PATH": "{root}/tools/msys64/msys64/ucrt64/bin;{PATH}"
      },
      "artifact": "{root}/exec/v/v/{task}/prog.exe"
+    },
+    {
+     "toolchain": "v (clang)",
+     "backend": "llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/v/clang/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/v/clang/{task}",
+     "artifact": "{root}/exec/v/clang/{task}/prog.exe"
     }
    ],
    "language": "V"
@@ -4478,6 +4713,18 @@
      ],
      "cwd": "{root}/exec/zig/zig/{task}",
      "artifact": "{root}/exec/zig/zig/{task}/prog.exe"
+    },
+    {
+     "toolchain": "zig (self-hosted x86-64)",
+     "backend": "zig-selfhosted",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/zig/selfhosted/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/zig/selfhosted/{task}",
+     "artifact": "{root}/exec/zig/selfhosted/{task}/prog.exe"
     }
    ],
    "language": "Zig"
@@ -4686,7 +4933,7 @@
      "cmd": [
       "{root}/tools/nodejs/node.exe",
       "--no-warnings",
-      "{root}/tools/nodejs/wasi-run.js",
+      "{root}/exec/wasi-run.js",
       "prog.wasm",
       "."
      ],
@@ -4706,7 +4953,7 @@
      "cmd": [
       "{root}/tools/nodejs/node.exe",
       "--no-warnings",
-      "{root}/tools/nodejs/wasi-run.js",
+      "{root}/exec/wasi-run.js",
       "prog.wasm",
       "."
      ]

@@ -1,0 +1,54 @@
+07_string_append.kt:17:15: error: unresolved reference 'wasm'.
+import kotlin.wasm.ExperimentalWasmInterop
+              ^^^^
+07_string_append.kt:18:15: error: unresolved reference 'wasm'.
+import kotlin.wasm.WasmImport
+              ^^^^
+07_string_append.kt:19:15: error: unresolved reference 'wasm'.
+import kotlin.wasm.unsafe.UnsafeWasmMemoryApi
+              ^^^^
+07_string_append.kt:20:15: error: unresolved reference 'wasm'.
+import kotlin.wasm.unsafe.withScopedMemoryAllocator
+              ^^^^
+07_string_append.kt:23:8: error: unresolved reference 'ExperimentalWasmInterop'.
+@OptIn(ExperimentalWasmInterop::class)
+       ^^^^^^^^^^^^^^^^^^^^^^^
+07_string_append.kt:23:8: error: annotation argument must be a compile-time constant.
+@OptIn(ExperimentalWasmInterop::class)
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+07_string_append.kt:24:2: error: unresolved reference 'WasmImport'.
+@WasmImport("wasi_snapshot_preview1", "fd_write")
+ ^^^^^^^^^^
+07_string_append.kt:28:8: error: unresolved reference 'ExperimentalWasmInterop'.
+@OptIn(ExperimentalWasmInterop::class, UnsafeWasmMemoryApi::class)
+       ^^^^^^^^^^^^^^^^^^^^^^^
+07_string_append.kt:28:8: error: annotation argument must be a compile-time constant.
+@OptIn(ExperimentalWasmInterop::class, UnsafeWasmMemoryApi::class)
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+07_string_append.kt:28:40: error: unresolved reference 'UnsafeWasmMemoryApi'.
+@OptIn(ExperimentalWasmInterop::class, UnsafeWasmMemoryApi::class)
+                                       ^^^^^^^^^^^^^^^^^^^
+07_string_append.kt:28:40: error: annotation argument must be a compile-time constant.
+@OptIn(ExperimentalWasmInterop::class, UnsafeWasmMemoryApi::class)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+07_string_append.kt:30:5: error: unresolved reference 'withScopedMemoryAllocator'.
+    withScopedMemoryAllocator { allocator ->
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+07_string_append.kt:30:33: error: cannot infer type for value parameter 'allocator'. Specify it explicitly.
+    withScopedMemoryAllocator { allocator ->
+                                ^^^^^^^^^
+07_string_append.kt:32:30: error: unresolved reference 'allocate'.
+        val text = allocator.allocate(data.size + 1)
+                             ^^^^^^^^
+07_string_append.kt:39:29: error: unresolved reference 'allocate'.
+        val iov = allocator.allocate(8)
+                            ^^^^^^^^
+07_string_append.kt:40:19: error: unresolved reference 'storeInt'.
+        (iov + 0).storeInt(text.address.toInt())
+                  ^^^^^^^^
+07_string_append.kt:41:19: error: unresolved reference 'storeInt'.
+        (iov + 4).storeInt(data.size + 1)
+                  ^^^^^^^^
+07_string_append.kt:42:34: error: unresolved reference 'allocate'.
+        val nwritten = allocator.allocate(4)
+                                 ^^^^^^^^

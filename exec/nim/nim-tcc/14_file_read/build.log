@@ -1,0 +1,20 @@
+Hint: used config file 'D:\Users\pedro.cardoso\stupidspeed\tools\nim\nim-2.2.12\config\nim.cfg' [Conf]
+Hint: used config file 'D:\Users\pedro.cardoso\stupidspeed\tools\nim\nim-2.2.12\config\config.nims' [Conf]
+...........................................................................................
+CC: system/exceptions.nim
+CC: std/sysatomics.nim
+CC: std/private/digitsutils.nim
+CC: system/dollars.nim
+CC: std/widestrs.nim
+CC: std/exitprocs.nim
+CC: std/syncio.nim
+CC: system.nim
+CC: strutils.nim
+CC: dynlib.nim
+CC: winlean.nim
+CC: times.nim
+CC: std/monotimes.nim
+CC: t14_file_read.nim
+Hint:  [Link]
+Hint: mm: orc; opt: speed; options: -d:release
+47454 lines; 2.222s; 73.098MiB peakmem; proj: D:\Users\pedro.cardoso\stupidspeed\exec\nim\nim-tcc\14_file_read\t14_file_read.nim; out: D:\Users\pedro.cardoso\stupidspeed\exec\nim\nim-tcc\14_file_read\prog.exe [SuccessX]
