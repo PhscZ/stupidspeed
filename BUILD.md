@@ -262,7 +262,7 @@ to get there, because that is what decides whether a cell's number contains comp
 **The engine, and why it is the axis that matters.** Each of the seven shapes below is a
 different *kind* of execution; the **engine** is the specific component doing it. `exec/cells.json`
 carries an `engine` id on every toolchain entry and an `engines` table naming what each one is,
-and `exec/harness.py` groups its tables by it. 159 toolchains resolve to 67 engines, and the
+and `exec/harness.py` groups its tables by it. 160 toolchains resolve to 67 engines, and the
 counts are not spread evenly:
 
 | Engine | Rows | The rows |
@@ -270,7 +270,7 @@ counts are not spread evenly:
 | GCC | 16 | `ada` (gnat), `fortran` (gfortran), `c` (gcc), `cpp` (g++), `cobol`, `vala`, `nim`, `mercury`, `ats`, `eiffel`, `seed7`, `v`, `nelua`, `python` (cython), `python` (nuitka), `haxe` (hxcpp) |
 | LLVM | 19 | `c`/`cpp` (clang), `rust`, `swift`, `zig`, `d` (ldc2), `fortran` (flang), `go` (tinygo), `crystal`, `odin`, `c3`, `beef`, `pony`, `lean4`, `kotlin` (native), `scala` (native), `terra`, `objectivec`, `qb64` |
 | wasmtime (Cranelift) | 11 | the eleven `wasm32-wasip1` rows |
-| V8 | 9 | eight of those same modules under node's WASI shim, plus `scala-js` and `clojurescript` |
+| V8 | 10 | seven of those same modules under node's WASI shim, plus `deno` (JavaScript), `scala-js` and `clojurescript` |
 | wasmtime (Winch) | 8 | the same eight compiled modules under wasmtime's baseline compiler |
 | WasmEdge | 7 | the same modules under a third runtime |
 | WAMR (iwasm) | 7 | the same modules under a fourth runtime |
@@ -278,7 +278,7 @@ counts are not spread evenly:
 | CoreCLR | 5 | `csharp`, `fsharp`, `vbnet`, `boo`, `componentpascal` |
 | MSVC | 4 | `c`/`cpp` (msvc), `commonlisp` (ecl), `modula3` |
 | BEAM | 4 | `erlang` (escript), `erlang` (erlc), `elixir`, `gleam` — one VM, three front ends, and a compile-once/compile-every-run pair inside it |
-| 52 more | 1-3 each | engines only one or two rows here use |
+| 56 more | 1-3 each | engines only one or two rows here use |
 
 **Sixteen rows share one code generator.** Ada, Fortran, COBOL, Vala, Nim, Mercury, ATS, Eiffel,
 Seed7, V, Nelua, Cython, Nuitka, hxcpp and the two C-family rows all hand their output to GCC;

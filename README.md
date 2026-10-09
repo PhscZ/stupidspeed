@@ -113,7 +113,7 @@ labelled by engine rather than by language:
 | CoreCLR | 5 | `csharp`, `fsharp`, `vbnet`, `boo`, `gpcp` — one CLR, five compilers |
 | MSVC | 4 | `cl`, `cl` (C++), `ecl`, `cm3` |
 | wasmtime (Cranelift) | 11 | the eleven `wasm32-wasip1` rows: the optimising compiler, and the default |
-| V8 | 10 | the wasm rows under node's WASI shim, plus `scala-js` and `clojurescript` |
+| V8 | 10 | seven of the eight WebAssembly modules under node's WASI shim, plus `deno` (JavaScript), `scala-js` and `clojurescript` |
 | wasmtime (Winch) | 8 | the same eight compiled modules under wasmtime's *baseline* compiler — same runtime, different code generator |
 | WasmEdge | 7 | the same modules under a third runtime |
 | WAMR (iwasm) | 7 | the same modules under a fourth runtime |
@@ -127,7 +127,7 @@ labelled by engine rather than by language:
 | LLVM (JIT) | 2 | `julia` and `julia (interpreted)` — one pipeline, one flag apart |
 | 49 more | 1 each | engines only one row here uses |
 
-Eighteen engines cover 110 of the 160 rows; the other 49 rows are each the only user of
+Eighteen engines cover 111 of the 160 rows; the other 49 rows are each the only user of
 their engine.
 
 That is the whole point of the axis: **`ada`, `fortran`, `modula-2`, `c`, `c++`, `cobol`,
@@ -280,11 +280,12 @@ distinguishable at a glance and a line's colour says what sort of thing it is.
 | Unicon | Unicon | unicon |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | V8 | AssemblyScript | node (wasip1) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | V8 | C | node (wasip1) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| V8 | C++ | node (wasip1) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| V8 | C++ | node (wasip1) |
+| V8 | Clojure | cljs.main |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | V8 | Go | node (wasip1) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | V8 | JavaScript | deno |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | V8 | Rust | node (wasip1) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| V8 | Scala | js |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| V8 | Scala | scala-cli (js) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | V8 | TinyGo | node (wasip1) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | V8 | Zig | node (wasip1) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | VBScript | VBScript | cscript |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -759,6 +760,8 @@ Output: `52428800`
 | VBScript | cscript |
 | Raku | rakudo (MoarVM) |
 | Elixir | elixir (BEAM) |
+| Erlang | OTP (escript), erlc (compiled) |
+| Gleam | gleam |
 | Beef | BeefBuild |
 | Haxe | hxcpp, hashlink |
 | Eiffel | eiffelstudio |
