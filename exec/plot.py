@@ -9,24 +9,27 @@ the filesystem with no server and no network.
     python exec/plot.py --open          # ...and open it in the browser
     python exec/plot.py --json other.json --html other.html
 
-The matrix is read **engine-first**.  A row's language is its front end; its
-*engine* is the component that actually turns the program into executed machine
-code, or interprets it -- `ada`, `fortran`, `modula-2`, `c++` and `c` are all
-GCC, and `java`, `kotlin`, `scala`, `clojure` and `groovy` are all HotSpot.  So
-many rows are the same engine wearing a different front end, and the page is
-built to say so:
+The matrix has two axes and the page is built around both.  A row is a **front
+end**: a language and the toolchain that turns its source into something
+runnable.  A **backend** is what then actually executes it -- the code generator
+or virtual machine the front end hands its program to -- and there are far fewer
+backends than front ends, because many front ends share one: `ada`, `fortran`,
+`modula-2`, `c++` and `c` are all GCC, `java`, `kotlin`, `scala`, `clojure` and
+`groovy` are all HotSpot, and one WebAssembly module runs unchanged on six
+runtimes.  So most rows are the same backend wearing a different front end, and
+the page is built to say so:
 
-  * every series is tagged with its engine and coloured by the engine's *kind*
+  * every series is tagged with its backend and coloured by the backend's *kind*
     (`native-aot`, `native-jit`, `bytecode-vm`, `interpreter`, `wasm-runtime`,
     `assembler`) rather than by language -- six kinds is few enough for a
     readable, accessible palette;
-  * the legend is grouped by engine: each engine is a heading (its display name
+  * the legend is grouped by backend: each backend is a heading (its display name
     and kind) with its rows/toolchains nested underneath, and clicking a heading
     collapses its group;
   * the multi-series chart has two modes, chosen with the View control --
-    "per toolchain" (one line per row/toolchain) and "per engine" (one line per
-    engine, each point the median of that engine's rows' medians for the task);
-  * the ranked bar chart for a single task names the engine beside each row.
+    "per toolchain" (one line per row/toolchain) and "per backend" (one line per
+    backend, each point the median of that backend's rows' medians for the task);
+  * the ranked bar chart for a single task names the backend beside each row.
 
 The page reads whichever metric is selected (the program's own `TIME_MS`, the
 harness's end-to-end wall clock, peak working set, or artifact size), on a log
@@ -35,9 +38,9 @@ isolates a series on a legend or bar click and shows the full cell record on
 hover; the ranked bar chart sorts every toolchain so "which language is fastest
 at task 13" is one glance.
 
-The engine table travels in `results.json`.  When a cell has no engine (an older
+The backend table travels in `results.json`.  When a cell has no backend (an older
 results file), the registry (`cells.json`) is consulted for that row/toolchain's
-engine, and anything still unknown is shown as `?` rather than dropped.
+backend, and anything still unknown is shown as `?` rather than dropped.
 
 Cells that failed are drawn as hollow markers at the bottom of the chart rather
 than dropped, because a row that is missing from a chart reads as "not
@@ -181,10 +184,10 @@ svg{display:block;width:100%;touch-action:none;cursor:crosshair}
   <label>View
     <select id="view">
       <option value="toolchain">per toolchain</option>
-      <option value="engine">per engine (rollup)</option>
+      <option value="backend">per backend (rollup)</option>
     </select>
   </label>
-  <label>Search <input type="text" id="search" placeholder="row, toolchain or engine"></label>
+  <label>Search <input type="text" id="search" placeholder="row, toolchain or backend"></label>
   <button id="reset">Reset zoom</button>
   <button id="iso">Clear isolation</button>
   <span class="spacer"></span>
@@ -236,29 +239,29 @@ function fmtBytes(v){
   return (i === 0 ? v : v.toFixed(v < 10 ? 2 : 1)) + " " + u[i];
 }
 
-// ---- engine table ----------------------------------------------------------
-// The registry's engine table travels in the results doc.  A cell may still
-// lack an engine (an older results file, or a toolchain added since the file
+// ---- backend table ----------------------------------------------------------
+// The registry's backend table travels in the results doc.  A cell may still
+// lack a backend (an older results file, or a toolchain added since the file
 // was written), so fall back to the registry copy that build() embeds, then to
-// "?" -- a series is never dropped just because its engine is unknown.
-const ENGINES = DOC.engines || {};
-const REG_ENGINES = __ENGINES__ || {};
-function engineOf(c){
+// "?" -- a series is never dropped just because its backend is unknown.
+const BACKENDS = DOC.backends || {};
+const REG_BACKENDS = __BACKENDS__ || {};
+function backendOf(c){
   if (!c) return "?";
-  if (c.engine) return c.engine;
-  const e = REG_ENGINES[c.row + "/" + c.toolchain];
+  if (c.backend) return c.backend;
+  const e = REG_BACKENDS[c.row + "/" + c.toolchain];
   return e || "?";
 }
-function engineMeta(id){
-  return ENGINES[id] || REG_ENGINES["#" + id] || {name: id, kind: "", what: ""};
+function backendMeta(id){
+  return BACKENDS[id] || REG_BACKENDS["#" + id] || {name: id, kind: "", what: ""};
 }
-function engineName(id){ return engineMeta(id).name || id; }
+function backendName(id){ return backendMeta(id).name || id; }
 
 // ---- kind palette ----------------------------------------------------------
 // Six kinds, six hues, picked to stay distinguishable on both the light and the
 // dark surface (mid-lightness, decent saturation).  Colour is by kind, not by
 // language: the question the page answers is "what actually ran", and two rows
-// of one engine share a hue on purpose.
+// of one backend share a hue on purpose.
 const KIND_COLORS = {
   "native-aot":   "hsl(212 72% 50%)",   // blue
   "native-jit":   "hsl(28 88% 50%)",    // orange
@@ -271,48 +274,48 @@ const KIND_FALLBACK = "hsl(215 12% 52%)";   // grey for an unknown kind
 function kindColor(kind){ return KIND_COLORS[kind] || KIND_FALLBACK; }
 
 // ---- series model ----------------------------------------------------------
-// One series per (row, toolchain) in toolchain mode; one per engine in engine
+// One series per (row, toolchain) in toolchain mode; one per backend in backend
 // mode.  A series' `cells` map always holds a cell-shaped object, so the same
 // drawing, tooltip and bar code works for both.
 const SERIES = [];
 const BY_KEY = new Map();
-const ENGINE_SERIES = [];
-const BY_ENGINE = new Map();
+const BACKEND_SERIES = [];
+const BY_BACKEND = new Map();
 for (const c of DOC.cells){
   const key = c.row + "/" + c.toolchain;
-  const eng = engineOf(c);
+  const backend = backendOf(c);
   let s = BY_KEY.get(key);
   if (!s){
     s = {key, row: c.row, toolchain: c.toolchain, language: c.language || c.row,
-         engine: eng, cells: new Map()};
+         backend: backend, cells: new Map()};
     BY_KEY.set(key, s);
     SERIES.push(s);
   }
   s.cells.set(c.task, c);
 }
 for (const s of SERIES){
-  s.color = kindColor(engineMeta(s.engine).kind);
+  s.color = kindColor(backendMeta(s.backend).kind);
 }
 SERIES.sort((a,b) => a.row.localeCompare(b.row) || a.toolchain.localeCompare(b.toolchain));
 
-// ---- engine rollup ---------------------------------------------------------
-// One series per engine: for each task, the median of the rows' medians.  The
+// ---- backend rollup ---------------------------------------------------------
+// One series per backend: for each task, the median of the rows' medians.  The
 // median (rather than the fastest row) is labelled as such in the UI, because
-// it is the robust summary of "what this engine typically does"; the fastest
-// row would flatter an engine whose front ends disagree.  A cell the rollup
+// it is the robust summary of "what this backend typically does"; the fastest
+// row would flatter a backend whose front ends disagree.  A cell the rollup
 // synthesises is not a measurement, so its `median_wall_ms`/memory fields are
 // copied from the chosen contributing cell only when that is meaningful -- for
 // the median it is left null and the tooltip names the contributor count.
 {
-  const members = new Map();       // engine id -> [series]
+  const members = new Map();       // backend id -> [series]
   for (const s of SERIES){
-    if (!members.has(s.engine)) members.set(s.engine, []);
-    members.get(s.engine).push(s);
+    if (!members.has(s.backend)) members.set(s.backend, []);
+    members.get(s.backend).push(s);
   }
-  for (const [eng, list] of members){
-    const meta = engineMeta(eng);
-    const es = {key: "engine:" + eng, engine: eng, kind: meta.kind,
-                name: meta.name || eng, rows: list, cells: new Map()};
+  for (const [backend, list] of members){
+    const meta = backendMeta(backend);
+    const es = {key: "backend:" + backend, backend: backend, kind: meta.kind,
+                name: meta.name || backend, rows: list, cells: new Map()};
     es.color = kindColor(meta.kind);
     for (const t of (DOC.tasks || [])){
       // Aggregate each metric the page can show, not just the speed one: the
@@ -338,28 +341,28 @@ SERIES.sort((a,b) => a.row.localeCompare(b.row) || a.toolchain.localeCompare(b.t
         return n % 2 ? vals[(n-1)/2] : (vals[n/2 - 1] + vals[n/2]) / 2;
       };
       const wv = pick("median_wall_ms"), mv = pick("peak_bytes"), av = pick("artifact_bytes");
-      es.cells.set(t, {row: meta.name || eng, toolchain: eng + " (rollup)",
+      es.cells.set(t, {row: meta.name || backend, toolchain: backend + " (rollup)",
                        task: t, status: "OK",
                        median_ms: med(sv), median_wall_ms: wv.length ? med(wv) : null,
                        peak_bytes: mv.length ? med(mv) : null,
                        artifact_bytes: av.length ? med(av) : null,
-                       runs: sv.length, engine: eng,
+                       runs: sv.length, backend: backend,
                        _rollup: true, _members: sv.length, _min: sv[0], _max: sv[sv.length-1]});
     }
-    ENGINE_SERIES.push(es);
+    BACKEND_SERIES.push(es);
   }
-  ENGINE_SERIES.sort((a,b) => a.name.localeCompare(b.name));
+  BACKEND_SERIES.sort((a,b) => a.name.localeCompare(b.name));
 }
 
 // The active series set and lookup for the current view.
 function activeSeries(){
-  return state.view === "engine" ? ENGINE_SERIES : SERIES;
+  return state.view === "backend" ? BACKEND_SERIES : SERIES;
 }
 function seriesByKey(key){
-  if (state.view === "engine") return BY_ENGINE.get(key);
+  if (state.view === "backend") return BY_BACKEND.get(key);
   return BY_KEY.get(key);
 }
-for (const es of ENGINE_SERIES) BY_ENGINE.set(es.key, es);
+for (const es of BACKEND_SERIES) BY_BACKEND.set(es.key, es);
 
 const TASKS = DOC.tasks && DOC.tasks.length ? DOC.tasks : __TASKS__;
 const taskIndex = new Map(TASKS.map((t,i) => [t,i]));
@@ -384,9 +387,9 @@ function el(name, attrs){
 
 function matches(s, q){
   if (!q) return true;
-  if (state.view === "engine") return (s.name + " " + s.engine + " " + (s.kind || "")).toLowerCase().includes(q);
+  if (state.view === "backend") return (s.name + " " + s.backend + " " + (s.kind || "")).toLowerCase().includes(q);
   return (s.row + "/" + s.toolchain).toLowerCase().includes(q) ||
-         (s.engine + " " + engineName(s.engine)).toLowerCase().includes(q);
+         (s.backend + " " + backendName(s.backend)).toLowerCase().includes(q);
 }
 function visibleSeries(){
   const q = state.search.trim().toLowerCase();
@@ -431,7 +434,7 @@ function valueOf(c){
 }
 function failedCells(){
   if (state.status === "ok") return [];
-  if (state.view === "engine") return [];   // a rollup is an aggregate, not a cell
+  if (state.view === "backend") return [];   // a rollup is an aggregate, not a cell
   return [...BY_KEY.values()].flatMap(s => [...s.cells.values()])
     .filter(c => c.status !== "OK");
 }
@@ -622,9 +625,9 @@ function renderLegend(){
   const m = metric();
   const q = state.search.trim().toLowerCase();
 
-  // Per-engine view: a flat list, one line per engine, no grouping to do.
-  if (state.view === "engine"){
-    const list = ENGINE_SERIES.filter(s => matches(s, q)).map(s => ({s, med: seriesMedian(s)}));
+  // Per-backend view: a flat list, one line per backend, no grouping to do.
+  if (state.view === "backend"){
+    const list = BACKEND_SERIES.filter(s => matches(s, q)).map(s => ({s, med: seriesMedian(s)}));
     list.sort((a,b) => {
       if (a.med == null && b.med == null) return a.s.name.localeCompare(b.s.name);
       if (a.med == null) return 1;
@@ -638,18 +641,18 @@ function renderLegend(){
     return;
   }
 
-  // Per-toolchain view, grouped by engine: the engine name (and kind) is a
+  // Per-toolchain view, grouped by backend: the backend name (and kind) is a
   // heading, its rows nest underneath.  Groups are ordered by their fastest
-  // member's median, so the engines that win float to the top, and inside a
+  // member's median, so the backends that win float to the top, and inside a
   // group the rows keep the same fastest-first order.
   const groups = new Map();
   for (const s of SERIES){
     if (q && !matches(s, q)) continue;
-    if (!groups.has(s.engine)) groups.set(s.engine, []);
-    groups.get(s.engine).push(s);
+    if (!groups.has(s.backend)) groups.set(s.backend, []);
+    groups.get(s.backend).push(s);
   }
   const gList = [];
-  for (const [eng, members] of groups){
+  for (const [backend, members] of groups){
     members.sort((a,b) => {
       const am = seriesMedian(a), bm = seriesMedian(b);
       if (am == null && bm == null) return a.row.localeCompare(b.row) || a.toolchain.localeCompare(b.toolchain);
@@ -661,27 +664,27 @@ function renderLegend(){
       const v = seriesMedian(s);
       return v == null ? acc : (acc == null || v < acc ? v : acc);
     }, null);
-    gList.push({eng, members, best});
+    gList.push({backend, members, best});
   }
   gList.sort((a,b) => {
-    if (a.best == null && b.best == null) return engineName(a.eng).localeCompare(engineName(b.eng));
+    if (a.best == null && b.best == null) return backendName(a.backend).localeCompare(backendName(b.backend));
     if (a.best == null) return 1;
     if (b.best == null) return -1;
     return a.best - b.best;
   });
-  for (const {eng, members, best} of gList){
-    const meta = engineMeta(eng);
-    const collapsed = state.collapsed.has(eng);
+  for (const {backend, members, best} of gList){
+    const meta = backendMeta(backend);
+    const collapsed = state.collapsed.has(backend);
     const allOff = members.every(s => state.hidden.has(s.key));
     const head = document.createElement("div");
     head.className = "lgh";
-    head.title = (meta.what || meta.name || eng) + " -- " + members.length + " row(s)";
+    head.title = (meta.what || meta.name || backend) + " -- " + members.length + " row(s)";
     head.innerHTML = `<span class="caret">${collapsed ? "\u25B8" : "\u25BE"}</span>` +
       `<span class="sw" style="background:${kindColor(meta.kind)}"></span>` +
-      `<span>${esc(engineName(eng))}</span>` +
+      `<span>${esc(backendName(backend))}</span>` +
       `<span class="kd">${esc(meta.kind || "?")}${allOff ? " (off)" : ""}</span>`;
     head.onclick = () => {
-      if (collapsed) state.collapsed.delete(eng); else state.collapsed.add(eng);
+      if (collapsed) state.collapsed.delete(backend); else state.collapsed.add(backend);
       renderLegend();
     };
     // A double-click on the heading toggles every row in the group, which is
@@ -715,8 +718,8 @@ function legendRow(s, med, nested){
   row.className = "lg" + (off ? " off" : "");
   row.dataset.key = s.key;
   if (nested){
-    const meta = engineMeta(s.engine);
-    row.title = s.row + "/" + s.toolchain + " -- engine " + engineName(s.engine) +
+    const meta = backendMeta(s.backend);
+    row.title = s.row + "/" + s.toolchain + " -- backend " + backendName(s.backend) +
       (meta.kind ? " (" + meta.kind + ")" : "");
   }
   const label = nested
@@ -812,7 +815,7 @@ window.addEventListener("mousemove", evt => {
   }
   if (!best || bd > 18 * 18){ tip.style.display = "none"; return; }
   const c = best.c, m = metric();
-  const em = engineMeta(c.engine || best.s.engine);
+  const em = backendMeta(c.backend || best.s.backend);
   const rows = [
     ["status", c.status + (c.warnings ? " (!)" : "")],
     ["TIME_MS", c.median_ms == null ? "--" : fmtMs(c.median_ms) + " ms"],
@@ -827,7 +830,7 @@ window.addEventListener("mousemove", evt => {
     ? `<div class="t">${esc(c.row)} <span style="color:var(--muted)">rollup</span></div>`
     : `<div class="t">${esc(best.s.row)} <span style="color:var(--muted)">${esc(best.s.toolchain)}</span></div>`;
   tip.innerHTML = head +
-    `<div style="color:var(--muted);margin-bottom:4px">engine ${esc(em.name || c.engine)}` +
+    `<div style="color:var(--muted);margin-bottom:4px">backend ${esc(em.name || c.backend)}` +
     (em.kind ? " &middot; " + esc(em.kind) : "") + "</div>" +
     `<div style="color:var(--muted);margin-bottom:4px">${esc(best.t)} &middot; ${esc(TASK_TITLES[best.t] || "")}</div>` +
     (c._rollup ? `<div style="color:var(--muted);margin-bottom:4px">median of the rows' medians</div>` : "") +
@@ -846,10 +849,10 @@ svg.addEventListener("mouseleave", () => { tip.style.display = "none"; });
 function renderBars(){
   const m = metric();
   const t = state.task;
-  const isEng = state.view === "engine";
+  const isBackendView = state.view === "backend";
   document.getElementById("barhead").textContent =
     "Ranked -- " + t + " (" + (TASK_TITLES[t] || "") + "), " + m.label +
-    (isEng ? " -- engines (median of rows' medians)" : " -- toolchains (engine in grey)");
+    (isBackendView ? " -- backends (median of rows' medians)" : " -- toolchains (backend in grey)");
   const rows = [];
   for (const s of activeSeries()){
     const c = s.cells.get(t);
@@ -869,13 +872,13 @@ function renderBars(){
     const w = Math.max(1.5, (state.scale === "log"
       ? (Math.log10(r.v + 1) / Math.log10(max + 1))
       : (r.v / max)) * 100);
-    // In toolchain view the label is "row toolchain" with the engine named in
-    // grey beside it -- the engine is the fact the bar is really about.
-    const nm = isEng
+    // In toolchain view the label is "row toolchain" with the backend named in
+    // grey beside it -- the backend is the fact the bar is really about.
+    const nm = isBackendView
       ? `<span class="nm" title="${esc(r.s.name)}">${esc(r.s.name)} <span style="color:var(--muted)">${esc(r.s.kind || "?")}</span></span>`
-      : `<span class="nm" title="${esc(r.s.row)}/${esc(r.s.toolchain)} (${esc(engineName(r.s.engine))})">` +
+      : `<span class="nm" title="${esc(r.s.row)}/${esc(r.s.toolchain)} (${esc(backendName(r.s.backend))})">` +
         `${esc(r.s.row)} <span style="color:var(--muted)">${esc(r.s.toolchain)}</span>` +
-        `<span style="color:var(--muted)"> \u00b7 ${esc(engineName(r.s.engine))}</span></span>`;
+        `<span style="color:var(--muted)"> \u00b7 ${esc(backendName(r.s.backend))}</span></span>`;
     d.innerHTML = `<span class="rk">${rank}</span>` + nm +
       `<span class="tr"><span class="fl" style="width:${w}%;background:${r.s.color}"></span></span>` +
       `<span class="vl">${m.unit === "ms" ? fmtMs(r.v) + " ms" : fmtBytes(r.v)}</span>`;
@@ -887,16 +890,16 @@ function renderBars(){
   for (const r of missing){
     const d = document.createElement("div");
     d.className = "bar bad";
-    const nm = isEng
+    const nm = isBackendView
       ? `<span class="nm">${esc(r.s.name)}</span>`
       : `<span class="nm">${esc(r.s.row)} <span style="color:var(--muted)">${esc(r.s.toolchain)}</span>` +
-        `<span style="color:var(--muted)"> \u00b7 ${esc(engineName(r.s.engine))}</span></span>`;
+        `<span style="color:var(--muted)"> \u00b7 ${esc(backendName(r.s.backend))}</span></span>`;
     d.innerHTML = `<span class="rk"></span>` + nm +
       `<span class="tr"></span><span class="vl" style="color:var(--err)">${r.c ? esc(r.c.status) : "not run"}</span>`;
     box.appendChild(d);
   }
-  document.getElementById("barnote").textContent = isEng
-    ? have.length + " engines with a measurement, " + missing.length + " without."
+  document.getElementById("barnote").textContent = isBackendView
+    ? have.length + " backends with a measurement, " + missing.length + " without."
     : have.length + " toolchains measured, " + missing.length + " not measured or not OK.";
 }
 
@@ -946,17 +949,17 @@ document.getElementById("iso").onclick = () => {
   state.isolated = null; state.hidden.clear(); render();
 };
 
-// A one-line reminder of what the current view means, since "per engine" turns
+// A one-line reminder of what the current view means, since "per backend" turns
 // the rows into something that is not a measurement of any one toolchain.
 function updateViewNote(){
   const n = document.getElementById("viewnote");
-  if (state.view === "engine"){
-    n.textContent = "Per engine: one line per engine, each point the median of " +
-      "that engine's rows' medians for the task. Colour is the engine kind. " +
-      "GCC and LLVM dominate because they are the same engine behind many front ends.";
+  if (state.view === "backend"){
+    n.textContent = "Per backend: one line per backend, each point the median of " +
+      "that backend's rows' medians for the task. Colour is the backend kind. " +
+      "GCC and LLVM dominate because they are the same backend behind many front ends.";
   } else {
     n.textContent = "Per toolchain: one line per row/toolchain, coloured by its " +
-      "engine's kind. The legend groups rows under their engine.";
+      "backend's kind. The legend groups rows under their backend.";
   }
 }
 
@@ -981,7 +984,7 @@ const sub = document.getElementById("sub");
   if (method.runs) parts.push(method.runs + " timed runs each");
   if (method.pinning) parts.push(method.pinning);
   if (DOC.generated) parts.push("generated " + esc(DOC.generated));
-  parts.push(`<b>${ENGINE_SERIES.length}</b> engines`);
+  parts.push(`<b>${BACKEND_SERIES.length}</b> backends`);
   sub.innerHTML = parts.join(" &middot; ");
 }
 buildTaskPicker();
@@ -999,36 +1002,36 @@ def load(path):
         return json.load(fh)
 
 
-def build(doc, tasks, engines=None, engine_of=None):
+def build(doc, tasks, backends=None, backend_of=None):
     """The page, with the measurements and the task list embedded in it.
 
-    `engines` is the registry's engine table and `engine_of` a
-    ``"row/toolchain" -> engine id`` map.  The results doc carries both, but an
+    `backends` is the registry's backend table and `backend_of` a
+    ``"row/toolchain" -> backend id`` map.  The results doc carries both, but an
     older file may not, so the registry copy is embedded as a fallback: a cell
-    whose engine is missing is grouped by the registry rather than shown as
+    whose backend is missing is grouped by the registry rather than shown as
     unknown.
     """
     cells = doc.get("cells") or []
-    engines = engines or doc.get("engines") or {}
-    engine_of = engine_of or {}
+    backends = backends or doc.get("backends") or {}
+    backend_of = backend_of or {}
     # Only what the page draws: a full cell carries its per-run samples and the
     # resolved command, which would multiply the file size for nothing.
-    keep = ("row", "language", "toolchain", "engine", "task", "status",
+    keep = ("row", "language", "toolchain", "backend", "task", "status",
             "median_ms", "median_wall_ms", "min_ms", "max_ms", "stdev_ms",
             "peak_bytes", "artifact_bytes", "out_bytes", "runs", "check",
             "pinned_cpu", "measured", "self_timed", "warnings", "error")
     slim = [{k: c.get(k) for k in keep if k in c} for c in cells]
-    # A cell with no engine at all is filled from the registry here, so the page
+    # A cell with no backend at all is filled from the registry here, so the page
     # has one place to fall back and the JS fallback is only for the registry's
     # own gaps.
     for c in slim:
-        if not c.get("engine"):
-            e = engine_of.get(c.get("row", "") + "/" + c.get("toolchain", ""))
+        if not c.get("backend"):
+            e = backend_of.get(c.get("row", "") + "/" + c.get("toolchain", ""))
             if e:
-                c["engine"] = e
-    doc = dict(doc, cells=slim, tasks=tasks, engines=engines)
-    reg = dict(engine_of)
-    for eid, meta in engines.items():
+                c["backend"] = e
+    doc = dict(doc, cells=slim, tasks=tasks, backends=backends)
+    reg = dict(backend_of)
+    for eid, meta in backends.items():
         reg["#" + eid] = meta
     # The measurements go in last: they are the one part of the page whose text
     # is not ours, so they must not be able to collide with a placeholder that
@@ -1036,7 +1039,7 @@ def build(doc, tasks, engines=None, engine_of=None):
     return (TEMPLATE
             .replace("__TITLES__", json.dumps(TASK_TITLES, separators=(",", ":")))
             .replace("__TASKS__", json.dumps(tasks))
-            .replace("__ENGINES__", json.dumps(reg, separators=(",", ":")))
+            .replace("__BACKENDS__", json.dumps(reg, separators=(",", ":")))
             .replace("__COUNT__", str(len(cells)))
             .replace("__TOTAL__", str(len(doc.get("all_cells") or [])))
             .replace("__DATA__", json.dumps(doc, separators=(",", ":"))))
@@ -1058,8 +1061,8 @@ def main():
     doc = load(args.json)
     tasks = doc.get("tasks") or TASKS
     total = len(doc.get("cells") or [])
-    engines = doc.get("engines") or {}
-    engine_of = {}
+    backends = doc.get("backends") or {}
+    backend_of = {}
     try:
         # The harness is the authority on how many cells the matrix has: it is
         # the same `expand` that decided what to run, so asking it keeps the
@@ -1069,18 +1072,18 @@ def main():
         reg = load(args.registry)
         tasks = reg.get("tasks", tasks)
         total = len(harness.expand(reg["rows"], tasks))
-        # The registry is also the authority on which engine a row/toolchain is:
+        # The registry is also the authority on which backend a row/toolchain is:
         # it is where the ids were assigned.  It fills in any cell the results
-        # file left without one (a file written before the engine column).
-        engines = engines or reg.get("engines", {})
+        # file left without one (a file written before the backend column).
+        backends = backends or reg.get("backends", {})
         for row, r in (reg.get("rows") or {}).items():
             for e in r.get("entries", []):
-                if e.get("engine"):
-                    engine_of[row + "/" + e.get("toolchain", "")] = e["engine"]
+                if e.get("backend"):
+                    backend_of[row + "/" + e.get("toolchain", "")] = e["backend"]
     except (OSError, ValueError, KeyError, ImportError, SystemExit):
         pass
     doc["all_cells"] = [None] * total
-    html = build(doc, tasks, engines, engine_of)
+    html = build(doc, tasks, backends, backend_of)
     with open(args.html, "w", encoding="utf-8") as fh:
         fh.write(html)
     cells = doc.get("cells") or []

@@ -1,0 +1,7 @@
+   Creating library D:\Users\pedro.cardoso\stupidspeed\exec\csharp\mono-aot\09_fib_recursive\09_fib_recursive.exe.dll.lib and object D:\Users\pedro.cardoso\stupidspeed\exec\csharp\mono-aot\09_fib_recursive\09_fib_recursive.exe.dll.exp
+Mono Ahead of Time compiler - compiling assembly D:\Users\pedro.cardoso\stupidspeed\exec\csharp\mono-aot\09_fib_recursive\09_fib_recursive.exe
+AOTID FEF68318-C71D-A145-A673-A0D6F4A238AF
+Compiled: 3/3
+Executing the native assembler: "clang.exe" --target=x86_64-pc-windows-msvc -c -x assembler  -o D:\Users\pedro.cardoso\AppData\Local\Temp\mono_aot_a23092.obj D:\Users\pedro.cardoso\AppData\Local\Temp\mono_aot_a23092
+Executing the native linker: "link.exe" /DLL /MACHINE:X64 /NOLOGO /INCREMENTAL:NO /DEBUG  /OUT:D:\Users\pedro.cardoso\stupidspeed\exec\csharp\mono-aot\09_fib_recursive\09_fib_recursive.exe.dll.tmp D:\Users\pedro.cardoso\AppData\Local\Temp\mono_aot_a23092.obj 
+JIT time: 1 ms, Generation time: 0 ms, Assembly+Link time: 276 ms.

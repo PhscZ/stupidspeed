@@ -18,10 +18,10 @@ like for the numbers to mean anything. For compilers, see `BUILD.md`.
 Languages compiled to a static native binary need nothing. The rest need the following.
 
 The table is per **front end** — what has to be installed for that row's own compiler. Several
-front ends share one runtime, which is the point of the engine axis in `README.md` and
+front ends share one runtime, which is the point of the backend axis in `README.md` and
 `BUILD.md`: `ada`, `fortran`, `c`, `c++`, `cobol`, `vala` and the other GCC rows all execute
 native code with nothing installed, and `java`, `kotlin`, `scala`, `clojure` and `groovy` all
-need the same JVM. A row that needs a runtime is really saying its **engine** does.
+need the same JVM. A row that needs a runtime is really saying its **backend** does.
 
 | Language | Toolchain | Runtime needed | Notes |
 |---|---|---|---|
@@ -30,6 +30,7 @@ need the same JVM. A row that needs a runtime is really saying its **engine** do
 | C++ | g++, clang++ | libstdc++ or libc++ | |
 | C++ | msvc | MSVC runtime | |
 | Rust | rustc | none | links libstdc statically by default |
+| Rust | rustc (cranelift) | none | a native Windows binary like the default `rustc` row; it links the UCRT (`ucrtbase.dll`, shipped with Windows), so nothing has to be installed. Only the build needs the MSVC environment |
 | Zig | zig | none | static by default |
 | Go | gc | none | static without cgo |
 | Go | tinygo | none | standalone executable; TinyGo's runtime is linked in. It has no fsync on Windows, so task 15 flushes by closing. |
@@ -47,7 +48,10 @@ need the same JVM. A row that needs a runtime is really saying its **engine** do
 | Dolphin Smalltalk | Dolphin 8 | MSVC x86 runtime (`vcruntime140.dll` + `msvcp140.dll`) | the VM is 32-bit, so it needs the x86 runtime, not the x64 one |
 | Groovy | groovy | JRE 17 or newer | the distribution ships its own `groovy.bat` launcher |
 | Tcl | tclsh | none | task 11 also needs the `Thread` extension; MSYS2's `mingw-w64-ucrt-x86_64-tcl` bundles it (`ucrt64/lib/thread2.8.13/`), see `BUILD.md` |
-| Java | openjdk | JRE 17 or newer | |
+| Java | openjdk | JRE 17 or newer | the default: tiered compilation, C1 then C2 |
+| Java | openjdk (interp) | the same JRE | `-Xint`: the template interpreter, no JIT. About 11x slower than the default on task 01 (818.9 ms against 71.9 ms) |
+| Java | openjdk (c1) | the same JRE | `-XX:TieredStopAtLevel=1`: C1 only, the C2 tier never runs |
+| Java | openjdk (c2) | the same JRE | `-XX:-TieredCompilation`: C2 only, no C1 profiling tier |
 | Java | openj9 | the Semeru JDK's own JRE (`tools/openj9/`) | Eclipse OpenJ9 21; the same class files as `openjdk`, no JVM flags, and `java.lang.Thread` maps to OS threads so task 11 is a real four-thread pass |
 | Java | graalvm jit | the GraalVM JDK itself, 21 or newer | no JVM flags needed: GraalVM's `java` has `UseJVMCICompiler` on by default, so it compiles the bytecode with the Graal compiler instead of HotSpot's C2 |
 | Java | graalvm native-image | none | standalone binary |
@@ -56,6 +60,7 @@ need the same JVM. A row that needs a runtime is really saying its **engine** do
 | C# | coreclr | .NET 8 runtime | |
 | C# | nativeaot | none | |
 | C# | mono | Mono runtime | |
+| C# | mono (aot) | Mono runtime, JIT off (`--full-aot`) | the same 15 assemblies as the `mono` row, compiled by the same `mcs`; the run loads `<task>.exe.dll` instead of JITting `<task>.exe`. Aot-only mode has no fallback: if a method the program calls is missing from the module, the run aborts instead of compiling it |
 | F# | dotnet | .NET 8 runtime | |
 | VB.NET | dotnet | .NET 8 runtime | same SDK and runtime as C# and F# |
 | Scala | jvm | JRE + scala library | |
@@ -63,6 +68,7 @@ need the same JVM. A row that needs a runtime is really saying its **engine** do
 | Dart | jit | Dart VM | |
 | JavaScript | bun, deno | the runtime itself | `bun <task>.js` needs nothing; the sources are CommonJS, which Deno 2 only accepts with **`--unstable-detect-cjs`**. Deno also denies the filesystem by default, so task 11 (its `worker_threads` re-read the script file) and task 14 need `--allow-read` and task 15 needs `--allow-write`; without them it stops with `Requires read access to …`. |
 | JavaScript | spidermonkey | the shell binary is the whole runtime | `js.exe <task>.js`. Real OS threads via `evalInWorker`, which runs its argument on a separate thread; cross-thread data needs a `SharedArrayBuffer` that the main thread has registered with `setSharedArrayBuffer()` first, with `Atomics` for the join — without that registration the worker's `getSharedArrayBuffer()` throws `RangeError`. Task 10 is a built-in-bignum cell: BigInt is native. `os.file.readFile(name, "binary")` gives the bytes as an ArrayBuffer, and `os.file` has no chunked read or append, so tasks 14 and 15 read and write the whole 50 MiB in one call. |
+| TypeScript | bun, deno | the runtime itself | `bun <task>.ts` needs nothing. `deno run <task>.ts` also needs nothing for the plain tasks, and unlike the `javascript` row's CommonJS files these sources are ES modules, so it needs **no** `--unstable-detect-cjs`. Deno denies the filesystem by default, so task 11 (its `worker_threads` re-read the script file) and task 14 need `--allow-read` and task 15 needs `--allow-write`; without them it stops with `Requires read access to …`. Task 10 is a built-in-bignum cell in both runtimes. |
 | JavaScript | quickjs | none | the binary is the whole runtime. Needs `--std` for the `std`/`os` modules, which is also what gives stderr. No threads. |
 | PHP | zend | PHP + opcache | task 11 needs the `parallel` PECL extension, which stock PHP does not ship and which requires a ZTS build. |
 | PHP | zend + jit | PHP + opcache | JIT needs `opcache.enable_cli=1` **and** `-d opcache.jit=tracing`: PHP 8.5 changed the master default of `opcache.jit` to `disable`, so `opcache.jit_buffer_size` alone leaves it off. Same ZTS + `parallel` requirement as the row above for task 11. |
@@ -127,6 +133,10 @@ need the same JVM. A row that needs a runtime is really saying its **engine** do
 | the same eight compiled modules, under `wasmedge 0.18.0` | wasmedge | `prog.wasm`, the same bytes | `tools/wasmedge/bin/wasmedge.exe --log-level off --run-mode=jit --dir .:. prog.wasm`. **Cannot load a shared-memory module at all** — it rejects the import section with `malformed limits flags` — so task 11 is a runtime capability boundary, not a failed cell. |
 | the same eight compiled modules, under `wamr 2.4.5 (iwasm)` | iwasm | `prog.wasm`, the same bytes | `tools/wamr/iwasm.exe --dir=. prog.wasm`. The one non-wasmtime runtime here that runs the `wasi-threads` task. |
 | the same eight compiled modules, under `node 22` (V8) | node | `prog.wasm`, the same bytes | `node --no-warnings tools/nodejs/wasi-run.js prog.wasm .` — node's own WASI shim. **It provides no `env.memory`**, so a module that imports its memory cannot run and task 11 is out. |
+| the same eight compiled modules, under `wasmer 4.3.7 --cranelift` | wasmer-cranelift | `prog.wasm`, the same bytes | `tools/wasmer437/bin/wasmer.exe run --cranelift --mapdir /:<dir> prog.wasm`. Threads are on by default, so task 11 needs no flags. `--mapdir /:<dir>` rather than `--dir=.`, because Wasmer's `--dir=.` preopens an empty root. **Task 15 is a capability boundary**: WASIX keeps a created file in an in-memory overlay that is discarded at exit, so `out.bin` is never written — verified, the cell prints the right answer and exits 0 with no `out.bin` on disk. |
+| the same eight compiled modules, under `wasmer 4.3.7 --llvm` | wasmer-llvm | `prog.wasm`, the same bytes | The same binary and run line with `--llvm`; only the code generator changes. Same task-15 boundary. |
+| the same eight compiled modules, under `wasmer 4.3.7 --singlepass` | wasmer-singlepass | `prog.wasm`, the same bytes | The same binary and run line with `--singlepass`. Task 15 is out for the same reason, and **task 11 deadlocks on the `c-wasm`, `cpp-wasm` and `rust-wasm` modules** — those three spawn their workers and then never make progress, against 0.16 s under Cranelift on the same bytes. The hand-written and AssemblyScript modules do run it. |
+| `zig-wasm` under wasmer | wasmer-cranelift, wasmer-llvm, wasmer-singlepass | `prog.wasm`, the same bytes | **Only task 11 runs.** The other fourteen hang in Zig 0.16's `poll_oneoff`-based `std.Io.Threaded` startup, where Wasmer panics with `overflow when subtracting durations`, or stop at `failed to init preopens: OutOfMemory` (Wasmer reports three preopens where wasmtime reports one). Task 11 uses raw WASI imports and instantiates no `std.Io`, so it runs under all three compilers. |
 | Scala | native | none | Standalone `.exe`. The link is static, so not even llvm-mingw's `libc++.dll` is needed; without `--native-linking=-static` the executable dies with `STATUS_DLL_NOT_FOUND` when llvm-mingw's `bin` is off the DLL search path. |
 | Scala | scala-cli (js) | `node 22` (`tools/nodejs/node.exe`, the same binary the wasm rows use) | No JVM at run time: the Scala.js linker emits one `prog.js`, and the row runs `node prog.js`. `--jvm system` is needed at *build* time only, so scala-cli does not fetch its own JDK. |
 | Beef | BeefBuild | none — static native binary | A Release build links the Beef runtime statically. The executable imports only `kernel32.dll`, `msvcrt.dll`, `user32.dll`, `SHELL32.dll`, `ole32.dll`, `gdi32.dll`, `version.dll` and `comdlg32.dll`; no Beef DLL has to be present. Process start-up is about 110–190 ms, which is a third of the row's slowest cell. |

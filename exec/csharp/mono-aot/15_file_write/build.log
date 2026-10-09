@@ -1,0 +1,7 @@
+   Creating library D:\Users\pedro.cardoso\stupidspeed\exec\csharp\mono-aot\15_file_write\15_file_write.exe.dll.lib and object D:\Users\pedro.cardoso\stupidspeed\exec\csharp\mono-aot\15_file_write\15_file_write.exe.dll.exp
+Mono Ahead of Time compiler - compiling assembly D:\Users\pedro.cardoso\stupidspeed\exec\csharp\mono-aot\15_file_write\15_file_write.exe
+AOTID 6CAA8945-4D3E-E3B2-2492-BAB08EC9559B
+Compiled: 2/2
+Executing the native assembler: "clang.exe" --target=x86_64-pc-windows-msvc -c -x assembler  -o D:\Users\pedro.cardoso\AppData\Local\Temp\mono_aot_a04808.obj D:\Users\pedro.cardoso\AppData\Local\Temp\mono_aot_a04808
+Executing the native linker: "link.exe" /DLL /MACHINE:X64 /NOLOGO /INCREMENTAL:NO /DEBUG  /OUT:D:\Users\pedro.cardoso\stupidspeed\exec\csharp\mono-aot\15_file_write\15_file_write.exe.dll.tmp D:\Users\pedro.cardoso\AppData\Local\Temp\mono_aot_a04808.obj 
+JIT time: 2 ms, Generation time: 1 ms, Assembly+Link time: 283 ms.

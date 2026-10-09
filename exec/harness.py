@@ -21,6 +21,18 @@ runs is taken over all of them.  The first run is also where the answer is
 checked, so a cell that answers wrongly is reported as `WRONG` rather than
 measured.
 
+The matrix has two axes and both are reported.  A **front end** is a row: a
+language and the toolchain that turns its source into something runnable --
+`ada`/`gnat`, `C`/`gcc`, `C++`/`g++`, `Rust`/`rustc`.  A **backend** is the
+component that actually executes the result: the code generator or virtual machine
+the front end hands its program to.  There are far fewer backends than front ends,
+because most front ends share one -- 16 are GCC, 19 are LLVM, the JVM's HotSpot
+appears in four configurations over the same class files, and eight WebAssembly
+backends execute the same modules -- so every cell carries both, and a run can be
+read by front end or by backend (`--backends`, `--backend gcc`, and the
+per-backend rollup in `results.md`).  `--backends` prints the current counts rather
+than this comment quoting them.
+
 Every cell has a number -- its position in `--list` order, row then toolchain
 then task -- and `--start`/`--end` take an inclusive slice of the matrix by that
 number, so a long sweep can be run in chunks and resumed where it stopped.
@@ -42,6 +54,8 @@ Usage
     python exec/harness.py --runs 3 --rows c,rust  # just those rows
     python exec/harness.py --rows ada              # one row, by folder
     python exec/harness.py --language C++          # every row of a language
+    python exec/harness.py --backends              # the backends, and their front ends
+    python exec/harness.py --backend gcc           # every row GCC carries
     python exec/harness.py --tasks 01,07           # just those tasks
     python exec/harness.py --start 1 --end 200     # items 1-200, by position
     python exec/harness.py --rows 1-30             # the first thirty languages
@@ -101,8 +115,8 @@ EXPECTED = {
 TIME_RE = re.compile(r"TIME_MS=([0-9]+(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?)")
 DEFAULT_TIMEOUT = 900
 
-# Cells recorded before a row was removed have no engine in the registry any more.
-UNKNOWN_ENGINE = "(not in the registry)"
+# Cells recorded before a row was removed have no backend in the registry any more.
+UNKNOWN_BACKEND = "(not in the registry)"
 
 
 # ---------------------------------------------------------------- peak memory
@@ -193,22 +207,22 @@ else:
 # ------------------------------------------------------------------- registry
 
 def load_registry(path):
-    """The task list, the per-row run recipes, and the engine table.
+    """The task list, the per-row run recipes, and the backend table.
 
     The fifteen expected answers are pinned above rather than read from the
     registry: they are the same in every row, and the rows' verifiers read them
     from their own source headers, so a copy in the registry could only drift.
 
-    `engines` is the other half of a row's identity.  Every toolchain entry names
+    `backends` is the other half of a row's identity.  Every toolchain entry names
     the component that actually turns its program into executed machine code --
     `gcc` for Ada, Fortran and C alike, `hotspot` for Java, Kotlin and Groovy --
     so the matrix can be read as "what ran" rather than "what was written".
-    A row's language is its front end; its engine is what a cell's number is
+    A row's language is its front end; its backend is what a cell's number is
     really about.
     """
     with open(path, encoding="utf-8") as fh:
         reg = json.load(fh)
-    return reg.get("tasks", TASKS), reg["rows"], reg.get("engines", {})
+    return reg.get("tasks", TASKS), reg["rows"], reg.get("backends", {})
 
 
 def expand(rows, tasks):
@@ -736,7 +750,7 @@ def _measure(cell, runs, timeout_override, check_only, cpu=3, cores=4):
     pin_to = None if cpu is None or cpu < 0 else (task, cpu, cores)
 
     result = {"row": row, "language": lang, "toolchain": tc, "task": task,
-              "engine": entry.get("engine"),
+              "backend": entry.get("backend"),
               "status": "OK", "cmd": cmd, "cwd": cwd, "samples": [],
               "artifact_bytes": None, "out_bytes": None, "timeout_s": timeout,
               # Provenance travels with the cell, not with the file: a results
@@ -943,25 +957,25 @@ def load_results(path):
     return cells if isinstance(cells, list) else []
 
 
-def engine_index(rows):
-    """`(row, toolchain) -> engine id`, from the registry.
+def backend_index(rows):
+    """`(row, toolchain) -> backend id`, from the registry.
 
     The results file is additive, so it can hold cells measured before the
-    engine field existed.  The registry is the authority on what runs a row, so
+    backend field existed.  The registry is the authority on what runs a row, so
     the writer stamps it onto every cell it is about to write rather than
     trusting each record to have carried it.
     """
     idx = {}
     for row, v in rows.items():
         for e in v["entries"]:
-            idx[(row, e["toolchain"])] = e.get("engine")
+            idx[(row, e["toolchain"])] = e.get("backend")
     return idx
 
-def backfill_engines(cells, index):
-    """Give every cell an engine, from the registry, in place."""
+def backfill_backends(cells, index):
+    """Give every cell a backend, from the registry, in place."""
     for c in cells:
-        if not c.get("engine"):
-            c["engine"] = index.get((c.get("row"), c.get("toolchain")))
+        if not c.get("backend"):
+            c["backend"] = index.get((c.get("row"), c.get("toolchain")))
     return cells
 
 def merge_results(previous, fresh, order=None):
@@ -1050,7 +1064,7 @@ def provenance(cells, runs, cpu):
     return run_text, pin_text
 
 
-def write_json(path, cells, runs, cpu=None, cores=4, engines=None):
+def write_json(path, cells, runs, cpu=None, cores=4, backends=None):
     run_text, pin_text = provenance(cells, runs, cpu)
     doc = {
         "generated": time.strftime("%Y-%m-%dT%H:%M:%S"),
@@ -1060,92 +1074,97 @@ def write_json(path, cells, runs, cpu=None, cores=4, engines=None):
         "task11_cores": cores,
         "cells_in_file": len(cells),
         "method": {"runs": run_text, "pinning": pin_text},
-        # The engine table travels with the numbers so a reader of this file
+        # The backend table travels with the numbers so a reader of this file
         # alone can group them; exec/cells.json remains the authority.
-        "engines": engines or {},
+        "backends": backends or {},
         "cells": cells,
     }
     atomic_write(path, json.dumps(doc, indent=1) + "\n")
 
 
 def _table(rows_order, cells, value, fmt):
-    """One markdown table, ordered so rows that share an engine sit together.
+    """One markdown table, ordered so rows that share a backend sit together.
 
-    `rows_order` is a list of `(engine_name, language, toolchain, row)` tuples
-    already sorted by engine.  The Engine column repeats on every line rather
+    `rows_order` is a list of `(backend_name, language, toolchain, row)` tuples
+    already sorted by backend.  The Backend column repeats on every line rather
     than being a group header, because the point of the column is to be
     grep-able: `grep '^| GCC '` is every row GCC runs, whatever front end is
     above it.
     """
     index = {(c["row"], c["toolchain"], c["task"]): c for c in cells}
-    head = "| Engine | Language | Toolchain | " + " | ".join(t[:2] for t in TASKS) + " |"
+    head = "| Backend | Language | Toolchain | " + " | ".join(t[:2] for t in TASKS) + " |"
     sep = "|" + "---|" * (len(TASKS) + 3)
     lines = [head, sep]
-    for eng, lang, tc, row in rows_order:
+    for backend, lang, tc, row in rows_order:
         vals = []
         for t in TASKS:
             c = index.get((row, tc, t))
             vals.append(fmt(value(c)) if c and c["status"] == "OK" else "")
-        lines.append("| %s | %s | %s | %s |" % (eng, lang, tc, " | ".join(vals)))
+        lines.append("| %s | %s | %s | %s |" % (backend, lang, tc, " | ".join(vals)))
     return "\n".join(lines)
 
-def _rollup(rows_order, cells, engines):
-    """How many rows and cells each engine covers, biggest engine first.
+def _rollup(rows_order, cells, backends):
+    """How many front ends and cells each backend covers, biggest backend first.
 
     This is the table that answers "how much of this matrix is the same thing
-    twice": GCC and LLVM between them run about a third of the rows.
+    twice": GCC and LLVM between them carry about a fifth of the front ends.
 
-    `rows_order` carries the engine's *display* name (that is what the tables
-    show), so the metadata lookup is by name too, and a cell whose engine is not
+    A "front end" here is a `(row, toolchain)` pair, which is the row of the
+    results table: a language plus the toolchain that builds or runs it.  The
+    count is of those, not of the 109 rows, because one row can be several front
+    ends -- the `c` row is four.
+
+    `rows_order` carries the backend's *display* name (that is what the tables
+    show), so the metadata lookup is by name too, and a cell whose backend is not
     in the registry -- a stale record of a row that has since been removed --
     lands in one clearly-labelled bucket instead of being dropped.
     """
-    by_name = {meta.get("name", eid): meta for eid, meta in engines.items()}
-    name_of = {eid: meta.get("name", eid) for eid, meta in engines.items()}
+    by_name = {meta.get("name", bid): meta for bid, meta in backends.items()}
+    name_of = {bid: meta.get("name", bid) for bid, meta in backends.items()}
     per = {}
-    for eng, _lang, tc, row in rows_order:
-        per.setdefault(eng, {"rows": [], "cells": 0, "ok": 0})
-        if (row, tc) not in per[eng]["rows"]:
-            per[eng]["rows"].append((row, tc))
+    for backend, _lang, tc, row in rows_order:
+        per.setdefault(backend, {"front_ends": [], "cells": 0, "ok": 0})
+        if (row, tc) not in per[backend]["front_ends"]:
+            per[backend]["front_ends"].append((row, tc))
     for c in cells:
-        eng = name_of.get(c.get("engine"), UNKNOWN_ENGINE)
-        if eng not in per:
+        backend = name_of.get(c.get("backend"), UNKNOWN_BACKEND)
+        if backend not in per:
             continue
-        per[eng]["cells"] += 1
+        per[backend]["cells"] += 1
         if c["status"] == "OK":
-            per[eng]["ok"] += 1
+            per[backend]["ok"] += 1
     lines = [
-        "| Engine | What it is | Kind | Rows | Cells | Measured |",
+        "| Backend | What it is | Kind | Front ends | Cells | Measured |",
         "|---|---|---|---|---|---|",
     ]
     def sort_key(kv):
-        # the unknown bucket is not an engine; keep it at the bottom
-        return (kv[0] == UNKNOWN_ENGINE, -len(kv[1]["rows"]), kv[0])
-    for eng, d in sorted(per.items(), key=sort_key):
-        meta = by_name.get(eng, {})
+        # the unknown bucket is not a backend; keep it at the bottom
+        return (kv[0] == UNKNOWN_BACKEND, -len(kv[1]["front_ends"]), kv[0])
+    for backend, d in sorted(per.items(), key=sort_key):
+        meta = by_name.get(backend, {})
         lines.append("| %s | %s | %s | %d | %d | %d |"
-                     % (eng, meta.get("what", ""), meta.get("kind", ""),
-                        len(d["rows"]), d["cells"], d["ok"]))
+                     % (backend, meta.get("what", ""), meta.get("kind", ""),
+                        len(d["front_ends"]), d["cells"], d["ok"]))
     return "\n".join(lines)
 
 
-def write_md(path, cells, runs, check=False, cpu=None, expected=(), engines=None):
-    engines = engines or {}
-    def eng_name(eid):
-        return engines.get(eid, {}).get("name", eid or UNKNOWN_ENGINE)
+def write_md(path, cells, runs, check=False, cpu=None, expected=(), backends=None):
+    backends = backends or {}
+    def backend_name(bid):
+        return backends.get(bid, {}).get("name", bid or UNKNOWN_BACKEND)
     order = []
     for c in cells:
-        key = (c.get("engine"), c["row"], c["toolchain"], c.get("language", c["row"]))
+        key = (c.get("backend"), c["row"], c["toolchain"], c.get("language", c["row"]))
         if key not in order:
             order.append(key)
-    # Engine first, then language, then row: rows that share an engine are
-    # adjacent, and within an engine the front ends read alphabetically.  Cells
-    # of rows that have since been removed have no engine and go last -- they
+    # Backend first, then language, then row: rows that share a backend are
+    # adjacent, and within a backend the front ends read alphabetically.  Cells
+    # of rows that have since been removed have no backend and go last -- they
     # are history in an additive file, not part of the current matrix.
-    order = [(eng_name(eng), lang, tc, row)
-             for eng, row, tc, lang in
-             sorted(order, key=lambda k: (eng_name(k[0]) == UNKNOWN_ENGINE,
-                                          eng_name(k[0]).lower(), k[3], k[2]))]
+    order = [(backend_name(backend), lang, tc, row)
+             for backend, row, tc, lang in
+             sorted(order, key=lambda k: (backend_name(k[0]) == UNKNOWN_BACKEND,
+                                          backend_name(k[0]).lower(), k[3], k[2]))]
     ok = sum(1 for c in cells if c["status"] == "OK" and not c.get("check"))
     checked = sum(1 for c in cells if c["status"] == "OK" and c.get("check"))
     skipped = [c for c in cells if c["status"] == "SKIP"]
@@ -1182,23 +1201,26 @@ def write_md(path, cells, runs, check=False, cpu=None, expected=(), engines=None
             "%d of %d task-15 cells wrote a 52428800-byte `out.bin`."
             % (len(wrote), len(writers)),
             "",
-            "## By engine",
+            "## By backend",
             "",
-            "A row's **engine** is the component that actually turns its program "
-            "into executed machine code, or interprets it.  Rows that share an "
-            "engine are the same code generator or virtual machine wearing "
-            "different front ends: `ada`, `fortran`, `modula-2`, `c++` and `c` "
-            "are all GCC, and `java`, `kotlin`, `scala`, `clojure` and `groovy` "
-            "are all HotSpot.  A cell's number is a fact about the engine plus "
-            "whatever the front end adds on top, so two rows with the same engine "
-            "and the same kind are directly comparable and two rows with "
-            "different kinds are not.",
+            "A row is a **front end**: a language and the toolchain that turns its "
+            "source into something runnable (`ada`/`gnat`, `C`/`gcc`, `C++`/`g++`, "
+            "`Rust`/`rustc`).  A row's **backend** is the component that then "
+            "actually executes the result: the code generator or virtual machine "
+            "the front end hands its program to.  Many front ends share one "
+            "backend, so this table is where the matrix's second axis shows up: "
+            "`ada`, `fortran`, `modula-2`, `c++` and `c` are all GCC, `java`, "
+            "`kotlin`, `scala`, `clojure` and `groovy` are all HotSpot, and the "
+            "WebAssembly module runs unchanged on eight backends.  A cell's number is a "
+            "fact about the backend plus whatever the front end adds on top, so two "
+            "rows with the same backend and the same kind are directly comparable "
+            "and two rows with different kinds are not.",
             "",
-            _rollup(order, cells, engines),
+            _rollup(order, cells, backends),
             "",
             "## Speed -- median `TIME_MS`, in milliseconds",
             "",
-            "Grouped by engine, so every row of one engine is adjacent.  The "
+            "Grouped by backend, so every row of one backend is adjacent.  The "
             "program times its own work, so start-up is outside the number.  A "
             "cell marked `*` in the console output has no `TIME_MS` line at all (the "
             "luau CLI cells, by design), so its end-to-end wall clock is the number "
@@ -1266,9 +1288,9 @@ def write_md(path, cells, runs, check=False, cpu=None, expected=(), engines=None
 
 # ----------------------------------------------------------------------- main
 
-def validate(rows, tasks, engines=None):
+def validate(rows, tasks, backends=None):
     problems = []
-    engines = engines or {}
+    backends = backends or {}
     for row in sorted(rows):
         entries = rows[row]["entries"]
         if not entries:
@@ -1285,22 +1307,22 @@ def validate(rows, tasks, engines=None):
                     problems.append("%s/%s: %s must be a string"
                                     % (row, e.get("toolchain"), key))
             # Every entry names what actually runs it, and that name has to be
-            # one the engine table defines -- otherwise the grouping would
+            # one the backend table defines -- otherwise the grouping would
             # silently drop the row from the chart and the rollup.
-            eng = e.get("engine")
-            if not eng:
-                problems.append("%s/%s: missing 'engine'"
+            backend = e.get("backend")
+            if not backend:
+                problems.append("%s/%s: missing 'backend'"
                                 % (row, e.get("toolchain")))
-            elif engines and eng not in engines:
-                problems.append("%s/%s: unknown engine %r"
-                                % (row, e.get("toolchain"), eng))
+            elif backends and backend not in backends:
+                problems.append("%s/%s: unknown backend %r"
+                                % (row, e.get("toolchain"), backend))
             for t in e.get("tasks", []):
                 if t != "*" and t not in tasks:
                     problems.append("%s/%s: unknown task %r" % (row, e.get("toolchain"), t))
-    for eid, meta in sorted(engines.items()):
+    for bid, meta in sorted(backends.items()):
         for key in ("name", "kind", "what"):
             if key not in meta:
-                problems.append("engine %s: missing %r" % (eid, key))
+                problems.append("backend %s: missing %r" % (bid, key))
     try:
         cells = expand(rows, tasks)
     except SystemExit as exc:
@@ -1345,6 +1367,76 @@ def near_miss(name, choices, display=None):
         hits = [display[h] for h in hits]
     return " (did you mean %s?)" % ", ".join(hits) if hits else ""
 
+def match_backends(table, tokens):
+    """The backend ids `--backend` names.
+
+    A backend is named by the id `exec/cells.json` gives it (`gcc`, `llvm`,
+    `hotspot`, `beam`, `coreclr`) or by the display name the tables print
+    (`--backend "HotSpot C2"`), because that is how the README spells them.
+    Case is folded, so `--backend GCC` and `--backend gcc` are the same backend.
+    """
+    by_key = {}
+    for bid, meta in table.items():
+        by_key.setdefault(bid.casefold(), bid)
+        by_key.setdefault(str(meta.get("name", bid)).casefold(), bid)
+    ids = set()
+    for token in tokens:
+        key = token.strip().casefold()
+        if key not in by_key:
+            raise SystemExit("--backend %s: no such backend%s"
+                             % (token, near_miss(key, by_key, by_key)))
+        ids.add(by_key[key])
+    return ids
+
+def backend_cells(rows, ids):
+    """The `(row, toolchain)` pairs whose backend is one of `ids`.
+
+    Selection is per toolchain, not per row, because the two axes cross inside a
+    row: the `c` row is four front ends (gcc, clang, tcc, msvc) on four
+    backends, so `--backend llvm` takes that row's clang cells and leaves its
+    gcc, tcc and msvc cells where they are.
+    """
+    if not ids:
+        return set()
+    return {(row, e["toolchain"])
+            for row, v in rows.items() for e in v["entries"]
+            if e.get("backend") in ids}
+
+def front_ends(rows, cells):
+    """`backend id -> what it carries`, for `--backends`.
+
+    The two-axis matrix in one place: for each backend, the front ends it
+    executes -- the `(row, toolchain)` pairs, the languages they are written in,
+    and how many cells they make up.
+    """
+    per = {}
+    for row, v in rows.items():
+        lang = v.get("language", row)
+        for e in v["entries"]:
+            d = per.setdefault(e.get("backend"), {"toolchains": [], "languages": []})
+            if (row, e["toolchain"]) not in d["toolchains"]:
+                d["toolchains"].append((row, e["toolchain"]))
+            if lang not in d["languages"]:
+                d["languages"].append(lang)
+    for bid, d in per.items():
+        d["cells"] = sum(1 for c in cells if c[3].get("backend") == bid)
+    return per
+
+def print_backends(rows, cells, table):
+    """The `--backends` listing: every backend, its kind, and its front ends."""
+    per = front_ends(rows, cells)
+    name_of = {bid: meta.get("name", bid) for bid, meta in table.items()}
+    print("%-24s %-14s %5s %6s  %s"
+          % ("BACKEND", "KIND", "TCS", "CELLS", "FRONT ENDS (LANGUAGES)"))
+    for bid, d in sorted(per.items(),
+                         key=lambda kv: (-len(kv[1]["toolchains"]),
+                                         name_of.get(kv[0], kv[0]).lower())):
+        print("%-24s %-14s %5d %6d  %s"
+              % (name_of.get(bid, bid), table.get(bid, {}).get("kind", ""),
+                 len(d["toolchains"]), d["cells"], ", ".join(sorted(d["languages"]))))
+    print("%d backends carry %d front ends over %d rows (%d cells)"
+          % (len(per), sum(len(d["toolchains"]) for d in per.values()), len(rows), len(cells)))
+
 def select_rows(rows, names, languages):
     """Which rows `--rows` and `--language` select: a set of names and number ranges.
 
@@ -1352,7 +1444,9 @@ def select_rows(rows, names, languages):
     numbers and ranges `--list` prints (`7`, `1-30`).  `--language` names a whole
     language from the results table's Language column (`C++`, `Prolog (SWI)`),
     which several rows can share, so `--language C++` is the `cpp` and `cpp-wasm`
-    rows together.  The two are unioned, so `--language C --rows rust` is both.
+    rows together.  Both name whole rows and are unioned, so naming both `C` and
+    `rust` is both.  `--backend` names a backend instead, which cuts across rows,
+    and is applied as a filter by `main` rather than here.
 
     A name that matches nothing is an error rather than an empty selection,
     because results are merged: a run that selected no cells would leave the file
@@ -1441,6 +1535,16 @@ def main():
             "  python exec/harness.py --rows exec\\ada        # same, as a path\n"
             "  python exec/harness.py --language C++         # cpp and cpp-wasm\n"
             "\n"
+            "A language and its toolchain is a front end; what executes it is a\n"
+            "backend, and many front ends share one.  `--backends` prints the two\n"
+            "axes, and `--backend` runs one backend's front ends -- the rows' own\n"
+            "toolchains, not whole rows, so `--backend llvm` takes the `c` row's\n"
+            "clang cells and leaves its gcc, tcc and msvc cells alone:\n"
+            "\n"
+            "  python exec/harness.py --backends             # the backends\n"
+            "  python exec/harness.py --backend gcc          # 16 rows, one backend\n"
+            "  python exec/harness.py --backend llvm --rows c  # the c row on clang\n"
+            "\n"
             "Results are additive: every run merges into exec/results.json, so the\n"
             "chunks above build one complete matrix between them and an interrupted\n"
             "run is continued rather than repeated.  A cell measured again replaces\n"
@@ -1459,6 +1563,15 @@ def main():
                          "(`C++`, `Prolog (SWI)`): every row of that language, so "
                          "`--language C++` is the cpp and cpp-wasm rows; unioned with "
                          "`--rows`")
+    ap.add_argument("--backend", default="",
+                    help="backends to narrow the run to, by id or display name "
+                         "(`gcc`, `llvm`, `beam`, `HotSpot C2`): only the toolchains "
+                         "that execute on one of them, so `--backend gcc` is the 16 "
+                         "GCC front ends and `--rows c --backend llvm` is that row's "
+                         "clang cells alone.  Filters --rows/--language, like --tasks")
+    ap.add_argument("--backends", action="store_true",
+                    help="print the backends, their kind and the front ends each one "
+                         "carries, then exit")
     ap.add_argument("--tasks", default="", help="comma-separated task numbers or names")
     ap.add_argument("--start", type=int, default=None,
                     help="first item to run, 1-based (see `--list`); default the first")
@@ -1486,27 +1599,41 @@ def main():
     if args.runs < 1 and not args.check:
         ap.error("--runs must be at least 1")
 
-    tasks, rows, engines = load_registry(args.registry)
-    eng_index = engine_index(rows)
-    problems, all_cells = validate(rows, tasks, engines)
+    tasks, rows, backends = load_registry(args.registry)
+    backend_of = backend_index(rows)
+    problems, all_cells = validate(rows, tasks, backends)
     if args.validate:
         for p in problems:
             print("PROBLEM %s" % p)
-        used = {e.get("engine") for r in rows.values() for e in r["entries"]}
-        print("rows=%d engines=%d cells=%d problems=%d"
+        used = {e.get("backend") for r in rows.values() for e in r["entries"]}
+        print("rows=%d backends=%d cells=%d problems=%d"
               % (len(rows), len(used), len(all_cells), len(problems)))
         return 1 if problems else 0
+
+    if args.backends:
+        print_backends(rows, all_cells, backends)
+        return 0
 
     row_names = sorted(rows)
     row_index = {r: i + 1 for i, r in enumerate(row_names)}
     want_rows = [r.strip() for r in args.rows.split(",") if r.strip()]
     want_langs = [l.strip() for l in args.language.split(",") if l.strip()]
+    want_backends = [b.strip() for b in args.backend.split(",") if b.strip()]
     want_tasks = [t.strip() for t in args.tasks.split(",") if t.strip()]
     named, ranges = select_rows(rows, want_rows, want_langs)
+    backend_ids = match_backends(backends, want_backends)
+    by_backend = backend_cells(rows, backend_ids)
     selected = []
     for cell in all_cells:
         row, tc, task, _e, _lang = cell
         if (named or ranges) and not row_wanted(row, named, ranges, row_index):
+            continue
+        # `--backend` narrows the rows `--rows`/`--language` named rather than
+        # adding to them, the way `--tasks` does: it picks the backends, they
+        # pick the front ends.  So `--rows c --backend llvm` is that row's clang
+        # cells and not the whole LLVM matrix.  A backend names toolchains, not
+        # rows -- the `c` row runs on four of them -- hence the pair.
+        if by_backend and (row, tc) not in by_backend:
             continue
         # `--tasks 01`, `--tasks 1` and `--tasks branches` all select 01_branches.
         if want_tasks and not task_selected(task, want_tasks):
@@ -1518,7 +1645,7 @@ def main():
     if args.list:
         for n, (row, tc, task, entry, _lang) in numbered:
             print("%d\t%s\t%s\t%s\t%s"
-                  % (n, row, tc, entry.get("engine", "?"), task))
+                  % (n, row, tc, entry.get("backend", "?"), task))
         if numbered:
             print("%d of %d cells selected (items %d-%d)"
                   % (len(numbered), len(selected), numbered[0][0], numbered[-1][0]))
@@ -1538,12 +1665,14 @@ def main():
     order = {cell_key(c): i for i, c in enumerate(all_cells)}
     expected = set(order)
     previous = [] if args.replace else load_results(args.json)
-    print("%d cells (items %d-%d of %d): %s, pinned to CPU %s%s%s" % (
+    print("%d cells (items %d-%d of %d): %s, pinned to CPU %s%s%s%s" % (
         len(numbered), numbered[0][0], numbered[-1][0], len(selected),
         "one run each (--check)" if args.check
         else "%d timed runs each" % args.runs,
         "none" if cpu is None else cpu,
         "" if cpu is None else " (task 11 gets %d)" % args.cores,
+        "" if not backend_ids else "; backend %s"
+        % ", ".join(sorted(backends[b].get("name", b) for b in backend_ids)),
         "" if not previous else "; merging into %d cells already in %s"
         % (len(previous), os.path.basename(args.json))), flush=True)
 
@@ -1552,9 +1681,9 @@ def main():
     def flush():
         """Write the file: previous cells, this run's cells, in registry order."""
         merged = merge_results(previous, results, order)
-        backfill_engines(merged, eng_index)
-        write_json(args.json, merged, args.runs, cpu, args.cores, engines)
-        write_md(args.md, merged, args.runs, args.check, cpu, expected, engines)
+        backfill_backends(merged, backend_of)
+        write_json(args.json, merged, args.runs, cpu, args.cores, backends)
+        write_md(args.md, merged, args.runs, args.check, cpu, expected, backends)
         return merged
 
     try:

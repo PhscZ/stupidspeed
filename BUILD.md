@@ -89,7 +89,11 @@ not `_`. In Component Pascal and Oberon-07 the compiler enforces the tie — the
 conventional.
 
 Most toolchain rows share their language's main source directory — `sources/c/` is built by
-`gcc`, `clang`, `msvc` and `tcc`, `sources/d/` by `dmd` and `ldc2`, and so on. A row
+`gcc`, `clang`, `msvc` and `tcc`, `sources/d/` by `dmd` and `ldc2`, `sources/java/` is compiled
+once and run by all four HotSpot configurations, `sources/rust/` by `rustc` and
+`rustc (cranelift)`, and the eight WebAssembly modules under `exec/*-wasm/` are each run by six
+runtimes. Those are the rows where the front end is held fixed and the backend is the only
+variable, so the sources being shared is the point, not an economy. A row
 whose source cannot be shared gets a directory of its own, holding **all fifteen tasks** and
 duplicating the files it has in common with the main row. Eighteen rows are in that position:
 
@@ -259,28 +263,39 @@ The four sections below group the rows by what the **artifact** is — a native 
 WebAssembly module, a bytecode file, or nothing at all. This section groups them by what happens
 to get there, because that is what decides whether a cell's number contains compilation.
 
-**The engine, and why it is the axis that matters.** Each of the seven shapes below is a
-different *kind* of execution; the **engine** is the specific component doing it. `exec/cells.json`
-carries an `engine` id on every toolchain entry and an `engines` table naming what each one is,
-and `exec/harness.py` groups its tables by it. 160 toolchains resolve to 67 engines, and the
-counts are not spread evenly:
+**The backend, and why it is the axis that matters.** Each of the seven shapes below is a
+different *kind* of execution; the **backend** is the specific component doing it. `exec/cells.json`
+carries a `backend` id on every toolchain entry and a `backends` table naming what each one is,
+and `exec/harness.py` groups its tables by it. The other axis is the **front end**: a language and
+the toolchain that builds or runs it, which is what a row of the results table is. There are 160
+of those over 84 languages and only 75 backends, and the counts are not spread evenly:
 
-| Engine | Rows | The rows |
+| Backend | Front ends | The rows |
 |---|---|---|
 | GCC | 16 | `ada` (gnat), `fortran` (gfortran), `c` (gcc), `cpp` (g++), `cobol`, `vala`, `nim`, `mercury`, `ats`, `eiffel`, `seed7`, `v`, `nelua`, `python` (cython), `python` (nuitka), `haxe` (hxcpp) |
 | LLVM | 19 | `c`/`cpp` (clang), `rust`, `swift`, `zig`, `d` (ldc2), `fortran` (flang), `go` (tinygo), `crystal`, `odin`, `c3`, `beef`, `pony`, `lean4`, `kotlin` (native), `scala` (native), `terra`, `objectivec`, `qb64` |
 | wasmtime (Cranelift) | 11 | the eleven `wasm32-wasip1` rows |
-| V8 | 10 | seven of those same modules under node's WASI shim, plus `deno` (JavaScript), `scala-js` and `clojurescript` |
+| V8 | 11 | seven of those same modules under node's WASI shim, plus `deno` (JavaScript), `typescript` (deno), `scala-js` and `clojurescript` |
 | wasmtime (Winch) | 8 | the same eight compiled modules under wasmtime's baseline compiler |
+| Wasmer (Cranelift) | 8 | the same eight modules under Wasmer's Cranelift compiler |
+| Wasmer (LLVM) | 8 | the same modules under Wasmer's LLVM compiler |
+| Wasmer (Singlepass) | 8 | the same modules under Wasmer's unoptimising single-pass compiler |
 | WasmEdge | 7 | the same modules under a third runtime |
 | WAMR (iwasm) | 7 | the same modules under a fourth runtime |
-| HotSpot C2 | 5 | `java` (openjdk), `kotlin` (jvm), `scala` (jvm), `clojure`, `groovy` |
+| HotSpot (tiered C1 + C2) | 5 | `java` (openjdk), `kotlin` (jvm), `scala` (jvm), `clojure`, `groovy` |
 | CoreCLR | 5 | `csharp`, `fsharp`, `vbnet`, `boo`, `componentpascal` |
 | MSVC | 4 | `c`/`cpp` (msvc), `commonlisp` (ecl), `modula3` |
 | BEAM | 4 | `erlang` (escript), `erlang` (erlc), `elixir`, `gleam` — one VM, three front ends, and a compile-once/compile-every-run pair inside it |
-| 56 more | 1-3 each | engines only one or two rows here use |
+| 64 more | 1-3 each | backends only one or two front ends here use |
 
-**Sixteen rows share one code generator.** Ada, Fortran, COBOL, Vala, Nim, Mercury, ATS, Eiffel,
+Three more HotSpot configurations sit beside the default: `openjdk (interp)` (`-Xint`, kind
+`bytecode-vm`), `openjdk (c1)` (`-XX:TieredStopAtLevel=1`) and `openjdk (c2)`
+(`-XX:-TieredCompilation`), which run the *same* class files on one code generator each.
+
+`exec/harness.py --backends` prints this table from the registry, with every backend's kind and
+the languages its front ends are written in.
+
+**Sixteen front ends share one code generator.** Ada, Fortran, COBOL, Vala, Nim, Mercury, ATS, Eiffel,
 Seed7, V, Nelua, Cython, Nuitka, hxcpp and the two C-family rows all hand their output to GCC;
 the only thing the cell measures about "the language" is what the front end emitted before gcc
 started. That is not a defect in the matrix — the front end's output quality is a real property
@@ -288,17 +303,20 @@ of the language — but it does mean a reader comparing `ada` against `c` is com
 front ends, not two compilers, and a reader comparing `ada` against `rust` is comparing GCC
 against LLVM with each language's front end folded in.
 
-**Four rows share the BEAM**, and they are the axis's cleanest illustration after GCC: `erlang`
+**Four front ends share the BEAM**, and they are the axis's cleanest illustration after GCC: `erlang`
 and `elixir` are two languages on one VM, `gleam` is a third whose output is Erlang *source*
 that `erlc` then compiles, and `erlang`'s two toolchains differ only in when the compile
 happens. All four land in the same `native-jit` kind, so their numbers are comparable, and the
 differences between them are exactly what the front end and the compile timing cost.
 
-**The four WebAssembly runtimes are the other clean group.** Eight modules are plain
-`wasm32-wasip1`, so the same bytes run under wasmtime's two code generators, WasmEdge, WAMR and
-node's V8 — five engines for one artifact, with the front end held perfectly fixed. That is the
-strongest form of the comparison this axis enables, and it is why `cranelift`/`winch` are two
-engines rather than one: the compiler is the variable.
+**The WebAssembly runtimes are the other clean group.** Eight modules are plain
+`wasm32-wasip1`, so the same bytes run under wasmtime's two code generators, Wasmer's three,
+WasmEdge, WAMR and node's V8 — eight backends for one artifact, with the front end held
+perfectly fixed. That is the strongest form of the comparison this axis enables, and it is why
+`cranelift`/`winch` and Wasmer's three are separate backends rather than one each: the compiler
+is the variable. The three Wasmer rows are the newest and the sharpest — one binary, one
+command line, three code generators, and a measured spread of 172 ms (Cranelift), 109 ms
+(LLVM) and 407 ms (Singlepass) on `c-wasm` task 01.
 
 **`kind` is the coarse version of the same idea** and is what makes two cells comparable at all:
 `native-aot`, `native-jit`, `wasm-runtime`, `bytecode-vm`, `interpreter`, `assembler`. Two rows
@@ -384,7 +402,7 @@ language. Where a row has several VMs, that is the point of the row.
 
 | Rows | Stages |
 |---|---|
-| `java` (openjdk, openj9) | javac → `.class` → HotSpot C2 or OpenJ9 JIT at run time |
+| `java` (openjdk, openj9) | javac → `.class` → HotSpot or OpenJ9 at run time. The `openjdk` toolchain is the default tiered pipeline (C1, then C2); `openjdk (interp)`, `(c1)` and `(c2)` run the *same* class files on one code generator each, so the four are a controlled comparison of HotSpot's own backends |
 | `java` (graalvm jit) | javac → `.class` → GraalVM's JIT |
 | `java` (graalvm native-image) | javac → `.class` → ahead-of-time native image |
 | `kotlin` | kotlinc → JVM bytecode (jvm row) or native (native row) |
@@ -457,6 +475,7 @@ nothing is written to disk and nothing is reused between runs.
 | Rows | Notes |
 |---|---|
 | `perl`, `tcl`, `vbscript`, `jscript`, `autohotkey` | parse and execute on each run |
+| `typescript` (bun, deno) | the runtime strips the type annotations in-process, then runs the result; there is no `tsc` step and no artifact on disk, so the annotations cost only the erasure |
 | `euphoria` | a tree-walking interpreter; no bytecode file |
 | `babashka` | babashka runs Clojure on SCI, an interpreter, inside a GraalVM native image |
 | `swipl` | SWI-Prolog compiles to its own clause representation in memory |
@@ -482,7 +501,7 @@ exists to show what it costs.
 | `php` (`+ jit`) | opcode JIT |
 | `ruby` (`+ yjit`) | method JIT |
 | `javascript` (bun, deno, spidermonkey, quickjs) | tiered JIT, except QuickJS which is bytecode only |
-| `csharp` (coreclr), `java` (openjdk, openj9, graalvm jit), `fsharp`, `vbnet`, `scala`, `clojure`, `groovy` | the VM JITs on first execution |
+| `csharp` (coreclr, mono llvm), `java` (openjdk, openjdk c1, openjdk c2, openj9, graalvm jit), `fsharp`, `vbnet`, `scala`, `clojure`, `groovy` | the VM JITs on first execution |
 
 ### What this means for reading a row
 
@@ -525,6 +544,7 @@ together.
 | C++ | clang++ | 10 | releases.llvm.org | `clang++ -O2 -pthread -o prog <task>.cpp` |
 | C++ | msvc | VS 2019 | as above | `cl /O2 /EHsc /Fe:prog <task>.cpp` |
 | Rust | rustc | 1.70 (1.63 for `std::array::from_fn`) | rustup.rs | `rustc -O -o prog <task>.rs` |
+| Rust | rustc (cranelift) | nightly 1.101.0 (2026-10-08) | rustup.rs — `rustup toolchain install nightly` then `rustup component add rustc-codegen-cranelift --toolchain nightly` | `rustc +nightly -Zcodegen-backend=cranelift -O -o prog.exe <task>.rs`, run with the MSVC environment (`tools/msvc_env.py` sets `PATH`/`INCLUDE`/`LIB`) because the nightly host is `x86_64-pc-windows-msvc` and links with `link.exe`. Same fifteen sources as the row above: rustc's front end and MIR are identical, and the code generator behind MIR is the variable. No `+crt-static` and no target override are needed. |
 | Zig | zig | 0.16 | ziglang.org/download | `zig build-exe -O ReleaseFast <task>.zig -femit-bin=prog` |
 | Go | gc | 1.20 | go.dev/dl | `go build -o prog <task>.go` |
 | Go | tinygo | 0.42 | tinygo.org, `tinygo0.42.0.windows-amd64.zip` (178 MB) extracted into `tools/tinygo/` — no installer, no admin | `tinygo build -o prog.exe <task>.go`, run from `sources/tinygo/`, which holds all fifteen tasks. TinyGo bundles its own LLVM 22.1 and emits a standalone executable, but it still **shells out to `go`** for `go list` and `go env`, so the Go SDK must be on `PATH` or every build dies with `could not find 'go' command`. The default target is the host (`windows/amd64` here); there is no `windows` target name in `tinygo targets` to pass explicitly. Fourteen of the fifteen files are byte-identical to `sources/go/`'s; task 15 differs because TinyGo's Windows target implements no fsync. |
@@ -599,7 +619,7 @@ onto one thread. All three are correct-answer-no-speedup cells.
 | Rust | wasm32-wasip1 (rustc) | 1.90 | `rustup target add wasm32-wasip1` (tier 2, prebuilt std) | `rustc --target wasm32-wasip1 -O -o prog.wasm <task>.rs`, run from `sources/rust-wasm/`. Task 11 uses `--target wasm32-wasip1-threads`, which is a **tier 3** target and has no prebuilt std — `rustup target add` fetches a std it has to build locally. |
 | Go | wasip1 (gc) | 1.26 | none — the installed toolchain has the target | `GOOS=wasip1 GOARCH=wasm go build -o prog.wasm <task>.go`, run from `sources/go-wasm/`. **The file tasks 14 and 15 need the preopen's guest path to be absolute**: Go's own wasip1 runtime resolves a relative name like `data.bin` against a preopen only when that preopen's guest name is a path such as `/`, so `wasmtime --dir . prog.wasm` fails with `open data.bin: Bad file number`; `wasmtime --dir=<hostdir>::/ prog.wasm` works. This is a Go-runtime quirk, not a wasmtime one — the wasi-sdk-built C and C++ rows open the same file happily under plain `--dir .`, because wasi-libc resolves it against the cwd. |
 | AssemblyScript | wasip1 (asc) | 0.28 | `npm install assemblyscript` into `tools/assemblyscript/` | `asc <task>.ts -O2 --outFile prog.wasm --runtime incremental --use abort=<task>/abortImpl`. **`asc` must be run with the row's directory as the working directory**, because the `--use abort=…` specifier is resolved relative to the source file. Task 11 adds `--enable threads --importMemory --sharedMemory --maximumMemory 1024`. |
-| WebAssembly | hand-written WAT | none | none — the runtime is the whole toolchain | **No build step.** `wasmtime run <task>.wat` parses the text on every run; measured, that costs 51 ms against 52 ms for the equivalent binary module, i.e. nothing. |
+| WebAssembly | hand-written WAT | none | none — the runtime is the whole toolchain, plus **wabt 1.0.42** for the Wasmer cells | **No build step for wasmtime.** `wasmtime run <task>.wat` parses the text on every run; measured, that costs 51 ms against 52 ms for the equivalent binary module, i.e. nothing. **Wasmer cannot read the `.wat` text form**, so `build_all.bat` also assembles each task to a committed `prog.wasm` with `tools/wabt/wabt-1.0.42/bin/wat2wasm.exe` (the `wabt-1.0.42-windows-x64.tar.gz` release from github.com/WebAssembly/wabt, extracted under `tools/wabt/` — no installer, no admin). Task 11 needs `--enable-threads`; **do not use `--enable-all`** there, because it also turns on compact imports and both wasmtime and Wasmer then reject the module with `invalid leading byte (0x7f) for external kind`. |
 | Python | wasip1 (cpython) | 3.12.2 | the `Python-3.12.2.tgz` source release (26 MB), cross-compiled once with the `wasi-sdk` tree the C row already installs — no new download | **Not a prebuilt artifact**, because neither released WASI asset is usable as it stands. The plain build has an owned, growable memory but `threading.Thread` raises `RuntimeError: can't start new thread`; the `-threads` build supports threads but declares its memory as an **import** with `min = max = 160` pages — a hard 10 MB cap — so tasks 04, 06, 12 and 13 die with `MemoryError`. The row's sources are `sources/python-wasm/`, the same fifteen files as the `cpython` row. It therefore builds from source and lifts the cap where it lives, in `configure.ac`'s WASI pthread branch (`configure.ac:2327-2340` in 3.12.2): `-Wl,--max-memory=10485760` becomes `-Wl,--max-memory=1073741824`, and the old target triple `wasm32-wasi-threads` becomes `wasm32-wasip1-threads` because wasi-sdk 34's sysroot has no `wasm32-wasi-threads` tree (`ph.c:1:10: fatal error: 'pthread.h' file not found`). Then: `env WASI_SDK_PATH=<wasi-sdk> sh Tools/wasm/wasi-env sh configure -C --host=wasm32-unknown-wasi --build=x86_64-pc-mingw64 --enable-wasm-pthreads --with-build-python=<python.exe> --prefix=/ CONFIG_SITE=Tools/wasm/config.site-wasm32-wasi`, then `mingw32-make -j12 python.wasm`, then copy `Lib/` to `lib/python3.12/` beside the module plus `_sysconfigdata__wasi_wasm32-wasi.py` from `build/lib.wasi-wasm32-3.12/`. **`--prefix=/` is what makes `--dir .` alone sufficient** — the official recipe leaves `/usr/local` and relies on a `--mapdir /::<srcdir>` mapping plus `PYTHONPATH`. Run line: `wasmtime -S threads=y -W threads=y -W shared-memory=y --dir . python.wasm <task>.py`. The resulting module is 28,012,164 bytes and declares `env.memory flags=3 shared min=160 max=16384`. A binary patch that raises the released asset's declared maximum is **not** a substitute: it yields a module wasmtime rejects with `invalid leading byte (0x80) for external kind`, because the import section's length prefix and its first descriptor overlap. |
 | Ruby | wasip1 (ruby.wasm) | 2.10.1 (`ruby.wasm`), CRuby 4.1.0 | github.com/ruby/ruby.wasm releases — the single-file `ruby.wasm` (99 MB) from the `2.10.1` tag, no installer and no admin. The `ruby-*-wasm32-unknown-wasip1-{full,minimal}.tar.gz` assets are the same build with the stdlib tree beside it, and the `-emscripten-` ones are a different target that the wasmtime CLI cannot run. | **No build step.** `wasmtime --dir . ruby.wasm <task>.rb`. The sources are `sources/ruby-wasm/`, a complete fifteen-file set; fourteen are byte-identical to `sources/ruby/`'s and task 11 differs. The module embeds CRuby 4.1.0 and its stdlib, so nothing else is needed. Every cell needs `--dir .` because the script itself is read through a preopen. Task 11 cannot use `Thread`: CRuby's WASI build is configured `THREAD_MODEL=none`, so `Thread.new` raises `initialize() function is unimplemented on this machine`, and `Ractor.new` is stubbed the same way. The row therefore uses **Fibers**, the language's own cooperative concurrency, and `sources/ruby-wasm/11_parallel_sum.rb` says so. |
 | Lua | wasip1 (puc-lua) | 5.4.8 | the `lua-5.4.8.tar.gz` source release (374 KB), cross-compiled once with the `wasi-sdk` tree the C row already installs — no new download | Compile the 33 core sources with **`clang++ -fexceptions`**, not `clang`, with the shim directory first on the include path: `clang++ --target=wasm32-wasip1 -O2 -fexceptions -DNDEBUG -D_WASI_EMULATED_SIGNAL -DL_tmpnam=32 -I<shim> -I<src> -c <file>.c`, skipping `luac.c`, which has its own `main`. In C mode `ldo.c` emits real `setjmp`/`longjmp` calls that nothing defines and the link dies with `undefined symbol: longjmp`. Then link them with `clang++ --target=wasm32-wasip1 -O2 -fwasm-exceptions -mllvm -wasm-use-legacy-eh=false -L<wasi-sdk>/share/wasi-sysroot/lib/wasm32-wasip1/eh -lc++abi -lunwind -lwasi-emulated-signal -lwasi-emulated-process-clocks -o lua.wasm *.o wasi_shims.c`. Four things carry the target, and none of them changes a Lua source line. The sources are `sources/lua-wasm/`, a complete fifteen-file set; fourteen are byte-identical to `sources/lua/`'s and task 11 differs. `-D_WASI_EMULATED_SIGNAL`/`-lwasi-emulated-signal` because `lstate.h` uses `sig_atomic_t`; `-lwasi-emulated-process-clocks` because `loslib.c` and `ltablib.c` call `clock()`; `-DL_tmpnam=32` because wasi-libc does not define `L_tmpnam`; and the C++ exception route because wasi-libc turns `<setjmp.h>` into a hard `#error` unless `-mllvm -wasm-enable-sjlj` is set, and that path emits *legacy* `try` instructions that both wasmtime 46 and 49 refuse with `legacy_exceptions feature required`. `ldo.c` already prefers `throw`/`catch` over `setjmp` under `__cplusplus`, so compiling the sources as C++ is Lua's own supported configuration and the only one the runtime can execute. `tools/lua-wasm/wasi_shims.c` supplies `tmpfile`, `tmpnam` and `system`, which wasi-libc omits and no task calls. Run line: `wasmtime -W exceptions=y --dir . lua.wasm <task>.lua`. Task 11 cannot use the Lanes extension the native Lua rows use — Lanes is a pthreads C extension with no wasm build — so the row uses **coroutines**, the language's own cooperative concurrency, and `sources/lua-wasm/11_parallel_sum.lua` says so. |
@@ -607,9 +627,9 @@ onto one thread. All three are correct-answer-no-speedup cells.
 | Zig | wasm32-wasip1 (zig) | 0.16 | ziglang.org/download, the same tree the native `zig` row installs | `zig build-exe <task>.zig -target wasm32-wasi -O ReleaseFast -femit-bin=prog.wasm`, run from `sources/zig-wasm/`. Zig 0.16 replaced `std.posix.write` and moved `std.fs` onto `std.Io`, so the entry point is `pub fn main(init: std.process.Init) !void` and output goes through `std.Io.File.stdout().writeStreamingAll(io, …)`; `sources/zig/` is the native sibling with the same shape. Task 11 needs `-fno-single-threaded -mcpu=generic+atomics+bulk_memory --shared-memory --import-memory --export-memory --max-memory=2147483648 -rdynamic`: **`-rdynamic` is load-bearing** — wasm-ld only exports symbols in the dynamic table, and without it wasmtime aborts with `failed to find a wasi-threads entry point function; expected an export with name: wasi_thread_start`. |
 | TinyGo | wasip1 (tinygo) | 0.42 | tinygo.org, `tinygo0.42.0.windows-amd64.zip` (178 MB), extracted into `tools/tinygo/` — no installer, no admin. Needs `go` on `PATH` for the same reason the native `tinygo` row does. The release zip ships **no `wasm-opt`**, and every wasm target runs it, so `tools/tinygo/bin/wasm-opt.exe` (binaryen) has to be dropped in beside `tinygo.exe`. | `tools/tinygo/bin/tinygo.exe build -target=wasip1 -o prog.wasm <task>.go`, run from `sources/tinygo-wasm/`. The sources are TinyGo-compatible Go written for this row, not the native `sources/go/` files. Task 11 is a `correct-answer-no-speedup` cell: Go's `wasip1` port has no thread support, so the four goroutines are multiplexed onto the single wasm thread. |
 
-**Four runtimes, one artifact.** Eight of the eleven modules are plain `wasm32-wasip1` and run
+**Seven runtimes, one artifact.** Eight of the eleven modules are plain `wasm32-wasip1` and run
 unchanged under every runtime below, which makes them a controlled comparison of the runtime
-alone — same bytes, same answers, different execution engine:
+alone — same bytes, same answers, different execution backend:
 
 | Runtime | Install | Run line |
 |---|---|---|
@@ -618,6 +638,16 @@ alone — same bytes, same answers, different execution engine:
 | WasmEdge 0.18.0 | `WasmEdge-0.18.0-windows.zip` under `tools/wasmedge/` | `wasmedge --log-level off --run-mode=jit --dir .:. prog.wasm` |
 | WAMR 2.4.5 (`iwasm`) | `iwasm-2.4.5-x86_64-windows-2022.zip` under `tools/wamr/` | `iwasm --dir=. prog.wasm` |
 | V8 (node 22) | node under `tools/nodejs/`, plus a 20-line WASI shim | `node --no-warnings tools/nodejs/wasi-run.js prog.wasm .` |
+| Wasmer 4.3.7, Cranelift | `wasmer-windows-amd64.tar.gz` (v4.3.7) extracted into `tools/wasmer437/` — no installer, no admin | `wasmer run --cranelift --mapdir /:<dir> prog.wasm` |
+| Wasmer 4.3.7, LLVM | the *same binary* — only the code generator changes | `wasmer run --llvm --mapdir /:<dir> prog.wasm` |
+| Wasmer 4.3.7, Singlepass | the *same binary* | `wasmer run --singlepass --mapdir /:<dir> prog.wasm` |
+
+**Wasmer is pinned to 4.3.7, not the current 7.x.** Wasmer 7 removed the `--cranelift`,
+`--llvm` and `--singlepass` selectors from `wasmer run` (and deprecated `--dir` in favour of
+`--volume`), so the three-code-generator arrangement only exists up to 4.x. Tasks 14 and 15
+use `--mapdir /:<host dir>` rather than `--dir=.`, because Wasmer's `--dir=.` preopens an
+empty root and the relative name does not resolve. Wasmer is a **WASIX** host rather than a
+plain WASI one, which is what produces the boundaries below.
 
 Cranelift and Winch are the same runtime with two code generators, so that pair isolates the
 compiler: measured on `c-wasm` task 01, Cranelift is **6.3x faster** than Winch on byte-identical
@@ -630,6 +660,26 @@ input. Three capability boundaries are worth recording rather than treating as f
   cannot run the `wasi-threads` task either.
 - **Winch does not implement `wasm_exceptions`**, which the Lua and CPython WASI builds need,
   so those three interpreted rows stay on Cranelift only.
+
+Wasmer's own boundaries, all of them consequences of it being a WASIX host:
+
+- **A file the program creates never reaches the host filesystem.** WASIX overlays the mapped
+  directory, so a new file lives in an in-memory layer that is discarded at exit, while a write
+  to a file that *already exists* does reach the host. Verified directly: with the committed
+  `out.bin` moved aside, `wasmer run --cranelift --mapdir /:<dir> prog.wasm` on the `wasm` row's
+  task 15 prints the right answer and exits 0, and `out.bin` is not there afterwards. Task 15
+  is therefore a capability boundary on all eight rows under all three compilers.
+- **Singlepass deadlocks on the three `wasi-threads` modules.** `c-wasm`, `cpp-wasm` and
+  `rust-wasm` spawn their workers and then never make progress (600 s, against 0.16 s under
+  Cranelift and 0.08 s under LLVM on the same bytes). The hand-written `wasm` row's task 11 and
+  AssemblyScript's do run under Singlepass, so the boundary is the pthread-style atomic-wait
+  pattern those three modules emit, not the threads proposal.
+- **Fourteen of the fifteen `zig-wasm` modules do not run under Wasmer at all.** Zig 0.16's
+  `std.Io.Threaded` event loop waits on `poll_oneoff` with an *absolute* clock subscription and
+  Wasmer panics on it (`overflow when subtracting durations`); other runs stop at
+  `failed to init preopens: OutOfMemory`, because Wasmer reports three preopens where wasmtime
+  reports one. Task 11 uses raw WASI imports and no `std.Io`, so it runs under all three
+  compilers — the `zig-wasm` wasmer cells are that task only.
 
 Each of those rows therefore records task 11 (or the whole row) as a runtime capability
 boundary, in the registry's `except` field, rather than as a cell that failed.
@@ -664,11 +714,15 @@ has to start on every measured run. That startup is part of the number.
 | Language | Toolchain | Minimum | Install | Build |
 |---|---|---|---|---|
 | Java | openjdk | 17 | jdk.java.net or Adoptium | `javac _<task>.java`, then `java -cp . _<task>` |
+| Java | openjdk (interp) | the `openjdk` row's JDK | nothing to install beyond that JDK | **No build step of its own**: the class files are the `openjdk` row's, and this toolchain is the run line `java -Xint -cp . _<task>`. `-Xint` turns off both JIT tiers, so the template interpreter executes every bytecode — the row's `bytecode-vm` cell, against the same class files on C1, C2 and the default tiered pipeline. |
+| Java | openjdk (c1) | the `openjdk` row's JDK | nothing beyond that JDK | `java -XX:TieredStopAtLevel=1 -cp . _<task>`: the C1 client compiler compiles the hot methods and the C2 tier is never entered, so the cell is C1's code with C1's profiling still running. |
+| Java | openjdk (c2) | the `openjdk` row's JDK | nothing beyond that JDK | `java -XX:-TieredCompilation -cp . _<task>`: C1's profiling tier is off, so C2 — the server compiler — compiles each method on first call. This is the C2 the default row reaches only after C1 has warmed the method up. |
 | Java | openj9 | 21 | IBM Semeru Open Edition, `ibm-semeru-open-jdk_x64_windows_21.0.12.15.zip` (230 MB) extracted into `tools/openj9/` — no installer, no admin, and it brings its own `javac` | `tools/openj9/bin/javac.exe -d . _<task>.java`, then `tools/openj9/bin/java.exe -cp . _<task>`. **Eclipse OpenJ9, not HotSpot**: run from `sources/java-openj9/`, which holds the same fifteen files as the `openjdk` row, unchanged, with no OpenJ9-specific flag and no `-X` option. The whole difference is which VM executes the bytecode — OpenJ9's JIT (`openj9-0.61.0`) against HotSpot's C2 — and OpenJ9 maps `java.lang.Thread` onto OS threads, so task 11 is a real four-thread pass. Verified with `java -version`, which reports `Eclipse OpenJ9 VM 21.0.12.15`. |
 | Java | graalvm jit | GraalVM 21 (25.0.4 measured) | graalvm.org, the same JDK tarball the `graalvm native-image` row installs | **No separate build step**: `javac _<task>.java` produces the same class files, and the row is the run line `<graalvm>/bin/java -cp . _<task>`. The whole difference from the `openjdk` row is which JIT compiles the bytecode: GraalVM's JDK has `EnableJVMCI`, `EnableJVMCIProduct` and `UseJVMCICompiler` all `true` by default, so the Graal compiler replaces HotSpot's C2 without any flag. Verified with `java -XX:+PrintFlagsFinal -version`. The sources are `sources/java-graalvm-jit/`, the same fifteen files as the `openjdk` row. |
 | Kotlin | jvm | 1.9 (2.4.20 measured) | kotlinlang.org, `kotlin-compiler-<v>.zip` (85 MB) extracted — no installer and no admin. Needs a JDK on `PATH`; `JAVA_HOME` selects which | `kotlinc <task>.kt -include-runtime -d prog.jar`, then `java -jar prog.jar`, run from `sources/kotlin/`, which holds all fifteen tasks. `-include-runtime` bundles `kotlin-stdlib` into the jar, so the run line needs a JRE and nothing else. Task 11 uses four `java.lang.Thread` workers. |
 | C# | coreclr | .NET 8 | dotnet.microsoft.com | `dotnet build -c Release` |
 | C# | mono | 6.12 | mono-project.com | `mcs -optimize+ <task>.cs` |
+| C# | mono (aot) | 6.12 | the same `mono.msi` the `mono` row installs, unpacked with `msiexec /a` (no admin) | Two steps on the same assembly: `mcs -optimize+ <task>.cs`, then `mono --aot=full <task>.exe`, which writes `<task>.exe.dll` — a native DLL holding the ahead-of-time code. It is run with `mono --full-aot <task>.exe`, the runtime's aot-only mode, where the JIT is off and only that module may execute. Two extra tools have to be on `PATH`: mono's AOT driver shells out to **`clang.exe`** for the assembler (`--target=x86_64-pc-windows-msvc`) and to **`link.exe`** for the DLL, so the build uses `tools/llvm-mingw/bin` plus the MSVC environment from `tools/msvc_env.py`; without clang it stops with `'"clang.exe"' is not recognized`. The framework assemblies are AOT-compiled once, beside the task. **`mono --llvm` is not available on Windows**: the official MSI is built without LLVM (`Mono Warning: --llvm not enabled in this runtime.`, and `mono --aot=llvm` answers `requires a runtime compiled with llvm support.`), and enabling it means a from-source Cygwin+MSVC build with `--enable-llvm` — see the note below. |
 | F# | dotnet | .NET 8 | as above | `dotnet build -c Release` |
 | VB.NET | dotnet | .NET 8 | as above | `dotnet build -c Release`, with a `.vbproj` instead of a `.csproj`. Same SDK as C# and F#, so no extra install. |
 | Scala | jvm | 3.3 | scala-lang.org | Two steps: `scalac -release 17 -d out <task>.scala`, then `java -cp "out;<scala>/maven2/org/scala-lang/scala3-library_3/<v>/scala3-library_3-<v>.jar;<scala>/maven2/org/scala-lang/scala-library/<v>/scala-library-<v>.jar" Main`, where `<scala>` is the distribution and `<v>` its version. **Scala CLI's `scala` is a subcommand runner, not the classic `scala Main` launcher**, so it rejects `scala Main` with `Main is not a scala sub-command`; running the compiled class through `java -cp` is the equivalent and it also keeps the launcher's own start-up out of the measurement. The compiler needs a JDK 17 or newer on `PATH`. |
@@ -700,6 +754,7 @@ time is zero. Everything is paid at run time.
 | Language | Toolchain |
 |---|---|
 | JavaScript | bun, deno |
+| TypeScript | bun, deno | bun 1.4.2, deno 2.9.7 (V8 15.0.245.2) | bun is a per-user install (`bun.exe`, no admin); deno is the single static `deno.exe` from github.com/denoland/deno releases, extracted into `tools/deno/` — no installer and no admin | **No build step**: `bun <task>.ts` / `deno run <task>.ts`. Both runtimes strip the type annotations themselves — bun with its own transpiler, deno with its built-in TypeScript support — so nothing is compiled ahead of time and no `tsconfig.json` is needed. Deno denies the filesystem by default: task 11's workers re-read the script file and task 14 opens `data.bin`, so both take `--allow-read`, and task 15 takes `--allow-write`. Because these sources are ES modules (`import * as fs from "node:fs"`), they need **no** `--unstable-detect-cjs`, unlike the `javascript` row's CommonJS files. Same fifteen programs as the `javascript` row with real type annotations, on the same two runtimes. |
 | PHP | zend | 8.5.11 (ZTS) | windows.php.net, `php-8.5.11-Win32-vs17-x64.zip` (36 MB, the non-`nts` name is the thread-safe build), extracted into `tools/php-zts/` — no installer, no admin | **No build step**: `php <task>.php`. The row uses the **ZTS** build rather than the NTS one, because task 11 needs the PECL `parallel` extension and that extension only loads into a thread-safe PHP; `php_parallel-1.2.10-8.5-ts-vs17-x64.zip` from the Windows PECL builds goes into `ext/`, with `pthreadVC3.dll` beside `php.exe`, and `php.ini` must set **`extension_dir`** as well as `extension=parallel` — the build's compiled-in default is `C:\php\ext`, so a bare `extension=parallel` fails with `Unable to load dynamic library`. |
 | PHP | zend + jit | as above | as above | Same interpreter, with `-d opcache.enable_cli=1 -d opcache.jit=tracing -d opcache.jit_buffer_size=64M`. **`-d opcache.jit=tracing` is required**: PHP 8.5 changed the master default of `opcache.jit` to `disable`, so `opcache.jit_buffer_size` alone leaves the JIT off (`opcache_get_status()` reports `jit.on=false`, `buffer_size=0`) and the row would measure only opcache bytecode caching. With the flag set the JIT is on and the effect is large — measured 4.2x on task 01, 6.0x on 09 and 12.3x on 11. |
 | Python | cpython, pypy, graalpy |
@@ -1178,6 +1233,26 @@ Worth knowing before starting, because these will eat a day each:
   `PREFIX` and it builds in about 30 seconds:
   `mingw32-make -j4 "PREFIX=C:/path/to/luajit"`. Copy `luajit.exe` and `lua51.dll` out of
   `src/`. Lua 5.4 from the official binaries is a separate row and is unaffected.
+- **`mono --llvm` does not exist on Windows.** The official `mono.msi` is built without LLVM,
+  so the flag is inert and the AOT driver refuses outright:
+
+  ```
+  $ mono --llvm 01_branches.exe
+  Mono Warning: --llvm not enabled in this runtime.          <- runs on the ordinary JIT
+  $ mono --aot=llvm 01_branches.exe
+  --aot=llvm requires a runtime compiled with llvm support.
+  AOT of image 01_branches.exe failed.
+  ```
+
+  `mono --version` reports `LLVM: supported, not enabled.` — the loader knows the option, the
+  build has nothing behind it — and no file in the 168 MB extracted tree is named `llvm`.
+  Enabling it means building Mono from source on Windows with `--enable-llvm`, which needs
+  Cygwin and Visual Studio and is a multi-hour build; upstream's own docs note that "most
+  packages" ship without it. The C# row therefore has no LLVM JIT cell, and its second Mono
+  cell is `mono (aot)` instead — `--aot=full`, which does work and gives the row the same
+  JIT/AOT pair the matrix draws for `dart` (`jit`/`aot`) and `java` (GraalVM JIT /
+  `native-image`). A third C# JIT would also have had nothing to pair against: Mono's LLVM
+  backend is an alternative code generator inside the same runtime, not a second runtime.
 - **msvc** only exists on Windows. On a Linux or macOS host, drop the two msvc columns.
   It also does not need administrator rights, despite the installer insisting otherwise.
   The `tools/` scripts this section names are **not in this repository** (the directory is

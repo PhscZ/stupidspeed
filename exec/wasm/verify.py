@@ -1,6 +1,7 @@
 import subprocess, re, os, shutil
 D = r"C:\stupidspeed\exec\wasm\wat"
 WT = r"C:\stupidspeed\tools\wasmtime46\wasmtime.exe"
+WS = r"C:\stupidspeed\tools\wasmer437\bin\wasmer.exe"
 DATA = r"C:\stupidspeed\data.bin"
 tasks = ["01_branches","02_switch_case","03_func_sum","04_array_sum","05_alloc_churn",
          "06_char_count","07_string_append","08_average","09_fib_recursive","10_pi",
@@ -12,25 +13,47 @@ exp = {"01_branches":"33333334 13333333 7619048 45714285","02_switch_case":"7500
  "12_matrix_add":"999000000","13_matrix_mul":"599995000","14_file_read":"2389704704","15_file_write":"52428800"}
 TIME_RE = re.compile(r"TIME_MS=([0-9]+(?:\.[0-9]+)?)")
 
-ok = 0; bad = []
-for t in tasks:
-    d = os.path.join(D, t)
+def snapshot_out(d):
+    """Remember task 15's out.bin, which is a committed artifact.
+
+    A verification run must leave exec/ exactly as it found it, so whatever the
+    cell wrote is put back once the cell has been checked -- the same thing
+    exec/harness.py does around every run.
+    """
+    p = os.path.join(d, "out.bin")
+    try:
+        with open(p, "rb") as fh:
+            return (p, fh.read())
+    except OSError:
+        return (p, None)
+
+def restore_out(saved):
+    p, blob = saved
+    try:
+        if blob is None:
+            if os.path.exists(p):
+                os.remove(p)
+        else:
+            with open(p, "wb") as fh:
+                fh.write(blob)
+    except OSError:
+        pass
+
+def stage(t, d):
     if t in ("14_file_read", "15_file_write"):
-        if not os.path.exists(os.path.join(d, "data.bin")) or not os.path.samefile(DATA, os.path.join(d, "data.bin")): shutil.copy(DATA, os.path.join(d, "data.bin"))
+        if not os.path.exists(os.path.join(d, "data.bin")) or not os.path.samefile(DATA, os.path.join(d, "data.bin")):
+            shutil.copy(DATA, os.path.join(d, "data.bin"))
     if t == "15_file_write":
         op = os.path.join(d, "out.bin")
         if os.path.exists(op):
             os.remove(op)
-    args = [WT, "run"]
-    if t == "11_parallel_sum":
-        args += ["-S", "threads=y", "-W", "threads=y", "-W", "shared-memory=y"]
-    if t in ("14_file_read", "15_file_write"):
-        args += ["--dir=."]
-    args.append(t + ".wat")
+
+def run(args, d, t, label):
     try:
         r = subprocess.run(args, capture_output=True, text=True, cwd=d, timeout=600)
     except subprocess.TimeoutExpired:
-        bad.append((t, "TIMEOUT after 600s")); print("%s FAIL TIMEOUT after 600s" % t, flush=True); continue
+        print("%s FAIL TIMEOUT after 600s [%s]" % (t, label), flush=True)
+        return False
     out = r.stdout.strip()
     m = TIME_RE.search(r.stderr)
     problems = []
@@ -41,11 +64,72 @@ for t in tasks:
     if t == "15_file_write" and not os.path.exists(os.path.join(d, "out.bin")):
         problems.append("out.bin missing")
     if problems:
-        bad.append((t, "; ".join(problems)))
-        print("%s FAIL %s" % (t, "; ".join(problems)), flush=True)
+        print("%s FAIL [%s] %s" % (t, label, "; ".join(problems)), flush=True)
+        return False
+    print("%s OK TIME_MS=%s [%s]" % (t, m.group(1), label), flush=True)
+    return True
+
+# ---------------------------------------------------------------- wasmtime
+# wasmtime reads the .wat text form directly, so there is no build step: the
+# .wat is both the source and the artifact.
+wt_ok = 0
+wt_bad = []
+for t in tasks:
+    d = os.path.join(D, t)
+    saved = snapshot_out(d)
+    stage(t, d)
+    args = [WT, "run"]
+    if t == "11_parallel_sum":
+        args += ["-S", "threads=y", "-W", "threads=y", "-W", "shared-memory=y"]
+    if t in ("14_file_read", "15_file_write"):
+        args += ["--dir=."]
+    args.append(t + ".wat")
+    good = run(args, d, t, "wasmtime")
+    restore_out(saved)
+    if good:
+        wt_ok += 1
     else:
-        ok += 1
-        print("%s OK TIME_MS=%s" % (t, m.group(1)), flush=True)
-print("WASM PASS %d/15" % ok, flush=True)
-if bad:
-    print("FAILURES: " + repr(bad), flush=True)
+        wt_bad.append(t)
+print("WASM wasmtime PASS %d/15" % wt_ok, flush=True)
+if wt_bad:
+    print("WASM wasmtime FAILURES: " + repr(wt_bad), flush=True)
+
+# ---------------------------------------------------------------- wasmer
+# wasmer cannot read the text form, so it runs the prog.wasm that build_all.bat
+# assembles from the same .wat with wabt's wat2wasm.  Three code generators, one
+# binary: --cranelift, --llvm, --singlepass.  Threads are on by default, so task
+# 11 needs no flags.  Tasks 14 and 15 need the working directory mapped to the
+# guest root: wasmer's --dir=. preopens an empty root and the relative name does
+# not resolve, while --mapdir /:<host dir> does.
+#
+# Task 15 is a capability boundary, not a failed cell: wasmer 4.3.7's WASIX
+# filesystem overlays the host directory read-only, so a file the program
+# *creates* lives in an in-memory layer that is discarded at exit.  Writing to a
+# file that already exists does reach the host, which is why task 14 (read
+# data.bin) is fine and task 15 cannot leave out.bin.  The same runtime's
+# poll_oneoff panics on an absolute clock subscription ("overflow when
+# subtracting durations"), which is why the zig-wasm row is blocked here.
+WEXCEPT = {"15_file_write"}
+for comp in ("cranelift", "llvm", "singlepass"):
+    w_ok = 0
+    w_bad = []
+    for t in tasks:
+        d = os.path.join(D, t)
+        if t in WEXCEPT:
+            print("%s SKIP [wasmer %s] capability boundary" % (t, comp), flush=True)
+            continue
+        saved = snapshot_out(d)
+        stage(t, d)
+        args = [WS, "run", "--" + comp]
+        if t in ("14_file_read", "15_file_write"):
+            args += ["--mapdir", "/:" + d]
+        args.append("prog.wasm")
+        good = run(args, d, t, "wasmer " + comp)
+        restore_out(saved)
+        if good:
+            w_ok += 1
+        else:
+            w_bad.append(t)
+    print("WASM wasmer (%s) PASS %d/15" % (comp, w_ok), flush=True)
+    if w_bad:
+        print("WASM wasmer (%s) FAILURES: %s" % (comp, repr(w_bad)), flush=True)

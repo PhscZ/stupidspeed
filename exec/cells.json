@@ -1,5 +1,5 @@
 {
- "note": "Run recipes transcribed from each row's exec/<row>/verify.py; that file remains the authority. {root} is the repository root; {task}, {row}, {toolchain}, {PATH} and {env:NAME} are also substituted by exec/harness.py. `language` is the README results table's Language column for the row.",
+ "note": "Run recipes transcribed from each row's exec/<row>/verify.py; that file remains the authority. {root} is the repository root; {task}, {row}, {toolchain}, {PATH} and {env:NAME} are also substituted by exec/harness.py. `language` is the README results table's Language column for the row. `backend` names the component that actually executes the entry -- the code generator or virtual machine the toolchain hands its program to -- and is the key into the `backends` table below; many front ends (a language plus its toolchain) share one backend, which is the matrix's second axis. See `exec/harness.py --backends`.",
  "tasks": [
   "01_branches",
   "02_switch_case",
@@ -17,7 +17,7 @@
   "14_file_read",
   "15_file_write"
  ],
- "engines": {
+ "backends": {
   "a68g": {
    "name": "Algol 68 Genie",
    "kind": "interpreter",
@@ -164,9 +164,9 @@
    "what": "Haxe's own VM"
   },
   "hotspot": {
-   "name": "HotSpot C2",
+   "name": "HotSpot (tiered C1 + C2)",
    "kind": "native-jit",
-   "what": "the JVM's C2 optimising JIT"
+   "what": "the JVM's default tiered compilation: C1 first, C2 for the hot methods"
   },
   "icx": {
    "name": "Intel oneAPI (DPC++)",
@@ -352,6 +352,46 @@
    "name": "Zend JIT",
    "kind": "native-jit",
    "what": "opcode JIT on top of the Zend VM"
+  },
+  "hotspot-interp": {
+   "name": "HotSpot (interpreter)",
+   "kind": "bytecode-vm",
+   "what": "-Xint: the template interpreter, no JIT at all"
+  },
+  "hotspot-c1": {
+   "name": "HotSpot C1",
+   "kind": "native-jit",
+   "what": "-XX:TieredStopAtLevel=1: the client compiler only, the C2 tier never runs"
+  },
+  "hotspot-c2": {
+   "name": "HotSpot C2",
+   "kind": "native-jit",
+   "what": "-XX:-TieredCompilation: the server compiler only, no C1 profiling tier"
+  },
+  "rust-cranelift": {
+   "name": "Cranelift (rustc)",
+   "kind": "native-aot",
+   "what": "rustc's MIR lowered by Cranelift instead of LLVM (-Zcodegen-backend=cranelift)"
+  },
+  "mono-aot": {
+   "name": "Mono AOT",
+   "kind": "native-aot",
+   "what": "mono --aot=full's native module for the same assembly, run by --full-aot with the JIT switched off"
+  },
+  "wasmer-cranelift": {
+   "name": "Wasmer (Cranelift)",
+   "kind": "wasm-runtime",
+   "what": "Wasmer's WASIX runtime with its Cranelift compiler"
+  },
+  "wasmer-llvm": {
+   "name": "Wasmer (LLVM)",
+   "kind": "wasm-runtime",
+   "what": "the same runtime, LLVM compiler"
+  },
+  "wasmer-singlepass": {
+   "name": "Wasmer (Singlepass)",
+   "kind": "wasm-runtime",
+   "what": "the same runtime, Singlepass: a fast single-pass compiler with no optimisation"
   }
  },
  "rows": {
@@ -359,7 +399,7 @@
    "entries": [
     {
      "toolchain": "AIR",
-     "engine": "avm2",
+     "backend": "avm2",
      "tasks": [
       "*"
      ],
@@ -382,7 +422,7 @@
    "entries": [
     {
      "toolchain": "gnat",
-     "engine": "gcc",
+     "backend": "gcc",
      "tasks": [
       "*"
      ],
@@ -399,7 +439,7 @@
    "entries": [
     {
      "toolchain": "a68g",
-     "engine": "a68g",
+     "backend": "a68g",
      "tasks": [
       "*"
      ],
@@ -420,7 +460,7 @@
     },
     {
      "toolchain": "a68g",
-     "engine": "a68g",
+     "backend": "a68g",
      "tasks": [
       "06_char_count"
      ],
@@ -443,7 +483,7 @@
    "entries": [
     {
      "toolchain": "x86-64 nasm",
-     "engine": "asm",
+     "backend": "asm",
      "tasks": [
       "*"
      ],
@@ -462,7 +502,7 @@
      "toolchain": "asc (wasip1)",
      "cwd": "{root}/exec/assemblyscript/{task}",
      "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
-     "engine": "wasmtime",
+     "backend": "wasmtime",
      "tasks": [
       "*"
      ],
@@ -478,7 +518,7 @@
      "toolchain": "asc (wasip1)",
      "cwd": "{root}/exec/assemblyscript/{task}",
      "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
-     "engine": "wasmtime",
+     "backend": "wasmtime",
      "tasks": [
       "11_parallel_sum"
      ],
@@ -500,7 +540,7 @@
      "toolchain": "asc (wasip1)",
      "cwd": "{root}/exec/assemblyscript/{task}",
      "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
-     "engine": "wasmtime",
+     "backend": "wasmtime",
      "tasks": [
       "14_file_read",
       "15_file_write"
@@ -518,7 +558,7 @@
      "toolchain": "wasmtime (winch)",
      "cwd": "{root}/exec/assemblyscript/{task}",
      "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
-     "engine": "winch",
+     "backend": "winch",
      "tasks": [
       "*"
      ],
@@ -534,7 +574,7 @@
      "toolchain": "wasmtime (winch)",
      "cwd": "{root}/exec/assemblyscript/{task}",
      "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
-     "engine": "winch",
+     "backend": "winch",
      "tasks": [
       "11_parallel_sum"
      ],
@@ -556,7 +596,7 @@
      "toolchain": "wasmtime (winch)",
      "cwd": "{root}/exec/assemblyscript/{task}",
      "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
-     "engine": "winch",
+     "backend": "winch",
      "tasks": [
       "14_file_read",
       "15_file_write"
@@ -574,7 +614,7 @@
      "toolchain": "wasmedge",
      "cwd": "{root}/exec/assemblyscript/{task}",
      "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
-     "engine": "wasm-edge",
+     "backend": "wasm-edge",
      "tasks": [
       "*"
      ],
@@ -593,7 +633,7 @@
      "toolchain": "wasmedge",
      "cwd": "{root}/exec/assemblyscript/{task}",
      "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
-     "engine": "wasm-edge",
+     "backend": "wasm-edge",
      "tasks": [
       "14_file_read",
       "15_file_write"
@@ -612,7 +652,7 @@
      "toolchain": "iwasm",
      "cwd": "{root}/exec/assemblyscript/{task}",
      "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
-     "engine": "wamr",
+     "backend": "wamr",
      "tasks": [
       "*"
      ],
@@ -625,7 +665,7 @@
      "toolchain": "iwasm",
      "cwd": "{root}/exec/assemblyscript/{task}",
      "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
-     "engine": "wamr",
+     "backend": "wamr",
      "tasks": [
       "11_parallel_sum"
      ],
@@ -638,7 +678,7 @@
      "toolchain": "iwasm",
      "cwd": "{root}/exec/assemblyscript/{task}",
      "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
-     "engine": "wamr",
+     "backend": "wamr",
      "tasks": [
       "14_file_read",
       "15_file_write"
@@ -653,7 +693,7 @@
      "toolchain": "node (wasip1)",
      "cwd": "{root}/exec/assemblyscript/{task}",
      "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
-     "engine": "v8",
+     "backend": "v8",
      "tasks": [
       "*"
      ],
@@ -672,7 +712,7 @@
      "toolchain": "node (wasip1)",
      "cwd": "{root}/exec/assemblyscript/{task}",
      "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
-     "engine": "v8",
+     "backend": "v8",
      "tasks": [
       "14_file_read",
       "15_file_write"
@@ -684,6 +724,66 @@
       "prog.wasm",
       "."
      ]
+    },
+    {
+     "toolchain": "wasmer (cranelift)",
+     "backend": "wasmer-cranelift",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--cranelift",
+      "--mapdir",
+      "/:{root}/exec/assemblyscript/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/assemblyscript/{task}",
+     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
+     "except": [
+      "15_file_write"
+     ]
+    },
+    {
+     "toolchain": "wasmer (llvm)",
+     "backend": "wasmer-llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--llvm",
+      "--mapdir",
+      "/:{root}/exec/assemblyscript/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/assemblyscript/{task}",
+     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
+     "except": [
+      "15_file_write"
+     ]
+    },
+    {
+     "toolchain": "wasmer (singlepass)",
+     "backend": "wasmer-singlepass",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--singlepass",
+      "--mapdir",
+      "/:{root}/exec/assemblyscript/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/assemblyscript/{task}",
+     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
+     "except": [
+      "15_file_write"
+     ]
     }
    ],
    "language": "AssemblyScript"
@@ -692,7 +792,7 @@
    "entries": [
     {
      "toolchain": "ats (gcc)",
-     "engine": "gcc",
+     "backend": "gcc",
      "tasks": [
       "*"
      ],
@@ -713,7 +813,7 @@
    "entries": [
     {
      "toolchain": "v2",
-     "engine": "autohotkey",
+     "backend": "autohotkey",
      "tasks": [
       "*"
      ],
@@ -736,7 +836,7 @@
    "entries": [
     {
      "toolchain": "babashka",
-     "engine": "graalvm-native",
+     "backend": "graalvm-native",
      "tasks": [
       "*"
      ],
@@ -754,7 +854,7 @@
    "entries": [
     {
      "toolchain": "BeefBuild",
-     "engine": "llvm",
+     "backend": "llvm",
      "tasks": [
       "*"
      ],
@@ -772,7 +872,7 @@
    "entries": [
     {
      "toolchain": "booc",
-     "engine": "coreclr",
+     "backend": "coreclr",
      "tasks": [
       "*"
      ],
@@ -791,7 +891,7 @@
    "entries": [
     {
      "toolchain": "gcc",
-     "engine": "gcc",
+     "backend": "gcc",
      "tasks": [
       "*"
      ],
@@ -804,7 +904,7 @@
     },
     {
      "toolchain": "clang",
-     "engine": "llvm",
+     "backend": "llvm",
      "tasks": [
       "*"
      ],
@@ -817,7 +917,7 @@
     },
     {
      "toolchain": "tcc",
-     "engine": "tcc",
+     "backend": "tcc",
      "tasks": [
       "*"
      ],
@@ -830,7 +930,7 @@
     },
     {
      "toolchain": "msvc",
-     "engine": "msvc",
+     "backend": "msvc",
      "tasks": [
       "*"
      ],
@@ -850,7 +950,7 @@
      "toolchain": "clang (wasm32-wasip1)",
      "cwd": "{root}/exec/c-wasm/{task}",
      "artifact": "{root}/exec/c-wasm/{task}/prog.wasm",
-     "engine": "wasmtime",
+     "backend": "wasmtime",
      "tasks": [
       "*"
      ],
@@ -874,7 +974,7 @@
      "toolchain": "wasmtime (winch)",
      "cwd": "{root}/exec/c-wasm/{task}",
      "artifact": "{root}/exec/c-wasm/{task}/prog.wasm",
-     "engine": "winch",
+     "backend": "winch",
      "tasks": [
       "*"
      ],
@@ -898,7 +998,7 @@
      "toolchain": "wasmedge",
      "cwd": "{root}/exec/c-wasm/{task}",
      "artifact": "{root}/exec/c-wasm/{task}/prog.wasm",
-     "engine": "wasm-edge",
+     "backend": "wasm-edge",
      "tasks": [
       "*"
      ],
@@ -920,7 +1020,7 @@
      "toolchain": "iwasm",
      "cwd": "{root}/exec/c-wasm/{task}",
      "artifact": "{root}/exec/c-wasm/{task}/prog.wasm",
-     "engine": "wamr",
+     "backend": "wamr",
      "tasks": [
       "*"
      ],
@@ -935,7 +1035,7 @@
      "toolchain": "node (wasip1)",
      "cwd": "{root}/exec/c-wasm/{task}",
      "artifact": "{root}/exec/c-wasm/{task}/prog.wasm",
-     "engine": "v8",
+     "backend": "v8",
      "tasks": [
       "*"
      ],
@@ -950,6 +1050,67 @@
      "except": [
       "11_parallel_sum"
      ]
+    },
+    {
+     "toolchain": "wasmer (cranelift)",
+     "backend": "wasmer-cranelift",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--cranelift",
+      "--mapdir",
+      "/:{root}/exec/c-wasm/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/c-wasm/{task}",
+     "artifact": "{root}/exec/c-wasm/{task}/prog.wasm",
+     "except": [
+      "15_file_write"
+     ]
+    },
+    {
+     "toolchain": "wasmer (llvm)",
+     "backend": "wasmer-llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--llvm",
+      "--mapdir",
+      "/:{root}/exec/c-wasm/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/c-wasm/{task}",
+     "artifact": "{root}/exec/c-wasm/{task}/prog.wasm",
+     "except": [
+      "15_file_write"
+     ]
+    },
+    {
+     "toolchain": "wasmer (singlepass)",
+     "backend": "wasmer-singlepass",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--singlepass",
+      "--mapdir",
+      "/:{root}/exec/c-wasm/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/c-wasm/{task}",
+     "artifact": "{root}/exec/c-wasm/{task}/prog.wasm",
+     "except": [
+      "11_parallel_sum",
+      "15_file_write"
+     ]
     }
    ],
    "language": "C"
@@ -958,7 +1119,7 @@
    "entries": [
     {
      "toolchain": "c3c",
-     "engine": "llvm",
+     "backend": "llvm",
      "tasks": [
       "*"
      ],
@@ -976,7 +1137,7 @@
    "entries": [
     {
      "toolchain": "clojure.main",
-     "engine": "hotspot",
+     "backend": "hotspot",
      "tasks": [
       "*"
      ],
@@ -997,7 +1158,7 @@
    "entries": [
     {
      "toolchain": "cljs.main",
-     "engine": "v8",
+     "backend": "v8",
      "tasks": [
       "*"
      ],
@@ -1016,7 +1177,7 @@
    "entries": [
     {
      "toolchain": "gnucobol",
-     "engine": "gcc",
+     "backend": "gcc",
      "tasks": [
       "*"
      ],
@@ -1037,7 +1198,7 @@
    "entries": [
     {
      "toolchain": "sbcl",
-     "engine": "sbcl",
+     "backend": "sbcl",
      "tasks": [
       "*"
      ],
@@ -1054,7 +1215,7 @@
    "entries": [
     {
      "toolchain": "ecl",
-     "engine": "msvc",
+     "backend": "msvc",
      "tasks": [
       "*"
      ],
@@ -1074,7 +1235,7 @@
    "entries": [
     {
      "toolchain": "gpcp",
-     "engine": "coreclr",
+     "backend": "coreclr",
      "tasks": [
       "*"
      ],
@@ -1091,7 +1252,7 @@
    "entries": [
     {
      "toolchain": "g++",
-     "engine": "gcc",
+     "backend": "gcc",
      "tasks": [
       "*"
      ],
@@ -1104,7 +1265,7 @@
     },
     {
      "toolchain": "clang++",
-     "engine": "llvm",
+     "backend": "llvm",
      "tasks": [
       "*"
      ],
@@ -1117,7 +1278,7 @@
     },
     {
      "toolchain": "msvc",
-     "engine": "msvc",
+     "backend": "msvc",
      "tasks": [
       "*"
      ],
@@ -1137,7 +1298,7 @@
      "toolchain": "clang++ (wasm32-wasip1)",
      "cwd": "{root}/exec/cpp-wasm/{task}",
      "artifact": "{root}/exec/cpp-wasm/{task}/prog.wasm",
-     "engine": "wasmtime",
+     "backend": "wasmtime",
      "tasks": [
       "*"
      ],
@@ -1161,7 +1322,7 @@
      "toolchain": "wasmtime (winch)",
      "cwd": "{root}/exec/cpp-wasm/{task}",
      "artifact": "{root}/exec/cpp-wasm/{task}/prog.wasm",
-     "engine": "winch",
+     "backend": "winch",
      "tasks": [
       "*"
      ],
@@ -1185,7 +1346,7 @@
      "toolchain": "wasmedge",
      "cwd": "{root}/exec/cpp-wasm/{task}",
      "artifact": "{root}/exec/cpp-wasm/{task}/prog.wasm",
-     "engine": "wasm-edge",
+     "backend": "wasm-edge",
      "tasks": [
       "*"
      ],
@@ -1207,7 +1368,7 @@
      "toolchain": "iwasm",
      "cwd": "{root}/exec/cpp-wasm/{task}",
      "artifact": "{root}/exec/cpp-wasm/{task}/prog.wasm",
-     "engine": "wamr",
+     "backend": "wamr",
      "tasks": [
       "*"
      ],
@@ -1222,7 +1383,7 @@
      "toolchain": "node (wasip1)",
      "cwd": "{root}/exec/cpp-wasm/{task}",
      "artifact": "{root}/exec/cpp-wasm/{task}/prog.wasm",
-     "engine": "v8",
+     "backend": "v8",
      "tasks": [
       "*"
      ],
@@ -1237,6 +1398,67 @@
      "except": [
       "11_parallel_sum"
      ]
+    },
+    {
+     "toolchain": "wasmer (cranelift)",
+     "backend": "wasmer-cranelift",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--cranelift",
+      "--mapdir",
+      "/:{root}/exec/cpp-wasm/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/cpp-wasm/{task}",
+     "artifact": "{root}/exec/cpp-wasm/{task}/prog.wasm",
+     "except": [
+      "15_file_write"
+     ]
+    },
+    {
+     "toolchain": "wasmer (llvm)",
+     "backend": "wasmer-llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--llvm",
+      "--mapdir",
+      "/:{root}/exec/cpp-wasm/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/cpp-wasm/{task}",
+     "artifact": "{root}/exec/cpp-wasm/{task}/prog.wasm",
+     "except": [
+      "15_file_write"
+     ]
+    },
+    {
+     "toolchain": "wasmer (singlepass)",
+     "backend": "wasmer-singlepass",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--singlepass",
+      "--mapdir",
+      "/:{root}/exec/cpp-wasm/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/cpp-wasm/{task}",
+     "artifact": "{root}/exec/cpp-wasm/{task}/prog.wasm",
+     "except": [
+      "11_parallel_sum",
+      "15_file_write"
+     ]
     }
    ],
    "language": "C++"
@@ -1245,7 +1467,7 @@
    "entries": [
     {
      "toolchain": "crystal",
-     "engine": "llvm",
+     "backend": "llvm",
      "tasks": [
       "*"
      ],
@@ -1262,7 +1484,7 @@
    "entries": [
     {
      "toolchain": "coreclr",
-     "engine": "coreclr",
+     "backend": "coreclr",
      "tasks": [
       "*"
      ],
@@ -1274,7 +1496,7 @@
     },
     {
      "toolchain": "nativeaot",
-     "engine": "coreclr-aot",
+     "backend": "coreclr-aot",
      "tasks": [
       "*"
      ],
@@ -1286,7 +1508,7 @@
     },
     {
      "toolchain": "mono",
-     "engine": "mono",
+     "backend": "mono",
      "tasks": [
       "*"
      ],
@@ -1296,6 +1518,20 @@
      ],
      "cwd": "{root}/exec/csharp/mono/{task}",
      "artifact": "{root}/exec/csharp/mono/{task}/{task}.exe"
+    },
+    {
+     "toolchain": "mono (aot)",
+     "backend": "mono-aot",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/mono/Mono/bin/mono.exe",
+      "--full-aot",
+      "{root}/exec/csharp/mono-aot/{task}/{task}.exe"
+     ],
+     "cwd": "{root}/exec/csharp/mono-aot/{task}",
+     "artifact": "{root}/exec/csharp/mono-aot/{task}/{task}.exe.dll"
     }
    ],
    "language": "C#"
@@ -1304,7 +1540,7 @@
    "entries": [
     {
      "toolchain": "dmd",
-     "engine": "dmd",
+     "backend": "dmd",
      "tasks": [
       "*"
      ],
@@ -1316,7 +1552,7 @@
     },
     {
      "toolchain": "ldc2",
-     "engine": "llvm",
+     "backend": "llvm",
      "tasks": [
       "*"
      ],
@@ -1333,7 +1569,7 @@
    "entries": [
     {
      "toolchain": "aot",
-     "engine": "dart-aot",
+     "backend": "dart-aot",
      "tasks": [
       "*"
      ],
@@ -1345,7 +1581,7 @@
     },
     {
      "toolchain": "jit",
-     "engine": "dart-jit",
+     "backend": "dart-jit",
      "tasks": [
       "*"
      ],
@@ -1363,7 +1599,7 @@
    "entries": [
     {
      "toolchain": "Dolphin 8",
-     "engine": "dolphin",
+     "backend": "dolphin",
      "tasks": [
       "*"
      ],
@@ -1388,7 +1624,7 @@
    "entries": [
     {
      "toolchain": "eiffelstudio",
-     "engine": "gcc",
+     "backend": "gcc",
      "tasks": [
       "*"
      ],
@@ -1405,7 +1641,7 @@
    "entries": [
     {
      "toolchain": "elixir (BEAM)",
-     "engine": "beam",
+     "backend": "beam",
      "tasks": [
       "*"
      ],
@@ -1437,7 +1673,7 @@
    "entries": [
     {
      "toolchain": "OTP (escript)",
-     "engine": "beam",
+     "backend": "beam",
      "tasks": [
       "*"
      ],
@@ -1455,7 +1691,7 @@
    "entries": [
     {
      "toolchain": "erlc (compiled)",
-     "engine": "beam",
+     "backend": "beam",
      "tasks": [
       "*"
      ],
@@ -1479,7 +1715,7 @@
    "entries": [
     {
      "toolchain": "eui",
-     "engine": "euphoria",
+     "backend": "euphoria",
      "tasks": [
       "*"
      ],
@@ -1500,7 +1736,7 @@
    "entries": [
     {
      "toolchain": "factor",
-     "engine": "factor",
+     "backend": "factor",
      "tasks": [
       "*"
      ],
@@ -1518,7 +1754,7 @@
    "entries": [
     {
      "toolchain": "x86-64 fasm",
-     "engine": "asm",
+     "backend": "asm",
      "tasks": [
       "*"
      ],
@@ -1535,7 +1771,7 @@
    "entries": [
     {
      "toolchain": "gfortran",
-     "engine": "gcc",
+     "backend": "gcc",
      "tasks": [
       "*"
      ],
@@ -1550,7 +1786,7 @@
     },
     {
      "toolchain": "flang",
-     "engine": "llvm",
+     "backend": "llvm",
      "tasks": [
       "*"
      ],
@@ -1570,7 +1806,7 @@
    "entries": [
     {
      "toolchain": "freebasic",
-     "engine": "freebasic",
+     "backend": "freebasic",
      "tasks": [
       "*"
      ],
@@ -1588,7 +1824,7 @@
    "entries": [
     {
      "toolchain": "dotnet",
-     "engine": "coreclr",
+     "backend": "coreclr",
      "tasks": [
       "*"
      ],
@@ -1606,7 +1842,7 @@
    "entries": [
     {
      "toolchain": "godot --headless",
-     "engine": "godot",
+     "backend": "godot",
      "tasks": [
       "*"
      ],
@@ -1627,7 +1863,7 @@
    "entries": [
     {
      "toolchain": "gforth",
-     "engine": "gforth",
+     "backend": "gforth",
      "tasks": [
       "*"
      ],
@@ -1645,7 +1881,7 @@
    "entries": [
     {
      "toolchain": "gleam",
-     "engine": "beam",
+     "backend": "beam",
      "tasks": [
       "*"
      ],
@@ -1668,7 +1904,7 @@
    "entries": [
     {
      "toolchain": "gc",
-     "engine": "go",
+     "backend": "go",
      "tasks": [
       "*"
      ],
@@ -1680,7 +1916,7 @@
     },
     {
      "toolchain": "tinygo",
-     "engine": "llvm",
+     "backend": "llvm",
      "tasks": [
       "*"
      ],
@@ -1699,7 +1935,7 @@
      "toolchain": "gc (wasip1)",
      "cwd": "{root}/exec/go-wasm/{task}",
      "artifact": "{root}/exec/go-wasm/{task}/prog.wasm",
-     "engine": "wasmtime",
+     "backend": "wasmtime",
      "tasks": [
       "*"
      ],
@@ -1715,7 +1951,7 @@
      "toolchain": "wasmtime (winch)",
      "cwd": "{root}/exec/go-wasm/{task}",
      "artifact": "{root}/exec/go-wasm/{task}/prog.wasm",
-     "engine": "winch",
+     "backend": "winch",
      "tasks": [
       "*"
      ],
@@ -1731,7 +1967,7 @@
      "toolchain": "wasmedge",
      "cwd": "{root}/exec/go-wasm/{task}",
      "artifact": "{root}/exec/go-wasm/{task}/prog.wasm",
-     "engine": "wasm-edge",
+     "backend": "wasm-edge",
      "tasks": [
       "*"
      ],
@@ -1749,7 +1985,7 @@
      "toolchain": "iwasm",
      "cwd": "{root}/exec/go-wasm/{task}",
      "artifact": "{root}/exec/go-wasm/{task}/prog.wasm",
-     "engine": "wamr",
+     "backend": "wamr",
      "tasks": [
       "*"
      ],
@@ -1763,7 +1999,7 @@
      "toolchain": "node (wasip1)",
      "cwd": "{root}/exec/go-wasm/{task}",
      "artifact": "{root}/exec/go-wasm/{task}/prog.wasm",
-     "engine": "v8",
+     "backend": "v8",
      "tasks": [
       "*"
      ],
@@ -1774,6 +2010,66 @@
       "prog.wasm",
       "."
      ]
+    },
+    {
+     "toolchain": "wasmer (cranelift)",
+     "backend": "wasmer-cranelift",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--cranelift",
+      "--mapdir",
+      "/:{root}/exec/go-wasm/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/go-wasm/{task}",
+     "artifact": "{root}/exec/go-wasm/{task}/prog.wasm",
+     "except": [
+      "15_file_write"
+     ]
+    },
+    {
+     "toolchain": "wasmer (llvm)",
+     "backend": "wasmer-llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--llvm",
+      "--mapdir",
+      "/:{root}/exec/go-wasm/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/go-wasm/{task}",
+     "artifact": "{root}/exec/go-wasm/{task}/prog.wasm",
+     "except": [
+      "15_file_write"
+     ]
+    },
+    {
+     "toolchain": "wasmer (singlepass)",
+     "backend": "wasmer-singlepass",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--singlepass",
+      "--mapdir",
+      "/:{root}/exec/go-wasm/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/go-wasm/{task}",
+     "artifact": "{root}/exec/go-wasm/{task}/prog.wasm",
+     "except": [
+      "15_file_write"
+     ]
     }
    ],
    "language": "Go"
@@ -1782,7 +2078,7 @@
    "entries": [
     {
      "toolchain": "groovy",
-     "engine": "hotspot",
+     "backend": "hotspot",
      "tasks": [
       "*"
      ],
@@ -1806,7 +2102,7 @@
    "entries": [
     {
      "toolchain": "hashlink",
-     "engine": "hashlink",
+     "backend": "hashlink",
      "tasks": [
       "*"
      ],
@@ -1824,7 +2120,7 @@
    "entries": [
     {
      "toolchain": "ghc",
-     "engine": "ghc",
+     "backend": "ghc",
      "tasks": [
       "*"
      ],
@@ -1837,7 +2133,7 @@
     },
     {
      "toolchain": "ghc",
-     "engine": "ghc",
+     "backend": "ghc",
      "tasks": [
       "11_parallel_sum"
      ],
@@ -1858,7 +2154,7 @@
    "entries": [
     {
      "toolchain": "hxcpp",
-     "engine": "gcc",
+     "backend": "gcc",
      "tasks": [
       "*"
      ],
@@ -1875,7 +2171,7 @@
    "entries": [
     {
      "toolchain": "icx (oneAPI)",
-     "engine": "icx",
+     "backend": "icx",
      "tasks": [
       "*"
      ],
@@ -1893,7 +2189,7 @@
    "entries": [
     {
      "toolchain": "janet",
-     "engine": "janet",
+     "backend": "janet",
      "tasks": [
       "*"
      ],
@@ -1915,7 +2211,7 @@
    "entries": [
     {
      "toolchain": "openjdk",
-     "engine": "hotspot",
+     "backend": "hotspot",
      "tasks": [
       "*"
      ],
@@ -1928,6 +2224,54 @@
      "cwd": "{root}/exec/java/openjdk/{task}",
      "artifact": "{root}/exec/java/openjdk/{task}/_{task}.class",
      "timeout": 600
+    },
+    {
+     "toolchain": "openjdk (interp)",
+     "backend": "hotspot-interp",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "java",
+      "-Xint",
+      "-cp",
+      ".",
+      "_{task}"
+     ],
+     "cwd": "{root}/exec/java/openjdk/{task}",
+     "artifact": "{root}/exec/java/openjdk/{task}/_{task}.class"
+    },
+    {
+     "toolchain": "openjdk (c1)",
+     "backend": "hotspot-c1",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "java",
+      "-XX:TieredStopAtLevel=1",
+      "-cp",
+      ".",
+      "_{task}"
+     ],
+     "cwd": "{root}/exec/java/openjdk/{task}",
+     "artifact": "{root}/exec/java/openjdk/{task}/_{task}.class"
+    },
+    {
+     "toolchain": "openjdk (c2)",
+     "backend": "hotspot-c2",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "java",
+      "-XX:-TieredCompilation",
+      "-cp",
+      ".",
+      "_{task}"
+     ],
+     "cwd": "{root}/exec/java/openjdk/{task}",
+     "artifact": "{root}/exec/java/openjdk/{task}/_{task}.class"
     }
    ],
    "language": "Java"
@@ -1936,7 +2280,7 @@
    "entries": [
     {
      "toolchain": "graalvm jit",
-     "engine": "graalvm-jit",
+     "backend": "graalvm-jit",
      "tasks": [
       "*"
      ],
@@ -1957,7 +2301,7 @@
    "entries": [
     {
      "toolchain": "graalvm native-image",
-     "engine": "graalvm-native",
+     "backend": "graalvm-native",
      "tasks": [
       "*"
      ],
@@ -1974,7 +2318,7 @@
    "entries": [
     {
      "toolchain": "openj9",
-     "engine": "openj9",
+     "backend": "openj9",
      "tasks": [
       "*"
      ],
@@ -1995,7 +2339,7 @@
    "entries": [
     {
      "toolchain": "bun",
-     "engine": "jsc",
+     "backend": "jsc",
      "tasks": [
       "*"
      ],
@@ -2009,7 +2353,7 @@
     },
     {
      "toolchain": "deno",
-     "engine": "v8",
+     "backend": "v8",
      "tasks": [
       "11_parallel_sum",
       "14_file_read"
@@ -2027,7 +2371,7 @@
     },
     {
      "toolchain": "deno",
-     "engine": "v8",
+     "backend": "v8",
      "tasks": [
       "15_file_write"
      ],
@@ -2044,7 +2388,7 @@
     },
     {
      "toolchain": "deno",
-     "engine": "v8",
+     "backend": "v8",
      "tasks": [
       "*"
      ],
@@ -2065,7 +2409,7 @@
    "entries": [
     {
      "toolchain": "cscript (WSH)",
-     "engine": "jscript",
+     "backend": "jscript",
      "tasks": [
       "*"
      ],
@@ -2086,7 +2430,7 @@
    "entries": [
     {
      "toolchain": "julia",
-     "engine": "julia",
+     "backend": "julia",
      "tasks": [
       "11_parallel_sum"
      ],
@@ -2100,7 +2444,7 @@
     },
     {
      "toolchain": "julia",
-     "engine": "julia",
+     "backend": "julia",
      "tasks": [
       "*"
      ],
@@ -2113,7 +2457,7 @@
     },
     {
      "toolchain": "julia (interpreted)",
-     "engine": "julia",
+     "backend": "julia",
      "tasks": [
       "11_parallel_sum"
      ],
@@ -2130,7 +2474,7 @@
     },
     {
      "toolchain": "julia (interpreted)",
-     "engine": "julia",
+     "backend": "julia",
      "tasks": [
       "*"
      ],
@@ -2151,7 +2495,7 @@
    "entries": [
     {
      "toolchain": "jvm",
-     "engine": "hotspot",
+     "backend": "hotspot",
      "tasks": [
       "*"
      ],
@@ -2170,7 +2514,7 @@
    "entries": [
     {
      "toolchain": "native",
-     "engine": "llvm",
+     "backend": "llvm",
      "tasks": [
       "*"
      ],
@@ -2187,7 +2531,7 @@
    "entries": [
     {
      "toolchain": "lean",
-     "engine": "llvm",
+     "backend": "llvm",
      "tasks": [
       "*"
      ],
@@ -2204,7 +2548,7 @@
    "entries": [
     {
      "toolchain": "lobster",
-     "engine": "lobster",
+     "backend": "lobster",
      "tasks": [
       "*"
      ],
@@ -2225,7 +2569,7 @@
    "entries": [
     {
      "toolchain": "puc-lua",
-     "engine": "lua",
+     "backend": "lua",
      "tasks": [
       "*"
      ],
@@ -2243,7 +2587,7 @@
     },
     {
      "toolchain": "luajit",
-     "engine": "luajit",
+     "backend": "luajit",
      "tasks": [
       "*"
      ],
@@ -2266,7 +2610,7 @@
    "entries": [
     {
      "toolchain": "wasip1 (puc-lua)",
-     "engine": "wasmtime",
+     "backend": "wasmtime",
      "tasks": [
       "*"
      ],
@@ -2289,7 +2633,7 @@
    "entries": [
     {
      "toolchain": "luau",
-     "engine": "luau",
+     "backend": "luau",
      "tasks": [
       "*"
      ],
@@ -2307,7 +2651,7 @@
     },
     {
      "toolchain": "lute",
-     "engine": "lute",
+     "backend": "lute",
      "tasks": [
       "11_parallel_sum",
       "14_file_read",
@@ -2328,7 +2672,7 @@
    "entries": [
     {
      "toolchain": "x86-64 masm",
-     "engine": "asm",
+     "backend": "asm",
      "tasks": [
       "*"
      ],
@@ -2346,7 +2690,7 @@
    "entries": [
     {
      "toolchain": "mmc",
-     "engine": "gcc",
+     "backend": "gcc",
      "tasks": [
       "*"
      ],
@@ -2367,7 +2711,7 @@
    "entries": [
     {
      "toolchain": "adw",
-     "engine": "adw",
+     "backend": "adw",
      "tasks": [
       "*"
      ],
@@ -2384,7 +2728,7 @@
    "entries": [
     {
      "toolchain": "cm3",
-     "engine": "msvc",
+     "backend": "msvc",
      "tasks": [
       "*"
      ],
@@ -2401,7 +2745,7 @@
    "entries": [
     {
      "toolchain": "nelua",
-     "engine": "gcc",
+     "backend": "gcc",
      "tasks": [
       "*"
      ],
@@ -2419,7 +2763,7 @@
    "entries": [
     {
      "toolchain": "nim",
-     "engine": "gcc",
+     "backend": "gcc",
      "tasks": [
       "*"
      ],
@@ -2437,7 +2781,7 @@
    "entries": [
     {
      "toolchain": "akron",
-     "engine": "akron",
+     "backend": "akron",
      "tasks": [
       "*"
      ],
@@ -2454,7 +2798,7 @@
    "entries": [
     {
      "toolchain": "clang (objc)",
-     "engine": "llvm",
+     "backend": "llvm",
      "tasks": [
       "*"
      ],
@@ -2475,7 +2819,7 @@
    "entries": [
     {
      "toolchain": "ocamlopt",
-     "engine": "ocaml-native",
+     "backend": "ocaml-native",
      "tasks": [
       "*"
      ],
@@ -2492,7 +2836,7 @@
     },
     {
      "toolchain": "ocamlc (bytecode)",
-     "engine": "ocaml-bytecode",
+     "backend": "ocaml-bytecode",
      "tasks": [
       "*"
      ],
@@ -2514,7 +2858,7 @@
    "entries": [
     {
      "toolchain": "odin",
-     "engine": "llvm",
+     "backend": "llvm",
      "tasks": [
       "*"
      ],
@@ -2531,7 +2875,7 @@
    "entries": [
     {
      "toolchain": "fpc",
-     "engine": "fpc",
+     "backend": "fpc",
      "tasks": [
       "*"
      ],
@@ -2549,7 +2893,7 @@
    "entries": [
     {
      "toolchain": "perl",
-     "engine": "perl",
+     "backend": "perl",
      "tasks": [
       "*"
      ],
@@ -2572,7 +2916,7 @@
    "entries": [
     {
      "toolchain": "Pharo 13",
-     "engine": "pharo",
+     "backend": "pharo",
      "tasks": [
       "*"
      ],
@@ -2600,7 +2944,7 @@
    "entries": [
     {
      "toolchain": "zend",
-     "engine": "zend",
+     "backend": "zend",
      "tasks": [
       "*"
      ],
@@ -2614,7 +2958,7 @@
     },
     {
      "toolchain": "zend + jit",
-     "engine": "zend-jit",
+     "backend": "zend-jit",
      "tasks": [
       "*"
      ],
@@ -2639,7 +2983,7 @@
    "entries": [
     {
      "toolchain": "ponyc",
-     "engine": "llvm",
+     "backend": "llvm",
      "tasks": [
       "*"
      ],
@@ -2652,7 +2996,7 @@
     },
     {
      "toolchain": "ponyc",
-     "engine": "llvm",
+     "backend": "llvm",
      "tasks": [
       "11_parallel_sum"
      ],
@@ -2672,7 +3016,7 @@
    "entries": [
     {
      "toolchain": "cpython",
-     "engine": "cpython",
+     "backend": "cpython",
      "tasks": [
       "*"
      ],
@@ -2686,7 +3030,7 @@
     },
     {
      "toolchain": "pypy",
-     "engine": "pypy",
+     "backend": "pypy",
      "tasks": [
       "*"
      ],
@@ -2700,7 +3044,7 @@
     },
     {
      "toolchain": "graalpy",
-     "engine": "graalvm-jit",
+     "backend": "graalvm-jit",
      "tasks": [
       "*"
      ],
@@ -2714,7 +3058,7 @@
     },
     {
      "toolchain": "nuitka",
-     "engine": "gcc",
+     "backend": "gcc",
      "tasks": [
       "*"
      ],
@@ -2731,7 +3075,7 @@
    "entries": [
     {
      "toolchain": "cython",
-     "engine": "gcc",
+     "backend": "gcc",
      "tasks": [
       "*"
      ],
@@ -2751,7 +3095,7 @@
    "entries": [
     {
      "toolchain": "wasip1 (cpython)",
-     "engine": "wasmtime",
+     "backend": "wasmtime",
      "tasks": [
       "*"
      ],
@@ -2778,7 +3122,7 @@
    "entries": [
     {
      "toolchain": "qb64",
-     "engine": "llvm",
+     "backend": "llvm",
      "tasks": [
       "*"
      ],
@@ -2796,7 +3140,7 @@
    "entries": [
     {
      "toolchain": "quickjs",
-     "engine": "quickjs",
+     "backend": "quickjs",
      "tasks": [
       "*"
      ],
@@ -2815,7 +3159,7 @@
    "entries": [
     {
      "toolchain": "gnu-r",
-     "engine": "gnu-r",
+     "backend": "gnu-r",
      "tasks": [
       "*"
      ],
@@ -2829,7 +3173,7 @@
     },
     {
      "toolchain": "gnu-r (no JIT)",
-     "engine": "gnu-r",
+     "backend": "gnu-r",
      "tasks": [
       "*"
      ],
@@ -2851,7 +3195,7 @@
    "entries": [
     {
      "toolchain": "racket (CS)",
-     "engine": "chez",
+     "backend": "chez",
      "tasks": [
       "*"
      ],
@@ -2873,7 +3217,7 @@
    "entries": [
     {
      "toolchain": "rakudo (MoarVM)",
-     "engine": "moarvm",
+     "backend": "moarvm",
      "tasks": [
       "*"
      ],
@@ -2892,7 +3236,7 @@
    "entries": [
     {
      "toolchain": "ring",
-     "engine": "ring",
+     "backend": "ring",
      "tasks": [
       "*"
      ],
@@ -2914,7 +3258,7 @@
    "entries": [
     {
      "toolchain": "cruby-yjit",
-     "engine": "cruby",
+     "backend": "cruby",
      "tasks": [
       "*"
      ],
@@ -2933,7 +3277,7 @@
     },
     {
      "toolchain": "jruby",
-     "engine": "openj9",
+     "backend": "openj9",
      "tasks": [
       "*"
      ],
@@ -2966,7 +3310,7 @@
    "entries": [
     {
      "toolchain": "wasip1 (ruby.wasm)",
-     "engine": "wasmtime",
+     "backend": "wasmtime",
      "tasks": [
       "*"
      ],
@@ -2987,7 +3331,7 @@
    "entries": [
     {
      "toolchain": "rustc",
-     "engine": "llvm",
+     "backend": "llvm",
      "tasks": [
       "*"
      ],
@@ -2996,6 +3340,18 @@
      ],
      "cwd": "{root}/exec/rust/rustc/{task}",
      "artifact": "{root}/exec/rust/rustc/{task}/prog.exe"
+    },
+    {
+     "toolchain": "rustc (cranelift)",
+     "backend": "rust-cranelift",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/rust/cranelift/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/rust/cranelift/{task}",
+     "artifact": "{root}/exec/rust/cranelift/{task}/prog.exe"
     }
    ],
    "language": "Rust"
@@ -3006,7 +3362,7 @@
      "toolchain": "rustc (wasm32-wasip1)",
      "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
      "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
-     "engine": "wasmtime",
+     "backend": "wasmtime",
      "tasks": [
       "*"
      ],
@@ -3021,7 +3377,7 @@
      "toolchain": "rustc (wasm32-wasip1)",
      "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
      "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
-     "engine": "wasmtime",
+     "backend": "wasmtime",
      "tasks": [
       "11_parallel_sum"
      ],
@@ -3042,7 +3398,7 @@
      "toolchain": "rustc (wasm32-wasip1)",
      "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
      "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
-     "engine": "wasmtime",
+     "backend": "wasmtime",
      "tasks": [
       "14_file_read",
       "15_file_write"
@@ -3060,7 +3416,7 @@
      "toolchain": "wasmtime (winch)",
      "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
      "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
-     "engine": "winch",
+     "backend": "winch",
      "tasks": [
       "*"
      ],
@@ -3075,7 +3431,7 @@
      "toolchain": "wasmtime (winch)",
      "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
      "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
-     "engine": "winch",
+     "backend": "winch",
      "tasks": [
       "11_parallel_sum"
      ],
@@ -3096,7 +3452,7 @@
      "toolchain": "wasmtime (winch)",
      "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
      "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
-     "engine": "winch",
+     "backend": "winch",
      "tasks": [
       "14_file_read",
       "15_file_write"
@@ -3114,7 +3470,7 @@
      "toolchain": "wasmedge",
      "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
      "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
-     "engine": "wasm-edge",
+     "backend": "wasm-edge",
      "tasks": [
       "*"
      ],
@@ -3133,7 +3489,7 @@
      "toolchain": "wasmedge",
      "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
      "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
-     "engine": "wasm-edge",
+     "backend": "wasm-edge",
      "tasks": [
       "14_file_read",
       "15_file_write"
@@ -3152,7 +3508,7 @@
      "toolchain": "iwasm",
      "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
      "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
-     "engine": "wamr",
+     "backend": "wamr",
      "tasks": [
       "*"
      ],
@@ -3165,7 +3521,7 @@
      "toolchain": "iwasm",
      "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
      "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
-     "engine": "wamr",
+     "backend": "wamr",
      "tasks": [
       "11_parallel_sum"
      ],
@@ -3178,7 +3534,7 @@
      "toolchain": "iwasm",
      "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
      "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
-     "engine": "wamr",
+     "backend": "wamr",
      "tasks": [
       "14_file_read",
       "15_file_write"
@@ -3193,7 +3549,7 @@
      "toolchain": "node (wasip1)",
      "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
      "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
-     "engine": "v8",
+     "backend": "v8",
      "tasks": [
       "*"
      ],
@@ -3212,7 +3568,7 @@
      "toolchain": "node (wasip1)",
      "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
      "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
-     "engine": "v8",
+     "backend": "v8",
      "tasks": [
       "14_file_read",
       "15_file_write"
@@ -3224,6 +3580,67 @@
       "prog.wasm",
       "."
      ]
+    },
+    {
+     "toolchain": "wasmer (cranelift)",
+     "backend": "wasmer-cranelift",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--cranelift",
+      "--mapdir",
+      "/:{root}/exec/rust-wasm/wasip1/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
+     "except": [
+      "15_file_write"
+     ]
+    },
+    {
+     "toolchain": "wasmer (llvm)",
+     "backend": "wasmer-llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--llvm",
+      "--mapdir",
+      "/:{root}/exec/rust-wasm/wasip1/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
+     "except": [
+      "15_file_write"
+     ]
+    },
+    {
+     "toolchain": "wasmer (singlepass)",
+     "backend": "wasmer-singlepass",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--singlepass",
+      "--mapdir",
+      "/:{root}/exec/rust-wasm/wasip1/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
+     "except": [
+      "11_parallel_sum",
+      "15_file_write"
+     ]
     }
    ],
    "language": "Rust"
@@ -3232,7 +3649,7 @@
    "entries": [
     {
      "toolchain": "jvm",
-     "engine": "hotspot",
+     "backend": "hotspot",
      "tasks": [
       "*"
      ],
@@ -3257,7 +3674,7 @@
    "entries": [
     {
      "toolchain": "scala-cli (js)",
-     "engine": "v8",
+     "backend": "v8",
      "tasks": [
       "*"
      ],
@@ -3276,7 +3693,7 @@
    "entries": [
     {
      "toolchain": "native",
-     "engine": "llvm",
+     "backend": "llvm",
      "tasks": [
       "*"
      ],
@@ -3294,7 +3711,7 @@
    "entries": [
     {
      "toolchain": "chez",
-     "engine": "chez",
+     "backend": "chez",
      "tasks": [
       "*"
      ],
@@ -3325,7 +3742,7 @@
    "entries": [
     {
      "toolchain": "s7c",
-     "engine": "gcc",
+     "backend": "gcc",
      "tasks": [
       "*"
      ],
@@ -3343,7 +3760,7 @@
    "entries": [
     {
      "toolchain": "spidermonkey",
-     "engine": "spidermonkey",
+     "backend": "spidermonkey",
      "tasks": [
       "*"
      ],
@@ -3361,7 +3778,7 @@
    "entries": [
     {
      "toolchain": "Poly/ML",
-     "engine": "polyml",
+     "backend": "polyml",
      "tasks": [
       "*"
      ],
@@ -3381,7 +3798,7 @@
    "entries": [
     {
      "toolchain": "swiftc",
-     "engine": "llvm",
+     "backend": "llvm",
      "tasks": [
       "*"
      ],
@@ -3402,7 +3819,7 @@
    "entries": [
     {
      "toolchain": "swipl",
-     "engine": "swipl",
+     "backend": "swipl",
      "tasks": [
       "*"
      ],
@@ -3432,7 +3849,7 @@
    "entries": [
     {
      "toolchain": "tclsh",
-     "engine": "tcl",
+     "backend": "tcl",
      "tasks": [
       "*"
      ],
@@ -3451,7 +3868,7 @@
    "entries": [
     {
      "toolchain": "terra",
-     "engine": "llvm",
+     "backend": "llvm",
      "tasks": [
       "*"
      ],
@@ -3478,7 +3895,7 @@
      "toolchain": "wasip1 (tinygo)",
      "cwd": "{root}/exec/tinygo-wasm/wasip1/{task}",
      "artifact": "{root}/exec/tinygo-wasm/wasip1/{task}/prog.wasm",
-     "engine": "wasmtime",
+     "backend": "wasmtime",
      "tasks": [
       "*"
      ],
@@ -3494,7 +3911,7 @@
      "toolchain": "wasip1 (tinygo)",
      "cwd": "{root}/exec/tinygo-wasm/wasip1/{task}",
      "artifact": "{root}/exec/tinygo-wasm/wasip1/{task}/prog.wasm",
-     "engine": "wasmtime",
+     "backend": "wasmtime",
      "tasks": [
       "14_file_read",
       "15_file_write"
@@ -3512,7 +3929,7 @@
      "toolchain": "wasmtime (winch)",
      "cwd": "{root}/exec/tinygo-wasm/wasip1/{task}",
      "artifact": "{root}/exec/tinygo-wasm/wasip1/{task}/prog.wasm",
-     "engine": "winch",
+     "backend": "winch",
      "tasks": [
       "*"
      ],
@@ -3528,7 +3945,7 @@
      "toolchain": "wasmtime (winch)",
      "cwd": "{root}/exec/tinygo-wasm/wasip1/{task}",
      "artifact": "{root}/exec/tinygo-wasm/wasip1/{task}/prog.wasm",
-     "engine": "winch",
+     "backend": "winch",
      "tasks": [
       "14_file_read",
       "15_file_write"
@@ -3546,7 +3963,7 @@
      "toolchain": "wasmedge",
      "cwd": "{root}/exec/tinygo-wasm/wasip1/{task}",
      "artifact": "{root}/exec/tinygo-wasm/wasip1/{task}/prog.wasm",
-     "engine": "wasm-edge",
+     "backend": "wasm-edge",
      "tasks": [
       "*"
      ],
@@ -3562,7 +3979,7 @@
      "toolchain": "wasmedge",
      "cwd": "{root}/exec/tinygo-wasm/wasip1/{task}",
      "artifact": "{root}/exec/tinygo-wasm/wasip1/{task}/prog.wasm",
-     "engine": "wasm-edge",
+     "backend": "wasm-edge",
      "tasks": [
       "14_file_read",
       "15_file_write"
@@ -3581,7 +3998,7 @@
      "toolchain": "iwasm",
      "cwd": "{root}/exec/tinygo-wasm/wasip1/{task}",
      "artifact": "{root}/exec/tinygo-wasm/wasip1/{task}/prog.wasm",
-     "engine": "wamr",
+     "backend": "wamr",
      "tasks": [
       "*"
      ],
@@ -3594,7 +4011,7 @@
      "toolchain": "iwasm",
      "cwd": "{root}/exec/tinygo-wasm/wasip1/{task}",
      "artifact": "{root}/exec/tinygo-wasm/wasip1/{task}/prog.wasm",
-     "engine": "wamr",
+     "backend": "wamr",
      "tasks": [
       "14_file_read",
       "15_file_write"
@@ -3609,7 +4026,7 @@
      "toolchain": "node (wasip1)",
      "cwd": "{root}/exec/tinygo-wasm/wasip1/{task}",
      "artifact": "{root}/exec/tinygo-wasm/wasip1/{task}/prog.wasm",
-     "engine": "v8",
+     "backend": "v8",
      "tasks": [
       "*"
      ],
@@ -3625,7 +4042,7 @@
      "toolchain": "node (wasip1)",
      "cwd": "{root}/exec/tinygo-wasm/wasip1/{task}",
      "artifact": "{root}/exec/tinygo-wasm/wasip1/{task}/prog.wasm",
-     "engine": "v8",
+     "backend": "v8",
      "tasks": [
       "14_file_read",
       "15_file_write"
@@ -3637,15 +4054,142 @@
       "prog.wasm",
       "."
      ]
+    },
+    {
+     "toolchain": "wasmer (cranelift)",
+     "backend": "wasmer-cranelift",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--cranelift",
+      "--mapdir",
+      "/:{root}/exec/tinygo-wasm/wasip1/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/tinygo-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/tinygo-wasm/wasip1/{task}/prog.wasm",
+     "except": [
+      "15_file_write"
+     ]
+    },
+    {
+     "toolchain": "wasmer (llvm)",
+     "backend": "wasmer-llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--llvm",
+      "--mapdir",
+      "/:{root}/exec/tinygo-wasm/wasip1/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/tinygo-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/tinygo-wasm/wasip1/{task}/prog.wasm",
+     "except": [
+      "15_file_write"
+     ]
+    },
+    {
+     "toolchain": "wasmer (singlepass)",
+     "backend": "wasmer-singlepass",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--singlepass",
+      "--mapdir",
+      "/:{root}/exec/tinygo-wasm/wasip1/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/tinygo-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/tinygo-wasm/wasip1/{task}/prog.wasm",
+     "except": [
+      "15_file_write"
+     ]
     }
    ],
    "language": "TinyGo"
+  },
+  "typescript": {
+   "language": "TypeScript",
+   "entries": [
+    {
+     "toolchain": "bun",
+     "backend": "jsc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{env:USERPROFILE}\\.bun\\bin\\bun.exe",
+      "{task}.ts"
+     ],
+     "cwd": "{root}/exec/typescript/bun/{task}",
+     "artifact": "{root}/exec/typescript/bun/{task}/{task}.ts",
+     "timeout": 600
+    },
+    {
+     "toolchain": "deno",
+     "backend": "v8",
+     "tasks": [
+      "11_parallel_sum",
+      "14_file_read"
+     ],
+     "cmd": [
+      "{root}/tools/deno/deno.exe",
+      "run",
+      "--allow-read",
+      "{task}.ts"
+     ],
+     "cwd": "{root}/exec/typescript/deno/{task}",
+     "artifact": "{root}/exec/typescript/deno/{task}/{task}.ts",
+     "timeout": 600
+    },
+    {
+     "toolchain": "deno",
+     "backend": "v8",
+     "tasks": [
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/deno/deno.exe",
+      "run",
+      "--allow-write",
+      "{task}.ts"
+     ],
+     "cwd": "{root}/exec/typescript/deno/{task}",
+     "artifact": "{root}/exec/typescript/deno/{task}/{task}.ts",
+     "timeout": 600
+    },
+    {
+     "toolchain": "deno",
+     "backend": "v8",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/deno/deno.exe",
+      "run",
+      "{task}.ts"
+     ],
+     "cwd": "{root}/exec/typescript/deno/{task}",
+     "artifact": "{root}/exec/typescript/deno/{task}/{task}.ts",
+     "timeout": 600
+    }
+   ]
   },
   "unicon": {
    "entries": [
     {
      "toolchain": "unicon",
-     "engine": "unicon",
+     "backend": "unicon",
      "tasks": [
       "*"
      ],
@@ -3663,7 +4207,7 @@
    "entries": [
     {
      "toolchain": "v",
-     "engine": "gcc",
+     "backend": "gcc",
      "tasks": [
       "*"
      ],
@@ -3683,7 +4227,7 @@
    "entries": [
     {
      "toolchain": "valac",
-     "engine": "gcc",
+     "backend": "gcc",
      "tasks": [
       "*"
      ],
@@ -3704,7 +4248,7 @@
    "entries": [
     {
      "toolchain": "dotnet",
-     "engine": "coreclr",
+     "backend": "coreclr",
      "tasks": [
       "*"
      ],
@@ -3723,7 +4267,7 @@
    "entries": [
     {
      "toolchain": "cscript",
-     "engine": "vbscript",
+     "backend": "vbscript",
      "tasks": [
       "*"
      ],
@@ -3744,7 +4288,7 @@
      "toolchain": "hand-written WAT",
      "cwd": "{root}/exec/wasm/wat/{task}",
      "artifact": "{root}/exec/wasm/wat/{task}/{task}.wat",
-     "engine": "wasmtime",
+     "backend": "wasmtime",
      "tasks": [
       "*"
      ],
@@ -3761,7 +4305,7 @@
      "toolchain": "hand-written WAT",
      "cwd": "{root}/exec/wasm/wat/{task}",
      "artifact": "{root}/exec/wasm/wat/{task}/{task}.wat",
-     "engine": "wasmtime",
+     "backend": "wasmtime",
      "tasks": [
       "11_parallel_sum"
      ],
@@ -3784,7 +4328,7 @@
      "toolchain": "hand-written WAT",
      "cwd": "{root}/exec/wasm/wat/{task}",
      "artifact": "{root}/exec/wasm/wat/{task}/{task}.wat",
-     "engine": "wasmtime",
+     "backend": "wasmtime",
      "tasks": [
       "14_file_read",
       "15_file_write"
@@ -3803,7 +4347,7 @@
      "toolchain": "wasmtime (winch)",
      "cwd": "{root}/exec/wasm/wat/{task}",
      "artifact": "{root}/exec/wasm/wat/{task}/{task}.wat",
-     "engine": "winch",
+     "backend": "winch",
      "tasks": [
       "*"
      ],
@@ -3820,7 +4364,7 @@
      "toolchain": "wasmtime (winch)",
      "cwd": "{root}/exec/wasm/wat/{task}",
      "artifact": "{root}/exec/wasm/wat/{task}/{task}.wat",
-     "engine": "winch",
+     "backend": "winch",
      "tasks": [
       "11_parallel_sum"
      ],
@@ -3843,7 +4387,7 @@
      "toolchain": "wasmtime (winch)",
      "cwd": "{root}/exec/wasm/wat/{task}",
      "artifact": "{root}/exec/wasm/wat/{task}/{task}.wat",
-     "engine": "winch",
+     "backend": "winch",
      "tasks": [
       "14_file_read",
       "15_file_write"
@@ -3857,6 +4401,66 @@
       "{task}.wat"
      ],
      "timeout": 600
+    },
+    {
+     "toolchain": "wasmer (cranelift)",
+     "backend": "wasmer-cranelift",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--cranelift",
+      "--mapdir",
+      "/:{root}/exec/wasm/wat/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/wasm/wat/{task}",
+     "artifact": "{root}/exec/wasm/wat/{task}/prog.wasm",
+     "except": [
+      "15_file_write"
+     ]
+    },
+    {
+     "toolchain": "wasmer (llvm)",
+     "backend": "wasmer-llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--llvm",
+      "--mapdir",
+      "/:{root}/exec/wasm/wat/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/wasm/wat/{task}",
+     "artifact": "{root}/exec/wasm/wat/{task}/prog.wasm",
+     "except": [
+      "15_file_write"
+     ]
+    },
+    {
+     "toolchain": "wasmer (singlepass)",
+     "backend": "wasmer-singlepass",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--singlepass",
+      "--mapdir",
+      "/:{root}/exec/wasm/wat/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/wasm/wat/{task}",
+     "artifact": "{root}/exec/wasm/wat/{task}/prog.wasm",
+     "except": [
+      "15_file_write"
+     ]
     }
    ],
    "language": "WebAssembly"
@@ -3865,7 +4469,7 @@
    "entries": [
     {
      "toolchain": "zig",
-     "engine": "llvm",
+     "backend": "llvm",
      "tasks": [
       "*"
      ],
@@ -3884,7 +4488,7 @@
      "toolchain": "wasm32-wasip1 (zig)",
      "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
      "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
-     "engine": "wasmtime",
+     "backend": "wasmtime",
      "tasks": [
       "*"
      ],
@@ -3900,7 +4504,7 @@
      "toolchain": "wasm32-wasip1 (zig)",
      "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
      "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
-     "engine": "wasmtime",
+     "backend": "wasmtime",
      "tasks": [
       "11_parallel_sum"
      ],
@@ -3922,7 +4526,7 @@
      "toolchain": "wasm32-wasip1 (zig)",
      "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
      "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
-     "engine": "wasmtime",
+     "backend": "wasmtime",
      "tasks": [
       "14_file_read",
       "15_file_write"
@@ -3940,7 +4544,7 @@
      "toolchain": "wasmtime (winch)",
      "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
      "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
-     "engine": "winch",
+     "backend": "winch",
      "tasks": [
       "*"
      ],
@@ -3956,7 +4560,7 @@
      "toolchain": "wasmtime (winch)",
      "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
      "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
-     "engine": "winch",
+     "backend": "winch",
      "tasks": [
       "11_parallel_sum"
      ],
@@ -3978,7 +4582,7 @@
      "toolchain": "wasmtime (winch)",
      "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
      "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
-     "engine": "winch",
+     "backend": "winch",
      "tasks": [
       "14_file_read",
       "15_file_write"
@@ -3996,7 +4600,7 @@
      "toolchain": "wasmedge",
      "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
      "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
-     "engine": "wasm-edge",
+     "backend": "wasm-edge",
      "tasks": [
       "*"
      ],
@@ -4015,7 +4619,7 @@
      "toolchain": "wasmedge",
      "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
      "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
-     "engine": "wasm-edge",
+     "backend": "wasm-edge",
      "tasks": [
       "14_file_read",
       "15_file_write"
@@ -4034,7 +4638,7 @@
      "toolchain": "iwasm",
      "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
      "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
-     "engine": "wamr",
+     "backend": "wamr",
      "tasks": [
       "*"
      ],
@@ -4047,7 +4651,7 @@
      "toolchain": "iwasm",
      "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
      "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
-     "engine": "wamr",
+     "backend": "wamr",
      "tasks": [
       "11_parallel_sum"
      ],
@@ -4060,7 +4664,7 @@
      "toolchain": "iwasm",
      "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
      "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
-     "engine": "wamr",
+     "backend": "wamr",
      "tasks": [
       "14_file_read",
       "15_file_write"
@@ -4075,7 +4679,7 @@
      "toolchain": "node (wasip1)",
      "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
      "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
-     "engine": "v8",
+     "backend": "v8",
      "tasks": [
       "*"
      ],
@@ -4094,7 +4698,7 @@
      "toolchain": "node (wasip1)",
      "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
      "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
-     "engine": "v8",
+     "backend": "v8",
      "tasks": [
       "14_file_read",
       "15_file_write"
@@ -4106,6 +4710,51 @@
       "prog.wasm",
       "."
      ]
+    },
+    {
+     "toolchain": "wasmer (cranelift)",
+     "backend": "wasmer-cranelift",
+     "tasks": [
+      "11_parallel_sum"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--cranelift",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm"
+    },
+    {
+     "toolchain": "wasmer (llvm)",
+     "backend": "wasmer-llvm",
+     "tasks": [
+      "11_parallel_sum"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--llvm",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm"
+    },
+    {
+     "toolchain": "wasmer (singlepass)",
+     "backend": "wasmer-singlepass",
+     "tasks": [
+      "11_parallel_sum"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--singlepass",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm"
     }
    ],
    "language": "Zig"

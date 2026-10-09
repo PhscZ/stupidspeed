@@ -1,0 +1,7 @@
+   Creating library D:\Users\pedro.cardoso\stupidspeed\exec\csharp\mono-aot\10_pi\10_pi.exe.dll.lib and object D:\Users\pedro.cardoso\stupidspeed\exec\csharp\mono-aot\10_pi\10_pi.exe.dll.exp
+Mono Ahead of Time compiler - compiling assembly D:\Users\pedro.cardoso\stupidspeed\exec\csharp\mono-aot\10_pi\10_pi.exe
+AOTID C8F5E28C-5D51-851E-7E06-1FAEE81B535F
+Compiled: 3/3
+Executing the native assembler: "clang.exe" --target=x86_64-pc-windows-msvc -c -x assembler  -o D:\Users\pedro.cardoso\AppData\Local\Temp\mono_aot_a28276.obj D:\Users\pedro.cardoso\AppData\Local\Temp\mono_aot_a28276
+Executing the native linker: "link.exe" /DLL /MACHINE:X64 /NOLOGO /INCREMENTAL:NO /DEBUG  /OUT:D:\Users\pedro.cardoso\stupidspeed\exec\csharp\mono-aot\10_pi\10_pi.exe.dll.tmp D:\Users\pedro.cardoso\AppData\Local\Temp\mono_aot_a28276.obj 
+JIT time: 2 ms, Generation time: 1 ms, Assembly+Link time: 274 ms.
