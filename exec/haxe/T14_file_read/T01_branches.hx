@@ -30,7 +30,7 @@ class T01_branches {
         }
 
         var t1 = haxe.Timer.stamp();
-        Sys.stderr().writeString("TIME_MS=" + ((t1 - t0) * 1000.0) + "\n");
-        Sys.println('$a $b $c $d');
+        Out.err("TIME_MS=" + ((t1 - t0) * 1000.0) + "\n");
+        Out.line('$a $b $c $d');
     }
 }

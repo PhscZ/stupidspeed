@@ -2,6 +2,10 @@ import subprocess, re, os, shutil
 D = r"C:\stupidspeed\exec\go-wasm"
 WT = r"C:\stupidspeed\tools\wasmtime46\wasmtime.exe"
 WS = r"C:\stupidspeed\tools\wasmer437\bin\wasmer.exe"
+NODE = r"C:\stupidspeed\tools\nodejs\node.exe"
+WASI_SHIM = r"C:\stupidspeed\exec\wasi-run.js"
+IWASM = r"C:\stupidspeed\tools\wamr\iwasm.exe"
+WASMEDGE = r"C:\stupidspeed\tools\wasmedge\bin\wasmedge.exe"
 DATA = r"C:\stupidspeed\data.bin"
 tasks = ["01_branches","02_switch_case","03_func_sum","04_array_sum","05_alloc_churn",
          "06_char_count","07_string_append","08_average","09_fib_recursive","10_pi",
@@ -125,3 +129,35 @@ for comp in ("cranelift", "llvm", "singlepass"):
     print("GO-WASM wasmer (%s) PASS %d/15" % (comp, w_ok), flush=True)
     if w_bad:
         print("GO-WASM wasmer (%s) FAILURES: %s" % (comp, repr(w_bad)), flush=True)
+
+# ---------------------------------------------- WAMR, WasmEdge, node (V8)
+# The same prog.wasm on the three other runtimes the registry lists.  Each needs
+# the preopen's *guest* name to be absolute, because Go's wasip1 runtime resolves
+# a relative name against a preopen only when the preopen is a path such as "/":
+# WAMR takes --map-dir=/::. rather than --dir=., WasmEdge --dir /:. rather than
+# --dir .:., and node's WASI shim maps its preopen to "/" but also has to drop
+# PWD from the guest environment, which the shim itself now does.
+def runtime_cells():
+    """The three other runtimes the registry lists, with their run lines."""
+    return [
+        ("WAMR", [IWASM, "--map-dir=/::.", "prog.wasm"]),
+        ("WasmEdge", [WASMEDGE, "--log-level", "off", "--run-mode=jit",
+                      "--dir", "/:.", "prog.wasm"]),
+        ("node (V8)", [NODE, "--no-warnings", WASI_SHIM, "prog.wasm", "."]),
+    ]
+
+for label, argv in runtime_cells():
+    r_ok = 0; r_bad = []
+    for t in tasks:
+        d = os.path.join(D, t)
+        saved = snapshot_out(d)
+        stage(t, d)
+        good = run(argv, d, t, label)
+        restore_out(saved)
+        if good:
+            r_ok += 1
+        else:
+            r_bad.append(t)
+    print("GO-WASM %s PASS %d/15" % (label, r_ok), flush=True)
+    if r_bad:
+        print("GO-WASM %s FAILURES: %s" % (label, repr(r_bad)), flush=True)

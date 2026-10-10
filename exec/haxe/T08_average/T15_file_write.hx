@@ -17,6 +17,25 @@ class T15_file_write {
     static function main() {
         // timing: haxe.Timer.stamp() is QueryPerformanceCounter on cpp (sub-microsecond); Sys.time() there is wall-clock ms.
         var t0 = haxe.Timer.stamp();
+        #if js
+        // deviation, two of them: the js target has no sys.io at all, so node's fs is the file
+        // layer here; and node's openSync("w") truncates, which File.write(path, true) also
+        // does on the other targets, so the byte cycle 0..255 is what lands in the file.
+        var fs = js.Syntax.code("require('fs')");
+        var buf = new js.lib.Uint8Array(new js.lib.ArrayBuffer(CHUNK));
+        for (i in 0...CHUNK) {
+            buf[i] = i % 256;
+        }
+
+        var fd:Int = fs.openSync("out.bin", "w");
+
+        var written = 0;
+        for (i in 0...REPEATS) {
+            written += fs.writeSync(fd, buf, 0, CHUNK);
+        }
+
+        fs.closeSync(fd);
+        #else
         var buf = haxe.io.Bytes.alloc(CHUNK);
         for (i in 0...CHUNK) {
             buf.set(i, i % 256);
@@ -31,9 +50,10 @@ class T15_file_write {
 
         f.flush();
         f.close();
+        #end
 
         var t1 = haxe.Timer.stamp();
-        Sys.stderr().writeString("TIME_MS=" + ((t1 - t0) * 1000.0) + "\n");
-        Sys.println(written);
+        Out.err("TIME_MS=" + ((t1 - t0) * 1000.0) + "\n");
+        Out.line(written);
     }
 }

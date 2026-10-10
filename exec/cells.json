@@ -403,11 +403,6 @@
    "kind": "native-aot",
    "what": "Zig's own x86-64 code generator, LLVM left out (-fno-llvm)"
   },
-  "neko": {
-   "name": "Neko",
-   "kind": "bytecode-vm",
-   "what": "Neko's bytecode VM"
-  },
   "mlton": {
    "name": "MLton",
    "kind": "native-aot",
@@ -1869,6 +1864,21 @@
       "PATH": "{root}/tools/msys64/msys64/ucrt64/bin;{PATH}"
      },
      "artifact": "{root}/exec/fortran/flang/{task}/prog.exe"
+    },
+    {
+     "toolchain": "ifx",
+     "backend": "llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/fortran/ifx/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/fortran/ifx/{task}",
+     "env": {
+      "PATH": "{root}/tools/ifx/Library/bin;{PATH}"
+     },
+     "artifact": "{root}/exec/fortran/ifx/{task}/prog.exe"
     }
    ],
    "language": "Fortran"
@@ -1966,7 +1976,10 @@
      "env": {
       "PATH": "{root}/tools/erlang/bin;{root}/tools/gleam;{PATH}"
      },
-     "artifact": "{root}/exec/gleam/build/dev/erlang/stupidspeed_gleam/ebin/t{task}.beam"
+     "artifact": "{root}/exec/gleam/build/dev/erlang/stupidspeed_gleam/ebin/t{task}.beam",
+     "restore": [
+      "{root}/exec/gleam/build/packages/packages.toml"
+     ]
     }
    ],
    "language": "Gleam"
@@ -2048,7 +2061,7 @@
       "off",
       "--run-mode=jit",
       "--dir",
-      ".:.",
+      "/:.",
       "prog.wasm"
      ]
     },
@@ -2062,7 +2075,7 @@
      ],
      "cmd": [
       "{root}/tools/wamr/iwasm.exe",
-      "--dir=.",
+      "--map-dir=/::.",
       "prog.wasm"
      ]
     },
@@ -2274,52 +2287,6 @@
      ],
      "cwd": "{root}/exec/haxe/T{task}",
      "artifact": "{root}/exec/haxe/T{task}/cs/T{task}.exe"
-    },
-    {
-     "toolchain": "haxe (php)",
-     "backend": "zend",
-     "tasks": [
-      "*"
-     ],
-     "except": [
-      "11_parallel_sum"
-     ],
-     "cmd": [
-      "{root}/tools/php/php.exe",
-      "-d",
-      "extension_dir={root}/tools/php/ext",
-      "-d",
-      "extension=mbstring",
-      "php/index.php"
-     ],
-     "cwd": "{root}/exec/haxe/T{task}",
-     "artifact": "{root}/exec/haxe/T{task}/php/index.php"
-    },
-    {
-     "toolchain": "haxe (python)",
-     "backend": "cpython",
-     "tasks": [
-      "*"
-     ],
-     "cmd": [
-      "python",
-      "py/T{task}.py"
-     ],
-     "cwd": "{root}/exec/haxe/T{task}",
-     "artifact": "{root}/exec/haxe/T{task}/py/T{task}.py"
-    },
-    {
-     "toolchain": "haxe (neko)",
-     "backend": "neko",
-     "tasks": [
-      "*"
-     ],
-     "cmd": [
-      "{root}/tools/neko/neko.exe",
-      "neko/T{task}.n"
-     ],
-     "cwd": "{root}/exec/haxe/T{task}",
-     "artifact": "{root}/exec/haxe/T{task}/neko/T{task}.n"
     }
    ],
    "language": "Haxe"

@@ -10,7 +10,7 @@ like for the numbers to mean anything. For compilers, see `BUILD.md`.
 | OS | x86-64, Linux, macOS or Windows | Every row is reachable on Windows and on Linux; macOS loses `msvc` and `dolphin smalltalk`. The `assembly` and `masm` rows are Windows x64 only, because both are freestanding PE programs built against `kernel32.dll`. `tcc`, `clang`, `flang` and `luajit` all need a little care on Windows but no WSL. |
 | CPU | 4 physical cores | Task 11 runs four threads. Every other task is pinned to one core, so more cores do not help them. |
 | RAM | 8 GB minimum, 16 GB comfortable | The tasks themselves are small: the largest allocation is task 06's 100 MB text, and task 12's three 1000x1000 arrays are 24 MB together. The 16 GB is for the JVM, GraalVM and Julia toolchains. `native-image` alone wants 2–4 GB to build. |
-| Disk | ~43 GB free | 100 MiB of fixtures, the toolchains themselves, and 2-3 GB of scratch while reassembling MSVC and Swift. `BUILD.md` measures the toolchains at about **41 GB for all 128 toolchains**, and that figure is the authority — it is maintained in one place there rather than as a running total here, which had drifted. The heavy terms are LLVM (4.0 GB), Swift (3.2 GB), the AIR SDK (1.6 GB), GNAT with its MSYS2 runtime (1.8 GB), MSVC (1.2 GB once reassembled from a 2.5 GB layout), Julia (1.1 GB), Perl (1.0 GB), the .NET SDK (0.7 GB), GraalVM (0.7 GB) and GHC's bindist (4.1 GB); most other rows are 0.1-0.6 GB. Package caches do not count and can be far larger than the toolchains themselves. |
+| Disk | ~43 GB free | 100 MiB of fixtures, the toolchains themselves, and 2-3 GB of scratch while reassembling MSVC and Swift. `BUILD.md` measures the toolchains at about **42 GB for all 126 toolchains**, and that figure is the authority — it is maintained in one place there rather than as a running total here, which had drifted. The heavy terms are LLVM (4.0 GB), Swift (3.2 GB), the AIR SDK (1.6 GB), GNAT with its MSYS2 runtime (1.8 GB), MSVC (1.2 GB once reassembled from a 2.5 GB layout), Julia (1.1 GB), Perl (1.0 GB), the .NET SDK (0.7 GB), GraalVM (0.7 GB) and GHC's bindist (4.1 GB); most other rows are 0.1-0.6 GB. Package caches do not count and can be far larger than the toolchains themselves. |
 | Filesystem | `tmpfs` or RAM disk preferred for the file tasks | Reading 50 MiB from a spinning disk measures the disk. Anything run under WSL2 measures the WSL disk layer instead. Where the fixture lives must be recorded in the results. |
 
 ## Runtimes
@@ -38,6 +38,7 @@ need the same JVM. A row that needs a runtime is really saying its **backend** d
 | Swift | swiftc | Swift runtime libraries | unless statically linked |
 | Fortran | gfortran | libgfortran | |
 | Fortran | flang | Fortran runtime | |
+| Fortran | ifx | `tools/ifx/Library/bin` on `PATH` for task 11 only | Fourteen of the fifteen executables are standalone: ifx links the Fortran runtime statically, and verified, task 01 runs with a bare system `PATH`. Task 11 is the exception — OpenMP is linked dynamically, so its exe needs `libiomp5md.dll`, which sits beside `ifx.exe` and nowhere else; without that directory on `PATH` it dies at load with `0xC0000135` and prints nothing. The row's registry entry sets the `PATH` for every cell. |
 | Ada | gnat | libgnat | |
 | Pascal | fpc | none | static by default |
 | Nim | nim | none | static by default |
@@ -105,7 +106,7 @@ need the same JVM. A row that needs a runtime is really saying its **backend** d
 | BASIC | freebasic | none | static by default |
 | BASIC | qb64 | none — the built .exe is static | QB64-PE compiles through C++, so each build takes a few seconds. `PRINT` pads numbers; the rows use `LTRIM$(STR$(x))`. No threads. |
 | V | v | none | static by default; needs a C compiler to build |
-| ATS | ats | none | static by default; needs a C compiler to build |
+| ATS | ats (gcc) | none | static by default; needs a C compiler to build |
 | C3 | c3c | none | static by default; needs the MSVC SDK to link |
 | Vala | valac | `libglib-2.0-0.dll` (and `libgobject-2.0-0.dll` for task 10) for the tasks that call GLib | from MSYS2 `ucrt64`; the tasks that call no GLib function link nothing extra and run with a bare system `PATH`. Static linking fails, so the DLLs have to be reachable. |
 | Oberon-07 | akron | none | static by default; the compiler's `Compiler.exe` is a standalone Windows binary |
@@ -130,9 +131,9 @@ need the same JVM. A row that needs a runtime is really saying its **backend** d
 | Lua (`wasmtime 46.0.3` or newer) | 5.4.8 | `lua.wasm`, built once with the wasi-sdk tree (see `BUILD.md`) | `wasmtime -W exceptions=y --dir . lua.wasm <task>.lua`. The `-W exceptions=y` is mandatory: Lua's `pcall`/`error` path lowers onto the exception-handling proposal, and wasmtime's `exceptions` feature is off by default, so without it the module fails to compile with `legacy_exceptions feature required for try instruction`. `--dir .` is needed on **every** cell, not just 14 and 15, because the script itself is read through the preopen. |
 | Python (`wasmtime 46.0.3`, the `-threads` module) | 3.12.2 | `python.wasm` plus its `lib/python3.12` tree, built once with the wasi-sdk (see `BUILD.md`) | `wasmtime -S threads=y -W threads=y -W shared-memory=y --dir . python.wasm <task>.py`, run from the directory holding both the module and `lib/`. **46 is mandatory here**: the module is built for `wasm32-wasip1-threads`, so 49 refuses the `-S threads` flag outright and the module's `threading.Thread` needs it. The stdlib tree has to sit beside the module, or the interpreter stops with `Could not find platform independent libraries <prefix>`. |
 | Ruby (`wasmtime 46.0.3` or newer) | 2.10.1 (CRuby 4.1.0) | the single-file `ruby.wasm` from ruby/ruby.wasm, 99 MB | `wasmtime --dir . ruby.wasm <task>.rb`. No feature flags: the module is plain wasip1 and runs on 46 and 49 alike. `--dir .` is needed on every cell, because the script itself is read through the preopen. |
-| the same eight compiled modules, under `wasmedge 0.18.0` | wasmedge | `prog.wasm`, the same bytes | `tools/wasmedge/bin/wasmedge.exe --log-level off --run-mode=jit --dir .:. prog.wasm`. **Cannot load a shared-memory module at all** — it rejects the import section with `malformed limits flags` — so task 11 is a runtime capability boundary, not a failed cell. |
-| the same eight compiled modules, under `wamr 2.4.5 (iwasm)` | iwasm | `prog.wasm`, the same bytes | `tools/wamr/iwasm.exe --dir=. prog.wasm`. The one non-wasmtime runtime here that runs the `wasi-threads` task. |
-| the same eight compiled modules, under `node 22` (V8) | node | `prog.wasm`, the same bytes | `node --no-warnings tools/nodejs/wasi-run.js prog.wasm .` — node's own WASI shim. **It provides no `env.memory`**, so a module that imports its memory cannot run and task 11 is out. |
+| the same eight compiled modules, under `wasmedge 0.18.0` | wasmedge | `prog.wasm`, the same bytes | `tools/wasmedge/bin/wasmedge.exe --log-level off --run-mode=jit --dir /:. prog.wasm`. **Cannot load a shared-memory module at all** — it rejects the import section with `malformed limits flags` — so task 11 is a runtime capability boundary, not a failed cell. The go-wasm row needs `--dir /:.` rather than `--dir .:.`: Go resolves a relative name only against a preopen whose *guest* name is `/`, and this runtime takes the host side relative to its own cwd, so `--dir /:.` is the form that works for both kinds of module (`c-wasm` and `go-wasm` both answer tasks 14 and 15 under it; an absolute host path is not accepted here). |
+| the same eight compiled modules, under `wamr 2.4.5 (iwasm)` | iwasm | `prog.wasm`, the same bytes | `tools/wamr/iwasm.exe --dir=. prog.wasm` for the wasi-sdk rows; **the go-wasm row takes `--map-dir=/::.` instead**, for the same absolute-guest-name reason, since `--dir=.` gives that module a relative preopen name it cannot resolve a file against. The one non-wasmtime runtime here that runs the `wasi-threads` task. |
+| the same eight compiled modules, under `node 22` (V8) | node | `prog.wasm`, the same bytes | `node --no-warnings tools/nodejs/wasi-run.js prog.wasm .` — node's own WASI shim. **It provides no `env.memory`**, so a module that imports its memory cannot run and task 11 is out. The shim drops `PWD` from the guest environment: node's WASI uses that variable as the guest's working directory, and Go's wasip1 runtime reads it directly (`syscall/fs_wasip1.go`), so a host `PWD` outside the preopen made the go-wasm file cells fail with `open data.bin: No such file or directory`. |
 | the same eight compiled modules, under `wasmer 4.3.7 --cranelift` | wasmer-cranelift | `prog.wasm`, the same bytes | `tools/wasmer437/bin/wasmer.exe run --cranelift --mapdir /:<dir> prog.wasm`. Threads are on by default, so task 11 needs no flags. `--mapdir /:<dir>` rather than `--dir=.`, because Wasmer's `--dir=.` preopens an empty root. **Task 15 is a capability boundary**: WASIX keeps a created file in an in-memory overlay that is discarded at exit, so `out.bin` is never written — verified, the cell prints the right answer and exits 0 with no `out.bin` on disk. |
 | the same eight compiled modules, under `wasmer 4.3.7 --llvm` | wasmer-llvm | `prog.wasm`, the same bytes | The same binary and run line with `--llvm`; only the code generator changes. Same task-15 boundary. |
 | the same eight compiled modules, under `wasmer 4.3.7 --singlepass` | wasmer-singlepass | `prog.wasm`, the same bytes | The same binary and run line with `--singlepass`. Task 15 is out for the same reason, and **task 11 deadlocks on the `c-wasm`, `cpp-wasm` and `rust-wasm` modules** — those three spawn their workers and then never make progress, against 0.16 s under Cranelift on the same bytes. The hand-written and AssemblyScript modules do run it. |
@@ -144,9 +145,6 @@ need the same JVM. A row that needs a runtime is really saying its **backend** d
 | Haxe | haxe (js) | `node` (`tools/nodejs/node.exe`) | No JVM, no VM of its own: `--js` emits one file and node runs it. The js target has no `sys` package, so the row's shared `Out.hx` routes output through `js.Syntax.code`, and tasks 11, 14 and 15 use node's `worker_threads` and `node:fs` directly. |
 | Haxe | haxe (jvm) | a JRE, plus `tools/hxjava/lib/hxjava-std.jar` on the classpath (the jar is inside the emitted one) | `java -jar jvm/T<NN>_<name>.jar`. A JVM target, so it lands on HotSpot beside the `java`, `kotlin` and `scala` rows. |
 | Haxe | haxe (cs) | the Mono runtime | `mono cs/T<NN>_<name>.exe`. The assembly is compiled by Mono's own `csc`, so no .NET SDK is involved. |
-| Haxe | haxe (php) | PHP **with mbstring**, and `extension_dir` set | `php -d extension_dir=<php>/ext -d extension=mbstring php/index.php`. Both `-d` flags are required: Haxe's generated bootstrap calls `mb_internal_encoding`, and this PHP ships no `php.ini`, so its `extension_dir` default points at a directory that does not exist. |
-| Haxe | haxe (python) | the interpreter | `python py/T<NN>_<name>.py`. |
-| Haxe | haxe (neko) | the Neko VM (`tools/neko/neko.exe`, already installed for `haxelib`) | `neko neko/T<NN>_<name>.n`. Neko is Haxe's own original bytecode VM, so this row is Haxe-on-Haxe rather than Haxe-on-someone-else's-runtime. |
 | Haxe | hashlink | `libhl.dll` must sit beside `hl.exe` (the extracted tree provides both) | Two steps: `haxe -cp sources/hashlink -main <module> -hl <out>.hl`, then `hl <out>.hl`. The module name must equal the file name and start uppercase, so the files are `T01_branches.hx` etc. **`Int` is 32-bit on this target**, so every accumulator that can exceed 2^31 is a `Float` (exact below 2^53) or a `haxe.Int64`. **There is no thread API**: `sys.thread` does not resolve, and the bundled `hl.uv` bindings expose no thread creation, so task 11's four workers are four child `hl` processes — each writes its partial to a file, the parent waits on `exitCode()` and sums the files, the same shape the VBScript, COBOL and gforth rows use. Task 10 hand-rolls base-1e9 limbs in `haxe.Int64`. |
 | Eiffel | eiffelstudio (`ec -finalize`) | none | The finalized executable links the Eiffel run-time into itself statically; the fifteen `prog.exe` files are self-contained and need no MinGW DLL. |
 | Seed7 | s7c | none | The compiled executable is self-contained and needs nothing from the Seed7 tree at run time. Only the compile needs `gcc` on `PATH`. |
@@ -674,8 +672,8 @@ every cell, how much memory does it take, and how big is the program?" — it ru
 program in `exec/`, not just one row's, and it is the tool the results table comes from.
 
 ```
-python exec/harness.py                    # every cell, 5 timed runs (the default)
-python exec/harness.py --runs 1           # one pass over the matrix
+python exec/harness.py                    # every cell, one timed run a cell
+python exec/harness.py --runs 5           # five timed runs a cell
 python exec/harness.py --runs 3 --rows c,rust --tasks 01,07,10
 python exec/harness.py --rows ada         # one row, by its folder under exec/
 python exec/harness.py --language C++     # every row of one language
@@ -688,14 +686,14 @@ python exec/harness.py --list             # print the cells that would run
 python exec/plot.py --open                # results.json -> the interactive results.html
 ```
 
-`--runs N` is the whole-suite repetition count: `--runs 1` runs the entire suite once,
-`--runs 5` (the default) five times, `--runs 3` three times. Every run counts — there is no
+`--runs N` is the whole-suite repetition count: `--runs 1` (the default) runs the entire suite
+once, `--runs 5` five times, `--runs 3` three times. Every run counts — there is no
 discarded warmup, so the median is taken over all of them — and the first run is also where
 the answer is checked, which is why a cell that answers wrongly is reported as `WRONG`
 instead of being measured.
 
 `--check` runs each cell once and reports pass/fail without timing. It is the fast way to
-ask "does every row still work on this machine?" without paying for five runs a cell.
+ask "does every row still work on this machine?" without paying for repeated runs a cell.
 
 #### Running part of the matrix
 
@@ -831,6 +829,11 @@ needed because the harness can only look where it is told:
 - **`out_file`** — where a task-15 program writes `out.bin`, when that is not the working
   directory. Again AIR, for the same reason. Without it the cell measures fine but is marked
   `!` with "task 15 left no out.bin", because the harness looked in the wrong place.
+- **`restore`** — files the program rewrites that are *committed*, and so have to be put back
+  after a run. Only the `gleam` row needs it: `gleam run` re-sorts the `[packages]` table of
+  `exec/gleam/build/packages/packages.toml` on every invocation, which leaves a dirty
+  checkout behind. The harness snapshots each listed path before the cell and restores it
+  afterwards, exactly as it already does for `out.bin` and `time.txt`.
 
 The harness stages the fixture and clears residue the way the verifiers do — `data.bin`
 put into a cell's directory for task 14 (task 15 never reads it), `out.bin` and any
@@ -893,8 +896,8 @@ Two things that will corrupt the results if you get them wrong:
 
 ## Method
 
-Per cell: five timed runs, and the median is reported alongside the minimum, maximum and
-standard deviation.
+Per cell: the timed runs the harness was told to take — one by default, `--runs N` for N — and the
+median is reported alongside the minimum, maximum and standard deviation.
 
 Peak process startup on the development machine is around **20 ms** and varies by 10 ms run
 to run. That is why the loop counts are in the hundreds of millions: at a million iterations
@@ -968,9 +971,11 @@ row's own `timing:` comment as well.
 
 ## Expected cost
 
-Every task runs five times, in 128 toolchains.
+Every task runs once by default (`--runs N` for N), in 110 rows of 246 toolchain entries.
 
-- Fast compiled languages: under a second per run, so about **1.5 hours** for the matrix.
+- Fast compiled languages: under a second per run, so about **half an hour** for a default
+  one-run pass over the whole matrix — 2955 cells at roughly 0.5 s each. Five runs over the
+  same matrix is about 2.5 hours, before the slow cells below are counted.
 - The 100-million-iteration tasks take 10 to 15 seconds in CPython.
 - The new rows are mostly slow, and they hold the slowest cells in the matrix:
   - **Component Pascal** task 10 is a .NET assembly running the same bounds-checked spigot; at
@@ -1045,7 +1050,7 @@ Every task runs five times, in 128 toolchains.
 
     The cost grows faster than the square of the digit count (exponent about 2.3 over the last
     two points), so those extrapolate to roughly **7.5 minutes** for the 1000-digit run, and the
-    cell's five runs are about two hours. The cause is not the
+    cell's five runs are about two hours (a default one-run pass, about 25 minutes). The cause is not the
     program: the C reference does the identical work in **0.6 s** on this machine, so a68g is
     about 900x slower
     per limb operation because it walks the tree instead of compiling. Its `-O2` (compile units,
@@ -1186,7 +1191,7 @@ Every task runs five times, in 128 toolchains.
   quadratic append, and its slow cell.
 - **Nothing is cut off, so a pass has no upper bound.** The compiled rows are all under a
   second per run, but one of the slow cells above can outweigh the entire rest of the matrix,
-  and it runs five times. Budget from the slowest cells, not from the average.
+  and a default pass runs it once. Budget from the slowest cells, not from the average.
 
 `WRONG` is a result, not a failure. So is `SKIPPED`, which is what a cell reports when the
 toolchain is missing or the language cannot do the task at all.

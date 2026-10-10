@@ -50,4 +50,17 @@ for %%T in (%TASKS%) do (
   cl /nologo /O2 /Fe:prog.exe %%T.c >build.log 2>&1
   if exist prog.exe ( echo OK msvc %%T ) else ( echo C-FAIL msvc %%T )
 )
+
+rem zig cc is clang's front end on Zig's own toolchain, libc and linker, so it
+rem needs no MinGW or MSVC installation behind it.  -mcpu is pinned: Zig's default
+rem is the *build* machine's CPU model, and a binary built that way carries AVX2
+rem and dies with 0xC000001D on any x86-64 CPU without it.
+echo ########## zig cc
+for %%T in (%TASKS%) do (
+  mkdir "%EXEC%\zig-cc\%%T" 2>nul
+  cd /d "%EXEC%\zig-cc\%%T"
+  copy /y "%SRC%\%%T.c" . >nul
+  C:\stupidspeed\tools\zig\zig.exe cc -O2 -pthread -mcpu=x86_64_v2 -o prog.exe %%T.c >build.log 2>&1
+  if exist prog.exe ( echo OK zigcc %%T ) else ( echo C-FAIL zigcc %%T )
+)
 echo ALLDONE

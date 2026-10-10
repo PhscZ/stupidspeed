@@ -18,6 +18,15 @@
 // the cell's working directory — the same access the wasmtime rows get from
 // `--dir`.  Measured on `c-wasm` task 14: 49 ms, and 258 ms on task 15.
 //
+// `PWD` is dropped from the guest environment.  Node's WASI uses that variable
+// as the guest's working directory, and the host's `PWD` is a path outside the
+// preopen, so a module that resolves a relative name against the working
+// directory — Go's wasip1 runtime does — cannot find its file.  Measured on
+// `go-wasm` task 14 with the host `PWD` set: `panic: open data.bin: No such file
+// or directory`.  With it removed, the same module answers in 520 ms.  Every
+// other row's libc resolves the same relative name against the preopen and is
+// unaffected either way.
+//
 // The file is part of the repository rather than of `tools/` on purpose: it is
 // the row's run recipe, not a third-party toolchain, and `tools/` is not
 // committed.
@@ -31,10 +40,15 @@ if (!file) {
   process.exit(2);
 }
 
+// The preopen maps `<preopen-dir>` to `/`; `PWD` is dropped so node does not
+// adopt the host's working directory as the guest's (see the note above).
+const env = { ...process.env };
+delete env.PWD;
+
 const wasi = new WASI({
   version: "preview1",
   args: [path.basename(file)],
-  env: process.env,
+  env,
   preopens: { "/": path.resolve(dir || ".") },
   returnOnExit: true,
 });

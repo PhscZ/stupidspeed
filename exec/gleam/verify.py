@@ -13,6 +13,15 @@ exp = {"01_branches":"33333334 13333333 7619048 45714285","02_switch_case":"7500
  "09_fib_recursive":"102334155","10_pi":"4470","11_parallel_sum":"7500000075000000",
  "12_matrix_add":"999000000","13_matrix_mul":"599995000","14_file_read":"2389704704","15_file_write":"52428800"}
 ok=0; bad=[]
+# `gleam run` rewrites the committed build manifest (it re-sorts the [packages]
+# table), so it is snapshotted and put back: verifying a row must leave the
+# checkout exactly as it found it.  exec/harness.py does the same for this row.
+MANIFEST = os.path.join(D, "build", "packages", "packages.toml")
+try:
+    with open(MANIFEST, "rb") as fh:
+        manifest_before = fh.read()
+except OSError:
+    manifest_before = None
 for t, m in mods.items():
     if t=="14_file_read" and (not os.path.exists(os.path.join(D,"data.bin")) or not os.path.samefile(r"C:\stupidspeed\data.bin", os.path.join(D,"data.bin"))): shutil.copy(r"C:\stupidspeed\data.bin", os.path.join(D,"data.bin"))
     if t=="15_file_write":
@@ -31,3 +40,6 @@ for t, m in mods.items():
     except subprocess.TimeoutExpired:
         bad.append((t,"TIMEOUT")); print("%-20s TIMEOUT"%t, flush=True)
 print("GLEAM PASS %d/15"%ok, flush=True)
+if manifest_before is not None:
+    with open(MANIFEST, "wb") as fh:
+        fh.write(manifest_before)

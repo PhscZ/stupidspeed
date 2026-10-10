@@ -3,6 +3,10 @@ setlocal enabledelayedexpansion
 rem Build all 15 Haxe tasks with the hxcpp native backend.
 rem   haxe -cp <dir> -main T<NN>_<name> -cpp out -D mingw -D MINGW_ROOT=C:\mingw64 -D no_shared_libs
 rem   run: out\T<NN>_<name>.exe
+rem The row's three other targets are built by the sibling script build_targets.bat
+rem (js, jvm and cs); both scripts copy sources\haxe\*.hx into the cell first, which is
+rem required -- the cell's own copies of the task sources are only as current as
+rem the last build that refreshed them.
 rem hxcpp drives g++ and windres; -D no_shared_libs makes the link static and MINGW_ROOT is
 rem mandatory (hxcpp otherwise guesses c:/MinGW and stops with "Could not guess MINGW_ROOT").
 rem Prerequisites, all under tools/: neko (NEKOPATH), haxe's own haxelib.exe, the hxcpp tree

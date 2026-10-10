@@ -7,7 +7,7 @@ timeout, plus the file whose size is the cell's "program size".  The recipes are
 transcribed from each row's own `exec/<row>/verify.py`, which stays the
 authority on how a row is built and run.
 
-For every cell the harness runs the program `--runs` times (default 5) and records
+For every cell the harness runs the program `--runs` times (default 1) and records
 
   speed      the program's own `TIME_MS` line -- the benchmark contract, which
              brackets only the task's own work -- and, beside it, the harness's
@@ -15,7 +15,7 @@ For every cell the harness runs the program `--runs` times (default 5) and recor
   memory     the peak working set of the child process
   file size  the built program's size, and the size of the `out.bin` task 15 wrote
 
-`--runs 1` runs the whole suite once, `--runs 5` (the default) five times, and so
+`--runs 1` (the default) runs the whole suite once, `--runs 5` five times, and so
 on.  Every run counts: there is no discarded warmup, so the median of the timed
 runs is taken over all of them.  The first run is also where the answer is
 checked, so a cell that answers wrongly is reported as `WRONG` rather than
@@ -49,7 +49,7 @@ whole benchmark (see RUN.md).  Cells run one at a time, each pinned to a single
 core -- four for task 11 -- and the working tree is left exactly as it was found.
 
 Usage
-    python exec/harness.py                        # every cell, 5 timed runs
+    python exec/harness.py                        # every cell, one timed run
     python exec/harness.py --runs 1                # one pass over the matrix
     python exec/harness.py --runs 3 --rows c,rust  # just those rows
     python exec/harness.py --rows ada              # one row, by folder
@@ -721,6 +721,10 @@ def measure(cell, runs, timeout_override, check_only, cpu=3, cores=4):
     cwd = norm(fill(entry["cwd"], ROOT_FWD, row, tc, task))
     watch = [norm(fill(entry["time_file"], ROOT_FWD, row, tc, task))
              if entry.get("time_file") else os.path.join(cwd, "time.txt")]
+    # A row may also rewrite a file of its own -- the gleam row's package
+    # manifest, which `gleam run` reorders on every invocation -- and that file
+    # is committed, so it is watched too and put back the same way.
+    watch += [norm(fill(p, ROOT_FWD, row, tc, task)) for p in entry.get("restore", [])]
     out = out_path(entry, cwd, row, tc, task)
     if out:
         watch.append(out)
@@ -1550,9 +1554,9 @@ def main():
             "run is continued rather than repeated.  A cell measured again replaces\n"
             "its own older row and nothing else.  Use --replace to start over.\n"
         ))
-    ap.add_argument("--runs", type=int, default=5,
-                    help="timed runs per cell (default 5); --runs 1 runs the whole "
-                         "suite once, --runs 3 three times.  Every run counts: there "
+    ap.add_argument("--runs", type=int, default=1,
+                    help="timed runs per cell (default 1); --runs 1 runs the whole "
+                         "suite once, --runs 5 five times.  Every run counts: there "
                          "is no discarded warmup")
     ap.add_argument("--rows", default="",
                     help="rows to run: names or folder paths (`ada`, `Actionscript`, "

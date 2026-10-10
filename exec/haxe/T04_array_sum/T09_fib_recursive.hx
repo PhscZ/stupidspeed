@@ -16,7 +16,7 @@ class T09_fib_recursive {
         var t0 = haxe.Timer.stamp();
         var answer = fib(40);
         var t1 = haxe.Timer.stamp();
-        Sys.stderr().writeString("TIME_MS=" + ((t1 - t0) * 1000.0) + "\n");
-        Sys.println(answer);
+        Out.err("TIME_MS=" + ((t1 - t0) * 1000.0) + "\n");
+        Out.line(answer);
     }
 }
