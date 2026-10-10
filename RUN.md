@@ -10,7 +10,7 @@ like for the numbers to mean anything. For compilers, see `BUILD.md`.
 | OS | x86-64, Linux, macOS or Windows | Every row is reachable on Windows and on Linux; macOS loses `msvc` and `dolphin smalltalk`. The `assembly` and `masm` rows are Windows x64 only, because both are freestanding PE programs built against `kernel32.dll`. `tcc`, `clang`, `flang` and `luajit` all need a little care on Windows but no WSL. |
 | CPU | 4 physical cores | Task 11 runs four threads. Every other task is pinned to one core, so more cores do not help them. |
 | RAM | 8 GB minimum, 16 GB comfortable | The tasks themselves are small: the largest allocation is task 06's 100 MB text, and task 12's three 1000x1000 arrays are 24 MB together. The 16 GB is for the JVM, GraalVM and Julia toolchains. `native-image` alone wants 2–4 GB to build. |
-| Disk | ~43 GB free | 100 MiB of fixtures, the toolchains themselves, and 2-3 GB of scratch while reassembling MSVC and Swift. `BUILD.md` measures the toolchains at about **42 GB for all 126 toolchains**, and that figure is the authority — it is maintained in one place there rather than as a running total here, which had drifted. The heavy terms are LLVM (4.0 GB), Swift (3.2 GB), the AIR SDK (1.6 GB), GNAT with its MSYS2 runtime (1.8 GB), MSVC (1.2 GB once reassembled from a 2.5 GB layout), Julia (1.1 GB), Perl (1.0 GB), the .NET SDK (0.7 GB), GraalVM (0.7 GB) and GHC's bindist (4.1 GB); most other rows are 0.1-0.6 GB. Package caches do not count and can be far larger than the toolchains themselves. |
+| Disk | ~43 GB free | 100 MiB of fixtures, the toolchains themselves, and 2-3 GB of scratch while reassembling MSVC and Swift. `BUILD.md` measures the toolchains at about **42 GB for all 125 toolchains**, and that figure is the authority — it is maintained in one place there rather than as a running total here, which had drifted. The heavy terms are LLVM (4.0 GB), Swift (3.2 GB), the AIR SDK (1.6 GB), GNAT with its MSYS2 runtime (1.8 GB), MSVC (1.2 GB once reassembled from a 2.5 GB layout), Julia (1.1 GB), Perl (1.0 GB), the .NET SDK (0.7 GB), GraalVM (0.7 GB) and GHC's bindist (4.1 GB); most other rows are 0.1-0.6 GB. Package caches do not count and can be far larger than the toolchains themselves. |
 | Filesystem | `tmpfs` or RAM disk preferred for the file tasks | Reading 50 MiB from a spinning disk measures the disk. Anything run under WSL2 measures the WSL disk layer instead. Where the fixture lives must be recorded in the results. |
 
 ## Runtimes
@@ -69,7 +69,6 @@ need the same JVM. A row that needs a runtime is really saying its **backend** d
 | Dart | jit | Dart VM | |
 | JavaScript | bun, deno | the runtime itself | `bun <task>.js` needs nothing; the sources are CommonJS, which Deno 2 only accepts with **`--unstable-detect-cjs`**. Deno also denies the filesystem by default, so task 11 (its `worker_threads` re-read the script file) and task 14 need `--allow-read` and task 15 needs `--allow-write`; without them it stops with `Requires read access to …`. |
 | JavaScript | spidermonkey | the shell binary is the whole runtime | `js.exe <task>.js`. Real OS threads via `evalInWorker`, which runs its argument on a separate thread; cross-thread data needs a `SharedArrayBuffer` that the main thread has registered with `setSharedArrayBuffer()` first, with `Atomics` for the join — without that registration the worker's `getSharedArrayBuffer()` throws `RangeError`. Task 10 is a built-in-bignum cell: BigInt is native. `os.file.readFile(name, "binary")` gives the bytes as an ArrayBuffer, and `os.file` has no chunked read or append, so tasks 14 and 15 read and write the whole 50 MiB in one call. |
-| TypeScript | bun, deno | the runtime itself | `bun <task>.ts` needs nothing. `deno run <task>.ts` also needs nothing for the plain tasks, and unlike the `javascript` row's CommonJS files these sources are ES modules, so it needs **no** `--unstable-detect-cjs`. Deno denies the filesystem by default, so task 11 (its `worker_threads` re-read the script file) and task 14 need `--allow-read` and task 15 needs `--allow-write`; without them it stops with `Requires read access to …`. Task 10 is a built-in-bignum cell in both runtimes. |
 | JavaScript | quickjs | none | the binary is the whole runtime. Needs `--std` for the `std`/`os` modules, which is also what gives stderr. No threads. |
 | PHP | zend | PHP + opcache | task 11 needs the `parallel` PECL extension, which stock PHP does not ship and which requires a ZTS build. |
 | PHP | zend + jit | PHP + opcache | JIT needs `opcache.enable_cli=1` **and** `-d opcache.jit=tracing`: PHP 8.5 changed the master default of `opcache.jit` to `disable`, so `opcache.jit_buffer_size` alone leaves it off. Same ZTS + `parallel` requirement as the row above for task 11. |
@@ -971,10 +970,10 @@ row's own `timing:` comment as well.
 
 ## Expected cost
 
-Every task runs once by default (`--runs N` for N), in 110 rows of 246 toolchain entries.
+Every task runs once by default (`--runs N` for N), in 109 rows of 244 toolchain entries.
 
 - Fast compiled languages: under a second per run, so about **half an hour** for a default
-  one-run pass over the whole matrix — 2955 cells at roughly 0.5 s each. Five runs over the
+  one-run pass over the whole matrix — 2925 cells at roughly 0.5 s each. Five runs over the
   same matrix is about 2.5 hours, before the slow cells below are counted.
 - The 100-million-iteration tasks take 10 to 15 seconds in CPython.
 - The new rows are mostly slow, and they hold the slowest cells in the matrix:

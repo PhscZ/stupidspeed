@@ -195,7 +195,7 @@ rows are Windows x64 only: each is a freestanding PE program built with `nasm -f
 too, including `flang` and `luajit`. See `RUN.md` for the full platform breakdown.
 
 Disk: **31 GB measured** for the first 96 toolchains, installed and run on one Windows x64 host,
-and about **42 GB for the 246 toolchain entries** the tables below now list.
+and about **42 GB for the 244 toolchain entries** the tables below now list.
 The heavy terms are LLVM (4.0 GB), Swift (3.2 GB), the AIR SDK (1.6 GB), GNAT with its MSYS2
 runtime (1.8 GB, which also supplies `flang`), MSVC (1.2 GB once reassembled from a 2.5 GB
 layout), Julia (1.1 GB), Perl (1.0 GB), the .NET SDK (0.7 GB) and GraalVM (0.7 GB); most other
@@ -243,7 +243,7 @@ Component Pascal compiler, 24 MB — **Cython** a 15 MB `pip install`, and **Nel
 repository and its 502 KB self-built interpreter, because Nelua's `runner.lua` needs `lfs`,
 `hasher` and `lpeglabel`, which the stock Lua does not have. The Cygwin tree is the one term here
 the tables below do not count, because it is a host toolchain rather than a `tools/` row.
-That puts the current total for all 126 installed toolchains at about **42 GB**, plus the
+That puts the current total for all 125 installed toolchains at about **42 GB**, plus the
 Cygwin tree.
 The three interpreted WebAssembly rows add about **0.14 GB** on top of the six that already
 existed: the single-file `ruby.wasm` is 99 MB, the Lua build reuses the `wasi-sdk` tree the C
@@ -268,14 +268,14 @@ to get there, because that is what decides whether a cell's number contains comp
 different *kind* of execution; the **backend** is the specific component doing it. `exec/cells.json`
 carries a `backend` id on every toolchain entry and a `backends` table naming what each one is,
 and `exec/harness.py` groups its tables by it. The other axis is the **front end**: a language and
-the toolchain that builds or runs it, which is what a row of the results table is. There are 204
-of those over 84 languages and only 78 backends, and the counts are not spread evenly:
+the toolchain that builds or runs it, which is what a row of the results table is. There are 202
+of those over 83 languages and only 78 backends, and the counts are not spread evenly:
 
 | Backend | Front ends | The rows |
 |---|---|---|
 | LLVM | 21 | `c`/`cpp` (clang), `rust`, `swift`, `zig`, `d` (ldc2), `fortran` (flang), `fortran` (ifx), `go` (tinygo), `crystal`, `odin`, `c3`, `beef`, `pony`, `lean4`, `kotlin` (native), `scala` (native), `terra`, `objectivec`, `qb64`, `v` (clang) |
 | GCC | 17 | `ada` (gnat), `fortran` (gfortran), `c` (gcc), `cpp` (g++), `cobol`, `vala`, `nim`, `mercury`, `ats`, `eiffel`, `seed7`, `v`, `nelua`, `python` (cython), `python` (nuitka), `haxe` (hxcpp), `nim` (cpp) |
-| V8 | 15 | seven of those same modules under node's WASI shim, plus `javascript` (deno), `typescript` (deno), `scala-js`, `clojurescript`, `haxe` (js), `kotlin` (js), `dart` (dart2js) and `dart` (dart2wasm) |
+| V8 | 14 | seven of those same modules under node's WASI shim, plus `javascript` (deno), `scala-js`, `clojurescript`, `haxe` (js), `kotlin` (js), `dart` (dart2js) and `dart` (dart2wasm) |
 | wasmtime (Cranelift) | 12 | the eleven `wasm32-wasip1` rows, plus `kotlin` (wasm) |
 | wasmtime (Winch) | 8 | the same eight compiled modules under wasmtime's baseline compiler |
 | Wasmer (Cranelift) | 8 | the same eight modules under Wasmer's Cranelift compiler |
@@ -476,7 +476,6 @@ nothing is written to disk and nothing is reused between runs.
 | Rows | Notes |
 |---|---|
 | `perl`, `tcl`, `vbscript`, `jscript`, `autohotkey` | parse and execute on each run |
-| `typescript` (bun, deno) | the runtime strips the type annotations in-process, then runs the result; there is no `tsc` step and no artifact on disk, so the annotations cost only the erasure |
 | `euphoria` | a tree-walking interpreter; no bytecode file |
 | `babashka` | babashka runs Clojure on SCI, an interpreter, inside a GraalVM native image |
 | `swipl` | SWI-Prolog compiles to its own clause representation in memory |
@@ -764,7 +763,6 @@ time is zero. Everything is paid at run time.
 | Language | Toolchain |
 |---|---|
 | JavaScript | bun, deno |
-| TypeScript | bun, deno | bun 1.4.2, deno 2.9.7 (V8 15.0.245.2) | bun is a per-user install (`bun.exe`, no admin); deno is the single static `deno.exe` from github.com/denoland/deno releases, extracted into `tools/deno/` — no installer and no admin | **No build step**: `bun <task>.ts` / `deno run <task>.ts`. Both runtimes strip the type annotations themselves — bun with its own transpiler, deno with its built-in TypeScript support — so nothing is compiled ahead of time and no `tsconfig.json` is needed. Deno denies the filesystem by default: task 11's workers re-read the script file and task 14 opens `data.bin`, so both take `--allow-read`, and task 15 takes `--allow-write`. Because these sources are ES modules (`import * as fs from "node:fs"`), they need **no** `--unstable-detect-cjs`, unlike the `javascript` row's CommonJS files. Same fifteen programs as the `javascript` row with real type annotations, on the same two runtimes. |
 | PHP | zend | 8.5.11 (ZTS) | windows.php.net, `php-8.5.11-Win32-vs17-x64.zip` (36 MB, the non-`nts` name is the thread-safe build), extracted into `tools/php-zts/` — no installer, no admin | **No build step**: `php <task>.php`. The row uses the **ZTS** build rather than the NTS one, because task 11 needs the PECL `parallel` extension and that extension only loads into a thread-safe PHP; `php_parallel-1.2.10-8.5-ts-vs17-x64.zip` from the Windows PECL builds goes into `ext/`, with `pthreadVC3.dll` beside `php.exe`, and `php.ini` must set **`extension_dir`** as well as `extension=parallel` — the build's compiled-in default is `C:\php\ext`, so a bare `extension=parallel` fails with `Unable to load dynamic library`. |
 | PHP | zend + jit | as above | as above | Same interpreter, with `-d opcache.enable_cli=1 -d opcache.jit=tracing -d opcache.jit_buffer_size=64M`. **`-d opcache.jit=tracing` is required**: PHP 8.5 changed the master default of `opcache.jit` to `disable`, so `opcache.jit_buffer_size` alone leaves the JIT off (`opcache_get_status()` reports `jit.on=false`, `buffer_size=0`) and the row would measure only opcache bytecode caching. With the flag set the JIT is on and the effect is large — measured 4.2x on task 01, 6.0x on 09 and 12.3x on 11. |
 | Python | cpython, pypy, graalpy |
