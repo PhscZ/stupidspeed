@@ -1,0 +1,35 @@
+# Line endings.
+#
+# The ActionScript row's build output is not a single file: `adt -target cmdline`
+# writes a package that is a *directory* -- prog.exe, prog.swf, mimetype,
+# META-INF/ and Adobe AIR/ -- and the AIR runtime validates the bytes inside it
+# before running the program.  Several of those files are plain text, so with
+# `core.autocrlf=true` (the Windows default, and set on this machine) a checkout
+# rewrites them to CRLF and the runtime refuses to start:
+#
+#   Security warning: invalid license or package - application may have been
+#   modified after packaging
+#
+# Restoring META-INF/AIR/application.xml to the committed bytes is what fixes it;
+# the CRLF forms of signatures.xml and of Adobe AIR/.../Licenses/*/COPYING do not
+# on their own stop the package from loading.  The whole bundle is therefore
+# checked out byte for byte rather than line-ending-converted, so a fresh clone
+# runs the row without being repackaged.
+#
+# The descriptor input needs the same treatment, and for the same reason.  `adt
+# -package` does not parse `app.xml` and re-emit it -- it copies it verbatim into
+# the bundle as META-INF/AIR/application.xml, byte for byte (verified: the two
+# files are identical, 867 bytes, no CRLF).  A line-ending-converted checkout
+# would therefore hand `adt` a CRLF descriptor and produce a CRLF
+# application.xml inside the package, which is the exact failure above -- and it
+# would do so on every rebuild, since `build_all.bat` copies the descriptor from
+# `sources/` into each task directory.  Protecting only the packaged output would
+# leave the row one rebuild away from breaking, so both copies of the descriptor
+# are pinned as well.
+#
+# Everything else is left to normal text handling: the `.as` sources, the logs
+# (`adt.log`, `amxmlc.log`) and the scripts (`build_all.bat`, `verify.py`) are
+# recompiled or rewritten on every build and tolerate either convention.
+exec/actionscript/*/out/** -text
+exec/actionscript/*/app.xml -text
+sources/actionscript/app.xml -text

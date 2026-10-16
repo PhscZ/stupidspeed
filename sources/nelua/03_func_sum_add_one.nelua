@@ -1,0 +1,14 @@
+-- task 03 func_sum — helper module, the second translation unit.
+-- A separate file so the call crosses a module boundary, the same reason the Fortran,
+-- Tcl, Vala, Racket and Janet rows split this task. `global function` is required for
+-- the helper to be visible outside its own module.
+--
+-- The `<noinline>` annotation is what actually keeps the call: Nelua concatenates every
+-- required module into one C translation unit, so without it gcc at -O2 inlines the
+-- helper and deletes the loop. Measured: 0.0000 s for the plain cross-file call against
+-- 0.0227 s for this one at 1e8 calls. It is emitted as
+-- `NELUA_NOINLINE` = `__attribute__((noinline))` on gcc. See 03_func_sum.nelua.
+
+global function add_one(n: integer): integer <noinline>
+  return n + 1
+end

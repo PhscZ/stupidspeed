@@ -1,0 +1,19 @@
+(* task 03 func_sum (helper module) — expected output: 100000000 *)
+(* build: Compiler.exe _03_func_sum.ob07 win64con -out prog.exe    run: prog.exe *)
+(* note: the called procedure lives in its own module, so the call in the 100 million *)
+(*       iteration loop cannot be inlined away. Build this file only through the import in *)
+(*       _03_func_sum.ob07; it has no module body of its own. *)
+(* note: this compiler requires an imported module's name to equal its file name, so the *)
+(*       file is AddOne.ob07 and the MODULE line is AddOne. An underscore is a legal *)
+(*       identifier character here, so _03_func_sum_add_one.ob07 would compile as well; *)
+(*       AddOne is used because the module is named after the procedure it exports, the same *)
+(*       choice the Oberon-2 row makes. *)
+
+MODULE AddOne;
+
+PROCEDURE AddOne*(n: INTEGER): INTEGER;
+BEGIN
+  RETURN n + 1
+END AddOne;
+
+END AddOne.

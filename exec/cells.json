@@ -1,0 +1,4130 @@
+{
+ "note": "Run recipes transcribed from each row's exec/<row>/verify.py; that file remains the authority. {root} is the repository root; {task}, {row}, {toolchain}, {PATH} and {env:NAME} are also substituted by exec/harness.py. `language` is the README results table's Language column for the row. `backend` names the component that actually executes the entry -- the code generator or virtual machine the toolchain hands its program to -- and is the key into the `backends` table below; many front ends (a language plus its toolchain) share one backend, which is the matrix's second axis. One front end goes the other way: `luau` registers a single toolchain whose tasks split between two engines -- the Luau CLI for 01-10, 12 and 13, Lute for 11, 14 and 15, because the plain CLI has no file I/O and no process API -- so its cells carry two different backends and the engine that ran each one is on the cell, not in the toolchain name. See `exec/harness.py --backends`.",
+ "tasks": [
+  "01_branches",
+  "02_switch_case",
+  "03_func_sum",
+  "04_array_sum",
+  "05_alloc_churn",
+  "06_char_count",
+  "07_string_append",
+  "08_average",
+  "09_fib_recursive",
+  "10_pi",
+  "11_parallel_sum",
+  "12_matrix_add",
+  "13_matrix_mul",
+  "14_file_read",
+  "15_file_write"
+ ],
+ "backends": {
+  "adw": {
+   "name": "ADW",
+   "kind": "native-aot",
+   "what": "ADW Modula-2, direct to object"
+  },
+  "akron": {
+   "name": "Akron",
+   "kind": "native-aot",
+   "what": "Akron Oberon-07, direct to object"
+  },
+  "asm": {
+   "name": "none — hand-written machine code",
+   "kind": "assembler",
+   "what": "an assembler, not a compiler: the source already is machine code"
+  },
+  "avm2": {
+   "name": "AVM2 (AIR)",
+   "kind": "native-jit",
+   "what": "the ActionScript VM's JIT"
+  },
+  "beam": {
+   "name": "BEAM",
+   "kind": "native-jit",
+   "what": "the Erlang VM's per-process scheduler and JIT"
+  },
+  "chez": {
+   "name": "Chez Scheme",
+   "kind": "native-aot",
+   "what": "Chez's own code generator"
+  },
+  "coreclr": {
+   "name": "CoreCLR",
+   "kind": "native-jit",
+   "what": "the .NET runtime's JIT"
+  },
+  "coreclr-aot": {
+   "name": "CoreCLR NativeAOT",
+   "kind": "native-aot",
+   "what": "ahead-of-time native .NET"
+  },
+  "cpython": {
+   "name": "CPython",
+   "kind": "bytecode-vm",
+   "what": "the reference Python bytecode VM"
+  },
+  "cruby": {
+   "name": "CRuby",
+   "kind": "bytecode-vm",
+   "what": "the reference Ruby ISeq VM"
+  },
+  "dart-aot": {
+   "name": "Dart AOT",
+   "kind": "native-aot",
+   "what": "dart compile exe"
+  },
+  "dart-jit": {
+   "name": "Dart VM",
+   "kind": "native-jit",
+   "what": "the Dart VM's JIT"
+  },
+  "dmd": {
+   "name": "DMD",
+   "kind": "native-aot",
+   "what": "Digital Mars D, its own backend"
+  },
+  "dolphin": {
+   "name": "Dolphin VM",
+   "kind": "native-jit",
+   "what": "a prebuilt image on Dolphin's VM"
+  },
+  "factor": {
+   "name": "Factor",
+   "kind": "native-jit",
+   "what": "Factor compiles the script and runs it on every invocation"
+  },
+  "fpc": {
+   "name": "FPC",
+   "kind": "native-aot",
+   "what": "Free Pascal Compiler, its own backend"
+  },
+  "freebasic": {
+   "name": "FreeBASIC",
+   "kind": "native-aot",
+   "what": "fbc's own emitter"
+  },
+  "gcc": {
+   "name": "GCC",
+   "kind": "native-aot",
+   "what": "the GNU Compiler Collection: parses, optimises and emits machine code"
+  },
+  "gforth": {
+   "name": "gforth",
+   "kind": "interpreter",
+   "what": "threaded-code interpreter"
+  },
+  "ghc": {
+   "name": "GHC",
+   "kind": "native-aot",
+   "what": "GHC's own STG/Cmm code generator"
+  },
+  "gnu-r": {
+   "name": "GNU R",
+   "kind": "bytecode-vm",
+   "what": "R's byte-code compiler and evaluator"
+  },
+  "go": {
+   "name": "Go (gc)",
+   "kind": "native-aot",
+   "what": "Go's own SSA backend and linker"
+  },
+  "godot": {
+   "name": "Godot",
+   "kind": "bytecode-vm",
+   "what": "Godot parses and runs the script"
+  },
+  "graalvm-jit": {
+   "name": "GraalVM JIT",
+   "kind": "native-jit",
+   "what": "the Graal compiler replacing HotSpot's C2"
+  },
+  "graalvm-native": {
+   "name": "GraalVM native-image",
+   "kind": "native-aot",
+   "what": "ahead-of-time native image built from the same class files"
+  },
+  "hashlink": {
+   "name": "HashLink",
+   "kind": "bytecode-vm",
+   "what": "Haxe's own VM"
+  },
+  "hotspot": {
+   "name": "HotSpot (tiered C1 + C2)",
+   "kind": "native-jit",
+   "what": "the JVM's default tiered compilation: C1 first, C2 for the hot methods"
+  },
+  "icx": {
+   "name": "Intel oneAPI (DPC++)",
+   "kind": "native-aot",
+   "what": "Intel's downstream LLVM fork (clang 24 from intel/llvm), a different build and optimisation pipeline from upstream clang"
+  },
+  "janet": {
+   "name": "Janet",
+   "kind": "bytecode-vm",
+   "what": "Janet compiles to bytecode on every run"
+  },
+  "jsc": {
+   "name": "JavaScriptCore",
+   "kind": "native-jit",
+   "what": "tiered JIT (LLInt + DFG + FTL)"
+  },
+  "jscript": {
+   "name": "JScript",
+   "kind": "interpreter",
+   "what": "the Windows Script Host JScript engine"
+  },
+  "julia": {
+   "name": "LLVM (JIT)",
+   "kind": "native-jit",
+   "what": "per-method LLVM compilation on first call"
+  },
+  "llvm": {
+   "name": "LLVM",
+   "kind": "native-aot",
+   "what": "LLVM IR and an LLVM backend (clang, rustc, swiftc, zig, ldc2, ...)"
+  },
+  "lobster": {
+   "name": "Lobster",
+   "kind": "bytecode-vm",
+   "what": "Lobster compiles to bytecode, then runs it"
+  },
+  "lua": {
+   "name": "PUC Lua",
+   "kind": "bytecode-vm",
+   "what": "Lua's register VM"
+  },
+  "luajit": {
+   "name": "LuaJIT",
+   "kind": "native-jit",
+   "what": "trace compilation"
+  },
+  "luau": {
+   "name": "Luau",
+   "kind": "bytecode-vm",
+   "what": "Luau's VM"
+  },
+  "lute": {
+   "name": "Lute",
+   "kind": "native-jit",
+   "what": "the Luau team's own runtime, for the tasks luau.exe cannot run"
+  },
+  "mono": {
+   "name": "Mono",
+   "kind": "native-jit",
+   "what": "Mono's JIT, a different runtime from CoreCLR"
+  },
+  "msvc": {
+   "name": "MSVC",
+   "kind": "native-aot",
+   "what": "Microsoft's cl.exe: parses, optimises and emits machine code"
+  },
+  "ocaml-bytecode": {
+   "name": "OCaml (ocamlc)",
+   "kind": "bytecode-vm",
+   "what": "OCaml's bytecode interpreter"
+  },
+  "ocaml-native": {
+   "name": "OCaml (ocamlopt)",
+   "kind": "native-aot",
+   "what": "OCaml's own native code generator"
+  },
+  "openj9": {
+   "name": "OpenJ9",
+   "kind": "native-jit",
+   "what": "Eclipse OpenJ9's JIT, a different VM from HotSpot"
+  },
+  "perl": {
+   "name": "Perl",
+   "kind": "interpreter",
+   "what": "the perl interpreter"
+  },
+  "pharo": {
+   "name": "Pharo VM",
+   "kind": "native-jit",
+   "what": "a prebuilt image on Pharo's Cog VM"
+  },
+  "polyml": {
+   "name": "Poly/ML",
+   "kind": "native-aot",
+   "what": "Poly/ML's own x86-64 code generator"
+  },
+  "pypy": {
+   "name": "PyPy",
+   "kind": "native-jit",
+   "what": "trace compilation"
+  },
+  "quickjs": {
+   "name": "QuickJS",
+   "kind": "bytecode-vm",
+   "what": "QuickJS compiles to bytecode, then its own VM"
+  },
+  "sbcl": {
+   "name": "SBCL",
+   "kind": "native-aot",
+   "what": "SBCL compiles to machine code at run time and on demand"
+  },
+  "spidermonkey": {
+   "name": "SpiderMonkey",
+   "kind": "native-jit",
+   "what": "tiered JIT (Baseline + Ion)"
+  },
+  "swipl": {
+   "name": "SWI-Prolog",
+   "kind": "bytecode-vm",
+   "what": "SWI's in-memory clause representation"
+  },
+  "tcc": {
+   "name": "TCC",
+   "kind": "native-aot",
+   "what": "Tiny C Compiler: one pass, no optimisation"
+  },
+  "tcl": {
+   "name": "Tcl",
+   "kind": "bytecode-vm",
+   "what": "Tcl's bytecode compiler and VM"
+  },
+  "unicon": {
+   "name": "Unicon",
+   "kind": "bytecode-vm",
+   "what": "icont compiles to icode, appended to the executable"
+  },
+  "v8": {
+   "name": "V8",
+   "kind": "native-jit",
+   "what": "tiered JIT (Ignition + TurboFan); here it runs the wasm module through the WASI shim"
+  },
+  "vbscript": {
+   "name": "VBScript",
+   "kind": "interpreter",
+   "what": "the Windows Script Host VBScript engine"
+  },
+  "wamr": {
+   "name": "WAMR (iwasm)",
+   "kind": "wasm-runtime",
+   "what": "WebAssembly Micro Runtime; the release build JITs via LLVM or interprets"
+  },
+  "wasmtime": {
+   "name": "wasmtime (Cranelift)",
+   "kind": "wasm-runtime",
+   "what": "Cranelift JITs the wasm module on every run -- wasmtime's optimising compiler"
+  },
+  "winch": {
+   "name": "wasmtime (Winch)",
+   "kind": "wasm-runtime",
+   "what": "Winch, wasmtime's baseline single-pass compiler, on the same modules as Cranelift"
+  },
+  "zend": {
+   "name": "Zend",
+   "kind": "bytecode-vm",
+   "what": "PHP's opcode VM"
+  },
+  "zend-jit": {
+   "name": "Zend JIT",
+   "kind": "native-jit",
+   "what": "opcode JIT on top of the Zend VM"
+  },
+  "hotspot-interp": {
+   "name": "HotSpot (interpreter)",
+   "kind": "bytecode-vm",
+   "what": "-Xint: the template interpreter, no JIT at all"
+  },
+  "hotspot-c1": {
+   "name": "HotSpot C1",
+   "kind": "native-jit",
+   "what": "-XX:TieredStopAtLevel=1: the client compiler only, the C2 tier never runs"
+  },
+  "hotspot-c2": {
+   "name": "HotSpot C2",
+   "kind": "native-jit",
+   "what": "-XX:-TieredCompilation: the server compiler only, no C1 profiling tier"
+  },
+  "rust-cranelift": {
+   "name": "Cranelift (rustc)",
+   "kind": "native-aot",
+   "what": "rustc's MIR lowered by Cranelift instead of LLVM (-Zcodegen-backend=cranelift)"
+  },
+  "mono-aot": {
+   "name": "Mono AOT",
+   "kind": "native-aot",
+   "what": "mono --aot=full's native module for the same assembly, run by --full-aot with the JIT switched off"
+  },
+  "wasmer-cranelift": {
+   "name": "Wasmer (Cranelift)",
+   "kind": "wasm-runtime",
+   "what": "Wasmer's WASIX runtime with its Cranelift compiler"
+  },
+  "wasmer-llvm": {
+   "name": "Wasmer (LLVM)",
+   "kind": "wasm-runtime",
+   "what": "the same runtime, LLVM compiler"
+  },
+  "zig-cc": {
+   "name": "zig cc / zig c++",
+   "kind": "native-aot",
+   "what": "clang and clang++ front ends on Zig's toolchain and libc"
+  },
+  "zig-selfhosted": {
+   "name": "Zig (self-hosted x86-64)",
+   "kind": "native-aot",
+   "what": "Zig's own x86-64 code generator, LLVM left out (-fno-llvm)"
+  },
+  "pike": {
+   "name": "Pike",
+   "kind": "bytecode-vm",
+   "what": "Pike's own bytecode VM; the interpreter compiles the program before its first statement"
+  },
+  "gprolog": {
+   "name": "GNU Prolog",
+   "kind": "native-aot",
+   "what": "gplc: .pl -> WAM -> mini-assembly -> x86-64 assembly, linked as a stand-alone executable"
+  },
+  "hermes": {
+   "name": "Hermes",
+   "kind": "bytecode-vm",
+   "what": "ahead-of-time compilation to HBC bytecode plus Hermes' own register VM; no JIT and no threads"
+  },
+  "compcert": {
+   "name": "CompCert",
+   "kind": "native-aot",
+   "what": "the CompCert C verified compiler (INRIA/AbsInt): a Coq-proved x86-64 code generator; its public release is non-commercial"
+  }
+ },
+ "rows": {
+  "actionscript": {
+   "entries": [
+    {
+     "toolchain": "AIR",
+     "backend": "avm2",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/actionscript/{task}/out/prog.exe"
+     ],
+     "cwd": "{root}/exec/actionscript/{task}",
+     "artifact": "{root}/exec/actionscript/{task}/out/prog.exe",
+     "timeout": 1800,
+     "time_file": "{env:APPDATA}/stupidspeed.actionscript/Local Store/time.txt",
+     "out_file": "{env:APPDATA}/stupidspeed.actionscript/Local Store/out.bin",
+     "clean": [
+      "{env:APPDATA}/stupidspeed.actionscript/Local Store/time.txt"
+     ]
+    }
+   ],
+   "language": "ActionScript"
+  },
+  "ada": {
+   "entries": [
+    {
+     "toolchain": "gnat",
+     "backend": "gcc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/ada/{task}/t{task}.exe"
+     ],
+     "cwd": "{root}/exec/ada/{task}",
+     "artifact": "{root}/exec/ada/{task}/t{task}.exe"
+    },
+    {
+     "toolchain": "gnat llvm",
+     "backend": "llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/ada/llvm/{task}/t{task}.exe"
+     ],
+     "cwd": "{root}/exec/ada/llvm/{task}",
+     "artifact": "{root}/exec/ada/llvm/{task}/t{task}.exe"
+    }
+   ],
+   "language": "Ada"
+  },
+  "assembly": {
+   "entries": [
+    {
+     "toolchain": "x86-64 nasm",
+     "backend": "asm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/assembly/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/assembly/{task}",
+     "artifact": "{root}/exec/assembly/{task}/prog.exe"
+    }
+   ],
+   "language": "Assembly"
+  },
+  "assemblyscript": {
+   "entries": [
+    {
+     "toolchain": "asc (wasip1)",
+     "cwd": "{root}/exec/assemblyscript/{task}",
+     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
+     "backend": "wasmtime",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "run",
+      "-C",
+      "compiler=cranelift",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "asc (wasip1)",
+     "cwd": "{root}/exec/assemblyscript/{task}",
+     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
+     "backend": "wasmtime",
+     "tasks": [
+      "11_parallel_sum"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "run",
+      "-C",
+      "compiler=cranelift",
+      "-S",
+      "threads=y",
+      "-W",
+      "threads=y",
+      "-W",
+      "shared-memory=y",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "asc (wasip1)",
+     "cwd": "{root}/exec/assemblyscript/{task}",
+     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
+     "backend": "wasmtime",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "run",
+      "-C",
+      "compiler=cranelift",
+      "--dir=.",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "wasmtime (winch)",
+     "cwd": "{root}/exec/assemblyscript/{task}",
+     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
+     "backend": "winch",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "run",
+      "-C",
+      "compiler=winch",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "wasmtime (winch)",
+     "cwd": "{root}/exec/assemblyscript/{task}",
+     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
+     "backend": "winch",
+     "tasks": [
+      "11_parallel_sum"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "run",
+      "-C",
+      "compiler=winch",
+      "-S",
+      "threads=y",
+      "-W",
+      "threads=y",
+      "-W",
+      "shared-memory=y",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "wasmtime (winch)",
+     "cwd": "{root}/exec/assemblyscript/{task}",
+     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
+     "backend": "winch",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "run",
+      "-C",
+      "compiler=winch",
+      "--dir=.",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "iwasm",
+     "cwd": "{root}/exec/assemblyscript/{task}",
+     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
+     "backend": "wamr",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wamr/iwasm.exe",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "iwasm",
+     "cwd": "{root}/exec/assemblyscript/{task}",
+     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
+     "backend": "wamr",
+     "tasks": [
+      "11_parallel_sum"
+     ],
+     "cmd": [
+      "{root}/tools/wamr/iwasm.exe",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "iwasm",
+     "cwd": "{root}/exec/assemblyscript/{task}",
+     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
+     "backend": "wamr",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/wamr/iwasm.exe",
+      "--dir=.",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "node (wasip1)",
+     "cwd": "{root}/exec/assemblyscript/{task}",
+     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
+     "backend": "v8",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/nodejs/node.exe",
+      "--no-warnings",
+      "{root}/exec/wasi-run.js",
+      "prog.wasm",
+      "."
+     ]
+    },
+    {
+     "toolchain": "node (wasip1)",
+     "cwd": "{root}/exec/assemblyscript/{task}",
+     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
+     "backend": "v8",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/nodejs/node.exe",
+      "--no-warnings",
+      "{root}/exec/wasi-run.js",
+      "prog.wasm",
+      "."
+     ]
+    },
+    {
+     "toolchain": "wasmer (cranelift)",
+     "backend": "wasmer-cranelift",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--cranelift",
+      "--mapdir",
+      "/:{root}/exec/assemblyscript/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/assemblyscript/{task}",
+     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
+     "create_out": true
+    },
+    {
+     "toolchain": "wasmer (llvm)",
+     "backend": "wasmer-llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--llvm",
+      "--mapdir",
+      "/:{root}/exec/assemblyscript/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/assemblyscript/{task}",
+     "artifact": "{root}/exec/assemblyscript/{task}/prog.wasm",
+     "create_out": true
+    }
+   ],
+   "language": "AssemblyScript"
+  },
+  "ats": {
+   "entries": [
+    {
+     "toolchain": "ats (gcc)",
+     "backend": "gcc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/ats/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/ats/{task}",
+     "env": {
+      "PATH": "C:\\cygwin64\\bin;{PATH}"
+     },
+     "artifact": "{root}/exec/ats/{task}/prog.exe",
+     "timeout": 300
+    }
+   ],
+   "language": "ATS"
+  },
+  "babashka": {
+   "entries": [
+    {
+     "toolchain": "babashka",
+     "backend": "graalvm-native",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/babashka/bb.exe",
+      "{task}.clj"
+     ],
+     "cwd": "{root}/exec/babashka",
+     "artifact": "{root}/exec/babashka/{task}.clj"
+    }
+   ],
+   "language": "Clojure"
+  },
+  "beef": {
+   "entries": [
+    {
+     "toolchain": "BeefBuild",
+     "backend": "llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/beef/{task}/out/prog.exe"
+     ],
+     "cwd": "{root}/exec/beef/{task}",
+     "artifact": "{root}/exec/beef/{task}/out/prog.exe",
+     "timeout": 600
+    }
+   ],
+   "language": "Beef"
+  },
+  "boo": {
+   "entries": [
+    {
+     "toolchain": "booc",
+     "backend": "coreclr",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/dotnet10/dotnet.exe",
+      "prog.exe"
+     ],
+     "cwd": "{root}/exec/boo/{task}",
+     "artifact": "{root}/exec/boo/{task}/prog.exe",
+     "timeout": 600
+    }
+   ],
+   "language": "Boo"
+  },
+  "c": {
+   "entries": [
+    {
+     "toolchain": "gcc",
+     "backend": "gcc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/c/{toolchain}/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/c/{toolchain}/{task}",
+     "artifact": "{root}/exec/c/{toolchain}/{task}/prog.exe",
+     "timeout": 600
+    },
+    {
+     "toolchain": "clang",
+     "backend": "llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/c/{toolchain}/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/c/{toolchain}/{task}",
+     "artifact": "{root}/exec/c/{toolchain}/{task}/prog.exe",
+     "timeout": 600
+    },
+    {
+     "toolchain": "tcc",
+     "backend": "tcc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/c/{toolchain}/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/c/{toolchain}/{task}",
+     "artifact": "{root}/exec/c/{toolchain}/{task}/prog.exe",
+     "timeout": 600
+    },
+    {
+     "toolchain": "msvc",
+     "backend": "msvc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/c/{toolchain}/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/c/{toolchain}/{task}",
+     "artifact": "{root}/exec/c/{toolchain}/{task}/prog.exe",
+     "timeout": 600
+    },
+    {
+     "toolchain": "zig cc",
+     "backend": "zig-cc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/c/zig-cc/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/c/zig-cc/{task}",
+     "artifact": "{root}/exec/c/zig-cc/{task}/prog.exe"
+    },
+    {
+     "toolchain": "compcert",
+     "backend": "compcert",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/c/{toolchain}/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/c/{toolchain}/{task}",
+     "env": {
+      "PATH": "{root}/tools/cygwin/bin;{PATH}"
+     },
+     "artifact": "{root}/exec/c/{toolchain}/{task}/prog.exe",
+     "timeout": 600
+    }
+   ],
+   "language": "C"
+  },
+  "c-wasm": {
+   "entries": [
+    {
+     "toolchain": "clang (wasm32-wasip1)",
+     "cwd": "{root}/exec/c-wasm/{task}",
+     "artifact": "{root}/exec/c-wasm/{task}/prog.wasm",
+     "backend": "wasmtime",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "-C",
+      "compiler=cranelift",
+      "-S",
+      "threads=y",
+      "-W",
+      "threads=y",
+      "-W",
+      "shared-memory=y",
+      "--dir",
+      ".",
+      "prog.wasm"
+     ],
+     "timeout": 600
+    },
+    {
+     "toolchain": "wasmtime (winch)",
+     "cwd": "{root}/exec/c-wasm/{task}",
+     "artifact": "{root}/exec/c-wasm/{task}/prog.wasm",
+     "backend": "winch",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "-C",
+      "compiler=winch",
+      "-S",
+      "threads=y",
+      "-W",
+      "threads=y",
+      "-W",
+      "shared-memory=y",
+      "--dir",
+      ".",
+      "prog.wasm"
+     ],
+     "timeout": 600
+    },
+    {
+     "toolchain": "iwasm",
+     "cwd": "{root}/exec/c-wasm/{task}",
+     "artifact": "{root}/exec/c-wasm/{task}/prog.wasm",
+     "backend": "wamr",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wamr/iwasm.exe",
+      "--dir=.",
+      "prog.wasm"
+     ],
+     "timeout": 600
+    },
+    {
+     "toolchain": "node (wasip1)",
+     "cwd": "{root}/exec/c-wasm/{task}",
+     "artifact": "{root}/exec/c-wasm/{task}/prog.wasm",
+     "backend": "v8",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/nodejs/node.exe",
+      "--no-warnings",
+      "{root}/exec/wasi-run.js",
+      "prog.wasm",
+      "."
+     ],
+     "timeout": 600
+    },
+    {
+     "toolchain": "wasmer (cranelift)",
+     "backend": "wasmer-cranelift",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--cranelift",
+      "--mapdir",
+      "/:{root}/exec/c-wasm/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/c-wasm/{task}",
+     "artifact": "{root}/exec/c-wasm/{task}/prog.wasm",
+     "create_out": true
+    },
+    {
+     "toolchain": "wasmer (llvm)",
+     "backend": "wasmer-llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--llvm",
+      "--mapdir",
+      "/:{root}/exec/c-wasm/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/c-wasm/{task}",
+     "artifact": "{root}/exec/c-wasm/{task}/prog.wasm",
+     "create_out": true
+    }
+   ],
+   "language": "C"
+  },
+  "c3": {
+   "entries": [
+    {
+     "toolchain": "c3c",
+     "backend": "llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/c3/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/c3/{task}",
+     "artifact": "{root}/exec/c3/{task}/prog.exe",
+     "timeout": 600
+    }
+   ],
+   "language": "C3"
+  },
+  "clojure": {
+   "entries": [
+    {
+     "toolchain": "clojure.main",
+     "backend": "hotspot",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "java",
+      "-cp",
+      "{root}/tools/clojure/clojure-1.12.0.jar;{root}/tools/clojure/spec.alpha-0.5.238.jar;{root}/tools/clojure/core.specs.alpha-0.4.74.jar",
+      "clojure.main",
+      "{task}.clj"
+     ],
+     "cwd": "{root}/exec/clojure",
+     "artifact": "{root}/exec/clojure/{task}.clj"
+    }
+   ],
+   "language": "Clojure"
+  },
+  "clojurescript": {
+   "entries": [
+    {
+     "toolchain": "cljs.main",
+     "backend": "v8",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/nodejs/node.exe",
+      "prog.js"
+     ],
+     "cwd": "{root}/exec/clojurescript/{task}",
+     "artifact": "{root}/exec/clojurescript/{task}/prog.js",
+     "timeout": 600
+    }
+   ],
+   "language": "Clojure"
+  },
+  "cobol": {
+   "entries": [
+    {
+     "toolchain": "gnucobol",
+     "backend": "gcc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/cobol/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/cobol/{task}",
+     "artifact": "{root}/exec/cobol/{task}/prog.exe",
+     "env": {
+      "PATH": "{root}/tools/msys64/msys64/ucrt64/bin;{PATH}"
+     },
+     "timeout": 1200
+    }
+   ],
+   "language": "COBOL"
+  },
+  "commonlisp": {
+   "entries": [
+    {
+     "toolchain": "sbcl",
+     "backend": "sbcl",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/commonlisp/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/commonlisp/{task}",
+     "artifact": "{root}/exec/commonlisp/{task}/prog.exe"
+    }
+   ],
+   "language": "Common Lisp"
+  },
+  "commonlisp-ecl": {
+   "entries": [
+    {
+     "toolchain": "ecl",
+     "backend": "msvc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/ecl/ecl.exe",
+      "--norc",
+      "--eval",
+      "(load \"{task}.fas\" :verbose nil)"
+     ],
+     "cwd": "{root}/exec/commonlisp-ecl/{task}",
+     "artifact": "{root}/exec/commonlisp-ecl/{task}/{task}.fas"
+    }
+   ],
+   "language": "Common Lisp"
+  },
+  "componentpascal": {
+   "entries": [
+    {
+     "toolchain": "gpcp",
+     "backend": "coreclr",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/componentpascal/_{task}/_{task}.exe"
+     ],
+     "cwd": "{root}/exec/componentpascal/_{task}",
+     "artifact": "{root}/exec/componentpascal/_{task}/_{task}.exe"
+    }
+   ],
+   "language": "Component Pascal"
+  },
+  "cpp": {
+   "entries": [
+    {
+     "toolchain": "g++",
+     "backend": "gcc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/cpp/gpp/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/cpp/gpp/{task}",
+     "artifact": "{root}/exec/cpp/gpp/{task}/prog.exe",
+     "timeout": 600
+    },
+    {
+     "toolchain": "clang++",
+     "backend": "llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/cpp/clangpp/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/cpp/clangpp/{task}",
+     "artifact": "{root}/exec/cpp/clangpp/{task}/prog.exe",
+     "timeout": 600
+    },
+    {
+     "toolchain": "msvc",
+     "backend": "msvc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/cpp/msvc/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/cpp/msvc/{task}",
+     "artifact": "{root}/exec/cpp/msvc/{task}/prog.exe",
+     "timeout": 600
+    },
+    {
+     "toolchain": "zig c++",
+     "backend": "zig-cc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/cpp/zigcpp/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/cpp/zigcpp/{task}",
+     "artifact": "{root}/exec/cpp/zigcpp/{task}/prog.exe",
+     "timeout": 600
+    }
+   ],
+   "language": "C++"
+  },
+  "cpp-wasm": {
+   "entries": [
+    {
+     "toolchain": "clang++ (wasm32-wasip1)",
+     "cwd": "{root}/exec/cpp-wasm/{task}",
+     "artifact": "{root}/exec/cpp-wasm/{task}/prog.wasm",
+     "backend": "wasmtime",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "-C",
+      "compiler=cranelift",
+      "-S",
+      "threads=y",
+      "-W",
+      "threads=y",
+      "-W",
+      "shared-memory=y",
+      "--dir",
+      ".",
+      "prog.wasm"
+     ],
+     "timeout": 600
+    },
+    {
+     "toolchain": "wasmtime (winch)",
+     "cwd": "{root}/exec/cpp-wasm/{task}",
+     "artifact": "{root}/exec/cpp-wasm/{task}/prog.wasm",
+     "backend": "winch",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "-C",
+      "compiler=winch",
+      "-S",
+      "threads=y",
+      "-W",
+      "threads=y",
+      "-W",
+      "shared-memory=y",
+      "--dir",
+      ".",
+      "prog.wasm"
+     ],
+     "timeout": 600
+    },
+    {
+     "toolchain": "iwasm",
+     "cwd": "{root}/exec/cpp-wasm/{task}",
+     "artifact": "{root}/exec/cpp-wasm/{task}/prog.wasm",
+     "backend": "wamr",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wamr/iwasm.exe",
+      "--dir=.",
+      "prog.wasm"
+     ],
+     "timeout": 600
+    },
+    {
+     "toolchain": "node (wasip1)",
+     "cwd": "{root}/exec/cpp-wasm/{task}",
+     "artifact": "{root}/exec/cpp-wasm/{task}/prog.wasm",
+     "backend": "v8",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/nodejs/node.exe",
+      "--no-warnings",
+      "{root}/exec/wasi-run.js",
+      "prog.wasm",
+      "."
+     ],
+     "timeout": 600
+    },
+    {
+     "toolchain": "wasmer (cranelift)",
+     "backend": "wasmer-cranelift",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--cranelift",
+      "--mapdir",
+      "/:{root}/exec/cpp-wasm/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/cpp-wasm/{task}",
+     "artifact": "{root}/exec/cpp-wasm/{task}/prog.wasm",
+     "create_out": true
+    },
+    {
+     "toolchain": "wasmer (llvm)",
+     "backend": "wasmer-llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--llvm",
+      "--mapdir",
+      "/:{root}/exec/cpp-wasm/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/cpp-wasm/{task}",
+     "artifact": "{root}/exec/cpp-wasm/{task}/prog.wasm",
+     "create_out": true
+    }
+   ],
+   "language": "C++"
+  },
+  "crystal": {
+   "entries": [
+    {
+     "toolchain": "crystal",
+     "backend": "llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/crystal/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/crystal/{task}",
+     "artifact": "{root}/exec/crystal/{task}/prog.exe"
+    }
+   ],
+   "language": "Crystal"
+  },
+  "csharp": {
+   "entries": [
+    {
+     "toolchain": "coreclr",
+     "backend": "coreclr",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/csharp/coreclr/{task}/bin/Release/net8.0/{task}.exe"
+     ],
+     "cwd": "{root}/exec/csharp/coreclr/{task}",
+     "artifact": "{root}/exec/csharp/coreclr/{task}/bin/Release/net8.0/{task}.exe"
+    },
+    {
+     "toolchain": "nativeaot",
+     "backend": "coreclr-aot",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/csharp/nativeaot/{task}/bin/Release/net8.0/win-x64/publish/{task}.exe"
+     ],
+     "cwd": "{root}/exec/csharp/nativeaot/{task}",
+     "artifact": "{root}/exec/csharp/nativeaot/{task}/bin/Release/net8.0/win-x64/publish/{task}.exe"
+    },
+    {
+     "toolchain": "mono",
+     "backend": "mono",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/mono/Mono/bin/mono.exe",
+      "{root}/exec/csharp/mono/{task}/{task}.exe"
+     ],
+     "cwd": "{root}/exec/csharp/mono/{task}",
+     "artifact": "{root}/exec/csharp/mono/{task}/{task}.exe"
+    },
+    {
+     "toolchain": "mono (aot)",
+     "backend": "mono-aot",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/mono/Mono/bin/mono.exe",
+      "--full-aot",
+      "{root}/exec/csharp/mono-aot/{task}/{task}.exe"
+     ],
+     "cwd": "{root}/exec/csharp/mono-aot/{task}",
+     "artifact": "{root}/exec/csharp/mono-aot/{task}/{task}.exe.dll"
+    }
+   ],
+   "language": "C#"
+  },
+  "d": {
+   "entries": [
+    {
+     "toolchain": "dmd",
+     "backend": "dmd",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/d/dmd/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/d/dmd/{task}",
+     "artifact": "{root}/exec/d/dmd/{task}/prog.exe"
+    },
+    {
+     "toolchain": "ldc2",
+     "backend": "llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/d/ldc2/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/d/ldc2/{task}",
+     "artifact": "{root}/exec/d/ldc2/{task}/prog.exe"
+    }
+   ],
+   "language": "D"
+  },
+  "dart": {
+   "entries": [
+    {
+     "toolchain": "aot",
+     "backend": "dart-aot",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/dart/aot/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/dart/aot/{task}",
+     "artifact": "{root}/exec/dart/aot/{task}/prog.exe"
+    },
+    {
+     "toolchain": "jit",
+     "backend": "dart-jit",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/dart/bin/dart.exe",
+      "{task}.dart"
+     ],
+     "cwd": "{root}/exec/dart/jit",
+     "artifact": "{root}/exec/dart/jit/{task}.dart"
+    }
+   ],
+   "language": "Dart"
+  },
+  "dolphin": {
+   "entries": [
+    {
+     "toolchain": "Dolphin 8",
+     "backend": "dolphin",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/dolphin/app/Dolphin8.exe",
+      "{root}/tools/dolphin/app/DPRO.img8",
+      "-u",
+      "-f",
+      "{root}/exec/dolphin/{task}/{task}.st",
+      "-q"
+     ],
+     "cwd": "{root}/exec/dolphin/{task}",
+     "artifact": "{root}/exec/dolphin/{task}/{task}.st",
+     "clean": [
+      "time.txt"
+     ]
+    }
+   ],
+   "language": "Dolphin Smalltalk"
+  },
+  "eiffel": {
+   "entries": [
+    {
+     "toolchain": "eiffelstudio",
+     "backend": "gcc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/eiffel/EIFGENs/t{task}/F_code/prog.exe"
+     ],
+     "cwd": "{root}/exec/eiffel/EIFGENs/t{task}/F_code",
+     "artifact": "{root}/exec/eiffel/EIFGENs/t{task}/F_code/prog.exe"
+    }
+   ],
+   "language": "Eiffel"
+  },
+  "elixir": {
+   "entries": [
+    {
+     "toolchain": "elixir (BEAM)",
+     "backend": "beam",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "cmd",
+      "/c",
+      "{root}/tools/elixir/bin/elixir.bat",
+      "{task}.exs"
+     ],
+     "cwd": "{root}/exec/elixir/elixir/{task}",
+     "env": {
+      "PATH": "{root}/tools/erlang/bin;{PATH}"
+     },
+     "artifact": "{root}/exec/elixir/elixir/{task}/{task}.exs",
+     "timeout": 600,
+     "timeouts": {
+      "01_branches": 900,
+      "02_switch_case": 900,
+      "08_average": 900,
+      "09_fib_recursive": 1800,
+      "10_pi": 900,
+      "13_matrix_mul": 1200
+     }
+    }
+   ],
+   "language": "Elixir"
+  },
+  "erlang": {
+   "entries": [
+    {
+     "toolchain": "OTP (escript)",
+     "backend": "beam",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/erlang/bin/escript.exe",
+      "{task}.erl"
+     ],
+     "cwd": "{root}/exec/erlang",
+     "artifact": "{root}/exec/erlang/{task}.erl"
+    }
+   ],
+   "language": "Erlang"
+  },
+  "erlang-compiled": {
+   "entries": [
+    {
+     "toolchain": "erlc (compiled)",
+     "backend": "beam",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/erlang/bin/erl.exe",
+      "-noshell",
+      "-s",
+      "{task}",
+      "main",
+      "-s",
+      "init",
+      "stop"
+     ],
+     "cwd": "{root}/exec/erlang-compiled/{task}",
+     "artifact": "{root}/exec/erlang-compiled/{task}/{task}.beam"
+    }
+   ],
+   "language": "Erlang"
+  },
+  "factor": {
+   "entries": [
+    {
+     "toolchain": "factor",
+     "backend": "factor",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/factor/factor.exe",
+      "{task}.factor"
+     ],
+     "cwd": "{root}/exec/factor",
+     "artifact": "{root}/exec/factor/{task}.factor"
+    }
+   ],
+   "language": "Factor"
+  },
+  "fasm": {
+   "entries": [
+    {
+     "toolchain": "x86-64 fasm",
+     "backend": "asm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/fasm/{task}.exe"
+     ],
+     "cwd": "{root}/exec/fasm",
+     "artifact": "{root}/exec/fasm/{task}.exe"
+    }
+   ],
+   "language": "Assembly"
+  },
+  "fortran": {
+   "entries": [
+    {
+     "toolchain": "gfortran",
+     "backend": "gcc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/fortran/gfortran/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/fortran/gfortran/{task}",
+     "env": {
+      "PATH": "{root}/tools/msys64/msys64/ucrt64/bin;{PATH}"
+     },
+     "artifact": "{root}/exec/fortran/gfortran/{task}/prog.exe"
+    },
+    {
+     "toolchain": "flang",
+     "backend": "llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/fortran/flang/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/fortran/flang/{task}",
+     "env": {
+      "PATH": "{root}/tools/msys64/msys64/ucrt64/bin;{PATH}"
+     },
+     "artifact": "{root}/exec/fortran/flang/{task}/prog.exe"
+    },
+    {
+     "toolchain": "ifx",
+     "backend": "llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/fortran/ifx/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/fortran/ifx/{task}",
+     "env": {
+      "PATH": "{root}/tools/ifx/Library/bin;{PATH}"
+     },
+     "artifact": "{root}/exec/fortran/ifx/{task}/prog.exe"
+    },
+    {
+     "toolchain": "lfortran",
+     "backend": "llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/fortran/lfortran/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/fortran/lfortran/{task}",
+     "env": {
+      "PATH": "{root}/tools/msys64/msys64/ucrt64/bin;{PATH}"
+     },
+     "artifact": "{root}/exec/fortran/lfortran/{task}/prog.exe",
+     "timeout": 600
+    }
+   ],
+   "language": "Fortran"
+  },
+  "freebasic": {
+   "entries": [
+    {
+     "toolchain": "freebasic",
+     "backend": "freebasic",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/freebasic/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/freebasic/{task}",
+     "artifact": "{root}/exec/freebasic/{task}/prog.exe",
+     "timeout": 600
+    }
+   ],
+   "language": "BASIC"
+  },
+  "fsharp": {
+   "entries": [
+    {
+     "toolchain": "dotnet",
+     "backend": "coreclr",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/dotnet8/dotnet.exe",
+      "{root}/exec/fsharp/{task}/bin/Release/net8.0/{task}.dll"
+     ],
+     "cwd": "{root}/exec/fsharp/{task}",
+     "artifact": "{root}/exec/fsharp/{task}/bin/Release/net8.0/{task}.dll"
+    }
+   ],
+   "language": "F#"
+  },
+  "gdscript": {
+   "entries": [
+    {
+     "toolchain": "godot --headless",
+     "backend": "godot",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/godot/Godot_v4.7.2-stable_win64_console.exe",
+      "--headless",
+      "--script",
+      "{task}.gd"
+     ],
+     "cwd": "{root}/exec/gdscript",
+     "artifact": "{root}/exec/gdscript/{task}.gd",
+     "timeout": 1800
+    }
+   ],
+   "language": "GDScript"
+  },
+  "gforth": {
+   "entries": [
+    {
+     "toolchain": "gforth",
+     "backend": "gforth",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/gforth/gforth.exe",
+      "{task}.fs"
+     ],
+     "cwd": "{root}/exec/gforth",
+     "artifact": "{root}/exec/gforth/{task}.fs"
+    }
+   ],
+   "language": "Forth"
+  },
+  "gleam": {
+   "entries": [
+    {
+     "toolchain": "gleam",
+     "backend": "beam",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/gleam/gleam.exe",
+      "run",
+      "--module",
+      "t{task}"
+     ],
+     "cwd": "{root}/exec/gleam",
+     "env": {
+      "PATH": "{root}/tools/erlang/bin;{root}/tools/gleam;{PATH}"
+     },
+     "artifact": "{root}/exec/gleam/build/dev/erlang/stupidspeed_gleam/ebin/t{task}.beam",
+     "restore": [
+      "{root}/exec/gleam/build/packages/packages.toml"
+     ]
+    }
+   ],
+   "language": "Gleam"
+  },
+  "go": {
+   "entries": [
+    {
+     "toolchain": "gc",
+     "backend": "go",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/go/gc/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/go/gc/{task}",
+     "artifact": "{root}/exec/go/gc/{task}/prog.exe"
+    },
+    {
+     "toolchain": "tinygo",
+     "backend": "llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/go/tinygo/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/go/tinygo/{task}",
+     "artifact": "{root}/exec/go/tinygo/{task}/prog.exe"
+    }
+   ],
+   "language": "Go"
+  },
+  "hashlink": {
+   "entries": [
+    {
+     "toolchain": "hashlink",
+     "backend": "hashlink",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/hashlink/hl.exe",
+      "T{task}.hl"
+     ],
+     "cwd": "{root}/exec/hashlink/T{task}",
+     "artifact": "{root}/exec/hashlink/T{task}/T{task}.hl"
+    }
+   ],
+   "language": "Haxe"
+  },
+  "haskell": {
+   "entries": [
+    {
+     "toolchain": "ghc",
+     "backend": "ghc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/haskell/ghc/T{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/haskell/ghc/T{task}",
+     "artifact": "{root}/exec/haskell/ghc/T{task}/prog.exe",
+     "timeout": 3600
+    },
+    {
+     "toolchain": "ghc",
+     "backend": "ghc",
+     "tasks": [
+      "11_parallel_sum"
+     ],
+     "cmd": [
+      "{root}/exec/haskell/ghc/T{task}/prog.exe",
+      "+RTS",
+      "-N4",
+      "-RTS"
+     ],
+     "cwd": "{root}/exec/haskell/ghc/T{task}",
+     "artifact": "{root}/exec/haskell/ghc/T{task}/prog.exe",
+     "timeout": 3600
+    }
+   ],
+   "language": "Haskell"
+  },
+  "haxe": {
+   "entries": [
+    {
+     "toolchain": "hxcpp",
+     "backend": "gcc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/haxe/T{task}/out/T{task}.exe"
+     ],
+     "cwd": "{root}/exec/haxe/T{task}",
+     "artifact": "{root}/exec/haxe/T{task}/out/T{task}.exe"
+    },
+    {
+     "toolchain": "haxe (js)",
+     "backend": "v8",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/nodejs/node.exe",
+      "js/T{task}.js"
+     ],
+     "cwd": "{root}/exec/haxe/T{task}",
+     "artifact": "{root}/exec/haxe/T{task}/js/T{task}.js"
+    },
+    {
+     "toolchain": "haxe (jvm)",
+     "backend": "hotspot",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "java",
+      "-jar",
+      "jvm/T{task}.jar"
+     ],
+     "cwd": "{root}/exec/haxe/T{task}",
+     "artifact": "{root}/exec/haxe/T{task}/jvm/T{task}.jar"
+    },
+    {
+     "toolchain": "haxe (cs)",
+     "backend": "mono",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/mono/Mono/bin/mono.exe",
+      "cs/T{task}.exe"
+     ],
+     "cwd": "{root}/exec/haxe/T{task}",
+     "artifact": "{root}/exec/haxe/T{task}/cs/T{task}.exe"
+    }
+   ],
+   "language": "Haxe"
+  },
+  "icx": {
+   "entries": [
+    {
+     "toolchain": "icx (oneAPI)",
+     "backend": "icx",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/icx/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/icx/{task}",
+     "artifact": "{root}/exec/icx/{task}/prog.exe",
+     "timeout": 600
+    }
+   ],
+   "language": "C"
+  },
+  "janet": {
+   "entries": [
+    {
+     "toolchain": "janet",
+     "backend": "janet",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/janet/janet.exe",
+      "{task}.janet"
+     ],
+     "cwd": "{root}/exec/janet/janet/{task}",
+     "artifact": "{root}/exec/janet/janet/{task}/{task}.janet",
+     "timeout": 600,
+     "timeouts": {
+      "07_string_append": 7200
+     }
+    }
+   ],
+   "language": "Janet"
+  },
+  "java": {
+   "entries": [
+    {
+     "toolchain": "openjdk",
+     "backend": "hotspot",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "java",
+      "-cp",
+      ".",
+      "_{task}"
+     ],
+     "cwd": "{root}/exec/java/openjdk/{task}",
+     "artifact": "{root}/exec/java/openjdk/{task}/_{task}.class",
+     "timeout": 600
+    },
+    {
+     "toolchain": "openjdk (interp)",
+     "backend": "hotspot-interp",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "java",
+      "-Xint",
+      "-cp",
+      ".",
+      "_{task}"
+     ],
+     "cwd": "{root}/exec/java/openjdk/{task}",
+     "artifact": "{root}/exec/java/openjdk/{task}/_{task}.class"
+    },
+    {
+     "toolchain": "openjdk (c1)",
+     "backend": "hotspot-c1",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "java",
+      "-XX:TieredStopAtLevel=1",
+      "-cp",
+      ".",
+      "_{task}"
+     ],
+     "cwd": "{root}/exec/java/openjdk/{task}",
+     "artifact": "{root}/exec/java/openjdk/{task}/_{task}.class"
+    },
+    {
+     "toolchain": "openjdk (c2)",
+     "backend": "hotspot-c2",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "java",
+      "-XX:-TieredCompilation",
+      "-cp",
+      ".",
+      "_{task}"
+     ],
+     "cwd": "{root}/exec/java/openjdk/{task}",
+     "artifact": "{root}/exec/java/openjdk/{task}/_{task}.class"
+    }
+   ],
+   "language": "Java"
+  },
+  "java-graalvm-jit": {
+   "entries": [
+    {
+     "toolchain": "graalvm jit",
+     "backend": "graalvm-jit",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/graalvm/bin/java.exe",
+      "-cp",
+      ".",
+      "_{task}"
+     ],
+     "cwd": "{root}/exec/java-graalvm-jit/{task}",
+     "artifact": "{root}/exec/java-graalvm-jit/{task}/_{task}.class",
+     "timeout": 600
+    }
+   ],
+   "language": "Java"
+  },
+  "java-graalvm-native": {
+   "entries": [
+    {
+     "toolchain": "graalvm native-image",
+     "backend": "graalvm-native",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/java-graalvm-native/{task}/_{task}.exe"
+     ],
+     "cwd": "{root}/exec/java-graalvm-native/{task}",
+     "artifact": "{root}/exec/java-graalvm-native/{task}/_{task}.exe"
+    }
+   ],
+   "language": "Java"
+  },
+  "java-openj9": {
+   "entries": [
+    {
+     "toolchain": "openj9",
+     "backend": "openj9",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/openj9/bin/java.exe",
+      "-cp",
+      ".",
+      "_{task}"
+     ],
+     "cwd": "{root}/exec/java-openj9/openj9/{task}",
+     "artifact": "{root}/exec/java-openj9/openj9/{task}/_{task}.class",
+     "timeout": 600
+    }
+   ],
+   "language": "Java"
+  },
+  "javascript": {
+   "entries": [
+    {
+     "toolchain": "bun",
+     "backend": "jsc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "C:\\Users\\pz020\\.bun\\bin\\bun.exe",
+      "{task}.js"
+     ],
+     "cwd": "{root}/exec/javascript/bun/{task}",
+     "artifact": "{root}/exec/javascript/bun/{task}/{task}.js",
+     "timeout": 600
+    },
+    {
+     "toolchain": "deno",
+     "backend": "v8",
+     "tasks": [
+      "11_parallel_sum",
+      "14_file_read"
+     ],
+     "cmd": [
+      "{root}/tools/deno/deno.exe",
+      "run",
+      "--unstable-detect-cjs",
+      "--allow-read",
+      "{task}.js"
+     ],
+     "cwd": "{root}/exec/javascript/deno/{task}",
+     "artifact": "{root}/exec/javascript/deno/{task}/{task}.js",
+     "timeout": 600
+    },
+    {
+     "toolchain": "deno",
+     "backend": "v8",
+     "tasks": [
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/deno/deno.exe",
+      "run",
+      "--unstable-detect-cjs",
+      "--allow-write",
+      "{task}.js"
+     ],
+     "cwd": "{root}/exec/javascript/deno/{task}",
+     "artifact": "{root}/exec/javascript/deno/{task}/{task}.js",
+     "timeout": 600
+    },
+    {
+     "toolchain": "deno",
+     "backend": "v8",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/deno/deno.exe",
+      "run",
+      "--unstable-detect-cjs",
+      "{task}.js"
+     ],
+     "cwd": "{root}/exec/javascript/deno/{task}",
+     "artifact": "{root}/exec/javascript/deno/{task}/{task}.js",
+     "timeout": 600
+    },
+    {
+     "toolchain": "hermes",
+     "backend": "hermes",
+     "tasks": [
+      "01_branches",
+      "02_switch_case",
+      "03_func_sum",
+      "04_array_sum",
+      "05_alloc_churn",
+      "06_char_count",
+      "07_string_append",
+      "08_average",
+      "09_fib_recursive",
+      "10_pi",
+      "12_matrix_add",
+      "13_matrix_mul"
+     ],
+     "cmd": [
+      "cmd",
+      "/c",
+      "{root}/exec/javascript/hermes/run.bat",
+      "{task}"
+     ],
+     "cwd": "{root}/exec/javascript/hermes/{task}",
+     "artifact": "{root}/exec/javascript/hermes/{task}/{task}.js",
+     "timeout": 600
+    }
+   ],
+   "language": "JavaScript"
+  },
+  "jscript": {
+   "entries": [
+    {
+     "toolchain": "cscript (WSH)",
+     "backend": "jscript",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "C:\\WINDOWS\\system32\\cscript.exe",
+      "//nologo",
+      "//E:{16d51579-a30b-4c8b-a276-0ff4dc41e755}",
+      "{task}.js"
+     ],
+     "cwd": "{root}/exec/jscript/wsh/{task}",
+     "artifact": "{root}/exec/jscript/wsh/{task}/{task}.js",
+     "timeout": 1800
+    }
+   ],
+   "language": "JScript"
+  },
+  "julia": {
+   "entries": [
+    {
+     "toolchain": "julia",
+     "backend": "julia",
+     "tasks": [
+      "11_parallel_sum"
+     ],
+     "cmd": [
+      "{root}/tools/julia/bin/julia.exe",
+      "-t4",
+      "{task}.jl"
+     ],
+     "cwd": "{root}/exec/julia/julia/{task}",
+     "artifact": "{root}/exec/julia/julia/{task}/{task}.jl"
+    },
+    {
+     "toolchain": "julia",
+     "backend": "julia",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/julia/bin/julia.exe",
+      "{task}.jl"
+     ],
+     "cwd": "{root}/exec/julia/julia/{task}",
+     "artifact": "{root}/exec/julia/julia/{task}/{task}.jl"
+    }
+   ],
+   "language": "Julia"
+  },
+  "kotlin": {
+   "entries": [
+    {
+     "toolchain": "jvm",
+     "backend": "hotspot",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "java",
+      "-jar",
+      "prog.jar"
+     ],
+     "cwd": "{root}/exec/kotlin/{task}",
+     "artifact": "{root}/exec/kotlin/{task}/prog.jar"
+    },
+    {
+     "toolchain": "js",
+     "backend": "v8",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/nodejs/node.exe",
+      "prog.js"
+     ],
+     "cwd": "{root}/exec/kotlin/{task}",
+     "artifact": "{root}/exec/kotlin/{task}/prog.js"
+    }
+   ],
+   "language": "Kotlin"
+  },
+  "kotlin-native": {
+   "entries": [
+    {
+     "toolchain": "native",
+     "backend": "llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/kotlin-native/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/kotlin-native/{task}",
+     "artifact": "{root}/exec/kotlin-native/{task}/prog.exe"
+    }
+   ],
+   "language": "Kotlin"
+  },
+  "lean4": {
+   "entries": [
+    {
+     "toolchain": "lean",
+     "backend": "llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/lean4/lean4/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/lean4/lean4/{task}",
+     "artifact": "{root}/exec/lean4/lean4/{task}/prog.exe"
+    }
+   ],
+   "language": "Lean 4"
+  },
+  "lobster": {
+   "entries": [
+    {
+     "toolchain": "lobster",
+     "backend": "lobster",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/lobster/bin/lobster.exe",
+      "{task}.lobster"
+     ],
+     "cwd": "{root}/exec/lobster/lobster/{task}",
+     "artifact": "{root}/exec/lobster/lobster/{task}/{task}.lobster",
+     "clean": [
+      "time.txt"
+     ]
+    }
+   ],
+   "language": "Lobster"
+  },
+  "lua": {
+   "entries": [
+    {
+     "toolchain": "puc-lua",
+     "backend": "lua",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/lua/lua54.exe",
+      "{task}.lua"
+     ],
+     "cwd": "{root}/exec/lua",
+     "env": {
+      "LUA_PATH": "{root}/tools/lua-rocks\\share\\lua\\5.4\\?.lua;{root}/tools/lua-rocks\\share\\lua\\5.4\\?\\init.lua;;",
+      "LUA_CPATH": "{root}/tools/lua-rocks\\lib\\lua\\5.4\\?.dll;;"
+     },
+     "artifact": "{root}/exec/lua/{task}.lua",
+     "timeout": 1800
+    },
+    {
+     "toolchain": "luajit",
+     "backend": "luajit",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/luajit/luajit.exe",
+      "{task}.lua"
+     ],
+     "cwd": "{root}/exec/lua",
+     "env": {
+      "LUA_PATH": "{root}/tools/lua-rocks\\share\\lua\\5.1\\?.lua;{root}/tools/lua-rocks\\share\\lua\\5.1\\?\\init.lua;;",
+      "LUA_CPATH": "{root}/tools/lua-rocks\\lib\\lua\\5.1\\?.dll;;"
+     },
+     "artifact": "{root}/exec/lua/{task}.lua",
+     "timeout": 1800
+    }
+   ],
+   "language": "Lua"
+  },
+  "lua-wasm": {
+   "entries": [
+    {
+     "toolchain": "wasip1 (puc-lua)",
+     "backend": "wasmtime",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "-W",
+      "exceptions=y",
+      "--dir",
+      ".",
+      "lua.wasm",
+      "{task}.lua"
+     ],
+     "cwd": "{root}/exec/lua-wasm",
+     "artifact": "{root}/exec/lua-wasm/{task}.lua"
+    }
+   ],
+   "language": "Lua"
+  },
+  "luau": {
+   "entries": [
+    {
+     "toolchain": "luau",
+     "backend": "luau",
+     "tasks": [
+      "*"
+     ],
+     "except": [
+      "11_parallel_sum",
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/luau/luau.exe",
+      "{task}.luau"
+     ],
+     "cwd": "{root}/exec/luau/luau/{task}",
+     "artifact": "{root}/exec/luau/luau/{task}/{task}.luau"
+    },
+    {
+     "toolchain": "luau",
+     "backend": "lute",
+     "tasks": [
+      "11_parallel_sum",
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/lute/lute.exe",
+      "run",
+      "{task}.luau"
+     ],
+     "cwd": "{root}/exec/luau/luau/{task}",
+     "artifact": "{root}/exec/luau/luau/{task}/{task}.luau"
+    }
+   ],
+   "language": "Luau"
+  },
+  "masm": {
+   "entries": [
+    {
+     "toolchain": "x86-64 masm",
+     "backend": "asm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/masm/masm/{task}/{task}.exe"
+     ],
+     "cwd": "{root}/exec/masm/masm/{task}",
+     "artifact": "{root}/exec/masm/masm/{task}/{task}.exe",
+     "timeout": 600
+    }
+   ],
+   "language": "Assembly"
+  },
+  "mercury": {
+   "entries": [
+    {
+     "toolchain": "mmc",
+     "backend": "gcc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/mercury/mmc/{task}/m{task}.exe"
+     ],
+     "cwd": "{root}/exec/mercury/mmc/{task}",
+     "env": {
+      "PATH": "{root}/tools/msys64/msys64/ucrt64/bin;{root}/tools/mercury/bin;{PATH}"
+     },
+     "artifact": "{root}/exec/mercury/mmc/{task}/m{task}.exe",
+     "timeout": 1800
+    }
+   ],
+   "language": "Mercury"
+  },
+  "modula2": {
+   "entries": [
+    {
+     "toolchain": "adw",
+     "backend": "adw",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/modula2/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/modula2/{task}",
+     "artifact": "{root}/exec/modula2/{task}/prog.exe"
+    }
+   ],
+   "language": "Modula-2"
+  },
+  "modula3": {
+   "entries": [
+    {
+     "toolchain": "cm3",
+     "backend": "msvc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/modula3/{task}/AMD64_NT/prog.exe"
+     ],
+     "cwd": "{root}/exec/modula3/{task}",
+     "artifact": "{root}/exec/modula3/{task}/AMD64_NT/prog.exe"
+    }
+   ],
+   "language": "Modula-3"
+  },
+  "nelua": {
+   "entries": [
+    {
+     "toolchain": "nelua",
+     "backend": "gcc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/nelua/nelua/{task}/{task}.exe"
+     ],
+     "cwd": "{root}/exec/nelua/nelua/{task}",
+     "artifact": "{root}/exec/nelua/nelua/{task}/{task}.exe",
+     "timeout": 600
+    }
+   ],
+   "language": "Nelua"
+  },
+  "nim": {
+   "entries": [
+    {
+     "toolchain": "nim",
+     "backend": "gcc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/nim/nim/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/nim/nim/{task}",
+     "artifact": "{root}/exec/nim/nim/{task}/prog.exe",
+     "timeout": 600
+    },
+    {
+     "toolchain": "nim (cpp)",
+     "backend": "gcc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/nim/cpp/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/nim/cpp/{task}",
+     "artifact": "{root}/exec/nim/cpp/{task}/prog.exe"
+    },
+    {
+     "toolchain": "nim (clang)",
+     "backend": "llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/nim/clang/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/nim/clang/{task}",
+     "artifact": "{root}/exec/nim/clang/{task}/prog.exe",
+     "timeout": 600
+    }
+   ],
+   "language": "Nim"
+  },
+  "oberon07": {
+   "entries": [
+    {
+     "toolchain": "akron",
+     "backend": "akron",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/oberon07/akron/_{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/oberon07/akron/_{task}",
+     "artifact": "{root}/exec/oberon07/akron/_{task}/prog.exe"
+    }
+   ],
+   "language": "Oberon-07"
+  },
+  "objectivec": {
+   "entries": [
+    {
+     "toolchain": "clang (objc)",
+     "backend": "llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/objectivec/clang/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/objectivec/clang/{task}",
+     "env": {
+      "PATH": "{root}/tools/msys64/msys64/ucrt64/bin;{PATH}"
+     },
+     "artifact": "{root}/exec/objectivec/clang/{task}/prog.exe",
+     "timeout": 600
+    }
+   ],
+   "language": "Objective-C"
+  },
+  "ocaml": {
+   "entries": [
+    {
+     "toolchain": "ocamlopt",
+     "backend": "ocaml-native",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/ocaml/ocamlopt/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/ocaml/ocamlopt/{task}",
+     "env": {
+      "PATH": "{root}/tools/msys64/msys64/ucrt64/bin;{PATH}",
+      "OCAMLLIB": "{root}/tools/msys64/msys64/ucrt64/lib/ocaml"
+     },
+     "artifact": "{root}/exec/ocaml/ocamlopt/{task}/prog.exe",
+     "timeout": 600
+    },
+    {
+     "toolchain": "ocamlc (bytecode)",
+     "backend": "ocaml-bytecode",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/ocaml/ocamlc/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/ocaml/ocamlc/{task}",
+     "env": {
+      "PATH": "{root}/tools/msys64/msys64/ucrt64/bin;{PATH}",
+      "OCAMLLIB": "{root}/tools/msys64/msys64/ucrt64/lib/ocaml"
+     },
+     "artifact": "{root}/exec/ocaml/ocamlc/{task}/prog.exe",
+     "timeout": 600
+    }
+   ],
+   "language": "OCaml"
+  },
+  "odin": {
+   "entries": [
+    {
+     "toolchain": "odin",
+     "backend": "llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/odin/odin/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/odin/odin/{task}",
+     "artifact": "{root}/exec/odin/odin/{task}/prog.exe"
+    }
+   ],
+   "language": "Odin"
+  },
+  "pascal": {
+   "entries": [
+    {
+     "toolchain": "fpc",
+     "backend": "fpc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/pascal/fpc/{task}/program"
+     ],
+     "cwd": "{root}/exec/pascal/fpc/{task}",
+     "artifact": "{root}/exec/pascal/fpc/{task}/program",
+     "timeout": 600
+    }
+   ],
+   "language": "Pascal"
+  },
+  "perl": {
+   "entries": [
+    {
+     "toolchain": "perl",
+     "backend": "perl",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/perl/bin/perl.exe",
+      "{task}.pl"
+     ],
+     "cwd": "{root}/exec/perl/perl/{task}",
+     "artifact": "{root}/exec/perl/perl/{task}/{task}.pl",
+     "timeout": 600,
+     "timeouts": {
+      "09_fib_recursive": 3600,
+      "10_pi": 1800
+     }
+    }
+   ],
+   "language": "Perl"
+  },
+  "pharo": {
+   "entries": [
+    {
+     "toolchain": "Pharo 13",
+     "backend": "pharo",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/pharo/PharoConsole.exe",
+      "--headless",
+      "{root}/tools/pharo/Pharo13.0-SNAPSHOT-64bit-d7c6f761d5.image",
+      "st",
+      "--quit",
+      "--no-source",
+      "{task}.st"
+     ],
+     "cwd": "{root}/exec/pharo/pharo/{task}",
+     "artifact": "{root}/exec/pharo/pharo/{task}/{task}.st",
+     "timeout": 600,
+     "timeouts": {
+      "09_fib_recursive": 1800,
+      "11_parallel_sum": 1200
+     }
+    }
+   ],
+   "language": "Pharo"
+  },
+  "php": {
+   "entries": [
+    {
+     "toolchain": "zend",
+     "backend": "zend",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/php-zts/php.exe",
+      "-d",
+      "memory_limit=4096M",
+      "{task}.php"
+     ],
+     "cwd": "{root}/exec/php/zend/{task}",
+     "artifact": "{root}/exec/php/zend/{task}/{task}.php",
+     "timeout": 600
+    },
+    {
+     "toolchain": "zend + jit",
+     "backend": "zend-jit",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/php-zts/php.exe",
+      "-d",
+      "opcache.enable_cli=1",
+      "-d",
+      "opcache.jit=tracing",
+      "-d",
+      "opcache.jit_buffer_size=64M",
+      "-d",
+      "memory_limit=4096M",
+      "{task}.php"
+     ],
+     "cwd": "{root}/exec/php/zend-jit/{task}",
+     "artifact": "{root}/exec/php/zend-jit/{task}/{task}.php",
+     "timeout": 600
+    }
+   ],
+   "language": "PHP"
+  },
+  "pony": {
+   "entries": [
+    {
+     "toolchain": "ponyc",
+     "backend": "llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/pony/ponyc/{task}/{task}.exe"
+     ],
+     "cwd": "{root}/exec/pony/ponyc/{task}",
+     "artifact": "{root}/exec/pony/ponyc/{task}/{task}.exe",
+     "timeout": 600
+    },
+    {
+     "toolchain": "ponyc",
+     "backend": "llvm",
+     "tasks": [
+      "11_parallel_sum"
+     ],
+     "cmd": [
+      "{root}/exec/pony/ponyc/{task}/{task}.exe",
+      "--ponymaxthreads=4",
+      "--ponynoscale"
+     ],
+     "cwd": "{root}/exec/pony/ponyc/{task}",
+     "artifact": "{root}/exec/pony/ponyc/{task}/{task}.exe",
+     "timeout": 600
+    }
+   ],
+   "language": "Pony"
+  },
+  "python": {
+   "entries": [
+    {
+     "toolchain": "cpython",
+     "backend": "cpython",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "C:/Users/pz020/AppData/Local/Programs/Python/Python313/python.exe",
+      "{task}.py"
+     ],
+     "cwd": "{root}/exec/python/cpython/{task}",
+     "artifact": "{root}/exec/python/cpython/{task}/{task}.py",
+     "timeout": 600
+    },
+    {
+     "toolchain": "pypy",
+     "backend": "pypy",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/pypy/pypy.exe",
+      "{task}.py"
+     ],
+     "cwd": "{root}/exec/python/pypy/{task}",
+     "artifact": "{root}/exec/python/pypy/{task}/{task}.py",
+     "timeout": 600
+    },
+    {
+     "toolchain": "graalpy",
+     "backend": "graalvm-jit",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/graalpy/graalpy-community3.13-25.4.4.1.1-windows-amd64/bin/graalpy.exe",
+      "{task}.py"
+     ],
+     "cwd": "{root}/exec/python/graalpy/{task}",
+     "artifact": "{root}/exec/python/graalpy/{task}/{task}.py",
+     "timeout": 600
+    },
+    {
+     "toolchain": "nuitka",
+     "backend": "gcc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/python/nuitka/{task}/{task}.dist/{task}.exe"
+     ],
+     "cwd": "{root}/exec/python/nuitka/{task}/{task}.dist",
+     "artifact": "{root}/exec/python/nuitka/{task}/{task}.dist/{task}.exe"
+    }
+   ],
+   "language": "Python"
+  },
+  "python-cython": {
+   "entries": [
+    {
+     "toolchain": "cython",
+     "backend": "gcc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/python-cython/cython/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/python-cython/cython/{task}",
+     "env": {
+      "PATH": "C:/Users/pz020/AppData/Local/Programs/Python/Python313;C:/Users/pz020/AppData/Local/Programs/Python/Python313/DLLs;{PATH}"
+     },
+     "artifact": "{root}/exec/python-cython/cython/{task}/prog.exe"
+    }
+   ],
+   "language": "Python"
+  },
+  "qb64": {
+   "entries": [
+    {
+     "toolchain": "qb64",
+     "backend": "llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/qb64/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/qb64/{task}",
+     "artifact": "{root}/exec/qb64/{task}/prog.exe",
+     "timeout": 600
+    }
+   ],
+   "language": "BASIC"
+  },
+  "quickjs": {
+   "entries": [
+    {
+     "toolchain": "quickjs",
+     "backend": "quickjs",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/quickjs/qjs.exe",
+      "--std",
+      "{task}.js"
+     ],
+     "cwd": "{root}/exec/quickjs/quickjs/{task}",
+     "artifact": "{root}/exec/quickjs/quickjs/{task}/{task}.js"
+    }
+   ],
+   "language": "JavaScript"
+  },
+  "r": {
+   "entries": [
+    {
+     "toolchain": "gnu-r",
+     "backend": "gnu-r",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/r/bin/Rscript.exe",
+      "{task}.R"
+     ],
+     "cwd": "{root}/exec/r/gnu-r/{task}",
+     "artifact": "{root}/exec/r/gnu-r/{task}/{task}.R",
+     "timeout": 3600
+    }
+   ],
+   "language": "R"
+  },
+  "racket": {
+   "entries": [
+    {
+     "toolchain": "racket (CS)",
+     "backend": "chez",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/racket/Racket.exe",
+      "{task}.rkt"
+     ],
+     "cwd": "{root}/exec/racket/racket/{task}",
+     "artifact": "{root}/exec/racket/racket/{task}/{task}.rkt",
+     "timeout": 1800,
+     "timeouts": {
+      "07_string_append": 3600
+     }
+    }
+   ],
+   "language": "Racket"
+  },
+  "ruby": {
+   "entries": [
+    {
+     "toolchain": "cruby-yjit",
+     "backend": "cruby",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/ruby/bin/ruby.exe",
+      "--yjit",
+      "{task}.rb"
+     ],
+     "cwd": "{root}/exec/ruby/cruby-yjit/{task}",
+     "artifact": "{root}/exec/ruby/cruby-yjit/{task}/{task}.rb",
+     "timeout": 600,
+     "timeouts": {
+      "09_fib_recursive": 1800,
+      "10_pi": 900
+     }
+    }
+   ],
+   "language": "Ruby"
+  },
+  "rust": {
+   "entries": [
+    {
+     "toolchain": "rustc",
+     "backend": "llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/rust/rustc/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/rust/rustc/{task}",
+     "artifact": "{root}/exec/rust/rustc/{task}/prog.exe"
+    },
+    {
+     "toolchain": "rustc (cranelift)",
+     "backend": "rust-cranelift",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/rust/cranelift/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/rust/cranelift/{task}",
+     "artifact": "{root}/exec/rust/cranelift/{task}/prog.exe"
+    }
+   ],
+   "language": "Rust"
+  },
+  "rust-wasm": {
+   "entries": [
+    {
+     "toolchain": "rustc (wasm32-wasip1)",
+     "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
+     "backend": "wasmtime",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "-C",
+      "compiler=cranelift",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "rustc (wasm32-wasip1)",
+     "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
+     "backend": "wasmtime",
+     "tasks": [
+      "11_parallel_sum"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "-C",
+      "compiler=cranelift",
+      "-S",
+      "threads=y",
+      "-W",
+      "threads=y",
+      "-W",
+      "shared-memory=y",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "rustc (wasm32-wasip1)",
+     "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
+     "backend": "wasmtime",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "-C",
+      "compiler=cranelift",
+      "--dir",
+      ".",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "wasmtime (winch)",
+     "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
+     "backend": "winch",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "-C",
+      "compiler=winch",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "wasmtime (winch)",
+     "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
+     "backend": "winch",
+     "tasks": [
+      "11_parallel_sum"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "-C",
+      "compiler=winch",
+      "-S",
+      "threads=y",
+      "-W",
+      "threads=y",
+      "-W",
+      "shared-memory=y",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "wasmtime (winch)",
+     "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
+     "backend": "winch",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "-C",
+      "compiler=winch",
+      "--dir",
+      ".",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "iwasm",
+     "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
+     "backend": "wamr",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wamr/iwasm.exe",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "iwasm",
+     "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
+     "backend": "wamr",
+     "tasks": [
+      "11_parallel_sum"
+     ],
+     "cmd": [
+      "{root}/tools/wamr/iwasm.exe",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "iwasm",
+     "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
+     "backend": "wamr",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/wamr/iwasm.exe",
+      "--dir=.",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "node (wasip1)",
+     "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
+     "backend": "v8",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/nodejs/node.exe",
+      "--no-warnings",
+      "{root}/exec/wasi-run.js",
+      "prog.wasm",
+      "."
+     ]
+    },
+    {
+     "toolchain": "node (wasip1)",
+     "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
+     "backend": "v8",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/nodejs/node.exe",
+      "--no-warnings",
+      "{root}/exec/wasi-run.js",
+      "prog.wasm",
+      "."
+     ]
+    },
+    {
+     "toolchain": "wasmer (cranelift)",
+     "backend": "wasmer-cranelift",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--cranelift",
+      "--mapdir",
+      "/:{root}/exec/rust-wasm/wasip1/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
+     "create_out": true
+    },
+    {
+     "toolchain": "wasmer (llvm)",
+     "backend": "wasmer-llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--llvm",
+      "--mapdir",
+      "/:{root}/exec/rust-wasm/wasip1/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/rust-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/rust-wasm/wasip1/{task}/prog.wasm",
+     "create_out": true
+    }
+   ],
+   "language": "Rust"
+  },
+  "scala": {
+   "entries": [
+    {
+     "toolchain": "jvm",
+     "backend": "hotspot",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{env:ProgramFiles}/Common Files/Oracle/Java/javapath/java.exe",
+      "-cp",
+      "out;{root}/tools/scala/maven2/org/scala-lang/scala3-library_3/3.9.0/scala3-library_3-3.9.0.jar;{root}/tools/scala/maven2/org/scala-lang/scala-library/3.9.0/scala-library-3.9.0.jar",
+      "Main"
+     ],
+     "cwd": "{root}/exec/scala/jvm/{task}",
+     "artifact": "{root}/exec/scala/jvm/{task}/out/Main.class",
+     "timeout": 600,
+     "timeouts": {
+      "09_fib_recursive": 1200,
+      "10_pi": 900
+     }
+    }
+   ],
+   "language": "Scala"
+  },
+  "scala-js": {
+   "entries": [
+    {
+     "toolchain": "scala-cli (js)",
+     "backend": "v8",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/nodejs/node.exe",
+      "prog.js"
+     ],
+     "cwd": "{root}/exec/scala-js/{task}",
+     "artifact": "{root}/exec/scala-js/{task}/prog.js",
+     "timeout": 600
+    }
+   ],
+   "language": "Scala"
+  },
+  "scala-native": {
+   "entries": [
+    {
+     "toolchain": "native",
+     "backend": "llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/scala-native/scala-native/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/scala-native/scala-native/{task}",
+     "artifact": "{root}/exec/scala-native/scala-native/{task}/prog.exe",
+     "timeout": 600
+    }
+   ],
+   "language": "Scala"
+  },
+  "scheme": {
+   "entries": [
+    {
+     "toolchain": "chez",
+     "backend": "chez",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/chez/bin/ta6nt/scheme.exe",
+      "--optimize-level",
+      "3",
+      "--script",
+      "{task}.ss"
+     ],
+     "cwd": "{root}/exec/scheme/chez/{task}",
+     "artifact": "{root}/exec/scheme/chez/{task}/{task}.ss",
+     "timeouts": {
+      "01_branches": 1200,
+      "02_switch_case": 1200,
+      "06_char_count": 1200,
+      "07_string_append": 3600,
+      "11_parallel_sum": 1200
+     },
+     "clean": [
+      "{root}/exec/scheme/chez/{task}/time.txt"
+     ]
+    }
+   ],
+   "language": "Scheme"
+  },
+  "seed7": {
+   "entries": [
+    {
+     "toolchain": "s7c",
+     "backend": "gcc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/seed7/s7c/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/seed7/s7c/{task}",
+     "artifact": "{root}/exec/seed7/s7c/{task}/prog.exe",
+     "timeout": 600
+    }
+   ],
+   "language": "Seed7"
+  },
+  "spidermonkey": {
+   "entries": [
+    {
+     "toolchain": "spidermonkey",
+     "backend": "spidermonkey",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/spidermonkey/js.exe",
+      "{task}.js"
+     ],
+     "cwd": "{root}/exec/spidermonkey/spidermonkey/{task}",
+     "artifact": "{root}/exec/spidermonkey/spidermonkey/{task}/{task}.js"
+    }
+   ],
+   "language": "JavaScript"
+  },
+  "standardml": {
+   "entries": [
+    {
+     "toolchain": "Poly/ML",
+     "backend": "polyml",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/standardml/polyml/{task}/{task}.exe",
+      "-H",
+      "1024"
+     ],
+     "cwd": "{root}/exec/standardml/polyml/{task}",
+     "artifact": "{root}/exec/standardml/polyml/{task}/{task}.exe",
+     "note": "-H 1024 is the row's documented run line (Poly/ML's initial heap in MB); it was 256 while task 12 was 1000x1000 and the live set was small. All fifteen tasks run from the build directory, which is where build_all.bat stages data.bin; RUN.md's sentence about sources/standardml describes the source header's run line."
+    }
+   ],
+   "language": "Standard ML"
+  },
+  "swift": {
+   "entries": [
+    {
+     "toolchain": "swiftc",
+     "backend": "llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/swift/swiftc/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/swift/swiftc/{task}",
+     "env": {
+      "PATH": "{root}/tools/swift/Toolchains/6.4.0+NoAsserts/usr/bin;{root}/tools/swift/Runtimes/6.4.0/usr/bin;{PATH}"
+     },
+     "artifact": "{root}/exec/swift/swiftc/{task}/prog.exe",
+     "timeout": 600
+    }
+   ],
+   "language": "Swift"
+  },
+  "swipl": {
+   "entries": [
+    {
+     "toolchain": "swipl",
+     "backend": "swipl",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/swipl/bin/swipl.exe",
+      "-q",
+      "-O",
+      "-f",
+      "none",
+      "-g",
+      "main",
+      "-t",
+      "halt",
+      "{task}.pl"
+     ],
+     "cwd": "{root}/exec/swipl/swipl/{task}",
+     "artifact": "{root}/exec/swipl/swipl/{task}/{task}.pl",
+     "timeout": 1800,
+     "timeouts": {
+      "07_string_append": 7200
+     }
+    }
+   ],
+   "language": "Prolog (SWI)"
+  },
+  "tcl": {
+   "entries": [
+    {
+     "toolchain": "tclsh",
+     "backend": "tcl",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/msys64/msys64/ucrt64/bin/tclsh.exe",
+      "{task}.tcl"
+     ],
+     "cwd": "{root}/exec/tcl/tclsh/{task}",
+     "artifact": "{root}/exec/tcl/tclsh/{task}/{task}.tcl",
+     "timeout": 1800
+    }
+   ],
+   "language": "Tcl"
+  },
+  "terra": {
+   "entries": [
+    {
+     "toolchain": "terra",
+     "backend": "llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/terra/bin/terra.exe",
+      "{task}.t"
+     ],
+     "cwd": "{root}/exec/terra/terra/{task}",
+     "env": {
+      "VCINSTALLDIR": "C:/fake/vc",
+      "INCLUDE": "{root}/tools/llvm-mingw/include"
+     },
+     "artifact": "{root}/exec/terra/terra/{task}/{task}.t",
+     "clean": [
+      "{root}/exec/terra/terra/{task}/time.txt"
+     ]
+    }
+   ],
+   "language": "Terra"
+  },
+  "unicon": {
+   "entries": [
+    {
+     "toolchain": "unicon",
+     "backend": "unicon",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/unicon/unicon/{task}/{task}.exe"
+     ],
+     "cwd": "{root}/exec/unicon/unicon/{task}",
+     "artifact": "{root}/exec/unicon/unicon/{task}/{task}.exe",
+     "timeout": 1800
+    }
+   ],
+   "language": "Unicon"
+  },
+  "v": {
+   "entries": [
+    {
+     "toolchain": "v",
+     "backend": "gcc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/v/v/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/v/v/{task}",
+     "env": {
+      "PATH": "{root}/tools/msys64/msys64/ucrt64/bin;{PATH}"
+     },
+     "artifact": "{root}/exec/v/v/{task}/prog.exe"
+    },
+    {
+     "toolchain": "v (clang)",
+     "backend": "llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/v/clang/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/v/clang/{task}",
+     "artifact": "{root}/exec/v/clang/{task}/prog.exe"
+    }
+   ],
+   "language": "V"
+  },
+  "vala": {
+   "entries": [
+    {
+     "toolchain": "valac",
+     "backend": "gcc",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/vala/valac/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/vala/valac/{task}",
+     "env": {
+      "PATH": "{root}/tools/msys64/msys64/ucrt64/bin;{PATH}"
+     },
+     "artifact": "{root}/exec/vala/valac/{task}/prog.exe",
+     "timeout": 600
+    }
+   ],
+   "language": "Vala"
+  },
+  "vbnet": {
+   "entries": [
+    {
+     "toolchain": "dotnet",
+     "backend": "coreclr",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/dotnet8/dotnet.exe",
+      "bin/Release/net8.0/{task}.dll"
+     ],
+     "cwd": "{root}/exec/vbnet/dotnet/{task}",
+     "artifact": "{root}/exec/vbnet/dotnet/{task}/bin/Release/net8.0/{task}.dll",
+     "timeout": 600
+    }
+   ],
+   "language": "VB.NET"
+  },
+  "vbscript": {
+   "entries": [
+    {
+     "toolchain": "cscript",
+     "backend": "vbscript",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "C:\\WINDOWS\\system32\\cscript.exe",
+      "//nologo",
+      "{task}.vbs"
+     ],
+     "cwd": "{root}/exec/vbscript/wsh/{task}",
+     "artifact": "{root}/exec/vbscript/wsh/{task}/{task}.vbs"
+    }
+   ],
+   "language": "VBScript"
+  },
+  "wasm": {
+   "entries": [
+    {
+     "toolchain": "hand-written WAT",
+     "cwd": "{root}/exec/wasm/wat/{task}",
+     "artifact": "{root}/exec/wasm/wat/{task}/{task}.wat",
+     "backend": "wasmtime",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "run",
+      "-C",
+      "compiler=cranelift",
+      "{task}.wat"
+     ],
+     "timeout": 600
+    },
+    {
+     "toolchain": "hand-written WAT",
+     "cwd": "{root}/exec/wasm/wat/{task}",
+     "artifact": "{root}/exec/wasm/wat/{task}/{task}.wat",
+     "backend": "wasmtime",
+     "tasks": [
+      "11_parallel_sum"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "run",
+      "-C",
+      "compiler=cranelift",
+      "-S",
+      "threads=y",
+      "-W",
+      "threads=y",
+      "-W",
+      "shared-memory=y",
+      "{task}.wat"
+     ],
+     "timeout": 600
+    },
+    {
+     "toolchain": "hand-written WAT",
+     "cwd": "{root}/exec/wasm/wat/{task}",
+     "artifact": "{root}/exec/wasm/wat/{task}/{task}.wat",
+     "backend": "wasmtime",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "run",
+      "-C",
+      "compiler=cranelift",
+      "--dir=.",
+      "{task}.wat"
+     ],
+     "timeout": 600
+    },
+    {
+     "toolchain": "wasmtime (winch)",
+     "cwd": "{root}/exec/wasm/wat/{task}",
+     "artifact": "{root}/exec/wasm/wat/{task}/{task}.wat",
+     "backend": "winch",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "run",
+      "-C",
+      "compiler=winch",
+      "{task}.wat"
+     ],
+     "timeout": 600
+    },
+    {
+     "toolchain": "wasmtime (winch)",
+     "cwd": "{root}/exec/wasm/wat/{task}",
+     "artifact": "{root}/exec/wasm/wat/{task}/{task}.wat",
+     "backend": "winch",
+     "tasks": [
+      "11_parallel_sum"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "run",
+      "-C",
+      "compiler=winch",
+      "-S",
+      "threads=y",
+      "-W",
+      "threads=y",
+      "-W",
+      "shared-memory=y",
+      "{task}.wat"
+     ],
+     "timeout": 600
+    },
+    {
+     "toolchain": "wasmtime (winch)",
+     "cwd": "{root}/exec/wasm/wat/{task}",
+     "artifact": "{root}/exec/wasm/wat/{task}/{task}.wat",
+     "backend": "winch",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "run",
+      "-C",
+      "compiler=winch",
+      "--dir=.",
+      "{task}.wat"
+     ],
+     "timeout": 600
+    },
+    {
+     "toolchain": "wasmer (cranelift)",
+     "backend": "wasmer-cranelift",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--cranelift",
+      "--mapdir",
+      "/:{root}/exec/wasm/wat/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/wasm/wat/{task}",
+     "artifact": "{root}/exec/wasm/wat/{task}/prog.wasm",
+     "create_out": true
+    },
+    {
+     "toolchain": "wasmer (llvm)",
+     "backend": "wasmer-llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--llvm",
+      "--mapdir",
+      "/:{root}/exec/wasm/wat/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/wasm/wat/{task}",
+     "artifact": "{root}/exec/wasm/wat/{task}/prog.wasm",
+     "create_out": true
+    }
+   ],
+   "language": "WebAssembly"
+  },
+  "zig": {
+   "entries": [
+    {
+     "toolchain": "zig",
+     "backend": "llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/zig/zig/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/zig/zig/{task}",
+     "artifact": "{root}/exec/zig/zig/{task}/prog.exe"
+    },
+    {
+     "toolchain": "zig (self-hosted x86-64)",
+     "backend": "zig-selfhosted",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/zig/selfhosted/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/zig/selfhosted/{task}",
+     "artifact": "{root}/exec/zig/selfhosted/{task}/prog.exe"
+    }
+   ],
+   "language": "Zig"
+  },
+  "zig-wasm": {
+   "entries": [
+    {
+     "toolchain": "wasm32-wasip1 (zig)",
+     "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
+     "backend": "wasmtime",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "run",
+      "-C",
+      "compiler=cranelift",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "wasm32-wasip1 (zig)",
+     "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
+     "backend": "wasmtime",
+     "tasks": [
+      "11_parallel_sum"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "run",
+      "-C",
+      "compiler=cranelift",
+      "-S",
+      "threads=y",
+      "-W",
+      "threads=y",
+      "-W",
+      "shared-memory=y",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "wasm32-wasip1 (zig)",
+     "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
+     "backend": "wasmtime",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "run",
+      "-C",
+      "compiler=cranelift",
+      "--dir=.",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "wasmtime (winch)",
+     "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
+     "backend": "winch",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "run",
+      "-C",
+      "compiler=winch",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "wasmtime (winch)",
+     "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
+     "backend": "winch",
+     "tasks": [
+      "11_parallel_sum"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "run",
+      "-C",
+      "compiler=winch",
+      "-S",
+      "threads=y",
+      "-W",
+      "threads=y",
+      "-W",
+      "shared-memory=y",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "wasmtime (winch)",
+     "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
+     "backend": "winch",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "run",
+      "-C",
+      "compiler=winch",
+      "--dir=.",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "iwasm",
+     "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
+     "backend": "wamr",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wamr/iwasm.exe",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "iwasm",
+     "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
+     "backend": "wamr",
+     "tasks": [
+      "11_parallel_sum"
+     ],
+     "cmd": [
+      "{root}/tools/wamr/iwasm.exe",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "iwasm",
+     "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
+     "backend": "wamr",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/wamr/iwasm.exe",
+      "--dir=.",
+      "prog.wasm"
+     ]
+    },
+    {
+     "toolchain": "node (wasip1)",
+     "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
+     "backend": "v8",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/nodejs/node.exe",
+      "--no-warnings",
+      "{root}/exec/wasi-run.js",
+      "prog.wasm",
+      "."
+     ]
+    },
+    {
+     "toolchain": "node (wasip1)",
+     "cwd": "{root}/exec/zig-wasm/wasip1/{task}",
+     "artifact": "{root}/exec/zig-wasm/wasip1/{task}/prog.wasm",
+     "backend": "v8",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/nodejs/node.exe",
+      "--no-warnings",
+      "{root}/exec/wasi-run.js",
+      "prog.wasm",
+      "."
+     ]
+    }
+   ],
+   "language": "Zig"
+  },
+  "llvm-ir": {
+   "language": "LLVM IR",
+   "entries": [
+    {
+     "toolchain": "llc",
+     "backend": "llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/llvm-ir/llc/{task}/prog.exe"
+     ],
+     "cwd": "{root}/exec/llvm-ir/llc/{task}",
+     "artifact": "{root}/exec/llvm-ir/llc/{task}/prog.exe"
+    }
+   ]
+  },
+  "pike": {
+   "language": "Pike",
+   "entries": [
+    {
+     "toolchain": "pike",
+     "backend": "pike",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/pike/bin/pike.exe",
+      "{task}.pike"
+     ],
+     "cwd": "{root}/exec/pike",
+     "artifact": "{root}/exec/pike/{task}.pike",
+     "timeouts": {
+      "08_average": 1800
+     }
+    }
+   ]
+  },
+  "gprolog": {
+   "language": "Prolog (GNU)",
+   "entries": [
+    {
+     "toolchain": "gplc",
+     "backend": "gprolog",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/exec/gprolog/gplc/{task}/{task}.exe"
+     ],
+     "cwd": "{root}/exec/gprolog/gplc/{task}",
+     "artifact": "{root}/exec/gprolog/gplc/{task}/{task}.exe",
+     "timeout": 1800,
+     "timeouts": {
+      "08_average": 3600,
+      "10_pi": 3600
+     }
+    }
+   ]
+  },
+  "go-wasm": {
+   "language": "Go",
+   "entries": [
+    {
+     "toolchain": "gc (wasip1)",
+     "backend": "wasmtime",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "-C",
+      "compiler=cranelift",
+      "--dir",
+      "{root}/exec/go-wasm/{task}::/",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/go-wasm/{task}",
+     "artifact": "{root}/exec/go-wasm/{task}/prog.wasm"
+    },
+    {
+     "toolchain": "gc (wasip1)",
+     "backend": "wasmtime",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "-C",
+      "compiler=cranelift",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/go-wasm/{task}",
+     "artifact": "{root}/exec/go-wasm/{task}/prog.wasm"
+    },
+    {
+     "toolchain": "wasmtime (winch)",
+     "backend": "winch",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "-C",
+      "compiler=winch",
+      "--dir",
+      "{root}/exec/go-wasm/{task}::/",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/go-wasm/{task}",
+     "artifact": "{root}/exec/go-wasm/{task}/prog.wasm"
+    },
+    {
+     "toolchain": "wasmtime (winch)",
+     "backend": "winch",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmtime46/wasmtime.exe",
+      "-C",
+      "compiler=winch",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/go-wasm/{task}",
+     "artifact": "{root}/exec/go-wasm/{task}/prog.wasm"
+    },
+    {
+     "toolchain": "iwasm",
+     "backend": "wamr",
+     "tasks": [
+      "14_file_read",
+      "15_file_write"
+     ],
+     "cmd": [
+      "{root}/tools/wamr/iwasm.exe",
+      "--map-dir=/::.",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/go-wasm/{task}",
+     "artifact": "{root}/exec/go-wasm/{task}/prog.wasm",
+     "create_out": true
+    },
+    {
+     "toolchain": "iwasm",
+     "backend": "wamr",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wamr/iwasm.exe",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/go-wasm/{task}",
+     "artifact": "{root}/exec/go-wasm/{task}/prog.wasm",
+     "create_out": true
+    },
+    {
+     "toolchain": "node (wasip1)",
+     "backend": "v8",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/nodejs/node.exe",
+      "--no-warnings",
+      "{root}/exec/wasi-run.js",
+      "prog.wasm",
+      "."
+     ],
+     "cwd": "{root}/exec/go-wasm/{task}",
+     "artifact": "{root}/exec/go-wasm/{task}/prog.wasm"
+    },
+    {
+     "toolchain": "wasmer (cranelift)",
+     "backend": "wasmer-cranelift",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--cranelift",
+      "--mapdir",
+      "/:{root}/exec/go-wasm/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/go-wasm/{task}",
+     "artifact": "{root}/exec/go-wasm/{task}/prog.wasm",
+     "create_out": true
+    },
+    {
+     "toolchain": "wasmer (llvm)",
+     "backend": "wasmer-llvm",
+     "tasks": [
+      "*"
+     ],
+     "cmd": [
+      "{root}/tools/wasmer437/bin/wasmer.exe",
+      "run",
+      "--llvm",
+      "--mapdir",
+      "/:{root}/exec/go-wasm/{task}",
+      "prog.wasm"
+     ],
+     "cwd": "{root}/exec/go-wasm/{task}",
+     "artifact": "{root}/exec/go-wasm/{task}/prog.wasm",
+     "create_out": true
+    }
+   ]
+  }
+ }
+}

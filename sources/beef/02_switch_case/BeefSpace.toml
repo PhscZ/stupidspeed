@@ -1,0 +1,5 @@
+FileVersion = 1
+Projects = {02_switch_case = {Path = "."}}
+
+[Workspace]
+StartupProject = "02_switch_case"

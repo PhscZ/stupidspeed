@@ -1,0 +1,7 @@
+# task 03 func_sum — helper, the second file, linked with 03_func_sum.icn.
+# A separate file so the call is a genuine cross-file call. Unicon compiles to icode for a
+# virtual machine, so the call is a VM call either way; the split is the row's convention.
+
+procedure add_one(n)
+    return n + 1
+end

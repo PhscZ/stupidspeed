@@ -1,0 +1,5 @@
+FileVersion = 1
+Projects = {09_fib_recursive = {Path = "."}}
+
+[Workspace]
+StartupProject = "09_fib_recursive"

@@ -1,0 +1,24 @@
+! task 04 array_sum — expected output: 599999940000000
+! build: none (interpreted — the script is compiled and run on every invocation)
+! run: tools/factor/factor.exe 04_array_sum.factor    (from sources/factor/)
+! note: one plain array of ten million fixnums, filled once and then read back twelve
+!       times in order.
+
+! timing: nano-count is Factor's monotonic nanosecond clock; TIME_MS is written to stderr
+!         through error-stream, and stdout is unchanged.
+USING: arrays io kernel locals math math.parser namespaces prettyprint sequences system ;
+IN: scratchpad
+
+: ss-report ( t0 value -- value )
+    swap nano-count swap - 1000000 /i number>string
+    "TIME_MS=" swap append "\n" append error-stream get stream-write ;
+
+:: sum-once ( a -- total )
+    0 10000000 [| total i | total i a nth + ] each-integer ;
+
+:: array-sum ( -- total )
+    10000000 0 <array> :> a
+    10000000 [| i | i i a set-nth ] each-integer
+    0 12 [| total k | total a sum-once + ] each-integer ;
+
+nano-count array-sum ss-report .

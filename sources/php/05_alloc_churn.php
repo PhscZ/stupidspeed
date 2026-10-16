@@ -1,0 +1,24 @@
+<?php
+// task 05 alloc_churn — expected output: 6374991808
+// build: none (interpreted)    run: php 05_alloc_churn.php (zend) | php -d opcache.enable_cli=1 -d opcache.jit=tracing -d opcache.jit_buffer_size=64M 05_alloc_churn.php (zend + jit)
+// note: `-d opcache.jit=tracing` is required here. PHP 8.5 changed the default of
+//       `opcache.jit` to `disable`, so the older `-d opcache.jit_buffer_size=64M`
+//       alone leaves the JIT off (opcache_get_status() reports jit.on=false and
+//       buffer_size=0) and the row would measure only opcache bytecode caching.
+// A PHP string is a mutable byte array, so each iteration allocates one 64-byte buffer;
+// the slot store keeps it reachable and drops the buffer it replaces.
+
+$__t0 = hrtime(true);
+$total = 0;
+$slots = array_fill(0, 256, '');
+
+for ($i = 0; $i < 50000000; $i++) {
+    $buf = str_repeat("\0", 64);
+    $buf[0] = chr($i & 255);
+    $total += ord($buf[0]);
+    $slots[$i & 255] = $buf;
+}
+
+$__t1 = hrtime(true);
+fwrite(STDERR, sprintf("TIME_MS=%.3f\n", ($__t1 - $__t0) / 1e6));
+echo $total, "\n";
