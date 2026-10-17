@@ -16,7 +16,13 @@ described after the list:
   argument fails when the folder holds more than one `.csproj`, and the projects would share
   one `obj/` and `bin/`.
 - **Fortran task 03** is two files, `03_func_sum.f90` and `03_func_sum_add_one.f90`, because
-  the no-inline requirement needs a second translation unit.
+  the no-inline requirement needs a second translation unit. **Task 06 builds its 250 MB text
+  from a runtime repeat count, not a literal** (`reps = 25000000` then
+  `repeat(block, reps)`): gfortran and LFortran both constant-fold a literal count into a
+  250 MB static initializer, which lands in `.rdata` and produces a 250 MB `prog.exe` — over
+  GitHub's 100 MB file limit, and a compile-time fold of the task rather than a measurement of
+  it. With the count in a variable the library call builds the string at run time, as the C row
+  does, and the executable is about 100 KB.
 - **Modula-2 task 03** is three files, `03_func_sum.mod`, `Func.def` and `Func.mod`, for the
   same reason: the caller only sees the declaration, so the 400000000 calls cannot be
   inlined. Compile `Func.mod` first and link both objects.
