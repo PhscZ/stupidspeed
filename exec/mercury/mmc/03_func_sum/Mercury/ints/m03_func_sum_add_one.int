@@ -1,0 +1,3 @@
+:- module m03_func_sum_add_one.
+:- interface.
+:- func add_one(int) = int.

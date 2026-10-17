@@ -10,7 +10,7 @@ fn main() {
     let t0 = std::time::Instant::now();
     let mut acc: u64 = 0;
 
-    for i in 0..100_000_000u64 {
+    for i in 0..108_000_000u64 {
         match i % 4 {
             0 => acc += 1,
             1 => acc += i,

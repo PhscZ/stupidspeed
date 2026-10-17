@@ -16,7 +16,7 @@ program main
 
   call system_clock(ss_t0, ss_rate)
   total = 0.0d0
-  do i = 0_8, 99999999_8
+  do i = 0_8, 199999999_8
     reading = real(mod(i, 256_8), kind=8)/256.0d0
     total = total + reading
   end do

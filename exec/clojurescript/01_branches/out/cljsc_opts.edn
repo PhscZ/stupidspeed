@@ -1,0 +1,1 @@
+{:output-dir "out", :target :nodejs, :optimizations :simple, :output-to "prog.js", :warnings {:single-segment-namespace false}, :main t01-branches, :aot-cache true}

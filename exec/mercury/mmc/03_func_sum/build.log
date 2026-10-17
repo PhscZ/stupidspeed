@@ -1,0 +1,9 @@
+Making Mercury\int3s\m03_func_sum.int3
+Making Mercury\int3s\m03_func_sum_add_one.int3
+Making Mercury\ints\m03_func_sum.int
+Making Mercury\ints\m03_func_sum_add_one.int
+Making Mercury\cs\m03_func_sum.c
+Making Mercury\cs\m03_func_sum_add_one.c
+Making Mercury\os\m03_func_sum.o
+Making Mercury\os\m03_func_sum_add_one.o
+Making m03_func_sum.exe

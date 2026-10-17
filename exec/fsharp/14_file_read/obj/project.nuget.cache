@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "qxFjKQYUF1M=",
+  "success": true,
+  "projectFilePath": "C:\\stupidspeed\\exec\\fsharp\\14_file_read\\14_file_read.fsproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\pz020\\.nuget\\packages\\fsharp.core\\8.0.403\\fsharp.core.8.0.403.nupkg.sha512"
+  ],
+  "logs": []
+}

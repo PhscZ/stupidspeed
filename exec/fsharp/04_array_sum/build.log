@@ -1,0 +1,9 @@
+  Determining projects to restore...
+  Restored C:\stupidspeed\exec\fsharp\04_array_sum\04_array_sum.fsproj (in 3,6 sec).
+  04_array_sum -> C:\stupidspeed\exec\fsharp\04_array_sum\bin\Release\net8.0\04_array_sum.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:01:18.84

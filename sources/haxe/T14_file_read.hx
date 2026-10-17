@@ -21,6 +21,7 @@ class T14_file_read {
 
     static function main() {
         // timing: haxe.Timer.stamp() is QueryPerformanceCounter on cpp (sub-microsecond); Sys.time() there is wall-clock ms.
+        var t0 = haxe.Timer.stamp();
         var total = haxe.Int64.ofInt(0);
         #if js
         // deviation: the js target has no sys.io at all, so node's fs is the file layer here.

@@ -10,7 +10,7 @@ class T08_average {
         var t0 = haxe.Timer.stamp();
         var total = 0.0;
 
-        for (i in 0...100000000) {
+        for (i in 0...200000000) {
             var reading = (i % 256) / 256.0;
             total += reading;
         }

@@ -48,10 +48,7 @@
                    READ IN-FILE INTO IN-REC
                        AT END MOVE "Y" TO EOF-F
                        NOT AT END
-                           PERFORM VARYING I FROM 1 BY 1 UNTIL I > 1048576
-                               COMPUTE B = FUNCTION ORD(IN-REC(I:1)) - 1
-                               ADD B TO TOTAL
-                           END-PERFORM
+                           PERFORM SUM-RECORD
                    END-READ
                END-PERFORM
                CLOSE IN-FILE
@@ -70,3 +67,12 @@
            DISPLAY "TIME_MS=" MS UPON STDERR.
            DISPLAY OT.
            STOP RUN.
+      *> The per-byte loop is a paragraph rather than an inline PERFORM nested
+      *> three deep: GnuCOBOL 3.2 miscompiles that nesting (it sums about 1/100
+      *> of each record and prints 0534196000 instead of the answer).
+       SUM-RECORD.
+           PERFORM VARYING I FROM 1 BY 1 UNTIL I > 1048576
+               COMPUTE B = FUNCTION ORD(IN-REC(I:1)) - 1
+               ADD B TO TOTAL
+           END-PERFORM
+           .

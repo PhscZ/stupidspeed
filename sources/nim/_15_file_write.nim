@@ -12,7 +12,7 @@ var buf = newSeq[byte](chunk)
 for i in 0 ..< chunk:
   buf[i] = byte(i mod 256)
 var written = 0
-for _pass in 0 ..< 8:
+for pass in 0 ..< 8:
   var f: File
   if not open(f, "out.bin", fmWrite):
     quit(1)

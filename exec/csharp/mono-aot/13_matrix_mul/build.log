@@ -1,0 +1,7 @@
+   Creating library C:\stupidspeed\exec\csharp\mono-aot\13_matrix_mul\13_matrix_mul.exe.dll.lib and object C:\stupidspeed\exec\csharp\mono-aot\13_matrix_mul\13_matrix_mul.exe.dll.exp
+Mono Ahead of Time compiler - compiling assembly C:\stupidspeed\exec\csharp\mono-aot\13_matrix_mul\13_matrix_mul.exe
+AOTID 9FCF2C54-E7CB-A535-9352-74A246F0840D
+Compiled: 2/2
+Executing the native assembler: "clang.exe" --target=x86_64-pc-windows-msvc -c -x assembler  -o C:\Users\pz020\AppData\Local\Temp\mono_aot_a08052.obj C:\Users\pz020\AppData\Local\Temp\mono_aot_a08052
+Executing the native linker: "link.exe" /DLL /MACHINE:X64 /NOLOGO /INCREMENTAL:NO /DEBUG  /OUT:C:\stupidspeed\exec\csharp\mono-aot\13_matrix_mul\13_matrix_mul.exe.dll.tmp C:\Users\pz020\AppData\Local\Temp\mono_aot_a08052.obj 
+JIT time: 11 ms, Generation time: 1 ms, Assembly+Link time: 3234 ms.

@@ -12,7 +12,7 @@ program main
 
   call system_clock(ss_t0, ss_rate)
   acc = 0_8
-  do i = 0_8, 99999999_8
+  do i = 0_8, 107999999_8
     select case (mod(i, 4_8))
     case (0_8)
       acc = acc + 1_8

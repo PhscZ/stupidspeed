@@ -1,0 +1,2 @@
+15_file_write.c:64: warning: implicit declaration of function 'fileno' is invalid in C99 [-Wimplicit-function-declaration]
+15_file_write.c:64: warning: 'fileno' is declared without a function prototype

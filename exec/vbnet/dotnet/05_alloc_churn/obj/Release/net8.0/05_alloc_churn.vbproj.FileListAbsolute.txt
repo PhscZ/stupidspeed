@@ -1,0 +1,15 @@
+C:\stupidspeed\exec\vbnet\dotnet\05_alloc_churn\bin\Release\net8.0\05_alloc_churn.exe
+C:\stupidspeed\exec\vbnet\dotnet\05_alloc_churn\bin\Release\net8.0\05_alloc_churn.deps.json
+C:\stupidspeed\exec\vbnet\dotnet\05_alloc_churn\bin\Release\net8.0\05_alloc_churn.runtimeconfig.json
+C:\stupidspeed\exec\vbnet\dotnet\05_alloc_churn\bin\Release\net8.0\05_alloc_churn.dll
+C:\stupidspeed\exec\vbnet\dotnet\05_alloc_churn\bin\Release\net8.0\05_alloc_churn.pdb
+C:\stupidspeed\exec\vbnet\dotnet\05_alloc_churn\obj\Release\net8.0\05_alloc_churn.GeneratedMSBuildEditorConfig.editorconfig
+C:\stupidspeed\exec\vbnet\dotnet\05_alloc_churn\obj\Release\net8.0\05_alloc_churn.AssemblyInfoInputs.cache
+C:\stupidspeed\exec\vbnet\dotnet\05_alloc_churn\obj\Release\net8.0\05_alloc_churn.AssemblyInfo.vb
+C:\stupidspeed\exec\vbnet\dotnet\05_alloc_churn\obj\Release\net8.0\05_alloc_churn.vbproj.CoreCompileInputs.cache
+C:\stupidspeed\exec\vbnet\dotnet\05_alloc_churn\obj\Release\net8.0\05_alloc_churn.sourcelink.json
+C:\stupidspeed\exec\vbnet\dotnet\05_alloc_churn\obj\Release\net8.0\05_alloc_churn.dll
+C:\stupidspeed\exec\vbnet\dotnet\05_alloc_churn\obj\Release\net8.0\refint\05_alloc_churn.dll
+C:\stupidspeed\exec\vbnet\dotnet\05_alloc_churn\obj\Release\net8.0\05_alloc_churn.pdb
+C:\stupidspeed\exec\vbnet\dotnet\05_alloc_churn\obj\Release\net8.0\05_alloc_churn.genruntimeconfig.cache
+C:\stupidspeed\exec\vbnet\dotnet\05_alloc_churn\obj\Release\net8.0\ref\05_alloc_churn.dll

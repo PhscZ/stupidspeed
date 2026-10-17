@@ -1,0 +1,11 @@
+;;; Loading #P"C:/stupidspeed/tools/ecl/cmp.fas"
+;;;
+;;; Compiling 14_file_read.lisp.
+;;; OPTIMIZE levels: Safety=2, Space=0, Speed=3, Debug=0
+;;;
+;;; Style warning:
+;;;   in file 14_file_read.lisp, position 2677
+;;;   at (DEFUN MAIN ...)
+;;;   ! Variable PASS, declared as IGNORE, found in a lisp form.
+;;; Finished compiling 14_file_read.lisp.
+;;;

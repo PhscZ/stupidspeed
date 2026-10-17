@@ -1,0 +1,32 @@
+<?php
+// task 15 file_write — expected output: 419430400
+// build: none (interpreted)    run: php 15_file_write.php (zend) | php -d opcache.enable_cli=1 -d opcache.jit=tracing -d opcache.jit_buffer_size=64M 15_file_write.php (zend + jit)
+// note: `-d opcache.jit=tracing` is required here. PHP 8.5 changed the default of
+//       `opcache.jit` to `disable`, so the older `-d opcache.jit_buffer_size=64M`
+//       alone leaves the JIT off (opcache_get_status() reports jit.on=false and
+//       buffer_size=0) and the row would measure only opcache bytecode caching.
+// Writes out.bin: the 1 MiB pattern 0,1,2,...,255 repeated 4096 times, written 50 times per
+// pass over 8 passes (each pass reopening out.bin at offset 0), then flushed and fsynced once
+// per pass. Prints the number of bytes the writes reported.
+
+$__t0 = hrtime(true);
+$pattern = '';
+for ($i = 0; $i < 256; $i++) {
+    $pattern .= chr($i);
+}
+$buffer = str_repeat($pattern, 4096);
+
+$written = 0;
+for ($pass = 0; $pass < 8; $pass++) {
+    $handle = fopen('out.bin', 'wb');
+    for ($i = 0; $i < 50; $i++) {
+        $written += fwrite($handle, $buffer);
+    }
+    fflush($handle);
+    fsync($handle);
+    fclose($handle);
+}
+
+$__t1 = hrtime(true);
+fwrite(STDERR, sprintf("TIME_MS=%.3f\n", ($__t1 - $__t0) / 1e6));
+echo $written, "\n";

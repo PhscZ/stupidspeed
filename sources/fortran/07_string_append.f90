@@ -16,7 +16,7 @@ program main
 
   call system_clock(ss_t0, ss_rate)
   text = ''
-  do i = 1_8, 250000_8
+  do i = 1_8, 750000_8
     text = text // 'x'
   end do
 

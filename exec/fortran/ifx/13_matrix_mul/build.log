@@ -1,0 +1,9 @@
+Intel(R) Fortran Compiler for applications running on Intel(R) 64, Version 2026.1.1 Build 20260724
+Copyright (C) 1985-2026 Intel Corporation. All rights reserved.
+
+Microsoft (R) Incremental Linker Version 14.44.35229.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+-out:prog.exe 
+-subsystem:console 
+13_matrix_mul.obj 

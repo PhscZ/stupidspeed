@@ -75,7 +75,7 @@
           (f64.const 0.5))))
     (call $puti (local.get $ip))
     (call $putc (i32.const 46))
-    (local.set $t (i64.const 200000000))
+    (local.set $t (i64.const 100000000))
     (block $done
       (loop $l
         (br_if $done (i64.eqz (local.get $t)))

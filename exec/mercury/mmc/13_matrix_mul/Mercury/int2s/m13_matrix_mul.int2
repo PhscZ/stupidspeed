@@ -1,0 +1,2 @@
+:- module m13_matrix_mul.
+:- interface.

@@ -1,0 +1,12 @@
+<!-- task 01 branches — expected output: 33333334 13333333 7619048 45714285 -->
+<!-- build: coreclr: dotnet build -c Release | nativeaot: dotnet publish -c Release -p:PublishAot=true | mono: mcs -optimize+ 01_branches.cs    run: coreclr: dotnet run -c Release (or bin/Release/net8.0/01_branches.exe) | nativeaot: bin/Release/net8.0/publish/01_branches.exe | mono: mono 01_branches.exe -->
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <Optimize>true</Optimize>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+</Project>

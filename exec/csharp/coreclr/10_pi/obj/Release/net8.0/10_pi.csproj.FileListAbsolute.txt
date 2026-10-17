@@ -1,0 +1,15 @@
+C:\stupidspeed\exec\csharp\coreclr\10_pi\bin\Release\net8.0\10_pi.exe
+C:\stupidspeed\exec\csharp\coreclr\10_pi\bin\Release\net8.0\10_pi.deps.json
+C:\stupidspeed\exec\csharp\coreclr\10_pi\bin\Release\net8.0\10_pi.runtimeconfig.json
+C:\stupidspeed\exec\csharp\coreclr\10_pi\bin\Release\net8.0\10_pi.dll
+C:\stupidspeed\exec\csharp\coreclr\10_pi\bin\Release\net8.0\10_pi.pdb
+C:\stupidspeed\exec\csharp\coreclr\10_pi\obj\Release\net8.0\10_pi.GeneratedMSBuildEditorConfig.editorconfig
+C:\stupidspeed\exec\csharp\coreclr\10_pi\obj\Release\net8.0\10_pi.AssemblyInfoInputs.cache
+C:\stupidspeed\exec\csharp\coreclr\10_pi\obj\Release\net8.0\10_pi.AssemblyInfo.cs
+C:\stupidspeed\exec\csharp\coreclr\10_pi\obj\Release\net8.0\10_pi.csproj.CoreCompileInputs.cache
+C:\stupidspeed\exec\csharp\coreclr\10_pi\obj\Release\net8.0\10_pi.sourcelink.json
+C:\stupidspeed\exec\csharp\coreclr\10_pi\obj\Release\net8.0\10_pi.dll
+C:\stupidspeed\exec\csharp\coreclr\10_pi\obj\Release\net8.0\refint\10_pi.dll
+C:\stupidspeed\exec\csharp\coreclr\10_pi\obj\Release\net8.0\10_pi.pdb
+C:\stupidspeed\exec\csharp\coreclr\10_pi\obj\Release\net8.0\10_pi.genruntimeconfig.cache
+C:\stupidspeed\exec\csharp\coreclr\10_pi\obj\Release\net8.0\ref\10_pi.dll

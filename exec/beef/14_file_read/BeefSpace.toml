@@ -1,0 +1,5 @@
+FileVersion = 1
+Projects = {14_file_read = {Path = "."}}
+
+[Workspace]
+StartupProject = "14_file_read"

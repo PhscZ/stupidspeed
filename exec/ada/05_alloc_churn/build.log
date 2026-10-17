@@ -1,0 +1,3 @@
+gcc -c -O3 t05_alloc_churn.adb
+gnatbind -x t05_alloc_churn.ali
+gnatlink t05_alloc_churn.ali -O3

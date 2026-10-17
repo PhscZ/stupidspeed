@@ -181,8 +181,8 @@ tfrac:   resq 1
 tpark:   resq 1
 tnumbuf: resb 40
 stderr:  resq 1
-bufA:    resb 250008
-bufB:    resb 250008
+bufA:    resb 750008
+bufB:    resb 750008
 numbuf:  resb 32
 charbuf: resb 1
 written: resd 1

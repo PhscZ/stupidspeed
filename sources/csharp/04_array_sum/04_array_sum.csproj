@@ -1,4 +1,4 @@
-<!-- task 04 array_sum — expected output: 599999940000000>
+<!-- task 04 array_sum — expected output: 599999940000000 -->
 <!-- build: coreclr: dotnet build -c Release | nativeaot: dotnet publish -c Release -p:PublishAot=true | mono: mcs -optimize+ 04_array_sum.cs    run: coreclr: dotnet run -c Release (or bin/Release/net8.0/04_array_sum.exe) | nativeaot: bin/Release/net8.0/publish/04_array_sum.exe | mono: mono 04_array_sum.exe -->
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>

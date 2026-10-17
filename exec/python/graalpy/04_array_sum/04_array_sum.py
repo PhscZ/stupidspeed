@@ -1,0 +1,19 @@
+# task 04 array_sum — expected output: 599999940000000
+# build: python 04_array_sum.py | pypy 04_array_sum.py | graalpy 04_array_sum.py | nuitka --standalone 04_array_sum.py    run: python 04_array_sum.py
+# build (wasm): python.wasm is the wasm32-wasip1-threads build of CPython (see BUILD.md); run: wasmtime -S threads=y -W threads=y -W shared-memory=y --dir . python.wasm <task>.py
+
+import time as _time, sys as _sys
+_t0 = _time.perf_counter()
+array = [0] * 10000000
+
+for i in range(10000000):
+    array[i] = i
+
+total = 0
+for _ in range(12):
+    for i in range(10000000):
+        total += array[i]
+
+_t1 = _time.perf_counter()
+_sys.stderr.write("TIME_MS=%.3f\n" % ((_t1 - _t0) * 1000.0))
+print(total)

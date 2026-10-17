@@ -1,0 +1,9 @@
+  Determining projects to restore...
+  Restored C:\stupidspeed\exec\fsharp\02_switch_case\02_switch_case.fsproj (in 1,18 sec).
+  02_switch_case -> C:\stupidspeed\exec\fsharp\02_switch_case\bin\Release\net8.0\02_switch_case.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:35.25

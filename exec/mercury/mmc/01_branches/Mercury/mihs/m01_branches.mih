@@ -1,0 +1,56 @@
+/*
+** Automatically generated from `01_branches.m'
+** by the Mercury compiler,
+** version 22.01.9
+** configured for x86_64-w64-mingw32.
+** Do not edit.
+**
+** The autoconfigured grade settings governing
+** the generation of this C file were
+**
+** TAG_BITS=2
+** UNBOXED_FLOAT=no
+** UNBOXED_INT64S=no
+** PREGENERATED_DIST=yes
+** HIGHLEVEL_CODE=yes
+**
+** END_OF_C_GRADE_INFO
+*/
+
+
+// :- module m01_branches.
+// :- interface.
+
+#ifndef MR_HEADER_GUARD_m01_branches
+#define MR_HEADER_GUARD_m01_branches
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "mercury.h"
+
+
+#ifndef M01_BRANCHES_DECL_GUARD
+#define M01_BRANCHES_DECL_GUARD
+
+#endif
+
+
+
+
+void MR_CALL 
+main_2_p_0(void);
+
+void mercury__m01_branches__init(void);
+void mercury__m01_branches__init_type_tables(void);
+void mercury__m01_branches__init_debugger(void);
+const char *mercury__m01_branches__grade_check(void);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif // MR_HEADER_GUARD_m01_branches
+
+// :- end_interface m01_branches.

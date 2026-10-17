@@ -1,0 +1,9 @@
+  Determining projects to restore...
+  Restored C:\stupidspeed\exec\fsharp\05_alloc_churn\05_alloc_churn.fsproj (in 9,54 sec).
+  05_alloc_churn -> C:\stupidspeed\exec\fsharp\05_alloc_churn\bin\Release\net8.0\05_alloc_churn.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:01:24.28

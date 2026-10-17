@@ -17,11 +17,12 @@ class T05_alloc_churn {
             slots.push(null);
         }
 
-        var total = 0;
-        for (i in 0...10000000) {
+        // 6374991808 is past 2^31, so the accumulator is Int64, as in task 04.
+        var total = haxe.Int64.ofInt(0);
+        for (i in 0...50000000) {
             var buf = haxe.io.Bytes.alloc(64);
             buf.set(0, i % 256);
-            total += buf.get(0);
+            total = haxe.Int64.add(total, haxe.Int64.ofInt(buf.get(0)));
 
             slots[i % 256] = buf;
         }

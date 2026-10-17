@@ -1,0 +1,87 @@
+{
+  "cacheVersion": "D20240927T193831",
+  "outputFile": "C:\\stupidspeed\\exec\\nim\\nim\\15_file_write\\prog.exe",
+  "outputLastModificationTime": "",
+  "compile": [
+    [
+      "C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@psystem@sexceptions.nim.c",
+      "gcc.exe -c  -w -fmax-errors=3 -mno-ms-bitfields -fno-strict-aliasing -DWIN32_LEAN_AND_MEAN -O3 -fno-ident -fno-math-errno   -IC:\\stupidspeed\\tools\\nim\\lib -IC:\\stupidspeed\\exec\\nim\\nim\\15_file_write -o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@psystem@sexceptions.nim.c.o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@psystem@sexceptions.nim.c"
+    ],
+    [
+      "C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pstd@sprivate@sdigitsutils.nim.c",
+      "gcc.exe -c  -w -fmax-errors=3 -mno-ms-bitfields -fno-strict-aliasing -DWIN32_LEAN_AND_MEAN -O3 -fno-ident -fno-math-errno   -IC:\\stupidspeed\\tools\\nim\\lib -IC:\\stupidspeed\\exec\\nim\\nim\\15_file_write -o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pstd@sprivate@sdigitsutils.nim.c.o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pstd@sprivate@sdigitsutils.nim.c"
+    ],
+    [
+      "C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@psystem@sdollars.nim.c",
+      "gcc.exe -c  -w -fmax-errors=3 -mno-ms-bitfields -fno-strict-aliasing -DWIN32_LEAN_AND_MEAN -O3 -fno-ident -fno-math-errno   -IC:\\stupidspeed\\tools\\nim\\lib -IC:\\stupidspeed\\exec\\nim\\nim\\15_file_write -o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@psystem@sdollars.nim.c.o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@psystem@sdollars.nim.c"
+    ],
+    [
+      "C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pstd@swidestrs.nim.c",
+      "gcc.exe -c  -w -fmax-errors=3 -mno-ms-bitfields -fno-strict-aliasing -DWIN32_LEAN_AND_MEAN -O3 -fno-ident -fno-math-errno   -IC:\\stupidspeed\\tools\\nim\\lib -IC:\\stupidspeed\\exec\\nim\\nim\\15_file_write -o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pstd@swidestrs.nim.c.o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pstd@swidestrs.nim.c"
+    ],
+    [
+      "C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pstd@sexitprocs.nim.c",
+      "gcc.exe -c  -w -fmax-errors=3 -mno-ms-bitfields -fno-strict-aliasing -DWIN32_LEAN_AND_MEAN -O3 -fno-ident -fno-math-errno   -IC:\\stupidspeed\\tools\\nim\\lib -IC:\\stupidspeed\\exec\\nim\\nim\\15_file_write -o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pstd@sexitprocs.nim.c.o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pstd@sexitprocs.nim.c"
+    ],
+    [
+      "C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pstd@ssyncio.nim.c",
+      "gcc.exe -c  -w -fmax-errors=3 -mno-ms-bitfields -fno-strict-aliasing -DWIN32_LEAN_AND_MEAN -O3 -fno-ident -fno-math-errno   -IC:\\stupidspeed\\tools\\nim\\lib -IC:\\stupidspeed\\exec\\nim\\nim\\15_file_write -o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pstd@ssyncio.nim.c.o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pstd@ssyncio.nim.c"
+    ],
+    [
+      "C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@psystem.nim.c",
+      "gcc.exe -c  -w -fmax-errors=3 -mno-ms-bitfields -fno-strict-aliasing -DWIN32_LEAN_AND_MEAN -O3 -fno-ident -fno-math-errno   -IC:\\stupidspeed\\tools\\nim\\lib -IC:\\stupidspeed\\exec\\nim\\nim\\15_file_write -o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@psystem.nim.c.o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@psystem.nim.c"
+    ],
+    [
+      "C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pstrutils.nim.c",
+      "gcc.exe -c  -w -fmax-errors=3 -mno-ms-bitfields -fno-strict-aliasing -DWIN32_LEAN_AND_MEAN -O3 -fno-ident -fno-math-errno   -IC:\\stupidspeed\\tools\\nim\\lib -IC:\\stupidspeed\\exec\\nim\\nim\\15_file_write -o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pstrutils.nim.c.o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pstrutils.nim.c"
+    ],
+    [
+      "C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pdynlib.nim.c",
+      "gcc.exe -c  -w -fmax-errors=3 -mno-ms-bitfields -fno-strict-aliasing -DWIN32_LEAN_AND_MEAN -O3 -fno-ident -fno-math-errno   -IC:\\stupidspeed\\tools\\nim\\lib -IC:\\stupidspeed\\exec\\nim\\nim\\15_file_write -o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pdynlib.nim.c.o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pdynlib.nim.c"
+    ],
+    [
+      "C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pwinlean.nim.c",
+      "gcc.exe -c  -w -fmax-errors=3 -mno-ms-bitfields -fno-strict-aliasing -DWIN32_LEAN_AND_MEAN -O3 -fno-ident -fno-math-errno   -IC:\\stupidspeed\\tools\\nim\\lib -IC:\\stupidspeed\\exec\\nim\\nim\\15_file_write -o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pwinlean.nim.c.o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pwinlean.nim.c"
+    ],
+    [
+      "C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@ptimes.nim.c",
+      "gcc.exe -c  -w -fmax-errors=3 -mno-ms-bitfields -fno-strict-aliasing -DWIN32_LEAN_AND_MEAN -O3 -fno-ident -fno-math-errno   -IC:\\stupidspeed\\tools\\nim\\lib -IC:\\stupidspeed\\exec\\nim\\nim\\15_file_write -o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@ptimes.nim.c.o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@ptimes.nim.c"
+    ],
+    [
+      "C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pstd@smonotimes.nim.c",
+      "gcc.exe -c  -w -fmax-errors=3 -mno-ms-bitfields -fno-strict-aliasing -DWIN32_LEAN_AND_MEAN -O3 -fno-ident -fno-math-errno   -IC:\\stupidspeed\\tools\\nim\\lib -IC:\\stupidspeed\\exec\\nim\\nim\\15_file_write -o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pstd@smonotimes.nim.c.o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pstd@smonotimes.nim.c"
+    ],
+    [
+      "C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@mt15_file_write.nim.c",
+      "gcc.exe -c  -w -fmax-errors=3 -mno-ms-bitfields -fno-strict-aliasing -DWIN32_LEAN_AND_MEAN -O3 -fno-ident -fno-math-errno   -IC:\\stupidspeed\\tools\\nim\\lib -IC:\\stupidspeed\\exec\\nim\\nim\\15_file_write -o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@mt15_file_write.nim.c.o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@mt15_file_write.nim.c"
+    ]
+  ],
+  "link": [
+    "C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@psystem@sexceptions.nim.c.o",
+    "C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pstd@sprivate@sdigitsutils.nim.c.o",
+    "C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@psystem@sdollars.nim.c.o",
+    "C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pstd@swidestrs.nim.c.o",
+    "C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pstd@sexitprocs.nim.c.o",
+    "C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pstd@ssyncio.nim.c.o",
+    "C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@psystem.nim.c.o",
+    "C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pstrutils.nim.c.o",
+    "C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pdynlib.nim.c.o",
+    "C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pwinlean.nim.c.o",
+    "C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@ptimes.nim.c.o",
+    "C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pstd@smonotimes.nim.c.o",
+    "C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@mt15_file_write.nim.c.o"
+  ],
+  "linkcmd": "gcc.exe   -o C:\\stupidspeed\\exec\\nim\\nim\\15_file_write\\prog.exe C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@psystem@sexceptions.nim.c.o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pstd@sprivate@sdigitsutils.nim.c.o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@psystem@sdollars.nim.c.o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pstd@swidestrs.nim.c.o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pstd@sexitprocs.nim.c.o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pstd@ssyncio.nim.c.o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@psystem.nim.c.o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pstrutils.nim.c.o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pdynlib.nim.c.o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pwinlean.nim.c.o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@ptimes.nim.c.o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@pstd@smonotimes.nim.c.o C:\\stupidspeed\\exec\\nim\\nim\\nimcache\\@mt15_file_write.nim.c.o    -Wl,-Bstatic -lpthread",
+  "extraCmds": [],
+  "configFiles": [
+    "C:\\stupidspeed\\tools\\nim\\config\\nim.cfg",
+    "C:\\stupidspeed\\tools\\nim\\config\\config.nims"
+  ],
+  "stdinInput": false,
+  "projectIsCmd": false,
+  "cmdInput": "",
+  "currentDir": "C:\\stupidspeed\\exec\\nim\\nim\\15_file_write",
+  "cmdline": "",
+  "depfiles": [],
+  "nimexe": ""
+}

@@ -26,7 +26,7 @@ language and the toolchain that turns its source into something runnable --
 `ada`/`gnat`, `C`/`gcc`, `C++`/`g++`, `Rust`/`rustc`.  A **backend** is the
 component that actually executes the result: the code generator or virtual machine
 the front end hands its program to.  There are far fewer backends than front ends,
-because most front ends share one -- 17 are GCC, 25 are LLVM, the JVM's HotSpot
+because most front ends share one -- 12 are GCC, 21 are LLVM, the JVM's HotSpot
 appears in four configurations over the same class files, and eight WebAssembly
 backends execute the same modules -- so every cell carries both, and a run can be
 read by front end or by backend (`--backends`, `--backend gcc`, and the
@@ -436,8 +436,6 @@ _TOOL_INDEX = None
 # where BUILD.md says needs no entry here.
 ALIASES = {
     "{root}/tools/lua/lua54.exe": "{root}/tools/lua/bin/lua.exe",
-    "{root}/tools/terra/bin/terra.exe":
-        "{root}/tools/terra/terra-Windows-x86_64-bb02b25/bin/terra.exe",
 }
 
 
@@ -684,7 +682,7 @@ def reset(cwd, entry, row, tc, task, time_file):
     perfectly good program into a failed cell.
     """
     paths = [fill(p, ROOT_FWD, row, tc, task) for p in entry.get("clean", [])]
-    # A bare name (dolphin and lobster list `time.txt`) is relative to the cell.
+    # A bare name (`clean: ["time.txt"]`) is relative to the cell.
     paths = [norm(p if os.path.isabs(p) else os.path.join(cwd, p)) for p in paths]
     paths.append(time_file or os.path.join(cwd, "time.txt"))
     out = out_path(entry, cwd, row, tc, task)
@@ -734,9 +732,9 @@ def measure(cell, runs, timeout_override, check_only, cpu=3, cores=4,
     cwd = norm(fill(entry["cwd"], ROOT_FWD, row, tc, task))
     watch = [norm(fill(entry["time_file"], ROOT_FWD, row, tc, task))
              if entry.get("time_file") else os.path.join(cwd, "time.txt")]
-    # A row may also rewrite a file of its own -- the gleam row's package
-    # manifest, which `gleam run` reorders on every invocation -- and that file
-    # is committed, so it is watched too and put back the same way.
+    # A row may also rewrite a file of its own, named by its `restore` list --
+    # a build manifest the toolchain reorders on every invocation, say -- and
+    # that file is committed, so it is watched too and put back the same way.
     watch += [norm(fill(p, ROOT_FWD, row, tc, task)) for p in entry.get("restore", [])]
     out = out_path(entry, cwd, row, tc, task)
     if out:
@@ -1724,7 +1722,7 @@ def main():
             "clang cells and leaves its gcc, tcc and msvc cells alone:\n"
             "\n"
             "  python exec/harness.py --backends             # the backends\n"
-            "  python exec/harness.py --backend gcc          # 17 rows, one backend\n"
+            "  python exec/harness.py --backend gcc          # 12 rows, one backend\n"
             "  python exec/harness.py --backend llvm --rows c  # the c row on clang\n"
             "\n"
             "Results are additive: every run merges into exec/results.json, so the\n"
@@ -1748,7 +1746,7 @@ def main():
     ap.add_argument("--backend", default="",
                     help="backends to narrow the run to, by id or display name "
                          "(`gcc`, `llvm`, `beam`, `HotSpot C2`): only the cells "
-                         "that execute on one of them, so `--backend gcc` is the 17 "
+                         "that execute on one of them, so `--backend gcc` is the 12 "
                          "GCC front ends and `--rows c --backend llvm` is that row's "
                          "clang cells alone.  Selection is per cell, so `--backend lute` "
                          "is Luau's three Lute tasks and not its twelve VM cells.  "

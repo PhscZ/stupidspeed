@@ -1,0 +1,7 @@
+   Creating library C:\stupidspeed\exec\csharp\mono-aot\03_func_sum\03_func_sum.exe.dll.lib and object C:\stupidspeed\exec\csharp\mono-aot\03_func_sum\03_func_sum.exe.dll.exp
+Mono Ahead of Time compiler - compiling assembly C:\stupidspeed\exec\csharp\mono-aot\03_func_sum\03_func_sum.exe
+AOTID 8356463F-D567-F4BA-7C33-C7DEF87543A1
+Compiled: 3/3
+Executing the native assembler: "clang.exe" --target=x86_64-pc-windows-msvc -c -x assembler  -o C:\Users\pz020\AppData\Local\Temp\mono_aot_a05116.obj C:\Users\pz020\AppData\Local\Temp\mono_aot_a05116
+Executing the native linker: "link.exe" /DLL /MACHINE:X64 /NOLOGO /INCREMENTAL:NO /DEBUG  /OUT:C:\stupidspeed\exec\csharp\mono-aot\03_func_sum\03_func_sum.exe.dll.tmp C:\Users\pz020\AppData\Local\Temp\mono_aot_a05116.obj 
+JIT time: 9 ms, Generation time: 1 ms, Assembly+Link time: 7721 ms.

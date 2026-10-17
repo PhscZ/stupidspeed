@@ -1,4 +1,0 @@
-import("libm3")
-module("AddOne")
-implementation("Main")
-program("prog")

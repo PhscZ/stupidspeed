@@ -1,0 +1,7 @@
+   Creating library C:\stupidspeed\exec\csharp\mono-aot\11_parallel_sum\11_parallel_sum.exe.dll.lib and object C:\stupidspeed\exec\csharp\mono-aot\11_parallel_sum\11_parallel_sum.exe.dll.exp
+Mono Ahead of Time compiler - compiling assembly C:\stupidspeed\exec\csharp\mono-aot\11_parallel_sum\11_parallel_sum.exe
+AOTID B36879A0-CBCF-6B6C-5568-D13A17DD1590
+Compiled: 6/6
+Executing the native assembler: "clang.exe" --target=x86_64-pc-windows-msvc -c -x assembler  -o C:\Users\pz020\AppData\Local\Temp\mono_aot_a15752.obj C:\Users\pz020\AppData\Local\Temp\mono_aot_a15752
+Executing the native linker: "link.exe" /DLL /MACHINE:X64 /NOLOGO /INCREMENTAL:NO /DEBUG  /OUT:C:\stupidspeed\exec\csharp\mono-aot\11_parallel_sum\11_parallel_sum.exe.dll.tmp C:\Users\pz020\AppData\Local\Temp\mono_aot_a15752.obj 
+JIT time: 11 ms, Generation time: 2 ms, Assembly+Link time: 1117 ms.

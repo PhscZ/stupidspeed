@@ -1,0 +1,5 @@
+:- module m06_char_count.
+:- interface.
+:- use_module io.
+:- pred main(io.io, io.io).
+:- mode main((builtin.di), (builtin.uo)) is det.

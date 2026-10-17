@@ -1,0 +1,18 @@
+[info] Linking (multithreadingEnabled=detect) (8768 ms)
+[info] Discovered 898 classes and 5482 methods after classloading
+[info] Checking intermediate code (quick) (253 ms)
+[info] Multithreading was not explicitly enabled - initial class loading has not detected any usage of system threads. Multithreading support will be disabled to improve performance.
+[info] Linking (multithreadingEnabled=false) (8266 ms)
+[info] Discovered 726 classes and 4142 methods after classloading
+[info] Checking intermediate code (quick) (80 ms)
+[info] Discovered 598 classes and 2087 methods after optimization
+[info] Optimizing (release-fast mode) (7080 ms)
+[info] Produced 8 LLVM IR files
+[info] Generating intermediate code (8831 ms)
+[info] Compiling to native code (65469 ms)
+[info] Linking with [dbghelp, kernel32, userenv, advapi32]
+[info] Linking native code (immix gc, none lto) (2371 ms)
+[info] Postprocessing (0 ms)
+[info] Total (101036 ms)
+Wrote C:\stupidspeed\exec\scala-native\scala-native\03_func_sum\prog.exe, run it with
+  .\prog.exe

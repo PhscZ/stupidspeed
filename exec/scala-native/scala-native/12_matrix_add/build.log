@@ -1,0 +1,20 @@
+[90mCompiling project (Scala 3.9.0, Scala Native 0.5.12)[0m
+[90mCompiled project (Scala 3.9.0, Scala Native 0.5.12)[0m
+[info] Linking (multithreadingEnabled=detect) (9841 ms)
+[info] Discovered 898 classes and 5481 methods after classloading
+[info] Checking intermediate code (quick) (372 ms)
+[info] Multithreading was not explicitly enabled - initial class loading has not detected any usage of system threads. Multithreading support will be disabled to improve performance.
+[info] Linking (multithreadingEnabled=false) (2209 ms)
+[info] Discovered 726 classes and 4141 methods after classloading
+[info] Checking intermediate code (quick) (56 ms)
+[info] Discovered 598 classes and 2086 methods after optimization
+[info] Optimizing (release-fast mode) (63272 ms)
+[info] Produced 8 LLVM IR files
+[info] Generating intermediate code (15366 ms)
+[info] Compiling to native code (300033 ms)
+[info] Linking with [dbghelp, kernel32, userenv, advapi32]
+[info] Linking native code (immix gc, none lto) (16929 ms)
+[info] Postprocessing (0 ms)
+[info] Total (460932 ms)
+Wrote C:\stupidspeed\exec\scala-native\scala-native\12_matrix_add\prog.exe, run it with
+  .\prog.exe

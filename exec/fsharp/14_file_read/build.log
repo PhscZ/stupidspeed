@@ -1,0 +1,9 @@
+  Determining projects to restore...
+  Restored C:\stupidspeed\exec\fsharp\14_file_read\14_file_read.fsproj (in 4,2 sec).
+  14_file_read -> C:\stupidspeed\exec\fsharp\14_file_read\bin\Release\net8.0\14_file_read.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:01:19.12

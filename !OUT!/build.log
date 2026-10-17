@@ -1,0 +1,12 @@
+Hint: used config file 'C:\stupidspeed\tools\nim\config\nim.cfg' [Conf]
+Hint: used config file 'C:\stupidspeed\tools\nim\config\config.nims' [Conf]
+.................................................................................................
+CC: system/exceptions.nim
+CC: std/assertions.nim
+CC: system.nim
+CC: strutils.nim
+CC: std/monotimes.nim
+CC: t06_char_count.nim
+Hint:  [Link]
+Hint: mm: orc; threads: on; opt: speed; options: -d:release
+48704 lines; 78.545s; 73.078MiB peakmem; proj: C:\stupidspeed\!OUT!\t06_char_count.nim; out: C:\stupidspeed\!OUT!\prog.exe [SuccessX]

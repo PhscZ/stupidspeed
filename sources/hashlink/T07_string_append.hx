@@ -15,7 +15,7 @@ class T07_string_append {
         var t0 = Sys.time();
         var text = "";
 
-        for (i in 0...250000) {
+        for (i in 0...750000) {
             text += "x";
         }
 

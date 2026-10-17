@@ -9,7 +9,7 @@ fn main() {
     let ss_t0 = Instant::now();
     let mut total: f64 = 0.0;
 
-    for i in 0..100_000_000u64 {
+    for i in 0..200_000_000u64 {
         let reading = (i % 256) as f64 / 256.0;
         total += reading;
     }

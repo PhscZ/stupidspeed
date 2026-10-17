@@ -13,7 +13,7 @@ class T02_switch_case {
         var t0 = Sys.time();
         var acc = haxe.Int64.ofInt(0);
 
-        for (i in 0...100000000) {
+        for (i in 0...108000000) {
             switch (i % 4) {
                 case 0:
                     acc += 1;

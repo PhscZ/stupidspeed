@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "A0nt4WGePBs=",
+  "success": true,
+  "projectFilePath": "C:\\stupidspeed\\exec\\fsharp\\10_pi\\10_pi.fsproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\pz020\\.nuget\\packages\\fsharp.core\\8.0.403\\fsharp.core.8.0.403.nupkg.sha512"
+  ],
+  "logs": []
+}

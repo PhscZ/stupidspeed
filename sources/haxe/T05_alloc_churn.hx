@@ -6,7 +6,7 @@
 //       has no free, so the buffer a slot replaces is simply dropped and the collector
 //       reclaims it, where the C row calls free() on it.
 // note: this is the memory-pressure cell for hxcpp's conservative stop-the-world collector:
-//       ten million 64-byte buffers are allocated and all but 256 become garbage.
+//       fifty million 64-byte buffers are allocated and all but 256 become garbage.
 
 class T05_alloc_churn {
     static function main() {
@@ -17,8 +17,9 @@ class T05_alloc_churn {
             slots.push(null);
         }
 
-        var total = 0;
-        for (i in 0...10000000) {
+        // 6.37e9 exceeds 2^31, so the accumulator must be an Int64 on the 32-bit-Int targets.
+        var total = haxe.Int64.ofInt(0);
+        for (i in 0...50000000) {
             var buf = haxe.io.Bytes.alloc(64);
             buf.set(0, i % 256);
             total += buf.get(0);

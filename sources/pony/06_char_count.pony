@@ -4,8 +4,8 @@
 // build: mkdir -p temp/pony/06_char_count && cp sources/pony/06_char_count.pony temp/pony/06_char_count/ && tools/ponyc/bin/ponyc.exe -o temp/pony/06_char_count temp/pony/06_char_count
 // run: temp/pony/06_char_count/06_char_count.exe
 // note: the 250 MB text is built from a repeated block — a 1000-byte chunk is built once by
-//       appending the ten-byte block 100 times, then that chunk is appended 100000 times — so
-//       the build is 100100 amortised-O(1) appends rather than 25000000 of them.
+//       appending the ten-byte block 100 times, then that chunk is appended 250000 times — so
+//       the build is 250100 amortised-O(1) appends rather than 250000000 of them.
 // note: String.values() walks the bytes of the string; 'h' occurs once per ten-byte block.
 
 
@@ -33,7 +33,7 @@ actor Main
       end
       let whole = String(250000000)
       j = 0
-      while j < 100000 do
+      while j < 250000 do
         whole.append(chunk)
         j = j + 1
       end

@@ -1,0 +1,9 @@
+  Determining projects to restore...
+  Restored C:\stupidspeed\exec\fsharp\09_fib_recursive\09_fib_recursive.fsproj (in 1,29 sec).
+  09_fib_recursive -> C:\stupidspeed\exec\fsharp\09_fib_recursive\bin\Release\net8.0\09_fib_recursive.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:01:04.87

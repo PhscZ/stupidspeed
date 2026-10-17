@@ -1,0 +1,87 @@
+{
+  "cacheVersion": "D20240927T193831",
+  "outputFile": "C:\\stupidspeed\\exec\\nim\\cpp\\15_file_write\\prog.exe",
+  "outputLastModificationTime": "",
+  "compile": [
+    [
+      "C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@psystem@sexceptions.nim.cpp",
+      "g++.exe -c -std=gnu++17 -funsigned-char  -w -fmax-errors=3 -fpermissive -mno-ms-bitfields -DWIN32_LEAN_AND_MEAN -O3 -fno-strict-aliasing -fno-ident -fno-math-errno   -IC:\\stupidspeed\\tools\\nim\\lib -IC:\\stupidspeed\\exec\\nim\\cpp\\15_file_write -o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@psystem@sexceptions.nim.cpp.o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@psystem@sexceptions.nim.cpp"
+    ],
+    [
+      "C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pstd@sprivate@sdigitsutils.nim.cpp",
+      "g++.exe -c -std=gnu++17 -funsigned-char  -w -fmax-errors=3 -fpermissive -mno-ms-bitfields -DWIN32_LEAN_AND_MEAN -O3 -fno-strict-aliasing -fno-ident -fno-math-errno   -IC:\\stupidspeed\\tools\\nim\\lib -IC:\\stupidspeed\\exec\\nim\\cpp\\15_file_write -o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pstd@sprivate@sdigitsutils.nim.cpp.o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pstd@sprivate@sdigitsutils.nim.cpp"
+    ],
+    [
+      "C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@psystem@sdollars.nim.cpp",
+      "g++.exe -c -std=gnu++17 -funsigned-char  -w -fmax-errors=3 -fpermissive -mno-ms-bitfields -DWIN32_LEAN_AND_MEAN -O3 -fno-strict-aliasing -fno-ident -fno-math-errno   -IC:\\stupidspeed\\tools\\nim\\lib -IC:\\stupidspeed\\exec\\nim\\cpp\\15_file_write -o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@psystem@sdollars.nim.cpp.o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@psystem@sdollars.nim.cpp"
+    ],
+    [
+      "C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pstd@swidestrs.nim.cpp",
+      "g++.exe -c -std=gnu++17 -funsigned-char  -w -fmax-errors=3 -fpermissive -mno-ms-bitfields -DWIN32_LEAN_AND_MEAN -O3 -fno-strict-aliasing -fno-ident -fno-math-errno   -IC:\\stupidspeed\\tools\\nim\\lib -IC:\\stupidspeed\\exec\\nim\\cpp\\15_file_write -o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pstd@swidestrs.nim.cpp.o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pstd@swidestrs.nim.cpp"
+    ],
+    [
+      "C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pstd@sexitprocs.nim.cpp",
+      "g++.exe -c -std=gnu++17 -funsigned-char  -w -fmax-errors=3 -fpermissive -mno-ms-bitfields -DWIN32_LEAN_AND_MEAN -O3 -fno-strict-aliasing -fno-ident -fno-math-errno   -IC:\\stupidspeed\\tools\\nim\\lib -IC:\\stupidspeed\\exec\\nim\\cpp\\15_file_write -o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pstd@sexitprocs.nim.cpp.o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pstd@sexitprocs.nim.cpp"
+    ],
+    [
+      "C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pstd@ssyncio.nim.cpp",
+      "g++.exe -c -std=gnu++17 -funsigned-char  -w -fmax-errors=3 -fpermissive -mno-ms-bitfields -DWIN32_LEAN_AND_MEAN -O3 -fno-strict-aliasing -fno-ident -fno-math-errno   -IC:\\stupidspeed\\tools\\nim\\lib -IC:\\stupidspeed\\exec\\nim\\cpp\\15_file_write -o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pstd@ssyncio.nim.cpp.o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pstd@ssyncio.nim.cpp"
+    ],
+    [
+      "C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@psystem.nim.cpp",
+      "g++.exe -c -std=gnu++17 -funsigned-char  -w -fmax-errors=3 -fpermissive -mno-ms-bitfields -DWIN32_LEAN_AND_MEAN -O3 -fno-strict-aliasing -fno-ident -fno-math-errno   -IC:\\stupidspeed\\tools\\nim\\lib -IC:\\stupidspeed\\exec\\nim\\cpp\\15_file_write -o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@psystem.nim.cpp.o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@psystem.nim.cpp"
+    ],
+    [
+      "C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pstrutils.nim.cpp",
+      "g++.exe -c -std=gnu++17 -funsigned-char  -w -fmax-errors=3 -fpermissive -mno-ms-bitfields -DWIN32_LEAN_AND_MEAN -O3 -fno-strict-aliasing -fno-ident -fno-math-errno   -IC:\\stupidspeed\\tools\\nim\\lib -IC:\\stupidspeed\\exec\\nim\\cpp\\15_file_write -o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pstrutils.nim.cpp.o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pstrutils.nim.cpp"
+    ],
+    [
+      "C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pdynlib.nim.cpp",
+      "g++.exe -c -std=gnu++17 -funsigned-char  -w -fmax-errors=3 -fpermissive -mno-ms-bitfields -DWIN32_LEAN_AND_MEAN -O3 -fno-strict-aliasing -fno-ident -fno-math-errno   -IC:\\stupidspeed\\tools\\nim\\lib -IC:\\stupidspeed\\exec\\nim\\cpp\\15_file_write -o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pdynlib.nim.cpp.o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pdynlib.nim.cpp"
+    ],
+    [
+      "C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pwinlean.nim.cpp",
+      "g++.exe -c -std=gnu++17 -funsigned-char  -w -fmax-errors=3 -fpermissive -mno-ms-bitfields -DWIN32_LEAN_AND_MEAN -O3 -fno-strict-aliasing -fno-ident -fno-math-errno   -IC:\\stupidspeed\\tools\\nim\\lib -IC:\\stupidspeed\\exec\\nim\\cpp\\15_file_write -o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pwinlean.nim.cpp.o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pwinlean.nim.cpp"
+    ],
+    [
+      "C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@ptimes.nim.cpp",
+      "g++.exe -c -std=gnu++17 -funsigned-char  -w -fmax-errors=3 -fpermissive -mno-ms-bitfields -DWIN32_LEAN_AND_MEAN -O3 -fno-strict-aliasing -fno-ident -fno-math-errno   -IC:\\stupidspeed\\tools\\nim\\lib -IC:\\stupidspeed\\exec\\nim\\cpp\\15_file_write -o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@ptimes.nim.cpp.o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@ptimes.nim.cpp"
+    ],
+    [
+      "C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pstd@smonotimes.nim.cpp",
+      "g++.exe -c -std=gnu++17 -funsigned-char  -w -fmax-errors=3 -fpermissive -mno-ms-bitfields -DWIN32_LEAN_AND_MEAN -O3 -fno-strict-aliasing -fno-ident -fno-math-errno   -IC:\\stupidspeed\\tools\\nim\\lib -IC:\\stupidspeed\\exec\\nim\\cpp\\15_file_write -o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pstd@smonotimes.nim.cpp.o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pstd@smonotimes.nim.cpp"
+    ],
+    [
+      "C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@mt15_file_write.nim.cpp",
+      "g++.exe -c -std=gnu++17 -funsigned-char  -w -fmax-errors=3 -fpermissive -mno-ms-bitfields -DWIN32_LEAN_AND_MEAN -O3 -fno-strict-aliasing -fno-ident -fno-math-errno   -IC:\\stupidspeed\\tools\\nim\\lib -IC:\\stupidspeed\\exec\\nim\\cpp\\15_file_write -o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@mt15_file_write.nim.cpp.o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@mt15_file_write.nim.cpp"
+    ]
+  ],
+  "link": [
+    "C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@psystem@sexceptions.nim.cpp.o",
+    "C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pstd@sprivate@sdigitsutils.nim.cpp.o",
+    "C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@psystem@sdollars.nim.cpp.o",
+    "C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pstd@swidestrs.nim.cpp.o",
+    "C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pstd@sexitprocs.nim.cpp.o",
+    "C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pstd@ssyncio.nim.cpp.o",
+    "C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@psystem.nim.cpp.o",
+    "C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pstrutils.nim.cpp.o",
+    "C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pdynlib.nim.cpp.o",
+    "C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pwinlean.nim.cpp.o",
+    "C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@ptimes.nim.cpp.o",
+    "C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pstd@smonotimes.nim.cpp.o",
+    "C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@mt15_file_write.nim.cpp.o"
+  ],
+  "linkcmd": "g++.exe   -o C:\\stupidspeed\\exec\\nim\\cpp\\15_file_write\\prog.exe C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@psystem@sexceptions.nim.cpp.o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pstd@sprivate@sdigitsutils.nim.cpp.o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@psystem@sdollars.nim.cpp.o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pstd@swidestrs.nim.cpp.o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pstd@sexitprocs.nim.cpp.o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pstd@ssyncio.nim.cpp.o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@psystem.nim.cpp.o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pstrutils.nim.cpp.o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pdynlib.nim.cpp.o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pwinlean.nim.cpp.o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@ptimes.nim.cpp.o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@pstd@smonotimes.nim.cpp.o C:\\stupidspeed\\exec\\nim\\cpp\\nimcache\\@mt15_file_write.nim.cpp.o    ",
+  "extraCmds": [],
+  "configFiles": [
+    "C:\\stupidspeed\\tools\\nim\\config\\nim.cfg",
+    "C:\\stupidspeed\\tools\\nim\\config\\config.nims"
+  ],
+  "stdinInput": false,
+  "projectIsCmd": false,
+  "cmdInput": "",
+  "currentDir": "C:\\stupidspeed\\exec\\nim\\cpp\\15_file_write",
+  "cmdline": "",
+  "depfiles": [],
+  "nimexe": ""
+}

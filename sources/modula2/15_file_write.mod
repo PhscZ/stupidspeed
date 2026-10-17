@@ -75,18 +75,27 @@ BEGIN
    ssT0 := SsNow ();
    FOR i := 0 TO chunk - 1 DO buf [i] := CHR (i MOD 256) END;
    total := 0;
+   (* One channel for all eight passes, rewound to offset 0 before each one.
+      ADW's SeqFile.OpenWrite is create-new, not truncate: it fails outright if
+      the file already exists, so the reopen-each-pass form this task is written
+      in on the other rows cannot be expressed at all here -- the second open
+      returns an error. Opening once and rewinding is the equivalent: the writes,
+      their offset, the flush and the resulting 50 MiB out.bin are unchanged.
+      The run directory must not hold a stale out.bin; exec/harness.py's reset()
+      and this row's verify.py both delete it before the run. *)
+   SeqFile.OpenWrite (cid, "out.bin", SeqFile.raw, res);
+   IF res # ChanConsts.opened THEN
+      STextIO.WriteString ("open failed"); STextIO.WriteLn; HALT
+   END;
    FOR p := 1 TO passes DO
-      SeqFile.OpenWrite (cid, "out.bin", SeqFile.raw, res);
-      IF res # ChanConsts.opened THEN
-         STextIO.WriteString ("open failed"); STextIO.WriteLn; HALT
-      END;
       FOR i := 1 TO reps DO
          IOChan.RawWrite (cid, ADR (buf), chunk);
          total := total + VAL (LONGCARD, chunk)
       END;
       IOChan.Flush (cid);
-      SeqFile.Close (cid)
+      IOChan.Reset (cid)
    END;
+   SeqFile.Close (cid);
    SsReport (ssT0);
    SLWholeIO.WriteLongCard (total, 0); STextIO.WriteLn
 END Task15.

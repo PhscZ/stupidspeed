@@ -1,0 +1,15 @@
+C:\stupidspeed\exec\csharp\coreclr\02_switch_case\bin\Release\net8.0\02_switch_case.exe
+C:\stupidspeed\exec\csharp\coreclr\02_switch_case\bin\Release\net8.0\02_switch_case.deps.json
+C:\stupidspeed\exec\csharp\coreclr\02_switch_case\bin\Release\net8.0\02_switch_case.runtimeconfig.json
+C:\stupidspeed\exec\csharp\coreclr\02_switch_case\bin\Release\net8.0\02_switch_case.dll
+C:\stupidspeed\exec\csharp\coreclr\02_switch_case\bin\Release\net8.0\02_switch_case.pdb
+C:\stupidspeed\exec\csharp\coreclr\02_switch_case\obj\Release\net8.0\02_switch_case.GeneratedMSBuildEditorConfig.editorconfig
+C:\stupidspeed\exec\csharp\coreclr\02_switch_case\obj\Release\net8.0\02_switch_case.AssemblyInfoInputs.cache
+C:\stupidspeed\exec\csharp\coreclr\02_switch_case\obj\Release\net8.0\02_switch_case.AssemblyInfo.cs
+C:\stupidspeed\exec\csharp\coreclr\02_switch_case\obj\Release\net8.0\02_switch_case.csproj.CoreCompileInputs.cache
+C:\stupidspeed\exec\csharp\coreclr\02_switch_case\obj\Release\net8.0\02_switch_case.sourcelink.json
+C:\stupidspeed\exec\csharp\coreclr\02_switch_case\obj\Release\net8.0\02_switch_case.dll
+C:\stupidspeed\exec\csharp\coreclr\02_switch_case\obj\Release\net8.0\refint\02_switch_case.dll
+C:\stupidspeed\exec\csharp\coreclr\02_switch_case\obj\Release\net8.0\02_switch_case.pdb
+C:\stupidspeed\exec\csharp\coreclr\02_switch_case\obj\Release\net8.0\02_switch_case.genruntimeconfig.cache
+C:\stupidspeed\exec\csharp\coreclr\02_switch_case\obj\Release\net8.0\ref\02_switch_case.dll

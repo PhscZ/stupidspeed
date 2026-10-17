@@ -70,7 +70,7 @@ function emitFixed9(v: f64): void {
   emitI64(scaled / 1000000000);
   emit(46);
   let frac: i64 = scaled % 1000000000;
-  let div: i64 = 200000000;
+  let div: i64 = 100000000;
   while (div > 0) {
     emit(48 + <i32>((frac / div) % 10));
     div = div / 10;

@@ -1,0 +1,2 @@
+C:\stupidspeed\exec\csharp\nativeaot\02_switch_case\bin\Release\net8.0\win-x64\publish\02_switch_case.exe
+C:\stupidspeed\exec\csharp\nativeaot\02_switch_case\bin\Release\net8.0\win-x64\publish\02_switch_case.pdb

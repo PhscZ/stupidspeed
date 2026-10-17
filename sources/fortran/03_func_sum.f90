@@ -16,7 +16,7 @@ program main
 
   call system_clock(ss_t0, ss_rate)
   value = 0_8
-  do i = 1_8, 100000000_8
+  do i = 1_8, 400000000_8
     value = add_one(value)
   end do
 

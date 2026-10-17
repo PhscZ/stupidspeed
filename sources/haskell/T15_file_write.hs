@@ -24,19 +24,22 @@ chunkLen = B.length chunk
 main :: IO ()
 main = do
   t0 <- getPOSIXTime
-  !n <- withBinaryFile "out.bin" WriteMode (passes 8 0)
+  !n <- passes 8 0
   t1 <- getPOSIXTime
   let !ms = (realToFrac (t1 - t0) :: Double) * 1000
   hPrintf stderr "TIME_MS=%.3f\n" ms
   print n
 
--- One pass: write the 1 MiB chunk 50 times, then flush.
-passes :: Int -> Int -> Handle -> IO Int
-passes 0 !w _ = return w
-passes p !w h = do
-  w' <- writeChunk h 50 w
-  hFlush h
-  passes (p - 1) w' h
+-- One pass: reopen out.bin (withBinaryFile truncates on open), write the 1 MiB
+-- chunk 50 times, then flush.
+passes :: Int -> Int -> IO Int
+passes 0 !w = return w
+passes p !w = do
+  w' <- withBinaryFile "out.bin" WriteMode (\h -> do
+          w'' <- writeChunk h 50 w
+          hFlush h
+          return w'')
+  passes (p - 1) w'
 
 writeChunk :: Handle -> Int -> Int -> IO Int
 writeChunk _ 0 !w = return w

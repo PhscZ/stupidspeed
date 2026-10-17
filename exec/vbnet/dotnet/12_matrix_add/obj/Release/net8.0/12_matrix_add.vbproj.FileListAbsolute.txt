@@ -1,0 +1,15 @@
+C:\stupidspeed\exec\vbnet\dotnet\12_matrix_add\bin\Release\net8.0\12_matrix_add.exe
+C:\stupidspeed\exec\vbnet\dotnet\12_matrix_add\bin\Release\net8.0\12_matrix_add.deps.json
+C:\stupidspeed\exec\vbnet\dotnet\12_matrix_add\bin\Release\net8.0\12_matrix_add.runtimeconfig.json
+C:\stupidspeed\exec\vbnet\dotnet\12_matrix_add\bin\Release\net8.0\12_matrix_add.dll
+C:\stupidspeed\exec\vbnet\dotnet\12_matrix_add\bin\Release\net8.0\12_matrix_add.pdb
+C:\stupidspeed\exec\vbnet\dotnet\12_matrix_add\obj\Release\net8.0\12_matrix_add.GeneratedMSBuildEditorConfig.editorconfig
+C:\stupidspeed\exec\vbnet\dotnet\12_matrix_add\obj\Release\net8.0\12_matrix_add.AssemblyInfoInputs.cache
+C:\stupidspeed\exec\vbnet\dotnet\12_matrix_add\obj\Release\net8.0\12_matrix_add.AssemblyInfo.vb
+C:\stupidspeed\exec\vbnet\dotnet\12_matrix_add\obj\Release\net8.0\12_matrix_add.vbproj.CoreCompileInputs.cache
+C:\stupidspeed\exec\vbnet\dotnet\12_matrix_add\obj\Release\net8.0\12_matrix_add.sourcelink.json
+C:\stupidspeed\exec\vbnet\dotnet\12_matrix_add\obj\Release\net8.0\12_matrix_add.dll
+C:\stupidspeed\exec\vbnet\dotnet\12_matrix_add\obj\Release\net8.0\refint\12_matrix_add.dll
+C:\stupidspeed\exec\vbnet\dotnet\12_matrix_add\obj\Release\net8.0\12_matrix_add.pdb
+C:\stupidspeed\exec\vbnet\dotnet\12_matrix_add\obj\Release\net8.0\12_matrix_add.genruntimeconfig.cache
+C:\stupidspeed\exec\vbnet\dotnet\12_matrix_add\obj\Release\net8.0\ref\12_matrix_add.dll

@@ -9,7 +9,7 @@ fn main() {
     let ss_t0 = Instant::now();
     let mut text = String::new();
 
-    for _ in 0..250_000 {
+    for _ in 0..750_000 {
         text = text + "x";
     }
 

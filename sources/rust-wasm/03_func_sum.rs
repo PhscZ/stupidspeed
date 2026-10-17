@@ -14,7 +14,7 @@ fn main() {
     let ss_t0 = Instant::now();
     let mut value: u64 = 0;
 
-    for _ in 0..100_000_000u64 {
+    for _ in 0..400_000_000u64 {
         value = add_one(value);
     }
 

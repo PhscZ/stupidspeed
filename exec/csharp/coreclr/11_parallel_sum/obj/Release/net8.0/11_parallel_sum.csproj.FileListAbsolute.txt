@@ -1,0 +1,15 @@
+C:\stupidspeed\exec\csharp\coreclr\11_parallel_sum\bin\Release\net8.0\11_parallel_sum.exe
+C:\stupidspeed\exec\csharp\coreclr\11_parallel_sum\bin\Release\net8.0\11_parallel_sum.deps.json
+C:\stupidspeed\exec\csharp\coreclr\11_parallel_sum\bin\Release\net8.0\11_parallel_sum.runtimeconfig.json
+C:\stupidspeed\exec\csharp\coreclr\11_parallel_sum\bin\Release\net8.0\11_parallel_sum.dll
+C:\stupidspeed\exec\csharp\coreclr\11_parallel_sum\bin\Release\net8.0\11_parallel_sum.pdb
+C:\stupidspeed\exec\csharp\coreclr\11_parallel_sum\obj\Release\net8.0\11_parallel_sum.GeneratedMSBuildEditorConfig.editorconfig
+C:\stupidspeed\exec\csharp\coreclr\11_parallel_sum\obj\Release\net8.0\11_parallel_sum.AssemblyInfoInputs.cache
+C:\stupidspeed\exec\csharp\coreclr\11_parallel_sum\obj\Release\net8.0\11_parallel_sum.AssemblyInfo.cs
+C:\stupidspeed\exec\csharp\coreclr\11_parallel_sum\obj\Release\net8.0\11_parallel_sum.csproj.CoreCompileInputs.cache
+C:\stupidspeed\exec\csharp\coreclr\11_parallel_sum\obj\Release\net8.0\11_parallel_sum.sourcelink.json
+C:\stupidspeed\exec\csharp\coreclr\11_parallel_sum\obj\Release\net8.0\11_parallel_sum.dll
+C:\stupidspeed\exec\csharp\coreclr\11_parallel_sum\obj\Release\net8.0\refint\11_parallel_sum.dll
+C:\stupidspeed\exec\csharp\coreclr\11_parallel_sum\obj\Release\net8.0\11_parallel_sum.pdb
+C:\stupidspeed\exec\csharp\coreclr\11_parallel_sum\obj\Release\net8.0\11_parallel_sum.genruntimeconfig.cache
+C:\stupidspeed\exec\csharp\coreclr\11_parallel_sum\obj\Release\net8.0\ref\11_parallel_sum.dll

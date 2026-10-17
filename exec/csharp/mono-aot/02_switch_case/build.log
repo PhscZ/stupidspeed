@@ -1,0 +1,7 @@
+   Creating library C:\stupidspeed\exec\csharp\mono-aot\02_switch_case\02_switch_case.exe.dll.lib and object C:\stupidspeed\exec\csharp\mono-aot\02_switch_case\02_switch_case.exe.dll.exp
+Mono Ahead of Time compiler - compiling assembly C:\stupidspeed\exec\csharp\mono-aot\02_switch_case\02_switch_case.exe
+AOTID 033B9BA7-9104-C006-FA62-EBF862481E72
+Compiled: 2/2
+Executing the native assembler: "clang.exe" --target=x86_64-pc-windows-msvc -c -x assembler  -o C:\Users\pz020\AppData\Local\Temp\mono_aot_a07512.obj C:\Users\pz020\AppData\Local\Temp\mono_aot_a07512
+Executing the native linker: "link.exe" /DLL /MACHINE:X64 /NOLOGO /INCREMENTAL:NO /DEBUG  /OUT:C:\stupidspeed\exec\csharp\mono-aot\02_switch_case\02_switch_case.exe.dll.tmp C:\Users\pz020\AppData\Local\Temp\mono_aot_a07512.obj 
+JIT time: 9 ms, Generation time: 1 ms, Assembly+Link time: 20858 ms.

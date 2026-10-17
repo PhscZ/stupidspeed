@@ -82,7 +82,7 @@ sum.rep:                                          ; preds = %sum.done, %sum.init
 
 sum:                                              ; preds = %sum.body, %sum.rep
   %j = phi i64 [ 0, %sum.rep ], [ %j.next, %sum.body ]
-  %acc = phi i64 [ %total, %sum.rep ], [ %acc.next, %sum.body ]
+  %acc = phi i64 [ 0, %sum.rep ], [ %acc.next, %sum.body ]
   %sc = icmp slt i64 %j, 10000000
   br i1 %sc, label %sum.body, label %sum.done
 

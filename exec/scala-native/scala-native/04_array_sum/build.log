@@ -1,0 +1,20 @@
+[90mCompiling project (Scala 3.9.0, Scala Native 0.5.12)[0m
+[90mCompiled project (Scala 3.9.0, Scala Native 0.5.12)[0m
+[info] Linking (multithreadingEnabled=detect) (8903 ms)
+[info] Discovered 899 classes and 5484 methods after classloading
+[info] Checking intermediate code (quick) (435 ms)
+[info] Multithreading was not explicitly enabled - initial class loading has not detected any usage of system threads. Multithreading support will be disabled to improve performance.
+[info] Linking (multithreadingEnabled=false) (16846 ms)
+[info] Discovered 729 classes and 4152 methods after classloading
+[info] Checking intermediate code (quick) (625 ms)
+[info] Discovered 600 classes and 2091 methods after optimization
+[info] Optimizing (release-fast mode) (46655 ms)
+[info] Produced 8 LLVM IR files
+[info] Generating intermediate code (35444 ms)
+[info] Compiling to native code (438010 ms)
+[info] Linking with [dbghelp, kernel32, userenv, advapi32]
+[info] Linking native code (immix gc, none lto) (27214 ms)
+[info] Postprocessing (0 ms)
+[info] Total (584435 ms)
+Wrote C:\stupidspeed\exec\scala-native\scala-native\04_array_sum\prog.exe, run it with
+  .\prog.exe

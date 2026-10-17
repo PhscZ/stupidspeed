@@ -8,6 +8,11 @@
 %       list (fill/4 is tail recursive, so no deep local stack) and then read
 %       back in index order by sum/3, twelve times over. Same fill-then-read shape,
 %       same 80 MB of live cells, same arithmetic as the C row.
+% note: the build reserves a 1 GB global stack (gplc --global-size 1048576, see
+%       exec/gprolog/build_all.bat). The ten-million-element list is 80 MB of cells but
+%       GNU Prolog's list constructor leaves the stack pointer where it is, so the fill
+%       walks past the default 32 MB and dies with "global stack overflow"; 1 GB is the
+%       measured requirement with margin.
 % note: measured region: the fill and the sums only; see 01_branches.pl for the pipeline
 %       note and for real_time/1.
 

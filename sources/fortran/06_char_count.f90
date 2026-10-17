@@ -15,9 +15,17 @@ program main
   character(len=1) :: ch
   integer(kind=8) :: count, i, n
   integer(kind=8) :: ss_t0, ss_t1, ss_rate
+  integer :: reps
+
+  ! The count is a variable rather than a literal on purpose: gfortran and
+  ! LFortran constant-fold repeat() with a constant count into a 250 MB static
+  ! initializer, which puts the whole text in .rdata and makes the executable
+  ! 250 MB. With a runtime value the text is built by the library call, which
+  ! is what this task describes and what the C row does.
+  reps = 25000000
 
   call system_clock(ss_t0, ss_rate)
-  text = repeat(block, 25000000)
+  text = repeat(block, reps)
   n = int(len(text), kind=8)
 
   count = 0_8

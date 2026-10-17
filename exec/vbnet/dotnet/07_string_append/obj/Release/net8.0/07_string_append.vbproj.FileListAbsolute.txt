@@ -1,0 +1,15 @@
+C:\stupidspeed\exec\vbnet\dotnet\07_string_append\bin\Release\net8.0\07_string_append.exe
+C:\stupidspeed\exec\vbnet\dotnet\07_string_append\bin\Release\net8.0\07_string_append.deps.json
+C:\stupidspeed\exec\vbnet\dotnet\07_string_append\bin\Release\net8.0\07_string_append.runtimeconfig.json
+C:\stupidspeed\exec\vbnet\dotnet\07_string_append\bin\Release\net8.0\07_string_append.dll
+C:\stupidspeed\exec\vbnet\dotnet\07_string_append\bin\Release\net8.0\07_string_append.pdb
+C:\stupidspeed\exec\vbnet\dotnet\07_string_append\obj\Release\net8.0\07_string_append.GeneratedMSBuildEditorConfig.editorconfig
+C:\stupidspeed\exec\vbnet\dotnet\07_string_append\obj\Release\net8.0\07_string_append.AssemblyInfoInputs.cache
+C:\stupidspeed\exec\vbnet\dotnet\07_string_append\obj\Release\net8.0\07_string_append.AssemblyInfo.vb
+C:\stupidspeed\exec\vbnet\dotnet\07_string_append\obj\Release\net8.0\07_string_append.vbproj.CoreCompileInputs.cache
+C:\stupidspeed\exec\vbnet\dotnet\07_string_append\obj\Release\net8.0\07_string_append.sourcelink.json
+C:\stupidspeed\exec\vbnet\dotnet\07_string_append\obj\Release\net8.0\07_string_append.dll
+C:\stupidspeed\exec\vbnet\dotnet\07_string_append\obj\Release\net8.0\refint\07_string_append.dll
+C:\stupidspeed\exec\vbnet\dotnet\07_string_append\obj\Release\net8.0\07_string_append.pdb
+C:\stupidspeed\exec\vbnet\dotnet\07_string_append\obj\Release\net8.0\07_string_append.genruntimeconfig.cache
+C:\stupidspeed\exec\vbnet\dotnet\07_string_append\obj\Release\net8.0\ref\07_string_append.dll

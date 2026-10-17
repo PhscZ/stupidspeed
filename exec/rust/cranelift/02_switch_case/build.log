@@ -1,0 +1,10 @@
+warning: unused variable: `t0`
+  --> 02_switch_case.rs:10:9
+   |
+10 |     let t0 = std::time::Instant::now();
+   |         ^^ help: if this is intentional, prefix it with an underscore: `_t0`
+   |
+   = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: 1 warning emitted
+

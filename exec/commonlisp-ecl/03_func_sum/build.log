@@ -1,0 +1,7 @@
+;;; Loading #P"C:/stupidspeed/tools/ecl/cmp.fas"
+;;;
+;;; Compiling 03_func_sum.lisp.
+;;; OPTIMIZE levels: Safety=2, Space=0, Speed=3, Debug=0
+;;;
+;;; Finished compiling 03_func_sum.lisp.
+;;;

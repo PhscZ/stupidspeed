@@ -15,7 +15,7 @@ class T03_func_sum {
         var t0 = haxe.Timer.stamp();
         var value = 0;
 
-        for (i in 0...100000000) {
+        for (i in 0...400000000) {
             value = AddOne.add_one(value);
         }
 

@@ -1,0 +1,42 @@
+PLEASE submit a bug report to https://github.com/llvm/llvm-project/issues/ and include the crash backtrace and instructions to reproduce the bug.
+Exception Code: 0xC0000005
+Exception Code: 0xC0000005
+ #0 0x00007ff6e6fbb908 (C:\stupidspeed\tools\msys64\msys64\ucrt64\bin\flang.exe+0x18b908)
+ #1 0x00007ff6e7caf4ed (C:\stupidspeed\tools\msys64\msys64\ucrt64\bin\flang.exe+0xe7f4ed)
+ #2 0x00007ff6e7caeec7 (C:\stupidspeed\tools\msys64\msys64\ucrt64\bin\flang.exe+0xe7eec7)
+ #3 0x00007ff6e6f97390 (C:\stupidspeed\tools\msys64\msys64\ucrt64\bin\flang.exe+0x167390)
+ #4 0x00007ff6e93cc955 (C:\stupidspeed\tools\msys64\msys64\ucrt64\bin\flang.exe+0x259c955)
+ #5 0x00007ff6e83121f7 (C:\stupidspeed\tools\msys64\msys64\ucrt64\bin\flang.exe+0x14e21f7)
+ #6 0x00007ff6e700134b (C:\stupidspeed\tools\msys64\msys64\ucrt64\bin\flang.exe+0x1d134b)
+ #7 0x00007ff6e7001d5d (C:\stupidspeed\tools\msys64\msys64\ucrt64\bin\flang.exe+0x1d1d5d)
+ #8 0x00007ff6e83135a4 (C:\stupidspeed\tools\msys64\msys64\ucrt64\bin\flang.exe+0x14e35a4)
+ #9 0x00007ff6e83134f0 (C:\stupidspeed\tools\msys64\msys64\ucrt64\bin\flang.exe+0x14e34f0)
+#10 0x00007ff6e8312080 (C:\stupidspeed\tools\msys64\msys64\ucrt64\bin\flang.exe+0x14e2080)
+#11 0x00007ff6e6fc6818 (C:\stupidspeed\tools\msys64\msys64\ucrt64\bin\flang.exe+0x196818)
+#12 0x00007ff6e6fc8e90 (C:\stupidspeed\tools\msys64\msys64\ucrt64\bin\flang.exe+0x198e90)
+#13 0x00007ff6e6fc8995 (C:\stupidspeed\tools\msys64\msys64\ucrt64\bin\flang.exe+0x198995)
+#14 0x00007ff6e6fc88ee (C:\stupidspeed\tools\msys64\msys64\ucrt64\bin\flang.exe+0x1988ee)
+#15 0x00007ffe30bc7d55 (C:\stupidspeed\tools\msys64\msys64\ucrt64\bin\libwinpthread-1.dll+0x7d55)
+#16 0x00007ff6e6fc8836 (C:\stupidspeed\tools\msys64\msys64\ucrt64\bin\flang.exe+0x198836)
+#17 0x00007ff6e6fc8c7e (C:\stupidspeed\tools\msys64\msys64\ucrt64\bin\flang.exe+0x198c7e)
+#18 0x00007ff6e6fc8d90 (C:\stupidspeed\tools\msys64\msys64\ucrt64\bin\flang.exe+0x198d90)
+#19 0x00007ffd5b1dabda (C:\stupidspeed\tools\msys64\msys64\ucrt64\bin\libLLVM-22.dll+0x1bcabda)
+#20 0x00007ffd5c4f86af (C:\stupidspeed\tools\msys64\msys64\ucrt64\bin\libLLVM-22.dll+0x2ee86af)
+#21 0x00007ffe39aa1bb2 (C:\WINDOWS\System32\ucrtbase.dll+0x21bb2)
+#22 0x00007ffe3bbd7374 (C:\WINDOWS\System32\KERNEL32.DLL+0x17374)
+#23 0x00007ffe3bd1cc91 (C:\WINDOWS\SYSTEM32\ntdll.dll+0x4cc91)
+flang: error: flang frontend command failed due to signal (use -v to see invocation)
+flang version 22.1.8 (https://github.com/msys2/MINGW-packages d34feaaa1d0aff624c870910b6f2589aa40d20de)
+Target: x86_64-w64-windows-gnu
+Thread model: posix
+InstalledDir: C:/stupidspeed/tools/msys64/msys64/ucrt64/bin
+flang: note: diagnostic msg: 
+********************
+
+PLEASE ATTACH THE FOLLOWING FILES TO THE BUG REPORT:
+Preprocessed source(s) and associated run script(s) are located at:
+flang: note: diagnostic msg: C:/Users/pz020/AppData/Local/Temp/10_pi-ae90cb
+flang: note: diagnostic msg: C:/Users/pz020/AppData/Local/Temp/10_pi-ae90cb.sh
+flang: note: diagnostic msg: 
+
+********************

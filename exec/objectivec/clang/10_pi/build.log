@@ -1,0 +1,4 @@
+10_pi.m:60:1: warning: method possibly missing a [super dealloc] call [-Wobjc-missing-super-calls]
+   60 | }
+      | ^
+1 warning generated.

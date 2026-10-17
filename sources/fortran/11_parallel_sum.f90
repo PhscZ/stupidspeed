@@ -18,7 +18,7 @@ program main
   !$omp parallel do reduction(+:total) private(acc, i) schedule(static)
   do t = 0_8, 3_8
     acc = 0_8
-    do i = t*25000000_8, (t + 1_8)*25000000_8 - 1_8
+    do i = t*27000000_8, (t + 1_8)*27000000_8 - 1_8
       select case (mod(i, 4_8))
       case (0_8)
         acc = acc + 1_8

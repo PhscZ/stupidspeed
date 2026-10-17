@@ -1,0 +1,7 @@
+   Creating library C:\stupidspeed\exec\csharp\mono-aot\08_average\08_average.exe.dll.lib and object C:\stupidspeed\exec\csharp\mono-aot\08_average\08_average.exe.dll.exp
+Mono Ahead of Time compiler - compiling assembly C:\stupidspeed\exec\csharp\mono-aot\08_average\08_average.exe
+AOTID 09E369A4-E63C-4C2D-F6BC-BCF982E428F9
+Compiled: 2/2
+Executing the native assembler: "clang.exe" --target=x86_64-pc-windows-msvc -c -x assembler  -o C:\Users\pz020\AppData\Local\Temp\mono_aot_a10980.obj C:\Users\pz020\AppData\Local\Temp\mono_aot_a10980
+Executing the native linker: "link.exe" /DLL /MACHINE:X64 /NOLOGO /INCREMENTAL:NO /DEBUG  /OUT:C:\stupidspeed\exec\csharp\mono-aot\08_average\08_average.exe.dll.tmp C:\Users\pz020\AppData\Local\Temp\mono_aot_a10980.obj 
+JIT time: 7 ms, Generation time: 1 ms, Assembly+Link time: 2335 ms.

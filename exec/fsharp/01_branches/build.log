@@ -1,0 +1,9 @@
+  Determining projects to restore...
+  Restored C:\stupidspeed\exec\fsharp\01_branches\01_branches.fsproj (in 1,2 sec).
+  01_branches -> C:\stupidspeed\exec\fsharp\01_branches\bin\Release\net8.0\01_branches.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:01:02.74

@@ -1,0 +1,7 @@
+   Creating library C:\stupidspeed\exec\csharp\mono-aot\05_alloc_churn\05_alloc_churn.exe.dll.lib and object C:\stupidspeed\exec\csharp\mono-aot\05_alloc_churn\05_alloc_churn.exe.dll.exp
+Mono Ahead of Time compiler - compiling assembly C:\stupidspeed\exec\csharp\mono-aot\05_alloc_churn\05_alloc_churn.exe
+AOTID 7B4A5BC6-C4A3-3DD0-6141-F98FADA77F24
+Compiled: 6/6
+Executing the native assembler: "clang.exe" --target=x86_64-pc-windows-msvc -c -x assembler  -o C:\Users\pz020\AppData\Local\Temp\mono_aot_a03172.obj C:\Users\pz020\AppData\Local\Temp\mono_aot_a03172
+Executing the native linker: "link.exe" /DLL /MACHINE:X64 /NOLOGO /INCREMENTAL:NO /DEBUG  /OUT:C:\stupidspeed\exec\csharp\mono-aot\05_alloc_churn\05_alloc_churn.exe.dll.tmp C:\Users\pz020\AppData\Local\Temp\mono_aot_a03172.obj 
+JIT time: 3 ms, Generation time: 2 ms, Assembly+Link time: 2502 ms.

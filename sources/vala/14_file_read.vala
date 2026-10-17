@@ -40,7 +40,7 @@ int main () {
             }
         }
 
-        fs.close ();
+        fs = null;
     }
 
     ss_report ();

@@ -1,0 +1,14 @@
+module(2, "03_func_sum_add_one.m",
+	m03_func_sum_add_one,
+	{},
+	{builtin, private_builtin},
+	{int},
+	{},
+	{},
+	{},
+	{},
+	{},
+	no_foreign_export,
+	no_main,
+	{}
+).

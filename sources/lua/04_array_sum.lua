@@ -19,4 +19,7 @@ end
 
 local __t1 = os.clock()
 io.stderr:write(string.format("TIME_MS=%.3f\n", (__t1 - __t0) * 1000.0))
-print(total)
+-- %.0f, not the default %g: LuaJIT holds the sum as a double (Lua 5.1 has no
+-- integer type) and %g prints it as 5.9999994e+14, where the expected line is
+-- the integer. PUC Lua 5.4 prints the same digits either way.
+print(string.format("%.0f", total))

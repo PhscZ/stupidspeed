@@ -1,0 +1,7 @@
+   Creating library C:\stupidspeed\exec\csharp\mono-aot\07_string_append\07_string_append.exe.dll.lib and object C:\stupidspeed\exec\csharp\mono-aot\07_string_append\07_string_append.exe.dll.exp
+Mono Ahead of Time compiler - compiling assembly C:\stupidspeed\exec\csharp\mono-aot\07_string_append\07_string_append.exe
+AOTID B6CD7984-2DE0-971A-C96A-7B1E1337F7ED
+Compiled: 2/2
+Executing the native assembler: "clang.exe" --target=x86_64-pc-windows-msvc -c -x assembler  -o C:\Users\pz020\AppData\Local\Temp\mono_aot_a07868.obj C:\Users\pz020\AppData\Local\Temp\mono_aot_a07868
+Executing the native linker: "link.exe" /DLL /MACHINE:X64 /NOLOGO /INCREMENTAL:NO /DEBUG  /OUT:C:\stupidspeed\exec\csharp\mono-aot\07_string_append\07_string_append.exe.dll.tmp C:\Users\pz020\AppData\Local\Temp\mono_aot_a07868.obj 
+JIT time: 6 ms, Generation time: 1 ms, Assembly+Link time: 2166 ms.

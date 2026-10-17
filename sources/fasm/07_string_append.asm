@@ -180,8 +180,8 @@ twhole:  rq 1
 tfrac:   rq 1
 tnumbuf: rb 40
 stderr:  rq 1
-bufA:    rb 250008
-bufB:    rb 250008
+bufA:    rb 750008
+bufB:    rb 750008
 numbuf:  rb 32
 charbuf: rb 1
 written: rd 1

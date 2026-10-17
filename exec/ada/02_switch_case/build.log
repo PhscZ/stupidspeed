@@ -1,0 +1,3 @@
+gcc -c -O3 t02_switch_case.adb
+gnatbind -x t02_switch_case.ali
+gnatlink t02_switch_case.ali -O3

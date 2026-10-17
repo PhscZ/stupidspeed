@@ -1,0 +1,2 @@
+11_parallel_sum.mod(30)(14) : warning: Warning --  Array elements will not be naturally aligned
+11_parallel_sum.mod(99)(7) : warning: Warning --  All possible CASE selectors are not handled

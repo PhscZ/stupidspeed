@@ -23,7 +23,7 @@ program main
 
   call system_clock(ss_t0, ss_rate)
   total = 0_8
-  do i = 0_8, 9999999_8
+  do i = 0_8, 49999999_8
     allocate(buf)
     buf(1:1) = achar(int(mod(i, 256_8)))
     total = total + int(iachar(buf(1:1)), kind=8)
